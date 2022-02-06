@@ -31,7 +31,9 @@ import net.minecraftforge.registries.RegistryObject;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.follower.SmallSlime;
+import de.markusbordihn.playercompanions.entity.guard.GuardEntity;
 import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
+import de.markusbordihn.playercompanions.entity.healer.Snail;
 
 @EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntityType {
@@ -42,6 +44,11 @@ public class ModEntityType {
 
   public static final DeferredRegister<EntityType<?>> ENTITIES =
       DeferredRegister.create(ForgeRegistries.ENTITIES, Constants.MOD_ID);
+
+  // Healer Entity
+  public static final RegistryObject<EntityType<Snail>> SNAIL =
+      ENTITIES.register(Snail.ID, () -> EntityType.Builder.<Snail>of(Snail::new, Snail.CATEGORY)
+          .sized(0.9F, 1.2F).clientTrackingRange(12).build(Snail.ID));
 
   // Guard Entity
   public static final RegistryObject<EntityType<SmallGhast>> SMALL_GHAST = ENTITIES.register(
@@ -56,7 +63,8 @@ public class ModEntityType {
   @SubscribeEvent
   public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
     // Create Attributes for Entities
-    event.put(SMALL_GHAST.get(), SmallGhast.createAttributes().build());
+    event.put(SMALL_GHAST.get(), GuardEntity.createAttributes().build());
     event.put(SMALL_SLIME.get(), SmallSlime.createAttributes().build());
+    event.put(SNAIL.get(), Snail.createAttributes().build());
   }
 }

@@ -29,16 +29,20 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
+import de.markusbordihn.playercompanions.client.model.SnailModel;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 
 public class ClientRenderer {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
+  // Layer Definitions
   public static final ModelLayerLocation SMALL_SLIME =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "small_slime"), "small_slime");
   public static final ModelLayerLocation SMALL_SLIME_OUTER = new ModelLayerLocation(
       new ResourceLocation(Constants.MOD_ID, "small_slime"), "small_slime_outer");
+  public static final ModelLayerLocation SNAIL =
+      new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "snail"), "main");
 
   protected ClientRenderer() {}
 
@@ -47,6 +51,7 @@ public class ClientRenderer {
 
     event.registerEntityRenderer(ModEntityType.SMALL_GHAST.get(), SmallGhastRenderer::new);
     event.registerEntityRenderer(ModEntityType.SMALL_SLIME.get(), SmallSlimeRenderer::new);
+    event.registerEntityRenderer(ModEntityType.SNAIL.get(), SnailRenderer::new);
   }
 
   public static void registerEntityLayerDefinitions(
@@ -54,5 +59,6 @@ public class ClientRenderer {
     log.info("{} Entity Layer Definitions ...", Constants.LOG_REGISTER_PREFIX);
     event.registerLayerDefinition(SMALL_SLIME, SmallSlimeModel::createInnerBodyLayer);
     event.registerLayerDefinition(SMALL_SLIME_OUTER, SmallSlimeModel::createOuterBodyLayer);
+    event.registerLayerDefinition(SNAIL, SnailModel::createBodyLayer);
   }
 }

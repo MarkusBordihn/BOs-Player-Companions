@@ -24,7 +24,10 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -63,9 +66,8 @@ public class GuardEntity extends CompanionEntity implements NeutralMob {
   class GuardAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
     private final GuardEntity guard;
 
-    public GuardAvoidEntityGoal(
-        GuardEntity p_30454_, Class<T> p_30455_, float p_30456_, double p_30457_,
-        double p_30458_) {
+    public GuardAvoidEntityGoal(GuardEntity p_30454_, Class<T> p_30455_, float p_30456_,
+        double p_30457_, double p_30458_) {
       super(p_30454_, p_30455_, p_30456_, p_30457_, p_30458_);
       this.guard = p_30454_;
     }
@@ -94,6 +96,11 @@ public class GuardEntity extends CompanionEntity implements NeutralMob {
       GuardEntity.this.setTarget((LivingEntity) null);
       super.tick();
     }
+  }
+
+  public static AttributeSupplier.Builder createAttributes() {
+    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
   @Override

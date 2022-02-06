@@ -48,11 +48,13 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.item.ModItems;
 
 public class SmallSlime extends FollowerEntity {
 
@@ -61,41 +63,62 @@ public class SmallSlime extends FollowerEntity {
   public static final String NAME = "Small Slime";
   public static final MobCategory CATEGORY = MobCategory.CREATURE;
 
-  // Entity Data
-  public static final Map<DyeColor, ResourceLocation> TEXTURE_BY_COLOR =
+  // Entity texture by color
+  private static final Map<DyeColor, ResourceLocation> TEXTURE_BY_COLOR =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(DyeColor.WHITE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_white.png"));
-        hashMap.put(DyeColor.ORANGE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_orange.png"));
-        hashMap.put(DyeColor.MAGENTA, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_magenta.png"));
-        hashMap.put(DyeColor.LIGHT_BLUE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_light_blue.png"));
-        hashMap.put(DyeColor.YELLOW, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_yellow.png"));
-        hashMap.put(DyeColor.LIME, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_lime.png"));
-        hashMap.put(DyeColor.PINK, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_pink.png"));
-        hashMap.put(DyeColor.GRAY, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_gray.png"));
-        hashMap.put(DyeColor.LIGHT_GRAY, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_light_gray.png"));
-        hashMap.put(DyeColor.CYAN, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_cyan.png"));
-        hashMap.put(DyeColor.PURPLE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_purple.png"));
+        hashMap.put(DyeColor.BLACK, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_black.png"));
         hashMap.put(DyeColor.BLUE, new ResourceLocation(Constants.MOD_ID,
             "textures/entity/small_slime/small_slime_blue.png"));
         hashMap.put(DyeColor.BROWN, new ResourceLocation(Constants.MOD_ID,
             "textures/entity/small_slime/small_slime_brown.png"));
+        hashMap.put(DyeColor.CYAN, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_cyan.png"));
+        hashMap.put(DyeColor.GRAY, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_gray.png"));
         hashMap.put(DyeColor.GREEN, new ResourceLocation(Constants.MOD_ID,
             "textures/entity/small_slime/small_slime_green.png"));
+        hashMap.put(DyeColor.LIGHT_BLUE, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_light_blue.png"));
+        hashMap.put(DyeColor.LIGHT_GRAY, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_light_gray.png"));
+        hashMap.put(DyeColor.LIME, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_lime.png"));
+        hashMap.put(DyeColor.MAGENTA, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_magenta.png"));
+        hashMap.put(DyeColor.ORANGE, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_orange.png"));
+        hashMap.put(DyeColor.PINK, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_pink.png"));
+        hashMap.put(DyeColor.PURPLE, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_purple.png"));
         hashMap.put(DyeColor.RED, new ResourceLocation(Constants.MOD_ID,
             "textures/entity/small_slime/small_slime_red.png"));
-        hashMap.put(DyeColor.BLACK, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_black.png"));
+        hashMap.put(DyeColor.WHITE, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_white.png"));
+        hashMap.put(DyeColor.YELLOW, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_yellow.png"));
+      });
+
+  // Companion Item by color
+  private static final Map<DyeColor, Item> COMPANION_ITEM_BY_COLOR =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(DyeColor.BLACK, ModItems.SMALL_SLIME_BLACK.get());
+        hashMap.put(DyeColor.BLUE, ModItems.SMALL_SLIME_BLUE.get());
+        hashMap.put(DyeColor.BROWN, ModItems.SMALL_SLIME_BROWN.get());
+        hashMap.put(DyeColor.CYAN, ModItems.SMALL_SLIME_CYAN.get());
+        hashMap.put(DyeColor.GRAY, ModItems.SMALL_SLIME_GRAY.get());
+        hashMap.put(DyeColor.GREEN, ModItems.SMALL_SLIME_GREEN.get());
+        hashMap.put(DyeColor.LIGHT_BLUE, ModItems.SMALL_SLIME_LIGHT_BLUE.get());
+        hashMap.put(DyeColor.LIGHT_GRAY, ModItems.SMALL_SLIME_LIGHT_GRAY.get());
+        hashMap.put(DyeColor.LIME, ModItems.SMALL_SLIME_LIME.get());
+        hashMap.put(DyeColor.MAGENTA, ModItems.SMALL_SLIME_MAGENTA.get());
+        hashMap.put(DyeColor.ORANGE, ModItems.SMALL_SLIME_ORANGE.get());
+        hashMap.put(DyeColor.PINK, ModItems.SMALL_SLIME_PINK.get());
+        hashMap.put(DyeColor.PURPLE, ModItems.SMALL_SLIME_PURPLE.get());
+        hashMap.put(DyeColor.RED, ModItems.SMALL_SLIME_RED.get());
+        hashMap.put(DyeColor.WHITE, ModItems.SMALL_SLIME_WHITE.get());
+        hashMap.put(DyeColor.YELLOW, ModItems.SMALL_SLIME_YELLOW.get());
       });
 
   public SmallSlime(EntityType<? extends SmallSlime> entityType, Level level) {
@@ -130,7 +153,17 @@ public class SmallSlime extends FollowerEntity {
 
   @Override
   public Item getTameItem() {
-    return Items.SLIME_BALL;
+    return ModItems.TAME_APPLE.get();
+  }
+
+  @Override
+  protected Ingredient getFoodItems() {
+    return Ingredient.of(Items.APPLE);
+  }
+
+  @Override
+  public Item getCompanionItem() {
+    return COMPANION_ITEM_BY_COLOR.get(this.getColor());
   }
 
   @Override
@@ -139,6 +172,7 @@ public class SmallSlime extends FollowerEntity {
     Item item = itemStack.getItem();
     // Only owner specific options.
     if (this.isTame() && this.isOwnedBy(player)) {
+
       // Change color of the slime.
       if (item instanceof DyeItem dyeItem) {
         DyeColor dyeColor = dyeItem.getDyeColor();

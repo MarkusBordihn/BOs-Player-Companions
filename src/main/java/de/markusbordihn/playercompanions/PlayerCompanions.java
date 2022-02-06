@@ -30,10 +30,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import de.markusbordihn.playercompanions.block.ModBlocks;
+import de.markusbordihn.playercompanions.client.gui.ClientGui;
+import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.client.screen.ClientScreens;
+import de.markusbordihn.playercompanions.container.ModContainer;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.level.spawner.SpawnHandler;
+import de.markusbordihn.playercompanions.network.NetworkHandler;
 
 @Mod(Constants.MOD_ID)
 public class PlayerCompanions {
@@ -43,6 +48,11 @@ public class PlayerCompanions {
   public PlayerCompanions() {
     final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     final IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
+
+    modEventBus.addListener(NetworkHandler::registerNetworkHandler);
+
+    log.info("{} Container ...", Constants.LOG_REGISTER_PREFIX);
+    ModContainer.CONTAINERS.register(modEventBus);
 
     log.info("{} Entities ...", Constants.LOG_REGISTER_PREFIX);
     ModEntityType.ENTITIES.register(modEventBus);
@@ -58,9 +68,12 @@ public class PlayerCompanions {
     forgeEventBus.addListener(ServerSetup::handleServerStartingEvent);
 
     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+      forgeEventBus.addListener(ModKeyMapping::handleKeyMapping);
       modEventBus.addListener(ClientSetup::new);
       modEventBus.addListener(ClientRenderer::registerEntityRenderers);
       modEventBus.addListener(ClientRenderer::registerEntityLayerDefinitions);
+      modEventBus.addListener(ClientGui::registerClientGui);
+      modEventBus.addListener(ClientScreens::registerScreens);
     });
   }
 }

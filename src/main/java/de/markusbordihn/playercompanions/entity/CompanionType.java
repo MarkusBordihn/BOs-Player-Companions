@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.entity;
 public enum CompanionType {
   FOLLOWER,
   GUARD,
+  HEALER,
   NPC,
   UNKNOWN
 }

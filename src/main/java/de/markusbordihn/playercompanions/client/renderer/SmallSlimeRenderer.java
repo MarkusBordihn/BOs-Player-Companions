@@ -53,11 +53,6 @@ public class SmallSlimeRenderer extends MobRenderer<SmallSlime, SmallSlimeModel<
     super.render(entity, p_115977_, p_115978_, poseStack, buffer, p_115981_);
   }
 
-  @Override
-  public Vec3 getRenderOffset(SmallSlime entity, float offset) {
-    return super.getRenderOffset(entity, offset);//.add(0, -0.6, 0);
-  }
-
   @Nullable
   @Override
   public ResourceLocation getTextureLocation(SmallSlime entity) {

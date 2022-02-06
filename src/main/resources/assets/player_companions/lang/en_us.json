@@ -1,16 +1,25 @@
 {
   "block.placeholder.text": "Template placeholder do not remove!",
-  "entity.placeholder.text": "Template placeholder do not remove!",
 
+  "entity.placeholder.text": "Template placeholder do not remove!",
   "entity.player_companions.small_slime": "Small Slime",
   "entity.player_companions.small_ghast": "Small Ghast",
-
   "entity.player_companions.monster": "%1$s",
   "entity.player_companions.monster_tamed": "%1$s from %2$s",
   "entity.player_companions.monster_respawn_message": "Your companion %1$s has been re-spawned!",
   "entity.player_companions.monster_will_respawn_message": "%1$s will be respawn in %2$s seconds!",
 
-  "item.placeholder.text": "Template placeholder do not remove!",
+  "container.player_companions.companions_menu": "Player Companions",
 
-  "item.player_companions.small_slime_spawn_egg": "Small Slime Spawn Egg"
+  "text.player_companions.tamed_companion_health": "Health: %1$s",
+  "text.player_companions.tamed_companion_name": "Name: %1$s",
+  "text.player_companions.tamed_companion_owner": "Owner: %1$s",
+
+  "text.player_companions.companion_is_near_you": "Companion %1$s is already spawned within 16 blocks from your position!",
+
+  "item.placeholder.text": "Template placeholder do not remove!",
+  "item.player_companions.small_slime_spawn_egg": "Small Slime Spawn Egg",
+
+  "itemGroup.companions": "Player Companions",
+  "itemGroup.companions_tame_items": "Player Companions: Tame Items"
 }

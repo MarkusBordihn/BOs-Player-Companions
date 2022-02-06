@@ -35,6 +35,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -45,6 +46,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.CompanionEntity;
+import de.markusbordihn.playercompanions.item.ModItems;
 
 @EventBusSubscriber
 public class SmallGhast extends GuardEntity implements FlyingAnimal {
@@ -157,7 +159,17 @@ public class SmallGhast extends GuardEntity implements FlyingAnimal {
 
   @Override
   public Item getTameItem() {
-    return Items.MAGMA_CREAM;
+    return ModItems.TAME_BONE.get();
+  }
+
+  @Override
+  protected Ingredient getFoodItems() {
+    return Ingredient.of(Items.BONE);
+  }
+
+  @Override
+  public Item getCompanionItem() {
+    return ModItems.SMALL_GHAST.get();
   }
 
   @Override

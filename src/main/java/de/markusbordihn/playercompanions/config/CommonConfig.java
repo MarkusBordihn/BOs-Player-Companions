@@ -25,11 +25,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.client.gui.GuiPosition;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class CommonConfig {
@@ -58,6 +61,10 @@ public class CommonConfig {
     public final ForgeConfigSpec.BooleanValue enableCompanionGhost;
     public final ForgeConfigSpec.BooleanValue friendlyFire;
 
+    public final ForgeConfigSpec.EnumValue<GuiPosition> guiPosition;
+    public final ForgeConfigSpec.IntValue guiOffsetX;
+    public final ForgeConfigSpec.IntValue guiOffsetY;
+
     public final ForgeConfigSpec.BooleanValue smallSlimeSpawnEnable;
     public final ForgeConfigSpec.IntValue smallSlimeMinGroup;
     public final ForgeConfigSpec.IntValue smallSlimeMaxGroup;
@@ -83,6 +90,16 @@ public class CommonConfig {
           .define("friendlyFire", false);
       enableCompanionGhost = builder.comment("Enable / Disable ghosts for died player companions.")
           .define("enableCompanionGhost", true);
+      builder.pop();
+
+      // Gui Settings
+      builder.push("General");
+      guiPosition = builder.comment("Position for the gui elements.").defineEnum("guiPosition",
+          GuiPosition.HOTBAR_RIGHT);
+      guiOffsetX = builder.comment("The offset on X axis from chosen position.")
+          .defineInRange("guiOffsetX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+      guiOffsetY = builder.comment("The offset on X axis from chosen position.")
+          .defineInRange("guiOffsetY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
       builder.pop();
 
       // Small Slime
@@ -113,4 +130,14 @@ public class CommonConfig {
 
     }
   }
+
+  @SubscribeEvent
+  public static void handleModConfigReloadEvent(ModConfigEvent.Reloading event) {
+    ModConfig config = event.getConfig();
+    if (config.getSpec() != commonSpec) {
+      return;
+    }
+    log.info("Reload common config file {} ...", config.getFileName());
+  }
+
 }

@@ -21,7 +21,7 @@ package de.markusbordihn.playercompanions.commands;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import de.markusbordihn.playercompanions.Constants;
+
 import com.mojang.brigadier.CommandDispatcher;
 
 import net.minecraft.commands.CommandSourceStack;
@@ -32,6 +32,8 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.server.ServerLifecycleHooks;
+
+import de.markusbordihn.playercompanions.Constants;
 
 @EventBusSubscriber
 public class CommandManager {

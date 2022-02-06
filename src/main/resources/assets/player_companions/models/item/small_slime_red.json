@@ -1,0 +1,6 @@
+{
+  "parent": "player_companions:item/small_slime",
+  "textures": {
+    "texture": "player_companions:entity/small_slime/small_slime_red"
+  }
+}

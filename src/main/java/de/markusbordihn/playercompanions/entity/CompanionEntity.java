@@ -83,13 +83,13 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.utils.Names;
 
 @EventBusSubscriber
-public class CompanionEntity extends TamableAnimal {
+public class CompanionEntity extends TamableAnimal implements TameablePlayerCompanion {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   public static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   // Entity Data and Tags
@@ -103,14 +103,14 @@ public class CompanionEntity extends TamableAnimal {
       SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
       SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
-  private static final EntityDataAccessor<Integer> DATA_RESPAWN_TICKER =
+  private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
       SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
   private static final String DATA_COLOR_TAG = "Color";
   private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
   private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
   private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
   private static final String DATA_REMAINING_ANGER_TIME_TAG = "CompanionAngerTimeRemaining";
-  private static final String DATA_RESPAWN_TICKER_TAG = "CompanionRespawnTicker";
+  private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
 
   // Custom name format
   private static final ResourceLocation CUSTOM_NAME =
@@ -119,16 +119,18 @@ public class CompanionEntity extends TamableAnimal {
       new ResourceLocation(Constants.MOD_ID, "monster_tamed");
   private static final ResourceLocation RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "monster_respawn_message");
+  private static final ResourceLocation WILL_RESPAWN_MESSAGE =
+      new ResourceLocation(Constants.MOD_ID, "monster_will_respawn_message");
 
   // Config settings
   private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
+  private static int respawnDelay = COMMON.respawnDelay.get();
 
   // Temporary states
   private boolean isActive = true;
   private boolean isFlying = false;
   private boolean isKeepOnJumping = false;
   private boolean isTamable = true;
-  private int respawnTicker = 0;
   private boolean wasOnGround;
   private CompanionType companionType = CompanionType.UNKNOWN;
 
@@ -146,6 +148,13 @@ public class CompanionEntity extends TamableAnimal {
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     respawnOnDeath = COMMON.respawnOnDeath.get();
+    respawnDelay = COMMON.respawnDelay.get();
+    if (respawnOnDeath) {
+      log.info("{} will be respawn on death with a {} secs delay.", Constants.LOG_ICON_NAME,
+          COMMON.respawnDelay.get(), respawnDelay);
+    } else {
+      log.warn("{} will NOT respawn on death!", Constants.LOG_ICON_NAME);
+    }
   }
 
   public static AttributeSupplier.Builder createAttributes() {
@@ -183,6 +192,10 @@ public class CompanionEntity extends TamableAnimal {
 
   public CompanionType getCompanionType() {
     return this.companionType;
+  }
+
+  public Item getCompanionItem() {
+    return null;
   }
 
   public void setCompanionType(CompanionType type) {
@@ -229,6 +242,9 @@ public class CompanionEntity extends TamableAnimal {
     this.setCustomName(
         new TranslatableComponent(Util.makeDescriptionId("entity", CUSTOM_NAME_TAMED),
             new TextComponent(getCustomCompanionName()), player.getName()));
+    if (player instanceof ServerPlayer) {
+      PlayerCompanionsServerData.get().updateOrRegisterCompanion(this);
+    }
   }
 
   protected ParticleOptions getParticleType() {
@@ -292,42 +308,27 @@ public class CompanionEntity extends TamableAnimal {
     this.persistentAngerTarget = uuid;
   }
 
-  public int getRespawnTicker() {
-    return this.entityData.get(DATA_RESPAWN_TICKER);
+  public int getRespawnTimer() {
+    return this.entityData.get(DATA_RESPAWN_TIMER);
   }
 
-  public void setRespawnTicker(int ticks) {
-    this.entityData.set(DATA_RESPAWN_TICKER, ticks);
-    this.respawnTicker = ticks;
-  }
-
-  public boolean hasRespawnTimer() {
-    return this.getRespawnTicker() > 0;
-  }
-
-  public void setRespawnTimer(int respawnTime) {
-    if (respawnTime > 0) {
+  public void setRespawnTimer(int timer) {
+    if (timer > java.time.Instant.now().getEpochSecond()) {
       isActive = false;
-      if (!this.isInvisible()) {
-        this.setInvisible(true);
-      }
     }
-    this.setRespawnTicker(respawnTime);
-    PlayerCompanionsData.get().updateCompanion(this);
+    this.entityData.set(DATA_RESPAWN_TIMER, timer);
+    PlayerCompanionsServerData.get().updatePlayerCompanion(this);
   }
 
-  public void respawnCompanion() {
+  public void stopRespawnTimer() {
     isActive = true;
-    this.setRespawnTicker(0);
+    this.setRespawnTimer(0);
     LivingEntity owner = this.getOwner();
     if (owner != null) {
       owner.sendMessage(new TranslatableComponent(Util.makeDescriptionId("entity", RESPAWN_MESSAGE),
           this.getCustomCompanionName()), Util.NIL_UUID);
     }
-    if (this.isInvisible()) {
-      this.setInvisible(false);
-    }
-    PlayerCompanionsData.get().updateCompanion(this);
+    PlayerCompanionsServerData.get().updatePlayerCompanion(this);
   }
 
   public boolean hasOwner() {
@@ -344,10 +345,34 @@ public class CompanionEntity extends TamableAnimal {
   }
 
   @Override
+  public boolean canTamePlayerCompanion(ItemStack itemStack, Player player,
+      LivingEntity livingEntity, InteractionHand hand) {
+    return isTamable && !this.isTame() && getTameItem() != null && itemStack.is(getTameItem())
+        && player.getInventory().canPlaceItem(1, itemStack);
+  }
+
+  @Override
+  public InteractionResult tamePlayerCompanion(ItemStack itemStack, Player player,
+      LivingEntity livingEntity, InteractionHand hand) {
+    if (!player.getAbilities().instabuild) {
+      itemStack.shrink(1);
+    }
+    if (this.random.nextInt(4) == 0
+        && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
+      this.tameAndFollow(player);
+      this.level.broadcastEntityEvent(this, (byte) 7);
+      return InteractionResult.SUCCESS;
+    } else {
+      this.level.broadcastEntityEvent(this, (byte) 6);
+      return InteractionResult.CONSUME;
+    }
+  }
+
+  @Override
   public void tame(Player player) {
     super.tame(player);
     if (player instanceof ServerPlayer) {
-      PlayerCompanionsData.get().updateOrRegisterCompanion(this);
+      PlayerCompanionsServerData.get().updateOrRegisterCompanion(this);
     }
   }
 
@@ -408,29 +433,17 @@ public class CompanionEntity extends TamableAnimal {
       return isOwnedOrTamed ? InteractionResult.CONSUME : InteractionResult.PASS;
     }
 
-    // Tame companion with tame item.
-    if (isTamable && !this.isTame() && getTameItem() != null && itemStack.is(getTameItem())) {
-      if (this.random.nextInt(4) == 0
-          && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
-        this.tameAndFollow(player);
-        if (!player.getAbilities().instabuild) {
-          itemStack.shrink(1);
-        }
-        this.level.broadcastEntityEvent(this, (byte) 7);
-        return InteractionResult.SUCCESS;
-      } else {
-        this.level.broadcastEntityEvent(this, (byte) 6);
-        return InteractionResult.CONSUME;
-      }
-    }
-
     // Health companion with food item, from any player.
     Item item = itemStack.getItem();
-    if (this.isFood(itemStack) && this.isTame() && this.getHealth() < this.getMaxHealth()) {
+    if (this.isTame() && this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
       if (!player.getAbilities().instabuild) {
         itemStack.shrink(1);
       }
       this.heal(item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 0.5F);
+      SoundEvent eatingSound = this.getEatingSound(itemStack);
+      if (eatingSound != null) {
+        playSound(eatingSound, 1F, 1F);
+      }
       this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
       return InteractionResult.SUCCESS;
     }
@@ -467,7 +480,7 @@ public class CompanionEntity extends TamableAnimal {
     this.entityData.define(DATA_EXPERIENCE, 0);
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 0);
     this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
-    this.entityData.define(DATA_RESPAWN_TICKER, 0);
+    this.entityData.define(DATA_RESPAWN_TIMER, 0);
   }
 
   @Override
@@ -477,7 +490,7 @@ public class CompanionEntity extends TamableAnimal {
     compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
     compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_EXPERIENCE_LEVEL_TAG, this.getExperienceLevel());
-    compoundTag.putInt(DATA_RESPAWN_TICKER_TAG, this.getRespawnTicker());
+    compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
   }
 
   @Override
@@ -493,15 +506,12 @@ public class CompanionEntity extends TamableAnimal {
     this.setExperienceLevel(compoundTag.getInt(DATA_EXPERIENCE_LEVEL_TAG));
 
     // Handle respawn ticker
-    if (compoundTag.contains(DATA_RESPAWN_TICKER_TAG)) {
-      this.setRespawnTicker(compoundTag.getInt(DATA_RESPAWN_TICKER_TAG));
-      if (this.getRespawnTicker() > 0) {
-        setRespawnTimer(this.getRespawnTicker());
-      }
+    if (compoundTag.contains(DATA_RESPAWN_TIMER_TAG)) {
+      this.setRespawnTimer(compoundTag.getInt(DATA_RESPAWN_TIMER_TAG));
     }
 
     // Register or update Companion
-    PlayerCompanionsData.get().updateOrRegisterCompanion(this);
+    PlayerCompanionsServerData.get().updateOrRegisterCompanion(this);
   }
 
   @Override
@@ -521,19 +531,13 @@ public class CompanionEntity extends TamableAnimal {
 
   @Override
   public void tick() {
-    // Allow do disable entity to save performance and to allow basic respawn logic.
-    if (!isActive) {
-      if (respawnTicker > 1) {
-        respawnTicker--;
-      }
-      if (respawnTicker == 1) {
-        respawnCompanion();
-      }
-      return;
-    }
-
     // Perform tick for AI and other important steps.
     super.tick();
+
+    // Allow do disable entity to save performance and to allow basic respawn logic.
+    if (!isActive) {
+      return;
+    }
 
     // Shows particle and play sound after jump or fall.
     if (this.onGround && !this.wasOnGround) {
@@ -552,6 +556,29 @@ public class CompanionEntity extends TamableAnimal {
       }
     }
     this.wasOnGround = this.onGround;
+  }
+
+  @Override
+  public void die(DamageSource damageSource) {
+    LivingEntity owner = getOwner();
+
+    // Remove fire, effects and items before dying but before we are storing the data.
+    clearFire();
+    dropLeash(true, true);
+    removeAllEffects();
+
+    if (isTame() || owner != null) {
+      if (respawnDelay > 1) {
+        setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
+      }
+      if (respawnOnDeath) {
+        owner.sendMessage(
+            new TranslatableComponent(Util.makeDescriptionId("entity", WILL_RESPAWN_MESSAGE),
+                getCustomCompanionName(), respawnDelay),
+            Util.NIL_UUID);
+      }
+    }
+    super.die(damageSource);
   }
 
   @Override

@@ -64,7 +64,6 @@ public class EntityManager {
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     respawnOnDeath = COMMON.respawnOnDeath.get();
-    event.getServer();
     respawnDelay = COMMON.respawnDelay.get() * (1000 / MinecraftServer.MS_PER_TICK);
     if (respawnOnDeath) {
       log.info("{} will be respawn on death with a {} secs / {} ticks delay.",
@@ -89,9 +88,10 @@ public class EntityManager {
     }
 
     // Prevent attack damage
-    if (preventAttack((CompanionEntity) entity, event.getSource(), event.getAmount())) {
-      event.setCanceled(true);
-    }
+    /*
+     * if (preventAttack((CompanionEntity) entity, event.getSource(), event.getAmount())) {
+     * event.setCanceled(true); }
+     */
   }
 
   @SubscribeEvent
@@ -104,9 +104,10 @@ public class EntityManager {
     }
 
     // Prevent hurt damage
-    if (preventAttack((CompanionEntity) entity, event.getSource(), event.getAmount())) {
-      event.setCanceled(true);
-    }
+    /*
+     * if (preventAttack((CompanionEntity) entity, event.getSource(), event.getAmount())) {
+     * event.setCanceled(true); }
+     */
   }
 
   @SubscribeEvent
@@ -120,13 +121,28 @@ public class EntityManager {
 
     CompanionEntity monsterEntity = (CompanionEntity) entity;
     LivingEntity owner = monsterEntity.getOwner();
-
-    // Protect monster entity in the case it has a valid owner.
+/*
     if (monsterEntity.isTame() && owner != null) {
-      // Chancel event to avoid dead.
-      event.setCanceled(true);
-      preventDead(monsterEntity, event.getSource());
-    }
+      // Set respawn timer, if needed.
+      if (respawnDelay > 1) {
+        monsterEntity.setRespawnTimer(respawnDelay);
+
+        // Send death message to the owner.
+        net.minecraft.network.chat.Component deathMessage =
+            monsterEntity.getCombatTracker().getDeathMessage();
+        if (!monsterEntity.level.isClientSide
+            && monsterEntity.level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES)
+            && owner instanceof ServerPlayer) {
+          owner.sendMessage(deathMessage, Util.NIL_UUID);
+          if (respawnOnDeath) {
+            owner.sendMessage(
+                new TranslatableComponent(Util.makeDescriptionId("entity", RESPAWN_MESSAGE),
+                    monsterEntity.getCustomCompanionName(), respawnDelay),
+                Util.NIL_UUID);
+          }
+        }
+      }
+    }*/
   }
 
   public static void preventDead(CompanionEntity monsterEntity, DamageSource source) {
@@ -140,8 +156,8 @@ public class EntityManager {
     // Clear fire, remove effects, unleash and heal.
     monsterEntity.clearFire();
     monsterEntity.dropLeash(true, true);
-    monsterEntity.heal(monsterEntity.getMaxHealth());
     monsterEntity.removeAllEffects();
+    monsterEntity.heal(monsterEntity.getMaxHealth());
     monsterEntity.setHealth(monsterEntity.getMaxHealth());
 
     // Reset target from damage source.

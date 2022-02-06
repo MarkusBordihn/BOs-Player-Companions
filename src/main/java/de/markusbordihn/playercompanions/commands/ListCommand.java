@@ -31,7 +31,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 import de.markusbordihn.playercompanions.data.PlayerCompanion;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 
 public class ListCommand extends CustomCommand {
   private static final ListCommand command = new ListCommand();
@@ -42,7 +42,7 @@ public class ListCommand extends CustomCommand {
 
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-    Map<UUID, PlayerCompanion> playerCompanionsMap = PlayerCompanionsData.get().getCompanions();
+    Map<UUID, PlayerCompanion> playerCompanionsMap = PlayerCompanionsServerData.get().getCompanions();
     Iterator<PlayerCompanion> playerCompanionIterator = playerCompanionsMap.values().iterator();
     sendFeedback(context, "Player Companions List (please check latest.log for full output)\n===");
     while (playerCompanionIterator.hasNext()) {

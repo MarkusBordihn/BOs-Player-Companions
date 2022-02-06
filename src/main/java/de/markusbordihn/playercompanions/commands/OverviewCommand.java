@@ -29,8 +29,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
+
 import de.markusbordihn.playercompanions.data.PlayerCompanion;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 
 public class OverviewCommand extends CustomCommand {
   private static final OverviewCommand command = new OverviewCommand();
@@ -42,7 +43,7 @@ public class OverviewCommand extends CustomCommand {
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
     ServerPlayer player = context.getSource().getPlayerOrException();
-    Set<PlayerCompanion> playerCompanionsSet = PlayerCompanionsData.get().getCompanions(player.getUUID());
+    Set<PlayerCompanion> playerCompanionsSet = PlayerCompanionsServerData.get().getCompanions(player.getUUID());
     if (playerCompanionsSet.isEmpty()) {
       sendFeedback(context, "Unable to find any owned companions!");
       return 0;

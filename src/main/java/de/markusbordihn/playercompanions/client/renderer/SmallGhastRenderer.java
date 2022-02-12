@@ -21,11 +21,10 @@ package de.markusbordihn.playercompanions.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -42,7 +41,7 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<
       new ResourceLocation("textures/entity/ghast/ghast_shooting.png");
 
   public SmallGhastRenderer(EntityRendererProvider.Context context) {
-    super(context, new SmallGhastModel<>(context.bakeLayer(ModelLayers.GHAST)), 0.4F);
+    super(context, new SmallGhastModel<>(context.bakeLayer(ClientRenderer.SMALL_GHAST)), 0.4F);
   }
 
   public ResourceLocation getTextureLocation(SmallGhast entity) {
@@ -50,8 +49,10 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<
   }
 
   @Override
-  public Vec3 getRenderOffset(SmallGhast entity, float offset) {
-    return super.getRenderOffset(entity, offset).add(0, 0.5, 0);
+  public void render(SmallGhast entity, float p_115977_, float p_115978_, PoseStack poseStack,
+      MultiBufferSource buffer, int light) {
+    //poseStack.translate(0d, 0.75d, 0d);
+    super.render(entity, p_115977_, p_115978_, poseStack, buffer, light);
   }
 
   @Override

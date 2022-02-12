@@ -39,12 +39,14 @@ import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-import de.markusbordihn.playercompanions.entity.CompanionEntity;
-import de.markusbordihn.playercompanions.entity.CompanionType;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionType;
 
-public class GuardEntity extends CompanionEntity implements NeutralMob {
+public class GuardEntity extends PlayerCompanionEntity implements NeutralMob {
 
   private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING =
       SynchedEntityData.defineId(GuardEntity.class, EntityDataSerializers.BOOLEAN);
@@ -52,7 +54,8 @@ public class GuardEntity extends CompanionEntity implements NeutralMob {
   public GuardEntity(EntityType<? extends GuardEntity> entityType, Level level) {
     super(entityType, level);
     this.setTame(false);
-    this.setCompanionType(CompanionType.GUARD);
+    this.setCompanionType(PlayerCompanionType.GUARD);
+    this.setCompanionTypeIcon(new ItemStack(Items.NETHERITE_SWORD));
   }
 
   public boolean isCharging() {
@@ -66,10 +69,10 @@ public class GuardEntity extends CompanionEntity implements NeutralMob {
   class GuardAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
     private final GuardEntity guard;
 
-    public GuardAvoidEntityGoal(GuardEntity p_30454_, Class<T> p_30455_, float p_30456_,
+    public GuardAvoidEntityGoal(GuardEntity entity, Class<T> p_30455_, float p_30456_,
         double p_30457_, double p_30458_) {
-      super(p_30454_, p_30455_, p_30456_, p_30457_, p_30458_);
-      this.guard = p_30454_;
+      super(entity, p_30455_, p_30456_, p_30457_, p_30458_);
+      this.guard = entity;
     }
 
     @Override
@@ -115,7 +118,7 @@ public class GuardEntity extends CompanionEntity implements NeutralMob {
     this.goalSelector.addGoal(3,
         new GuardEntity.GuardAvoidEntityGoal<>(this, Llama.class, 24.0F, 1.5D, 1.5D));
     this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
-    this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 0.1D, true));
+    this.goalSelector.addGoal(5, new MeleeAttackGoal(this, this.flying() ? 0.25D : 1.0D, true));
     this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
     this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());

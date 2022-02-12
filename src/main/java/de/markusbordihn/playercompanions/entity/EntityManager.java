@@ -83,7 +83,7 @@ public class EntityManager {
     LivingEntity entity = event.getEntityLiving();
 
     // Ignore event if friendly fire is enabled!
-    if (friendlyFire || !(entity instanceof CompanionEntity)) {
+    if (friendlyFire || !(entity instanceof PlayerCompanionEntity)) {
       return;
     }
 
@@ -99,7 +99,7 @@ public class EntityManager {
     LivingEntity entity = event.getEntityLiving();
 
     // Ignore event if friendly fire is enabled!
-    if (friendlyFire || !(entity instanceof CompanionEntity)) {
+    if (friendlyFire || !(entity instanceof PlayerCompanionEntity)) {
       return;
     }
 
@@ -115,11 +115,11 @@ public class EntityManager {
     LivingEntity entity = event.getEntityLiving();
 
     // Ignore if feature is disabled or if it is another entity type.
-    if (!respawnOnDeath || !(entity instanceof CompanionEntity)) {
+    if (!respawnOnDeath || !(entity instanceof PlayerCompanionEntity)) {
       return;
     }
 
-    CompanionEntity monsterEntity = (CompanionEntity) entity;
+    PlayerCompanionEntity monsterEntity = (PlayerCompanionEntity) entity;
     LivingEntity owner = monsterEntity.getOwner();
 /*
     if (monsterEntity.isTame() && owner != null) {
@@ -145,7 +145,7 @@ public class EntityManager {
     }*/
   }
 
-  public static void preventDead(CompanionEntity monsterEntity, DamageSource source) {
+  public static void preventDead(PlayerCompanionEntity monsterEntity, DamageSource source) {
     LivingEntity owner = monsterEntity.getOwner();
 
     // Reset angry for neutral mobs, if needed.
@@ -203,7 +203,7 @@ public class EntityManager {
     }
   }
 
-  public static boolean preventAttack(CompanionEntity monsterEntity, DamageSource source,
+  public static boolean preventAttack(PlayerCompanionEntity monsterEntity, DamageSource source,
       float damage) {
     // Sneaking will bypass the protection.
     if (monsterEntity == null || source == null || monsterEntity.getOwner() == null

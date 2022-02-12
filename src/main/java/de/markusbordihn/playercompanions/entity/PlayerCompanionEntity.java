@@ -29,12 +29,10 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -53,7 +51,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -63,14 +60,8 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -82,66 +73,43 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.utils.Names;
 
 @EventBusSubscriber
-public class CompanionEntity extends TamableAnimal implements TameablePlayerCompanion {
+public class PlayerCompanionEntity extends PlayerCompanionEntityData
+    implements TameablePlayerCompanion {
 
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   public static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
-  // Entity Data and Tags
-  private static final EntityDataAccessor<Integer> DATA_COLOR =
-      SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
-  private static final EntityDataAccessor<String> DATA_CUSTOM_COMPANION_NAME =
-      SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.STRING);
-  private static final EntityDataAccessor<Integer> DATA_EXPERIENCE_LEVEL =
-      SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
-  private static final EntityDataAccessor<Integer> DATA_EXPERIENCE =
-      SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
-  private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
-      SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
-  private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
-      SynchedEntityData.defineId(CompanionEntity.class, EntityDataSerializers.INT);
-  private static final String DATA_COLOR_TAG = "Color";
-  private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
-  private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
-  private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
-  private static final String DATA_REMAINING_ANGER_TIME_TAG = "CompanionAngerTimeRemaining";
-  private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
-
   // Custom name format
   private static final ResourceLocation CUSTOM_NAME =
-      new ResourceLocation(Constants.MOD_ID, "monster");
+      new ResourceLocation(Constants.MOD_ID, "companion");
   private static final ResourceLocation CUSTOM_NAME_TAMED =
-      new ResourceLocation(Constants.MOD_ID, "monster_tamed");
+      new ResourceLocation(Constants.MOD_ID, "companion_tamed");
   private static final ResourceLocation RESPAWN_MESSAGE =
-      new ResourceLocation(Constants.MOD_ID, "monster_respawn_message");
+      new ResourceLocation(Constants.MOD_ID, "companion_respawn_message");
   private static final ResourceLocation WILL_RESPAWN_MESSAGE =
-      new ResourceLocation(Constants.MOD_ID, "monster_will_respawn_message");
+      new ResourceLocation(Constants.MOD_ID, "companion_will_respawn_message");
 
   // Config settings
   private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
   private static int respawnDelay = COMMON.respawnDelay.get();
 
   // Temporary states
-  private boolean isActive = true;
-  private boolean isFlying = false;
-  private boolean isKeepOnJumping = false;
-  private boolean isTamable = true;
   private boolean wasOnGround;
-  private CompanionType companionType = CompanionType.UNKNOWN;
 
   // Anger state
   private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
   @Nullable
   private UUID persistentAngerTarget;
 
-  public CompanionEntity(EntityType<? extends CompanionEntity> entityType, Level level) {
+  public PlayerCompanionEntity(EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level) {
     super(entityType, level);
-    this.moveControl = new CompanionEntityMoveControl(this);
+    this.moveControl = new PlayerCompanionEntityMoveControl(this);
     this.setTame(false);
   }
 
@@ -182,48 +150,8 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
     return true;
   }
 
-  protected boolean keepOnJumping() {
-    return this.isKeepOnJumping;
-  }
-
-  protected void keepOnJumping(boolean keepOnJumping) {
-    this.isKeepOnJumping = keepOnJumping;
-  }
-
-  public CompanionType getCompanionType() {
-    return this.companionType;
-  }
-
   public Item getCompanionItem() {
     return null;
-  }
-
-  public void setCompanionType(CompanionType type) {
-    this.companionType = type;
-  }
-
-  protected boolean flying() {
-    return this.isFlying;
-  }
-
-  protected void flying(boolean flying) {
-    this.isFlying = flying;
-  }
-
-  protected int getJumpDelay() {
-    return this.random.nextInt(20) + 10;
-  }
-
-  protected int getWaitDelay() {
-    return this.random.nextInt(200) + 10;
-  }
-
-  protected int getJumpMoveDelay() {
-    return 10;
-  }
-
-  protected float getSoundPitch() {
-    return ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
   }
 
   protected void tameAndFollow(Player player) {
@@ -247,52 +175,19 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
     }
   }
 
+  protected void pet() {
+    // Heal pet by 0.1 points.
+    if (this.getHealth() < this.getMaxHealth()) {
+      this.setHealth((float) (this.getHealth() + 0.1));
+    }
+  }
+
+  public SoundEvent getPetSound() {
+    return SoundEvents.WOLF_WHINE;
+  }
+
   protected ParticleOptions getParticleType() {
     return null;
-  }
-
-  protected String getRandomName() {
-    return Names.getRandomMobName();
-  }
-
-  public DyeColor getColor() {
-    return DyeColor.byId(this.entityData.get(DATA_COLOR));
-  }
-
-  public void setColor(DyeColor dyeColor) {
-    this.entityData.set(DATA_COLOR, dyeColor.getId());
-  }
-
-  public String getCustomCompanionName() {
-    return this.entityData.get(DATA_CUSTOM_COMPANION_NAME);
-  }
-
-  public void setCustomCompanionName(String name) {
-    this.entityData.set(DATA_CUSTOM_COMPANION_NAME, name);
-  }
-
-  public Integer getExperience() {
-    return this.entityData.get(DATA_EXPERIENCE);
-  }
-
-  public void setExperience(Integer experience) {
-    this.entityData.set(DATA_EXPERIENCE, experience);
-  }
-
-  public Integer getExperienceLevel() {
-    return this.entityData.get(DATA_EXPERIENCE_LEVEL);
-  }
-
-  public void setExperienceLevel(Integer experience) {
-    this.entityData.set(DATA_EXPERIENCE_LEVEL, experience);
-  }
-
-  public int getRemainingPersistentAngerTime() {
-    return this.entityData.get(DATA_REMAINING_ANGER_TIME);
-  }
-
-  public void setRemainingPersistentAngerTime(int angerTime) {
-    this.entityData.set(DATA_REMAINING_ANGER_TIME, angerTime);
   }
 
   public void startPersistentAngerTimer() {
@@ -308,21 +203,32 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
     this.persistentAngerTarget = uuid;
   }
 
-  public int getRespawnTimer() {
-    return this.entityData.get(DATA_RESPAWN_TIMER);
+  public void addParticle(ParticleOptions particleOptions) {
+    for (int i = 0; i < 4; ++i) {
+      float randomCircleDistance = this.random.nextFloat() * ((float) Math.PI * 2F);
+      float randomOffset = this.random.nextFloat() * 0.5F + 0.5F;
+      float randomOffsetX = Mth.sin(randomCircleDistance) * 0.5F * randomOffset;
+      float randomOffsetZ = Mth.cos(randomCircleDistance) * 0.5F * randomOffset;
+      this.level.addParticle(particleOptions, this.getX() + randomOffsetX, this.getY(),
+          this.getZ() + randomOffsetZ, 0.0D, 0.0D, 0.0D);
+    }
   }
 
-  public void setRespawnTimer(int timer) {
-    if (timer > java.time.Instant.now().getEpochSecond()) {
-      isActive = false;
+  public void playSound(Player player, SoundEvent sound, float volume, float pitch) {
+    if (player.level.isClientSide) {
+      player.playSound(sound, volume, pitch);
     }
-    this.entityData.set(DATA_RESPAWN_TIMER, timer);
+  }
+
+  @Override
+  public void setRespawnTimer(int timer) {
+    super.setRespawnTimer(timer);
     PlayerCompanionsServerData.get().updatePlayerCompanion(this);
   }
 
+  @Override
   public void stopRespawnTimer() {
-    isActive = true;
-    this.setRespawnTimer(0);
+    super.stopRespawnTimer();
     LivingEntity owner = this.getOwner();
     if (owner != null) {
       owner.sendMessage(new TranslatableComponent(Util.makeDescriptionId("entity", RESPAWN_MESSAGE),
@@ -331,24 +237,11 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
     PlayerCompanionsServerData.get().updatePlayerCompanion(this);
   }
 
-  public boolean hasOwner() {
-    return this.getOwnerUUID() != null;
-  }
-
-  public boolean isWeapon(ItemStack itemStack) {
-    if (itemStack.isEmpty()) {
-      return false;
-    }
-    Item item = itemStack.getItem();
-    return item instanceof SwordItem || item instanceof CrossbowItem || item instanceof TridentItem
-        || item instanceof BowItem || item instanceof AxeItem;
-  }
-
   @Override
   public boolean canTamePlayerCompanion(ItemStack itemStack, Player player,
       LivingEntity livingEntity, InteractionHand hand) {
-    return isTamable && !this.isTame() && getTameItem() != null && itemStack.is(getTameItem())
-        && player.getInventory().canPlaceItem(1, itemStack);
+    return this.isTamable() && !this.isTame() && getTameItem() != null
+        && itemStack.is(getTameItem()) && player.getInventory().canPlaceItem(1, itemStack);
   }
 
   @Override
@@ -378,7 +271,7 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
 
   @Override
   public boolean causeFallDamage(float start, float end, DamageSource damageSource) {
-    if (this.isFlying) {
+    if (this.flying()) {
       return false;
     }
     return super.causeFallDamage(start, end, damageSource);
@@ -387,7 +280,7 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
   @Override
   protected void checkFallDamage(double height, boolean flag, BlockState blockState,
       BlockPos blockPos) {
-    if (this.isFlying) {
+    if (this.flying()) {
       return;
     }
     super.checkFallDamage(height, flag, blockState, blockPos);
@@ -395,7 +288,7 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
 
   @Override
   public boolean onClimbable() {
-    if (this.isFlying) {
+    if (this.flying()) {
       return false;
     }
     return super.onClimbable();
@@ -410,14 +303,17 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
   protected void registerGoals() {
     this.goalSelector.addGoal(1, new FloatGoal(this));
     this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-    this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, getFoodItems(), false));
+    this.goalSelector.addGoal(3, new TemptGoal(this, 0.5D, getFoodItems(), false));
+    if (!this.isTame()) {
+      this.goalSelector.addGoal(3, new TemptGoal(this, 1D, Ingredient.of(getTameItem()), false));
+    }
     this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 5.0F, 1.0F, true));
     this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
     this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
   }
 
   @Override
-  public CompanionEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+  public PlayerCompanionEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
     return null;
   }
 
@@ -425,6 +321,17 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
   public InteractionResult mobInteract(Player player, InteractionHand hand) {
     ItemStack itemStack = player.getItemInHand(hand);
     boolean isOwner = this.isTame() && this.isOwnedBy(player);
+
+    // Pet Player Companion
+    if (isOwner && player.isCrouching()) {
+      log.info("Pet Companion...");
+      this.pet();
+      this.addParticle(ParticleTypes.HEART);
+      if (this.getPetSound() != null) {
+        this.playSound(player, this.getPetSound(), 1.0F, 1.0F);
+      }
+      return InteractionResult.SUCCESS;
+    }
 
     // Early return for client side events.
     if (this.level.isClientSide) {
@@ -448,17 +355,22 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
       return InteractionResult.SUCCESS;
     }
 
-    // Order to sit is hand is empty or has an weapon in hand (during compat)
-    if (isOwner && (itemStack.isEmpty() || isWeapon(itemStack))) {
-      if (this.isOrderedToSit()) {
-        this.setOrderedToSit(false);
-        this.navigation.recomputePath();
-      } else {
-        this.setOrderedToSit(true);
-        this.navigation.stop();
-        this.setTarget((LivingEntity) null);
+    // Handler Order Commands with CTRL Key pressed
+    boolean ctrlKeyPressed = ModKeyMapping.KEY_COMMAND.isDown();
+    if (ctrlKeyPressed) {
+
+      // Order to sit is hand is empty or has an weapon in hand (during compat)
+      if (isOwner && (itemStack.isEmpty() || isWeapon(itemStack))) {
+        if (this.isOrderedToSit()) {
+          this.setOrderedToSit(false);
+          this.navigation.recomputePath();
+        } else {
+          this.setOrderedToSit(true);
+          this.navigation.stop();
+          this.setTarget((LivingEntity) null);
+        }
+        return InteractionResult.SUCCESS;
       }
-      return InteractionResult.SUCCESS;
     }
 
     return super.mobInteract(player, hand);
@@ -473,44 +385,8 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
   }
 
   @Override
-  protected void defineSynchedData() {
-    super.defineSynchedData();
-    this.entityData.define(DATA_COLOR, DyeColor.GREEN.getId());
-    this.entityData.define(DATA_CUSTOM_COMPANION_NAME, getRandomName());
-    this.entityData.define(DATA_EXPERIENCE, 0);
-    this.entityData.define(DATA_EXPERIENCE_LEVEL, 0);
-    this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
-    this.entityData.define(DATA_RESPAWN_TIMER, 0);
-  }
-
-  @Override
-  public void addAdditionalSaveData(CompoundTag compoundTag) {
-    super.addAdditionalSaveData(compoundTag);
-    compoundTag.putByte(DATA_COLOR_TAG, (byte) this.getColor().getId());
-    compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
-    compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
-    compoundTag.putInt(DATA_EXPERIENCE_LEVEL_TAG, this.getExperienceLevel());
-    compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
-  }
-
-  @Override
   public void readAdditionalSaveData(CompoundTag compoundTag) {
     super.readAdditionalSaveData(compoundTag);
-    if (compoundTag.contains(DATA_COLOR_TAG, 99)) {
-      this.setColor(DyeColor.byId(compoundTag.getInt(DATA_COLOR_TAG)));
-    }
-    if (compoundTag.contains(DATA_CUSTOM_COMPANION_NAME_TAG)) {
-      this.setCustomCompanionName(compoundTag.getString(DATA_CUSTOM_COMPANION_NAME_TAG));
-    }
-    this.setExperience(compoundTag.getInt(DATA_EXPERIENCE_TAG));
-    this.setExperienceLevel(compoundTag.getInt(DATA_EXPERIENCE_LEVEL_TAG));
-
-    // Handle respawn ticker
-    if (compoundTag.contains(DATA_RESPAWN_TIMER_TAG)) {
-      this.setRespawnTimer(compoundTag.getInt(DATA_RESPAWN_TIMER_TAG));
-    }
-
-    // Register or update Companion
     PlayerCompanionsServerData.get().updateOrRegisterCompanion(this);
   }
 
@@ -535,7 +411,7 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
     super.tick();
 
     // Allow do disable entity to save performance and to allow basic respawn logic.
-    if (!isActive) {
+    if (!isActive()) {
       return;
     }
 
@@ -579,6 +455,12 @@ public class CompanionEntity extends TamableAnimal implements TameablePlayerComp
       }
     }
     super.die(damageSource);
+  }
+
+  @Override
+  public void setOrderedToSit(boolean sit) {
+    super.setOrderedToSit(sit);
+    PlayerCompanionsServerData.get().updatePlayerCompanion(this);
   }
 
   @Override

@@ -39,7 +39,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.CompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 
@@ -74,7 +74,7 @@ public class CompanionTameItem extends Item {
   }
 
   public boolean canTameCompanion(LivingEntity livingEntity) {
-    return livingEntity instanceof CompanionEntity;
+    return livingEntity instanceof PlayerCompanionEntity;
   }
 
   public boolean canTameCompanionType(String mobType) {
@@ -104,7 +104,7 @@ public class CompanionTameItem extends Item {
           InteractionResult result =
               tameablePlayerCompanion.tamePlayerCompanion(itemStack, player, livingEntity, hand);
           if (result == InteractionResult.SUCCESS) {
-            if (livingEntity instanceof CompanionEntity companionEntity) {
+            if (livingEntity instanceof PlayerCompanionEntity companionEntity) {
               Item companionItem = companionEntity.getCompanionItem();
               if (companionItem != null) {
                 convertEntityToItem(companionItem, player, livingEntity, hand);

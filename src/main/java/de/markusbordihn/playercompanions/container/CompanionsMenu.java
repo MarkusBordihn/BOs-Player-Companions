@@ -35,7 +35,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.slots.FavouriteCompanionSlot;
-import de.markusbordihn.playercompanions.data.PlayerCompanion;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.item.ModItems;
 

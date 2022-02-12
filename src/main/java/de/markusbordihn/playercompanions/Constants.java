@@ -36,4 +36,5 @@ public final class Constants {
 
   // Prefixes
   public static final String TEXT_PREFIX = "text.player_companions.";
+  public static final String KEY_PREFIX = "key.player_companions.";
 }

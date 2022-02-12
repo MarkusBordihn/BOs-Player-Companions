@@ -35,10 +35,12 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -209,8 +211,8 @@ public class SmallSlime extends FollowerEntity {
   }
 
   @Override
-  public Vec3 getLeashOffset() {
-    return new Vec3(0.0D, 1.7F * this.getEyeHeight(), this.getBbWidth() * 0.4F);
+  public SoundEvent getPetSound() {
+    return SoundEvents.SLIME_SQUISH;
   }
 
   @Override
@@ -226,6 +228,16 @@ public class SmallSlime extends FollowerEntity {
   @Override
   protected SoundEvent getDeathSound() {
     return SoundEvents.SLIME_DEATH_SMALL;
+  }
+
+  @Override
+  public Vec3 getLeashOffset() {
+    return new Vec3(0.0D, 0.2F * this.getEyeHeight(), this.getBbWidth() * 0.4F);
+  }
+
+  @Override
+  public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
+    return 0.35F;
   }
 
 }

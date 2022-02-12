@@ -27,15 +27,17 @@ import com.google.gson.JsonSyntaxException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import org.stringtemplate.v4.compiler.STParser.compoundElement_return;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
 public class PlayerCompanionsClientData {
@@ -43,15 +45,15 @@ public class PlayerCompanionsClientData {
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static long lastUpdate;
-  private static Set<PlayerCompanion> playerCompanionsSet = ConcurrentHashMap.newKeySet();
-  private static ConcurrentHashMap<UUID, PlayerCompanion> playerCompanionsMap =
+  private static Set<PlayerCompanionData> playerCompanionsSet = ConcurrentHashMap.newKeySet();
+  private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
       new ConcurrentHashMap<>();
 
   protected PlayerCompanionsClientData() {
 
   }
 
-  public static PlayerCompanion getCompanion(ItemStack itemStack) {
+  public static PlayerCompanionData getCompanion(ItemStack itemStack) {
     UUID companionUUID = null;
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     if (compoundTag.hasUUID(CapturedCompanion.COMPANION_UUID_TAG)) {
@@ -63,11 +65,18 @@ public class PlayerCompanionsClientData {
     return null;
   }
 
-  public static PlayerCompanion getCompanion(UUID companionUUID) {
+  public static PlayerCompanionData getCompanion(UUID companionUUID) {
     return playerCompanionsMap.get(companionUUID);
   }
 
-  public static Set<PlayerCompanion> getCompanions() {
+  public static PlayerCompanionData getCompanion(LivingEntity livingEntity) {
+    if (livingEntity instanceof PlayerCompanionEntity companionEntity) {
+      return playerCompanionsMap.get(companionEntity.getUUID());
+    }
+    return null;
+  }
+
+  public static Set<PlayerCompanionData> getCompanions() {
     return playerCompanionsSet;
   }
 
@@ -96,7 +105,7 @@ public class PlayerCompanionsClientData {
     if (compoundTag.contains(PlayerCompanionsServerData.COMPANIONS_TAG)) {
       ListTag companionListTag = compoundTag.getList(PlayerCompanionsServerData.COMPANIONS_TAG, 10);
       for (int i = 0; i < companionListTag.size(); ++i) {
-        PlayerCompanion playerCompanion = new PlayerCompanion(companionListTag.getCompound(i));
+        PlayerCompanionData playerCompanion = new PlayerCompanionData(companionListTag.getCompound(i));
         playerCompanionsMap.put(playerCompanion.getUUID(), playerCompanion);
         playerCompanionsSet.add(playerCompanion);
       }

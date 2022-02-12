@@ -30,10 +30,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.collector.Snail;
 import de.markusbordihn.playercompanions.entity.follower.SmallSlime;
 import de.markusbordihn.playercompanions.entity.guard.GuardEntity;
 import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
-import de.markusbordihn.playercompanions.entity.healer.Snail;
 
 @EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntityType {
@@ -45,7 +45,7 @@ public class ModEntityType {
   public static final DeferredRegister<EntityType<?>> ENTITIES =
       DeferredRegister.create(ForgeRegistries.ENTITIES, Constants.MOD_ID);
 
-  // Healer Entity
+  // Collector Entity
   public static final RegistryObject<EntityType<Snail>> SNAIL =
       ENTITIES.register(Snail.ID, () -> EntityType.Builder.<Snail>of(Snail::new, Snail.CATEGORY)
           .sized(0.9F, 1.2F).clientTrackingRange(12).build(Snail.ID));

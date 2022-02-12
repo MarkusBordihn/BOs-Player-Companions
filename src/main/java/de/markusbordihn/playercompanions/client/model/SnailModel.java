@@ -59,13 +59,13 @@ public class SnailModel<T extends Entity> extends HierarchicalModel<T> {
     PartDefinition eyes = partDefinition.addOrReplaceChild("eyes", CubeListBuilder.create(),
         PartPose.offset(0.0F, 15.75F, -4.5F));
 
-    PartDefinition right_eye = eyes.addOrReplaceChild("right_eye",
+    PartDefinition rightEye = eyes.addOrReplaceChild("right_eye",
         CubeListBuilder.create().texOffs(0, 0)
             .addBox(-2.5F, -2.75F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(0, 4)
             .addBox(-2.0F, -0.75F, -0.5F, 1.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 0.0F, 0.0F));
 
-    PartDefinition left_eye = eyes.addOrReplaceChild("left_eye",
+    PartDefinition leftEye = eyes.addOrReplaceChild("left_eye",
         CubeListBuilder.create().texOffs(0, 0)
             .addBox(0.5F, -2.75F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(0, 4)
             .addBox(1.0F, -0.75F, -0.5F, 1.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)),

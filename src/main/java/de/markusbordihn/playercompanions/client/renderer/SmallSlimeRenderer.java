@@ -21,13 +21,9 @@ package de.markusbordihn.playercompanions.client.renderer;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,16 +37,9 @@ import de.markusbordihn.playercompanions.entity.follower.SmallSlime;
 public class SmallSlimeRenderer extends MobRenderer<SmallSlime, SmallSlimeModel<SmallSlime>> {
 
   public SmallSlimeRenderer(EntityRendererProvider.Context context) {
-    super(context, new SmallSlimeModel<>(context.bakeLayer(ClientRenderer.SMALL_SLIME)), 0.26F);
+    super(context, new SmallSlimeModel<>(context.bakeLayer(ClientRenderer.SMALL_SLIME)), 0.4F);
     this.addLayer(new SmallSlimeOuterLayer<>(this, context.getModelSet()));
     this.addLayer(new SmallSlimeStatusLayer(this));
-  }
-
-  @Override
-  public void render(SmallSlime entity, float p_115977_, float p_115978_, PoseStack poseStack,
-      MultiBufferSource buffer, int p_115981_) {
-    this.shadowRadius = 0.4F;
-    super.render(entity, p_115977_, p_115978_, poseStack, buffer, p_115981_);
   }
 
   @Nullable

@@ -29,7 +29,7 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CompanionEntityMoveControl extends MoveControl {
+public class PlayerCompanionEntityMoveControl extends MoveControl {
   public static final float MIN_SPEED = 5.0E-4F;
   public static final float MIN_SPEED_SQR = 2.5000003E-7F;
   protected static final int MAX_TURN = 90;
@@ -37,7 +37,7 @@ public class CompanionEntityMoveControl extends MoveControl {
   private int jumpMoveDelay;
   private int waitDelay;
 
-  public CompanionEntityMoveControl(Mob mob) {
+  public PlayerCompanionEntityMoveControl(Mob mob) {
     super(mob);
   }
 
@@ -48,7 +48,7 @@ public class CompanionEntityMoveControl extends MoveControl {
 
   @Override
   public void tick() {
-    if (this.mob instanceof CompanionEntity companionEntity) {
+    if (this.mob instanceof PlayerCompanionEntity companionEntity) {
 
       // More advanced moving for Monsters
       if (this.operation == MoveControl.Operation.MOVE_TO) {
@@ -92,16 +92,18 @@ public class CompanionEntityMoveControl extends MoveControl {
             this.operation = MoveControl.Operation.JUMPING;
           }
         }
-      } else if (this.operation == MoveControl.Operation.WAIT && companionEntity.isOrderedToSit()) {
+      }
 
+      else if (this.operation == MoveControl.Operation.WAIT && companionEntity.isOrderedToSit()) {
         // Wait on place if ordered to sit.
         if (this.waitDelay-- <= 0) {
           this.waitDelay = companionEntity.getWaitDelay();
           this.mob.playSound(companionEntity.getWaitSound(), companionEntity.getSoundVolume(),
               companionEntity.getSoundPitch());
         }
-      } else if (this.operation == MoveControl.Operation.WAIT) {
+      }
 
+      else if (this.operation == MoveControl.Operation.WAIT) {
         // Keep jumping if not ordered to sit.
         if (companionEntity.keepOnJumping()
             && this.mob.isOnGround() && this.jumpDelay-- <= 0) {
@@ -113,6 +115,7 @@ public class CompanionEntityMoveControl extends MoveControl {
           }
         }
         this.mob.setZza(0.0F);
+
       } else {
         super.tick();
       }

@@ -49,7 +49,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanion;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
@@ -58,7 +58,10 @@ public class CapturedCompanion extends Item {
 
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
+  private static final String FALL_DISTANCE_TAG = "FallDistance";
+  private static final String FIRE_TAG = "Fire";
   private static final String HEALTH_TAG = "Health";
+
   public static final String COMPANION_UUID_TAG = "CompanionUUID";
 
   public CapturedCompanion() {
@@ -146,16 +149,25 @@ public class CapturedCompanion extends Item {
   }
 
   public Entity getCompanionEntity(ItemStack itemStack, Level level) {
-    PlayerCompanion playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
+    PlayerCompanionData playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
     EntityType<?> entityType = playerCompanion.getEntityType();
     CompoundTag entityData = playerCompanion.getEntityData();
     Entity entity = entityType.create(level);
     if (entity != null && !entityData.isEmpty()) {
 
       // Restore health, if needed
-      if (entityData.contains(HEALTH_TAG) && entityData.getFloat(HEALTH_TAG) <= 0.0) {
-        entityData.putFloat(HEALTH_TAG, 8.0F);
+      if (entityData.contains(HEALTH_TAG) && entityData.getFloat(HEALTH_TAG) <= 0) {
+        entityData.putFloat(HEALTH_TAG, playerCompanion.getEntityHealthMax());
       }
+
+      // Remove negative effects
+      if (entityData.contains(FIRE_TAG) && entityData.getShort(FIRE_TAG) > 0) {
+        entityData.putShort(FIRE_TAG, (short) 0);
+      }
+      if (entityData.contains(FALL_DISTANCE_TAG) && entityData.getFloat(FALL_DISTANCE_TAG) > 0) {
+        entityData.putFloat(FALL_DISTANCE_TAG, 0);
+      }
+
       entity.load(entityData);
     }
     return entity;
@@ -180,7 +192,7 @@ public class CapturedCompanion extends Item {
     }
 
     // Check if there is any active respawn timer.
-    PlayerCompanion playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
+    PlayerCompanionData playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
     if (playerCompanion != null && playerCompanion.hasEntityRespawnTimer()
         && playerCompanion.getEntityRespawnTimer() > java.time.Instant.now().getEpochSecond()) {
       log.info("Companion could respawn in {} secs ...",
@@ -202,13 +214,13 @@ public class CapturedCompanion extends Item {
       return InteractionResult.CONSUME;
     }
 
-
     return InteractionResult.sidedSuccess(level.isClientSide);
   }
 
   @Override
   public boolean isBarVisible(ItemStack itemStack) {
-    return true;
+    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
+    return playerCompanion != null;
   }
 
   @Override
@@ -218,7 +230,7 @@ public class CapturedCompanion extends Item {
 
   @Override
   public int getBarWidth(ItemStack itemStack) {
-    PlayerCompanion playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
+    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
     if (playerCompanion != null) {
       return Math
           .round(playerCompanion.getEntityHealth() * (13f / playerCompanion.getEntityHealthMax()));
@@ -228,7 +240,7 @@ public class CapturedCompanion extends Item {
 
   @Override
   public int getBarColor(ItemStack itemStack) {
-    PlayerCompanion playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
+    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
     if (playerCompanion != null) {
       float color =
           Math.max(0.0F, playerCompanion.getEntityHealth() / playerCompanion.getEntityHealthMax());
@@ -240,7 +252,7 @@ public class CapturedCompanion extends Item {
   @Override
   public void appendHoverText(ItemStack itemStack, @Nullable Level level,
       List<Component> tooltipList, TooltipFlag tooltipFlag) {
-    PlayerCompanion playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
+    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
     if (playerCompanion != null) {
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_name",
           playerCompanion.getName()).withStyle(ChatFormatting.GOLD));

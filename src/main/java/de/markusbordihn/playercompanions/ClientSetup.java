@@ -26,12 +26,10 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import de.markusbordihn.playercompanions.block.ModBlocks;
-import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
@@ -42,9 +40,6 @@ public class ClientSetup {
     log.info("{} Client setup ...", Constants.LOG_REGISTER_PREFIX);
 
     event.enqueueWork(() -> {
-
-      ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_OPEN);
-
       ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMPANION_GHOST.get(),
           RenderType.translucent());
     });

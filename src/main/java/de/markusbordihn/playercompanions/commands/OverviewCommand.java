@@ -30,7 +30,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
-import de.markusbordihn.playercompanions.data.PlayerCompanion;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 
 public class OverviewCommand extends CustomCommand {
@@ -43,15 +43,15 @@ public class OverviewCommand extends CustomCommand {
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
     ServerPlayer player = context.getSource().getPlayerOrException();
-    Set<PlayerCompanion> playerCompanionsSet = PlayerCompanionsServerData.get().getCompanions(player.getUUID());
+    Set<PlayerCompanionData> playerCompanionsSet = PlayerCompanionsServerData.get().getCompanions(player.getUUID());
     if (playerCompanionsSet.isEmpty()) {
       sendFeedback(context, "Unable to find any owned companions!");
       return 0;
     }
-    Iterator<PlayerCompanion> playerCompanionIterator = playerCompanionsSet.iterator();
+    Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanionsSet.iterator();
     sendFeedback(context, "Your Companions\n===");
     while (playerCompanionIterator.hasNext()) {
-      PlayerCompanion playerCompanion = playerCompanionIterator.next();
+      PlayerCompanionData playerCompanion = playerCompanionIterator.next();
       if (playerCompanion != null) {
         sendFeedback(context, String.format("%s", playerCompanion));
       }

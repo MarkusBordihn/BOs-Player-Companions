@@ -26,9 +26,11 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
@@ -45,7 +47,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.CompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.ModItems;
 
 @EventBusSubscriber
@@ -58,6 +60,7 @@ public class SmallGhast extends GuardEntity implements FlyingAnimal {
   public static final String ID = "small_ghast";
   public static final String NAME = "Small Ghast";
   public static final MobCategory CATEGORY = MobCategory.CREATURE;
+  public static final EntityDimensions entityDimensions = new EntityDimensions(0.675f, 0.9f, false);
 
   // Config settings
   private static int explosionPower = COMMON.smallGhastExplosionPower.get();
@@ -112,7 +115,7 @@ public class SmallGhast extends GuardEntity implements FlyingAnimal {
       LivingEntity livingEntity = this.smallGhast.getTarget();
       if (livingEntity != null) {
         // Ignore entities from the same Owner.
-        if (livingEntity instanceof CompanionEntity companionEntity
+        if (livingEntity instanceof PlayerCompanionEntity companionEntity
             && companionEntity.getOwner() == this.smallGhast.getOwner()) {
           this.smallGhast.setTarget(null);
           return;
@@ -173,9 +176,10 @@ public class SmallGhast extends GuardEntity implements FlyingAnimal {
   }
 
   @Override
-  public Vec3 getLeashOffset() {
-    return new Vec3(0.0D, 0.01F * this.getEyeHeight(), this.getBbWidth() * 0.4F);
+  public SoundEvent getPetSound() {
+    return SoundEvents.GHAST_AMBIENT;
   }
+
 
   @Override
   public SoundSource getSoundSource() {
@@ -195,6 +199,26 @@ public class SmallGhast extends GuardEntity implements FlyingAnimal {
   @Override
   protected SoundEvent getDeathSound() {
     return SoundEvents.GHAST_DEATH;
+  }
+
+  @Override
+  public Vec3 getLeashOffset() {
+    return new Vec3(0.0D, 0.72F * this.getEyeHeight(), this.getBbWidth() * 0.4F);
+  }
+
+  @Override
+  public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
+    return 1.45F;
+  }
+
+  @Override
+  public float getScale() {
+    return 0.75F;
+  }
+
+  @Override
+  public EntityDimensions getDimensions(Pose pose) {
+    return new EntityDimensions(0.75f, 1.70f, false);
   }
 
 }

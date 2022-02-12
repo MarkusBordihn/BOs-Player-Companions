@@ -41,7 +41,8 @@ public class ClientGui {
 
     event.enqueueWork(() -> {
       Minecraft minecraft = Minecraft.getInstance();
-      MinecraftForge.EVENT_BUS.register(new CallCompanionGui(minecraft));
+      MinecraftForge.EVENT_BUS.register(new PlayerCompanionGui(minecraft));
+      MinecraftForge.EVENT_BUS.register(new PlayerCompanionHud(minecraft));
     });
   }
 }

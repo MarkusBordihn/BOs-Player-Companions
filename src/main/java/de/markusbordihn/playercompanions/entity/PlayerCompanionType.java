@@ -19,7 +19,8 @@
 
 package de.markusbordihn.playercompanions.entity;
 
-public enum CompanionType {
+public enum PlayerCompanionType {
+  COLLECTOR,
   FOLLOWER,
   GUARD,
   HEALER,

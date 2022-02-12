@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "minecraft:item/seagrass"
+    "layer0": "player_companions:item/tame_seagrass"
   }
 }

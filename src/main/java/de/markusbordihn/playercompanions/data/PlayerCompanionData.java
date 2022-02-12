@@ -33,11 +33,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
-import de.markusbordihn.playercompanions.entity.CompanionType;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionType;
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.CompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
-public class PlayerCompanion {
+public class PlayerCompanionData {
 
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
@@ -50,42 +50,48 @@ public class PlayerCompanion {
   private static final String REMOVED_TAG = "Removed";
   private static final String TYPE_TAG = "Type";
   private static final String UUID_TAG = "UUID";
-  private static final String ENTITY_ID_TAG = "EntityId";
-  private static final String ENTITY_TYPE_TAG = "EntityType";
-  private static final String ENTITY_HEALTH_TAG = "EntityHealth";
-  private static final String ENTITY_HEALTH_MAX_TAG = "EntityHealthMax";
-  private static final String ENTITY_RESPAWN_TIMER_TAG = "EntityRespawnTimer";
   private static final String ENTITY_DATA_TAG = "EntityData";
+  private static final String ENTITY_HEALTH_MAX_TAG = "EntityHealthMax";
+  private static final String ENTITY_HEALTH_TAG = "EntityHealth";
+  private static final String ENTITY_ID_TAG = "EntityId";
+  private static final String ENTITY_RESPAWN_TIMER_TAG = "EntityRespawnTimer";
+  private static final String ENTITY_SITTING_TAG = "EntitySitting";
+  private static final String ENTITY_TYPE_TAG = "EntityType";
 
   private BlockPos blockPos;
   private boolean active = true;
   private boolean hasOwner = false;
   private boolean isRemoved = false;
-  private CompanionType type = CompanionType.UNKNOWN;
-  private CompanionEntity companionEntity;
+  private PlayerCompanionType type = PlayerCompanionType.UNKNOWN;
+  private PlayerCompanionEntity companionEntity;
   private ResourceKey<Level> level;
   private String levelName = "";
   private String name = "";
   private String ownerName = "";
   private UUID companionUUID = null;
   private UUID ownerUUID = null;
-  private int entityId;
+  private CompoundTag entityData;
   private EntityType<?> entityType;
+  private boolean entitySitting = false;
   private float entityHealth;
   private float entityHealthMax;
+  private int entityId;
   private int entityRespawnTimer;
-  private CompoundTag entityData;
 
-  public PlayerCompanion(CompanionEntity companion) {
+  public PlayerCompanionData(PlayerCompanionEntity companion) {
     load(companion);
   }
 
-  public PlayerCompanion(CompoundTag compoundTag) {
+  public PlayerCompanionData(CompoundTag compoundTag) {
     load(compoundTag);
   }
 
   public boolean hasOwner() {
     return this.ownerUUID != null;
+  }
+
+  public boolean isOrderedToSit() {
+    return this.entitySitting;
   }
 
   public UUID getUUID() {
@@ -107,7 +113,7 @@ public class PlayerCompanion {
     return this.ownerName;
   }
 
-  public CompanionType getType() {
+  public PlayerCompanionType getType() {
     return this.type;
   }
 
@@ -143,7 +149,7 @@ public class PlayerCompanion {
     return this.entityRespawnTimer > 0;
   }
 
-  public void load(CompanionEntity companion) {
+  public void load(PlayerCompanionEntity companion) {
     this.companionEntity = companion;
     this.companionUUID = companion.getUUID();
     this.name = companion.getCustomCompanionName();
@@ -163,6 +169,7 @@ public class PlayerCompanion {
     this.entityHealth = companion.getHealth();
     this.entityHealthMax = companion.getMaxHealth();
     this.entityRespawnTimer = companion.getRespawnTimer();
+    this.entitySitting = companion.isOrderedToSit();
     this.entityData = companion.serializeNBT();
     log.debug("Created PlayerCompanion {} over entity with {}", this.name, this);
   }
@@ -171,7 +178,7 @@ public class PlayerCompanion {
     this.companionUUID = compoundTag.getUUID(UUID_TAG);
     this.name = compoundTag.getString(NAME_TAG);
     if (compoundTag.contains(TYPE_TAG)) {
-      this.type = CompanionType.valueOf(compoundTag.getString(TYPE_TAG));
+      this.type = PlayerCompanionType.valueOf(compoundTag.getString(TYPE_TAG));
     }
     this.hasOwner = compoundTag.hasUUID(OWNER_TAG);
     if (this.hasOwner) {
@@ -202,6 +209,7 @@ public class PlayerCompanion {
     this.entityHealth = compoundTag.getFloat(ENTITY_HEALTH_TAG);
     this.entityHealthMax = compoundTag.getFloat(ENTITY_HEALTH_MAX_TAG);
     this.entityRespawnTimer = compoundTag.getInt(ENTITY_RESPAWN_TIMER_TAG);
+    this.entitySitting = compoundTag.getBoolean(ENTITY_SITTING_TAG);
     this.entityData = compoundTag.getCompound(ENTITY_DATA_TAG);
     log.debug("Created PlayerCompanion {} over compoundTag with {}", this.name, this);
   }
@@ -233,6 +241,7 @@ public class PlayerCompanion {
     compoundTag.putFloat(ENTITY_HEALTH_TAG, this.entityHealth);
     compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.entityHealthMax);
     compoundTag.putInt(ENTITY_RESPAWN_TIMER_TAG, this.entityRespawnTimer);
+    compoundTag.putBoolean(ENTITY_SITTING_TAG, this.entitySitting);
 
     // Storing current companion entity data if available (regardless of disc status)
     if (includeData) {
@@ -244,23 +253,29 @@ public class PlayerCompanion {
       }
     }
 
-    // Sync specific meta data from entity directly
+    // Sync specific meta data from entity directly, if available.
     if (this.companionEntity != null && this.companionEntity.isAlive()) {
-      compoundTag.putFloat(ENTITY_HEALTH_TAG, this.companionEntity.getHealth());
+      compoundTag.putBoolean(ENTITY_SITTING_TAG, this.companionEntity.isOrderedToSit());
       compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.companionEntity.getMaxHealth());
+      compoundTag.putFloat(ENTITY_HEALTH_TAG, this.companionEntity.getHealth());
+      if (this.companionEntity.getOwner() != null) {
+        compoundTag.putString(OWNER_NAME_TAG,
+            this.companionEntity.getOwner().getName().getString());
+      }
     }
 
     return compoundTag;
   }
 
-  public boolean changed(PlayerCompanion playerCompanion) {
+  public boolean changed(PlayerCompanionData playerCompanion) {
     return playerCompanion.getUUID() != this.getUUID()
         || !playerCompanion.getName().equals(this.getName())
         || playerCompanion.getOwnerUUID() != this.getOwnerUUID()
         || playerCompanion.getType() != this.getType()
         || playerCompanion.getEntityId() != this.getEntityId()
         || playerCompanion.getEntityHealth() != this.getEntityHealth()
-        || playerCompanion.getEntityRespawnTimer() != this.getEntityRespawnTimer();
+        || playerCompanion.getEntityRespawnTimer() != this.getEntityRespawnTimer()
+        || playerCompanion.isOrderedToSit() != this.isOrderedToSit();
   }
 
   public String toString() {
@@ -271,7 +286,7 @@ public class PlayerCompanion {
         + this.entityId + ", UUID=" + this.companionUUID + "]";
   }
 
-  public boolean is(PlayerCompanion playerCompanion) {
+  public boolean is(PlayerCompanionData playerCompanion) {
     return this.companionUUID == playerCompanion.companionUUID;
   }
 
@@ -281,11 +296,11 @@ public class PlayerCompanion {
       return true;
     }
 
-    if (!(object instanceof PlayerCompanion)) {
+    if (!(object instanceof PlayerCompanionData)) {
       return false;
     }
 
-    PlayerCompanion playerCompanion = (PlayerCompanion) object;
+    PlayerCompanionData playerCompanion = (PlayerCompanionData) object;
     return playerCompanion.getUUID().equals(this.companionUUID);
   }
 

@@ -51,16 +51,16 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.data.PlayerCompanion;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
-import de.markusbordihn.playercompanions.entity.CompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class CallCompanionGui extends GuiComponent {
+public class PlayerCompanionGui extends GuiComponent {
 
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public static final CommonConfig.Config COMMON = CommonConfig.COMMON;
+  private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static GuiPosition guiPosition = COMMON.guiPosition.get();
   private static int guiOffsetX = COMMON.guiOffsetX.get();
   private static int guiOffsetY = COMMON.guiOffsetY.get();
@@ -75,7 +75,7 @@ public class CallCompanionGui extends GuiComponent {
   private final ItemRenderer itemRenderer;
   private final EntityRenderDispatcher entityRenderDispatcher;
 
-  public CallCompanionGui(Minecraft minecraft) {
+  public PlayerCompanionGui(Minecraft minecraft) {
     this.minecraft = minecraft;
     this.fontRender = minecraft.font;
     this.itemRenderer = minecraft.getItemRenderer();
@@ -127,10 +127,10 @@ public class CallCompanionGui extends GuiComponent {
     // this.renderCustomEntity(player, poseStack, );
 
     Entity entity = null;
-    Set<PlayerCompanion> companions = PlayerCompanionsClientData.getCompanions();
+    Set<PlayerCompanionData> companions = PlayerCompanionsClientData.getCompanions();
 
     if (companions != null && !companions.isEmpty()) {
-      PlayerCompanion playerCompanion = companions.iterator().next();
+      PlayerCompanionData playerCompanion = companions.iterator().next();
       entity = this.minecraft.level.getEntity(playerCompanion.getEntityId());
     }
     if (entity != null && entity instanceof LivingEntity livingEntity) {

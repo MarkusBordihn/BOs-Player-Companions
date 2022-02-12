@@ -28,7 +28,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.SnailModel;
-import de.markusbordihn.playercompanions.entity.healer.Snail;
+import de.markusbordihn.playercompanions.entity.collector.Snail;
 
 @OnlyIn(Dist.CLIENT)
 public class SnailRenderer extends MobRenderer<Snail, SnailModel<Snail>> {

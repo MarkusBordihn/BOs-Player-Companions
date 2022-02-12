@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Markus Bordihn
+ * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,10 +17,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.entity.follower;
+package de.markusbordihn.playercompanions.entity.collector;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
@@ -30,18 +31,18 @@ import net.minecraft.world.level.Level;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionType;
 
-public class FollowerEntity extends PlayerCompanionEntity {
+public class CollectorEntity extends PlayerCompanionEntity implements NeutralMob {
 
-  public FollowerEntity(EntityType<? extends FollowerEntity> entityType, Level level) {
+  public CollectorEntity(EntityType<? extends CollectorEntity> entityType, Level level) {
     super(entityType, level);
     this.setTame(false);
-    this.setCompanionType(PlayerCompanionType.FOLLOWER);
-    this.setCompanionTypeIcon(new ItemStack(Items.CARROT_ON_A_STICK));
+    this.setCompanionType(PlayerCompanionType.COLLECTOR);
+    this.setCompanionTypeIcon(new ItemStack(Items.CHEST));
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.4F)
-        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 1.0D);
   }
 
 }

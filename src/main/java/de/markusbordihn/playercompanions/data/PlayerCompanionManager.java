@@ -42,7 +42,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.CompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 @EventBusSubscriber
 public class PlayerCompanionManager {
@@ -128,14 +128,14 @@ public class PlayerCompanionManager {
   }
 
   private static void updateOrRegisterCompanion(Entity entity) {
-    if (entity instanceof CompanionEntity companionEntity
+    if (entity instanceof PlayerCompanionEntity companionEntity
         && !companionEntity.getLevel().isClientSide) {
       PlayerCompanionsServerData.get().updateOrRegisterCompanion(companionEntity);
     }
   }
 
   private static void updateCompanionData(Entity entity) {
-    if (entity instanceof CompanionEntity companionEntity
+    if (entity instanceof PlayerCompanionEntity companionEntity
         && !companionEntity.getLevel().isClientSide) {
       PlayerCompanionsServerData.get().updatePlayerCompanionData(companionEntity);
     }

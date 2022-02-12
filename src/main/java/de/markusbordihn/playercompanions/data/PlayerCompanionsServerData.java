@@ -44,7 +44,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.CompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
 
@@ -57,9 +57,9 @@ public class PlayerCompanionsServerData extends SavedData {
   public static final String LAST_UPDATE_TAG = "LastUpdate";
   public static final String NPC_TAG = "NPCs";
 
-  private static ConcurrentHashMap<UUID, PlayerCompanion> playerCompanionsMap =
+  private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
       new ConcurrentHashMap<>();
-  private static ConcurrentHashMap<UUID, Set<PlayerCompanion>> companionsPerPlayerMap =
+  private static ConcurrentHashMap<UUID, Set<PlayerCompanionData>> companionsPerPlayerMap =
       new ConcurrentHashMap<>();
 
   private static MinecraftServer server;
@@ -115,7 +115,7 @@ public class PlayerCompanionsServerData extends SavedData {
     return lastUpdate;
   }
 
-  public PlayerCompanion getCompanion(ItemStack itemStack) {
+  public PlayerCompanionData getCompanion(ItemStack itemStack) {
     UUID companionUUID = null;
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     if (compoundTag.hasUUID(CapturedCompanion.COMPANION_UUID_TAG)) {
@@ -127,19 +127,19 @@ public class PlayerCompanionsServerData extends SavedData {
     return null;
   }
 
-  public PlayerCompanion getCompanion(UUID companionUUID) {
+  public PlayerCompanionData getCompanion(UUID companionUUID) {
     return playerCompanionsMap.get(companionUUID);
   }
 
-  public Map<UUID, PlayerCompanion> getCompanions() {
+  public Map<UUID, PlayerCompanionData> getCompanions() {
     return playerCompanionsMap;
   }
 
-  public Set<PlayerCompanion> getCompanions(UUID ownerUUID) {
+  public Set<PlayerCompanionData> getCompanions(UUID ownerUUID) {
     return companionsPerPlayerMap.get(ownerUUID);
   }
 
-  public void updateOrRegisterCompanion(CompanionEntity companionEntity) {
+  public void updateOrRegisterCompanion(PlayerCompanionEntity companionEntity) {
     if (playerCompanionsMap.get(companionEntity.getUUID()) == null) {
       registerCompanion(companionEntity);
     } else {
@@ -147,13 +147,13 @@ public class PlayerCompanionsServerData extends SavedData {
     }
   }
 
-  public void updatePlayerCompanion(CompanionEntity companionEntity) {
-    PlayerCompanion currentPlayerCompanion = playerCompanionsMap.get(companionEntity.getUUID());
+  public void updatePlayerCompanion(PlayerCompanionEntity companionEntity) {
+    PlayerCompanionData currentPlayerCompanion = playerCompanionsMap.get(companionEntity.getUUID());
     if (currentPlayerCompanion == null) {
       log.error("Player Companion {} does not exists!", companionEntity);
       return;
     }
-    PlayerCompanion playerCompanion = new PlayerCompanion(companionEntity);
+    PlayerCompanionData playerCompanion = new PlayerCompanionData(companionEntity);
 
     // Only update the data in the case there is a relevant change.
     if (Boolean.FALSE.equals(playerCompanion.changed(currentPlayerCompanion))) {
@@ -169,27 +169,27 @@ public class PlayerCompanionsServerData extends SavedData {
     syncPlayerCompanion(playerCompanion);
   }
 
-  public void updatePlayerCompanionData(CompanionEntity companionEntity) {
+  public void updatePlayerCompanionData(PlayerCompanionEntity companionEntity) {
     if (companionEntity.getId() > 1) {
       updatePlayerCompanion(companionEntity);
     }
   }
 
-  public void registerCompanion(CompanionEntity companionEntity) {
+  public void registerCompanion(PlayerCompanionEntity companionEntity) {
     if (playerCompanionsMap.get(companionEntity.getUUID()) != null) {
       log.warn("Companion {} is already registered!", companionEntity);
       return;
     }
     log.debug("Register companion {} ...", companionEntity);
-    addPlayerCompanion(new PlayerCompanion(companionEntity));
+    addPlayerCompanion(new PlayerCompanionData(companionEntity));
     this.setDirty();
   }
 
-  private static void addPlayerCompanion(PlayerCompanion playerCompanion) {
+  private static void addPlayerCompanion(PlayerCompanionData playerCompanion) {
     playerCompanionsMap.put(playerCompanion.getUUID(), playerCompanion);
     UUID ownerUUID = playerCompanion.getOwnerUUID();
     if (ownerUUID != null) {
-      Set<PlayerCompanion> playerCompanions =
+      Set<PlayerCompanionData> playerCompanions =
           companionsPerPlayerMap.computeIfAbsent(ownerUUID, key -> ConcurrentHashMap.newKeySet());
       // Make sure to remove existing entries with the same id, because Set's not supporting forced
       // adds like Maps and always relies on the equal function.
@@ -201,7 +201,7 @@ public class PlayerCompanionsServerData extends SavedData {
   }
 
   private static void addPlayerCompanion(CompoundTag compoundTag) {
-    addPlayerCompanion(new PlayerCompanion(compoundTag));
+    addPlayerCompanion(new PlayerCompanionData(compoundTag));
   }
 
   public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
@@ -225,7 +225,7 @@ public class PlayerCompanionsServerData extends SavedData {
     if (ownerUUID == null) {
       return "";
     }
-    Set<PlayerCompanion> playerCompanions = getCompanions(ownerUUID);
+    Set<PlayerCompanionData> playerCompanions = getCompanions(ownerUUID);
     if (playerCompanions == null || playerCompanions.isEmpty()) {
       return "";
     }
@@ -236,9 +236,9 @@ public class PlayerCompanionsServerData extends SavedData {
     ListTag companionListTag = new ListTag();
 
     // Iterate over all known player companions for the owner and get their meta data.
-    Iterator<PlayerCompanion> playerCompanionIterator = playerCompanions.iterator();
+    Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanions.iterator();
     while (playerCompanionIterator.hasNext()) {
-      PlayerCompanion playerCompanion = playerCompanionIterator.next();
+      PlayerCompanionData playerCompanion = playerCompanionIterator.next();
       if (playerCompanion != null) {
         CompoundTag playerCompanionCompoundTag = new CompoundTag();
         playerCompanion.saveMetaData(playerCompanionCompoundTag);
@@ -250,7 +250,7 @@ public class PlayerCompanionsServerData extends SavedData {
     return compoundTag.getAsString();
   }
 
-  public void syncPlayerCompanion(PlayerCompanion playerCompanion) {
+  public void syncPlayerCompanion(PlayerCompanionData playerCompanion) {
     // Only sync player companions, if we have a valid owner.
     if (!playerCompanion.hasOwner()) {
       return;
@@ -268,9 +268,9 @@ public class PlayerCompanionsServerData extends SavedData {
 
     // Iterate throw all companions and store their full data (meta + entity data).
     ListTag companionListTag = new ListTag();
-    Iterator<PlayerCompanion> playerCompanionIterator = playerCompanionsMap.values().iterator();
+    Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanionsMap.values().iterator();
     while (playerCompanionIterator.hasNext()) {
-      PlayerCompanion playerCompanion = playerCompanionIterator.next();
+      PlayerCompanionData playerCompanion = playerCompanionIterator.next();
       if (playerCompanion != null) {
         CompoundTag playerCompanionCompoundTag = new CompoundTag();
         playerCompanion.save(playerCompanionCompoundTag);

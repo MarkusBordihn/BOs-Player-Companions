@@ -27,7 +27,7 @@ import com.google.gson.JsonSyntaxException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.stringtemplate.v4.compiler.STParser.compoundElement_return;
+
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.nbt.CompoundTag;

@@ -21,7 +21,6 @@ package de.markusbordihn.playercompanions.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +32,7 @@ import de.markusbordihn.playercompanions.client.model.SmallGhastModel;
 import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
 
 @OnlyIn(Dist.CLIENT)
-public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<SmallGhast>> {
+public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel> {
 
   private static final ResourceLocation GHAST_LOCATION =
       new ResourceLocation("textures/entity/ghast/ghast.png");
@@ -41,18 +40,12 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<
       new ResourceLocation("textures/entity/ghast/ghast_shooting.png");
 
   public SmallGhastRenderer(EntityRendererProvider.Context context) {
-    super(context, new SmallGhastModel<>(context.bakeLayer(ClientRenderer.SMALL_GHAST)), 0.4F);
-  }
-
-  public ResourceLocation getTextureLocation(SmallGhast entity) {
-    return entity.isCharging() ? GHAST_SHOOTING_LOCATION : GHAST_LOCATION;
+    super(context, new SmallGhastModel(context.bakeLayer(ClientRenderer.SMALL_GHAST)), 0.4F);
   }
 
   @Override
-  public void render(SmallGhast entity, float p_115977_, float p_115978_, PoseStack poseStack,
-      MultiBufferSource buffer, int light) {
-    //poseStack.translate(0d, 0.75d, 0d);
-    super.render(entity, p_115977_, p_115978_, poseStack, buffer, light);
+  public ResourceLocation getTextureLocation(SmallGhast entity) {
+    return entity.isCharging() ? GHAST_SHOOTING_LOCATION : GHAST_LOCATION;
   }
 
   @Override

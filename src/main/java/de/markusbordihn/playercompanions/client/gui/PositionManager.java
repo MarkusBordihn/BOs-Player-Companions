@@ -25,8 +25,8 @@ import net.minecraft.client.Minecraft;
 
 public class PositionManager {
 
-  private static int HOTBAR_RIGHT = 90;
-  private static int HOTBAR_LEFT = -90;
+  private static final int HOTBAR_RIGHT = 90;
+  private static final int HOTBAR_LEFT = -90;
 
   private Window window;
   private int guiScaledWidth;

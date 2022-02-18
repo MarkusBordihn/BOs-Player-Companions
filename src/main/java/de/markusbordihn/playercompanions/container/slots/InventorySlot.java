@@ -17,52 +17,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.network.message;
-
-import java.util.function.Supplier;
+package de.markusbordihn.playercompanions.container.slots;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
+import de.markusbordihn.playercompanions.container.CompanionsMenu;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
-public class MessagePlayerCompanionsData {
+public class InventorySlot extends Slot {
 
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private final String data;
+  private CompanionsMenu menu;
+  private final int slot;
 
-  public MessagePlayerCompanionsData(String data) {
-    this.data = data;
+  public InventorySlot(CompanionsMenu menu, Container container, int slot, int x, int y) {
+    super(container, slot, x, y);
+    this.menu = menu;
+    this.slot = slot;
   }
 
-  public String getData() {
-    return this.data;
+  @Override
+  public void set(ItemStack itemStack) {
+    super.set(itemStack);
+
+    // Update menu only if we changed the slot to avoid updated for place and take actions.
+    this.menu.setChanged(this.slot, itemStack);
   }
 
-  public static void encode(MessageCommandPlayerCompanion message, FriendlyByteBuf buffer) {
-    buffer.writeUtf(message.getPlayerCompanionUUID());
-    buffer.writeUtf(message.getCommand());
-  }
-
-  public static void handle(MessagePlayerCompanionsData message,
-      Supplier<NetworkEvent.Context> contextSupplier) {
-    NetworkEvent.Context context = contextSupplier.get();
-    context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-        () -> () -> handlePacket(message, context)));
-    context.setPacketHandled(true);
-  }
-
-  public static void handlePacket(MessagePlayerCompanionsData message,
-      NetworkEvent.Context context) {
-    log.info("Handle Packet {} {}: {}", message, context, message.getData());
-    PlayerCompanionsClientData.load(message.getData());
+  @Override
+  public boolean mayPlace(ItemStack itemStack) {
+    Item item = itemStack.getItem();
+    return (!(item instanceof CapturedCompanion) && !(item instanceof CompanionTameItem));
   }
 
 }

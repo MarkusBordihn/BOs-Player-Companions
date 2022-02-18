@@ -36,7 +36,8 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.network.message.MessageOpenCompanionsMenu;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
+import de.markusbordihn.playercompanions.network.message.MessageCommandPlayerCompanion;
 import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionsData;
 
 @EventBusSubscriber
@@ -58,8 +59,14 @@ public class NetworkHandler {
         INSTANCE, PROTOCOL_VERSION);
 
     event.enqueueWork(() -> {
-      INSTANCE.registerMessage(id++, MessageOpenCompanionsMenu.class, (message, buffer) -> {
-      }, buffer -> new MessageOpenCompanionsMenu(), MessageOpenCompanionsMenu::handle);
+      // Send Player Companion Command: Client -> Server
+      INSTANCE.registerMessage(id++, MessageCommandPlayerCompanion.class, (message, buffer) -> {
+        buffer.writeUtf(message.getPlayerCompanionUUID());
+        buffer.writeUtf(message.getCommand());
+      }, buffer -> new MessageCommandPlayerCompanion(buffer.readUtf(), buffer.readUtf()),
+          MessageCommandPlayerCompanion::handle);
+
+      // Sync Player Companion Data: Server -> Client
       INSTANCE.registerMessage(id++, MessagePlayerCompanionsData.class, (message, buffer) -> {
         buffer.writeUtf(message.getData());
       }, buffer -> new MessagePlayerCompanionsData(buffer.readUtf()),
@@ -69,7 +76,6 @@ public class NetworkHandler {
 
   @SubscribeEvent
   public static void handlePlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-    log.info("{} {}", event, event.getPlayer());
     Player player = event.getPlayer();
 
     // Sending companion Data
@@ -78,11 +84,19 @@ public class NetworkHandler {
     }
   }
 
+  public static void commandPlayerCompanion(String playerCompanionUUID,
+      PlayerCompanionCommand command) {
+    if (playerCompanionUUID != null && command != null) {
+      log.debug("commandPlayerCompanion {} {}", playerCompanionUUID, command);
+      INSTANCE.sendToServer(new MessageCommandPlayerCompanion(playerCompanionUUID, command.toString()));
+    }
+  }
+
   public static void updatePlayerCompanionsData(ServerPlayer serverPlayer) {
     String companionData =
         PlayerCompanionsServerData.get().exportClientData(serverPlayer.getUUID());
     if (companionData != null && !companionData.isBlank()) {
-      log.info("Sending Player Companions data {} to {}", companionData, serverPlayer);
+      log.debug("Sending Player Companions data {} to {}", companionData, serverPlayer);
       INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
           new MessagePlayerCompanionsData(companionData));
     }

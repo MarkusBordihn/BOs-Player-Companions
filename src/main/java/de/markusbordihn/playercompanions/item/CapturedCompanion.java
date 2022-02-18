@@ -35,9 +35,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -52,6 +55,7 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 
 public class CapturedCompanion extends Item {
@@ -96,7 +100,7 @@ public class CapturedCompanion extends Item {
     // Check if companion already exists
     if (level instanceof ServerLevel serverLevel) {
       playerCompanion = getCompanionEntity(itemStack, serverLevel);
-      log.info("Found existing player companion {}", playerCompanion);
+      log.debug("Found existing player companion {}", playerCompanion);
     }
 
     // If companion exits, just port the companion to the player.
@@ -130,7 +134,7 @@ public class CapturedCompanion extends Item {
       if (blockState.is(Blocks.AIR) || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
           || blockState.is(Blocks.SEAGRASS)) {
         // Adjust entity position to spawn position.
-        entity.setPosRaw(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        entity.setPosRaw(blockPos.getX(), blockPos.getY() + 0.001, blockPos.getZ());
 
         // Add entity to the world.
         log.debug("Spawn companion {} with {}", entity);
@@ -144,7 +148,20 @@ public class CapturedCompanion extends Item {
     return false;
   }
 
-  public boolean despawnCompanion() {
+  public boolean despawnCompanion(LivingEntity livingEntity, ItemStack itemStack, Level level) {
+    UUID capturedCompanionUUID = getCompanionUUID(itemStack);
+    if (!(livingEntity instanceof PlayerCompanionEntity playerCompanionEntity)
+        || !playerCompanionEntity.getUUID().equals(capturedCompanionUUID)) {
+      return false;
+    }
+    log.info("Capture Companion for transportation ...");
+
+    // Sync data before we despawn entity.
+    PlayerCompanionsServerData.get().updatePlayerCompanion(playerCompanionEntity);
+
+    // Discarded Entity from the world.
+    livingEntity.setRemoved(RemovalReason.DISCARDED);
+
     return true;
   }
 
@@ -167,10 +184,27 @@ public class CapturedCompanion extends Item {
       if (entityData.contains(FALL_DISTANCE_TAG) && entityData.getFloat(FALL_DISTANCE_TAG) > 0) {
         entityData.putFloat(FALL_DISTANCE_TAG, 0);
       }
-
       entity.load(entityData);
     }
     return entity;
+  }
+
+  @Override
+  public InteractionResult interactLivingEntity(ItemStack itemStack, Player player,
+      LivingEntity livingEntity, InteractionHand hand) {
+
+    // Check if we have any captured companion.
+    if (!hasCompanion(itemStack)) {
+      return InteractionResult.FAIL;
+    }
+
+    // Try to despawn companion.
+    Level level = player.getLevel();
+    if (despawnCompanion(livingEntity, itemStack, level)) {
+      return InteractionResult.CONSUME;
+    }
+
+    return InteractionResult.sidedSuccess(level.isClientSide);
   }
 
   @Override
@@ -187,6 +221,7 @@ public class CapturedCompanion extends Item {
     ItemStack itemStack = context.getItemInHand();
     Player player = context.getPlayer();
 
+    // Check if we have any captured companion.
     if (!hasCompanion(itemStack)) {
       return InteractionResult.FAIL;
     }

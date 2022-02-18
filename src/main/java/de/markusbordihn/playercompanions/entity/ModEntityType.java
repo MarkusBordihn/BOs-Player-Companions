@@ -32,6 +32,8 @@ import net.minecraftforge.registries.RegistryObject;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.collector.Snail;
 import de.markusbordihn.playercompanions.entity.follower.SmallSlime;
+import de.markusbordihn.playercompanions.entity.healer.Fairy;
+import de.markusbordihn.playercompanions.entity.healer.HealerEntity;
 import de.markusbordihn.playercompanions.entity.guard.GuardEntity;
 import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
 
@@ -50,19 +52,25 @@ public class ModEntityType {
       ENTITIES.register(Snail.ID, () -> EntityType.Builder.<Snail>of(Snail::new, Snail.CATEGORY)
           .sized(0.9F, 1.2F).clientTrackingRange(12).build(Snail.ID));
 
-  // Guard Entity
-  public static final RegistryObject<EntityType<SmallGhast>> SMALL_GHAST = ENTITIES.register(
-      SmallGhast.ID, () -> EntityType.Builder.<SmallGhast>of(SmallGhast::new, SmallGhast.CATEGORY)
-          .sized(0.9F, 1.2F).clientTrackingRange(12).build(SmallGhast.ID));
-
   // Follower Entity
   public static final RegistryObject<EntityType<SmallSlime>> SMALL_SLIME = ENTITIES.register(
       SmallSlime.ID, () -> EntityType.Builder.<SmallSlime>of(SmallSlime::new, SmallSlime.CATEGORY)
           .sized(0.5F, 0.5F).clientTrackingRange(12).build(SmallSlime.ID));
 
+  // Healer Entity
+  public static final RegistryObject<EntityType<Fairy>> FAIRY =
+      ENTITIES.register(Fairy.ID, () -> EntityType.Builder.<Fairy>of(Fairy::new, Fairy.CATEGORY)
+          .sized(0.9F, 1.2F).clientTrackingRange(12).build(Fairy.ID));
+
+  // Guard Entity
+  public static final RegistryObject<EntityType<SmallGhast>> SMALL_GHAST = ENTITIES.register(
+      SmallGhast.ID, () -> EntityType.Builder.<SmallGhast>of(SmallGhast::new, SmallGhast.CATEGORY)
+          .sized(0.9F, 1.2F).clientTrackingRange(12).build(SmallGhast.ID));
+
   @SubscribeEvent
   public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
     // Create Attributes for Entities
+    event.put(FAIRY.get(), HealerEntity.createAttributes().build());
     event.put(SMALL_GHAST.get(), GuardEntity.createAttributes().build());
     event.put(SMALL_SLIME.get(), SmallSlime.createAttributes().build());
     event.put(SNAIL.get(), Snail.createAttributes().build());

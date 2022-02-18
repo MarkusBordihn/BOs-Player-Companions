@@ -42,6 +42,10 @@ public class CommonConfig {
   public static final ForgeConfigSpec commonSpec;
   public static final Config COMMON;
 
+  public static final String MIN_GROUP_SIZE_TEXT = "Min group size.";
+  public static final String MAX_GROUP_SIZE_TEXT = "Max group size.";
+  public static final String SPAWN_WEIGHT_TEXT = "Spawn weight.";
+
   protected CommonConfig() {}
 
   static {
@@ -65,6 +69,16 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue guiOffsetX;
     public final ForgeConfigSpec.IntValue guiOffsetY;
 
+    public final ForgeConfigSpec.IntValue collectorTypeRadius;
+
+    public final ForgeConfigSpec.IntValue healerTypeRadius;
+    public final ForgeConfigSpec.IntValue healerTypeAmount;
+
+    public final ForgeConfigSpec.BooleanValue fairySpawnEnable;
+    public final ForgeConfigSpec.IntValue fairyMinGroup;
+    public final ForgeConfigSpec.IntValue fairyMaxGroup;
+    public final ForgeConfigSpec.IntValue fairyWeight;
+
     public final ForgeConfigSpec.BooleanValue smallSlimeSpawnEnable;
     public final ForgeConfigSpec.IntValue smallSlimeMinGroup;
     public final ForgeConfigSpec.IntValue smallSlimeMaxGroup;
@@ -76,10 +90,14 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue smallGhastWeight;
     public final ForgeConfigSpec.IntValue smallGhastExplosionPower;
 
+    public final ForgeConfigSpec.BooleanValue snailSpawnEnable;
+    public final ForgeConfigSpec.IntValue snailMinGroup;
+    public final ForgeConfigSpec.IntValue snailMaxGroup;
+    public final ForgeConfigSpec.IntValue snailWeight;
+
     Config(ForgeConfigSpec.Builder builder) {
       builder.comment("Player Companion's (General configuration)");
 
-      // General Config
       builder.push("General");
       respawnOnDeath =
           builder.comment("Respawn companion on death.").define("respawnOnDeath", true);
@@ -92,7 +110,6 @@ public class CommonConfig {
           .define("enableCompanionGhost", true);
       builder.pop();
 
-      // Gui Settings
       builder.push("General");
       guiPosition = builder.comment("Position for the gui elements.").defineEnum("guiPosition",
           GuiPosition.HOTBAR_RIGHT);
@@ -102,30 +119,57 @@ public class CommonConfig {
           .defineInRange("guiOffsetY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
       builder.pop();
 
-      // Small Slime
+      builder.push("Collector Type");
+      collectorTypeRadius =
+          builder.comment("Defines the radius in which items are automatically collected.")
+              .defineInRange("collectorTypeRadius", 3, 0, 16);
+      builder.pop();
+
+      builder.push("Healer Type");
+      healerTypeRadius = builder.comment("Defines the radius in which players are healed.")
+          .defineInRange("healerTypeRadius", 8, 0, 32);
+      healerTypeAmount = builder.comment("Defines the healing amount.")
+          .defineInRange("healerTypeAmount", 2, 0, 16);
+      builder.pop();
+
+      builder.push("Fairy");
+      fairySpawnEnable =
+          builder.comment("Enable/Disable the fairy spawn.").define("fairySpawnEnable", true);
+      fairyMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fairyMinGroup", 1, 0, 64);
+      fairyMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fairyMaxGroup", 2, 0, 64);
+      fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 6, 0, 100);
+      builder.pop();
+
       builder.push("Small Slime");
       smallSlimeSpawnEnable = builder.comment("Enable/Disable the small slime spawn.")
           .define("smallSlimeSpawnEnable", true);
       smallSlimeMinGroup =
-          builder.comment("Min group size.").defineInRange("smallSlimeMinGroup", 1, 0, 64);
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("smallSlimeMinGroup", 1, 0, 64);
       smallSlimeMaxGroup =
-          builder.comment("Max group size.").defineInRange("smallSlimeMaxGroup", 2, 0, 64);
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("smallSlimeMaxGroup", 2, 0, 64);
       smallSlimeWeight =
-          builder.comment("Spawn weight.").defineInRange("smallSlimeWeight", 5, 0, 100);
+          builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("smallSlimeWeight", 6, 0, 100);
       builder.pop();
 
-      // Small Ghast
       builder.push("Small Ghast");
       smallGhastExplosionPower =
           builder.comment("Explosion power").defineInRange("smallGhastExplosionPower", 0, 0, 16);
       smallGhastSpawnEnable = builder.comment("Enable/Disable the small ghast spawn.")
           .define("smallGhastSpawnEnable", true);
       smallGhastMinGroup =
-          builder.comment("Min group size.").defineInRange("smallGhastMinGroup", 1, 0, 64);
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("smallGhastMinGroup", 1, 0, 64);
       smallGhastMaxGroup =
-          builder.comment("Max group size.").defineInRange("smallGhastMaxGroup", 2, 0, 64);
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("smallGhastMaxGroup", 2, 0, 64);
       smallGhastWeight =
-          builder.comment("Spawn weight.").defineInRange("smallGhastWeight", 5, 0, 100);
+          builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("smallGhastWeight", 6, 0, 100);
+      builder.pop();
+
+      builder.push("Snail");
+      snailSpawnEnable =
+          builder.comment("Enable/Disable the snail spawn.").define("snailSpawnEnable", true);
+      snailMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("snailMinGroup", 1, 0, 64);
+      snailMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("snailMaxGroup", 2, 0, 64);
+      snailWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("snailWeight", 6, 0, 100);
       builder.pop();
 
     }

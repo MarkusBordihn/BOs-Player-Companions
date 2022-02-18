@@ -1,0 +1,6 @@
+{
+  "parent": "player_companions:item/fairy",
+  "textures": {
+    "texture": "player_companions:entity/fairy/fairy_default"
+  }
+}

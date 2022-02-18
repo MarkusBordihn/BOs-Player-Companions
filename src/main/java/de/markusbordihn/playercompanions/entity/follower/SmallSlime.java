@@ -123,7 +123,7 @@ public class SmallSlime extends FollowerEntity {
         hashMap.put(DyeColor.YELLOW, ModItems.SMALL_SLIME_YELLOW.get());
       });
 
-  public SmallSlime(EntityType<? extends SmallSlime> entityType, Level level) {
+  public SmallSlime(EntityType<? extends FollowerEntity> entityType, Level level) {
     super(entityType, level);
     this.keepOnJumping(true);
   }

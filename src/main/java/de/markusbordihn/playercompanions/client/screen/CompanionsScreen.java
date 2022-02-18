@@ -23,9 +23,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 
 import de.markusbordihn.playercompanions.Constants;
@@ -36,14 +39,17 @@ public class CompanionsScreen extends AbstractContainerScreen<CompanionsMenu> {
   private static final ResourceLocation TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/player_companions.png");
 
+  private final Entity entity;
+
   public CompanionsScreen(CompanionsMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component);
+    this.entity = menu.getPlayerCompanionEntity();
   }
 
   @Override
   public void init() {
     super.init();
-    this.imageHeight = 180;
+    this.imageHeight = 190;
     this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     this.topPos = (this.height - this.imageHeight) / 2;
     this.inventoryLabelY = this.imageHeight - 93;
@@ -53,6 +59,12 @@ public class CompanionsScreen extends AbstractContainerScreen<CompanionsMenu> {
   public void render(PoseStack poseStack, int x, int y, float partialTicks) {
     this.renderBackground(poseStack);
     super.render(poseStack, x, y, partialTicks);
+    if (entity instanceof LivingEntity livingEntity) {
+      InventoryScreen.renderEntityInInventory(
+          this.leftPos + 50,
+          this.topPos + 90, 30, 0F, 0F,
+          livingEntity);
+    }
   }
 
   @Override

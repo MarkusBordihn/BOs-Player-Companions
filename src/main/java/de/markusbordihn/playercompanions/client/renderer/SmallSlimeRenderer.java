@@ -30,7 +30,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
 import de.markusbordihn.playercompanions.client.renderer.layers.SmallSlimeOuterLayer;
-import de.markusbordihn.playercompanions.client.renderer.layers.SmallSlimeStatusLayer;
 import de.markusbordihn.playercompanions.entity.follower.SmallSlime;
 
 @OnlyIn(Dist.CLIENT)
@@ -39,7 +38,6 @@ public class SmallSlimeRenderer extends MobRenderer<SmallSlime, SmallSlimeModel<
   public SmallSlimeRenderer(EntityRendererProvider.Context context) {
     super(context, new SmallSlimeModel<>(context.bakeLayer(ClientRenderer.SMALL_SLIME)), 0.4F);
     this.addLayer(new SmallSlimeOuterLayer<>(this, context.getModelSet()));
-    this.addLayer(new SmallSlimeStatusLayer(this));
   }
 
   @Nullable

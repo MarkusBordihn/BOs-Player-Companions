@@ -53,7 +53,6 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class PlayerCompanionGui extends GuiComponent {
@@ -157,13 +156,13 @@ public class PlayerCompanionGui extends GuiComponent {
       int p_168683_) {
     if (!itemStack.isEmpty()) {
       PoseStack poseStack = RenderSystem.getModelViewStack();
-      float f = (float) itemStack.getPopTime() - p_168680_;
+      float f = itemStack.getPopTime() - p_168680_;
       if (f > 0.0F) {
         float f1 = 1.0F + f / 5.0F;
         poseStack.pushPose();
-        poseStack.translate((double) (x + 8), (double) (y + 12), 0.0D);
+        poseStack.translate((x + 8), (y + 12), 0.0D);
         poseStack.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
-        poseStack.translate((double) (-(x + 8)), (double) (-(y + 12)), 0.0D);
+        poseStack.translate((-(x + 8)), (-(y + 12)), 0.0D);
         RenderSystem.applyModelViewMatrix();
       }
 

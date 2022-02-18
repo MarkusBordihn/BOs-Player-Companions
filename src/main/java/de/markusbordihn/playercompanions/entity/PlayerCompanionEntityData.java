@@ -1,5 +1,25 @@
+/**
+ * Copyright 2022 Markus Bordihn
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package de.markusbordihn.playercompanions.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -7,6 +27,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BowItem;
@@ -36,16 +57,20 @@ public class PlayerCompanionEntityData extends TamableAnimal {
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
+  private static final EntityDataAccessor<String> DATA_VARIANT =
+      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.STRING);
   private static final String DATA_COLOR_TAG = "Color";
   private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
   private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
   private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
   private static final String DATA_REMAINING_ANGER_TIME_TAG = "CompanionAngerTimeRemaining";
   private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
+  private static final String DATA_VARIANT_TAG = "Variant";
 
   // Temporary states
   private boolean isActive = true;
   private boolean isFlying = false;
+  private boolean isFlyingAround = false;
   private boolean isKeepOnJumping = false;
   private boolean isTamable = true;
   private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
@@ -65,6 +90,17 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public void flying(boolean flying) {
     this.isFlying = flying;
+  }
+
+  public boolean flyingAround() {
+    return this.isFlyingAround;
+  }
+
+  public void flyingAround(boolean flyingAround) {
+    if (flyingAround) {
+      this.setNoGravity(true);
+    }
+    this.isFlyingAround = flyingAround;
   }
 
   public boolean isTamable() {
@@ -101,6 +137,14 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public void setColor(DyeColor dyeColor) {
     this.entityData.set(DATA_COLOR, dyeColor.getId());
+  }
+
+  public String getVariant() {
+    return this.entityData.get(DATA_VARIANT);
+  }
+
+  public void setVariant(String variant) {
+    this.entityData.set(DATA_VARIANT, variant);
   }
 
   public String getCustomCompanionName() {
@@ -175,6 +219,15 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     return this.getOwnerUUID() != null;
   }
 
+  public BlockPos ownerBlockPosition() {
+    if (this.hasOwner()) {
+      LivingEntity owner = this.getOwner();
+      if (owner.isAlive() && owner.isAddedToWorld()) {
+        return owner.blockPosition();
+      }
+    }
+    return this.blockPosition();
+  }
 
   public boolean isWeapon(ItemStack itemStack) {
     if (itemStack.isEmpty()) {
@@ -185,7 +238,6 @@ public class PlayerCompanionEntityData extends TamableAnimal {
         || item instanceof BowItem || item instanceof AxeItem;
   }
 
-
   @Override
   protected void defineSynchedData() {
     super.defineSynchedData();
@@ -195,6 +247,7 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 0);
     this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
+    this.entityData.define(DATA_VARIANT, "default");
   }
 
   @Override
@@ -205,6 +258,7 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_EXPERIENCE_LEVEL_TAG, this.getExperienceLevel());
     compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
+    compoundTag.putString(DATA_VARIANT_TAG, this.getVariant());
   }
 
   @Override
@@ -223,6 +277,8 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     if (compoundTag.contains(DATA_RESPAWN_TIMER_TAG)) {
       this.setRespawnTimer(compoundTag.getInt(DATA_RESPAWN_TIMER_TAG));
     }
+
+    this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
   }
 
   @Override

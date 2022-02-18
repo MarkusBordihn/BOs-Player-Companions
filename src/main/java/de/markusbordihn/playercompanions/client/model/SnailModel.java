@@ -27,13 +27,14 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.world.entity.Entity;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import de.markusbordihn.playercompanions.entity.collector.Snail;
+
 @OnlyIn(Dist.CLIENT)
-public class SnailModel<T extends Entity> extends HierarchicalModel<T> {
+public class SnailModel extends HierarchicalModel<Snail> {
 
   private final ModelPart root;
   private final ModelPart body;
@@ -82,7 +83,7 @@ public class SnailModel<T extends Entity> extends HierarchicalModel<T> {
     return LayerDefinition.create(meshDefinition, 64, 32);
   }
 
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+  public void setupAnim(Snail entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {}
 
   public ModelPart root() {

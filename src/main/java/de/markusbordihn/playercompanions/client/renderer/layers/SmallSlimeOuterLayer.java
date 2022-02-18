@@ -41,12 +41,13 @@ import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 @OnlyIn(Dist.CLIENT)
 public class SmallSlimeOuterLayer<T extends LivingEntity>
     extends RenderLayer<T, SmallSlimeModel<T>> {
+
   private final EntityModel<T> model;
 
-  public SmallSlimeOuterLayer(RenderLayerParent<T, SmallSlimeModel<T>> p_174536_,
-      EntityModelSet p_174537_) {
-    super(p_174536_);
-    this.model = new SmallSlimeModel<>(p_174537_.bakeLayer(ClientRenderer.SMALL_SLIME_OUTER));
+  public SmallSlimeOuterLayer(RenderLayerParent<T, SmallSlimeModel<T>> layer,
+      EntityModelSet entityModelSet) {
+    super(layer);
+    this.model = new SmallSlimeModel<>(entityModelSet.bakeLayer(ClientRenderer.SMALL_SLIME_OUTER));
   }
 
   public void render(PoseStack poseStack, MultiBufferSource buffer, int p_117472_, T entity,

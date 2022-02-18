@@ -19,29 +19,39 @@
 
 package de.markusbordihn.playercompanions.client.renderer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.client.model.SnailModel;
-import de.markusbordihn.playercompanions.entity.collector.Snail;
+import de.markusbordihn.playercompanions.client.model.FairyModel;
+import de.markusbordihn.playercompanions.entity.healer.Fairy;
 
 @OnlyIn(Dist.CLIENT)
-public class SnailRenderer extends MobRenderer<Snail, SnailModel> {
+public class FairyRenderer extends HumanoidMobRenderer<Fairy, FairyModel> {
 
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail.png");
-
-  public SnailRenderer(EntityRendererProvider.Context context) {
-    super(context, new SnailModel(context.bakeLayer(ClientRenderer.SNAIL)), 0.4F);
+  public FairyRenderer(EntityRendererProvider.Context context) {
+    super(context, new FairyModel(context.bakeLayer(ClientRenderer.FAIRY)), 0.3F);
   }
 
-  public ResourceLocation getTextureLocation(Snail entity) {
-    return TEXTURE_LOCATION;
+  @Override
+  protected int getBlockLightLevel(Fairy entity, BlockPos blockPos) {
+    return 15;
+  }
+
+  @Override
+  protected void scale(Fairy entity, PoseStack poseStack, float unused) {
+    poseStack.scale(0.4F, 0.4F, 0.4F);
+  }
+
+  @Override
+  public ResourceLocation getTextureLocation(Fairy entity) {
+    return entity.getResourceLocation();
   }
 
 }

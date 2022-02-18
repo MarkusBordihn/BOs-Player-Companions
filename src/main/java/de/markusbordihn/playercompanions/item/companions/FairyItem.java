@@ -17,31 +17,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.client.renderer;
+package de.markusbordihn.playercompanions.item.companions;
 
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+public class FairyItem extends CapturedCompanion {
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.client.model.SnailModel;
-import de.markusbordihn.playercompanions.entity.collector.Snail;
+  public static final String ID = "fairy";
 
-@OnlyIn(Dist.CLIENT)
-public class SnailRenderer extends MobRenderer<Snail, SnailModel> {
-
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail.png");
-
-  public SnailRenderer(EntityRendererProvider.Context context) {
-    super(context, new SnailModel(context.bakeLayer(ClientRenderer.SNAIL)), 0.4F);
+  public FairyItem() {
+    super();
   }
 
-  public ResourceLocation getTextureLocation(Snail entity) {
-    return TEXTURE_LOCATION;
+  public FairyItem(Properties properties) {
+    super(properties);
   }
-
 }

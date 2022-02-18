@@ -96,6 +96,11 @@ public class PlayerCompanionsServerData extends SavedData {
             PlayerCompanionsServerData.getFileId());
   }
 
+  public static boolean available() {
+    PlayerCompanionsServerData.get();
+    return PlayerCompanionsServerData.data != null;
+  }
+
   public static PlayerCompanionsServerData get() {
     if (PlayerCompanionsServerData.data == null) {
       prepare(ServerLifecycleHooks.getCurrentServer());
@@ -127,6 +132,10 @@ public class PlayerCompanionsServerData extends SavedData {
     return null;
   }
 
+  public PlayerCompanionData getCompanion(PlayerCompanionEntity playerCompanionEntity) {
+    return getCompanion(playerCompanionEntity.getUUID());
+  }
+
   public PlayerCompanionData getCompanion(UUID companionUUID) {
     return playerCompanionsMap.get(companionUUID);
   }
@@ -148,24 +157,36 @@ public class PlayerCompanionsServerData extends SavedData {
   }
 
   public void updatePlayerCompanion(PlayerCompanionEntity companionEntity) {
-    PlayerCompanionData currentPlayerCompanion = playerCompanionsMap.get(companionEntity.getUUID());
-    if (currentPlayerCompanion == null) {
-      log.error("Player Companion {} does not exists!", companionEntity);
+    PlayerCompanionData playerCompanion = playerCompanionsMap.get(companionEntity.getUUID());
+    if (playerCompanion == null) {
+      log.error("Failed to update player companion {} because it does not exists!", companionEntity);
+      registerCompanion(companionEntity);
       return;
     }
-    PlayerCompanionData playerCompanion = new PlayerCompanionData(companionEntity);
 
     // Only update the data in the case there is a relevant change.
-    if (Boolean.FALSE.equals(playerCompanion.changed(currentPlayerCompanion))) {
+    if (!playerCompanion.changed(companionEntity)) {
       return;
     }
-    log.debug("Update player companion from {} to {} ...", currentPlayerCompanion, playerCompanion);
-    addPlayerCompanion(playerCompanion);
+    playerCompanion.load(companionEntity);
+
+    // Update Companions per Player Map for faster and easier access.
+    UUID ownerUUID = playerCompanion.getOwnerUUID();
+    if (ownerUUID != null) {
+      Set<PlayerCompanionData> playerCompanions =
+          companionsPerPlayerMap.computeIfAbsent(ownerUUID, key -> ConcurrentHashMap.newKeySet());
+      // Make sure to remove existing entries with the same id, because Set's not supporting forced
+      // adds like Maps and always relies on the equal function.
+      if (playerCompanions.contains(playerCompanion)) {
+        playerCompanions.remove(playerCompanion);
+      }
+      playerCompanions.add(playerCompanion);
+    }
 
     // Store data to disk.
     this.setDirty();
 
-    // Sync data (client-side) with player companion owner, if any.
+    // Sync data (server -> client-side) with player companion owner, if any.
     syncPlayerCompanion(playerCompanion);
   }
 
@@ -206,7 +227,7 @@ public class PlayerCompanionsServerData extends SavedData {
 
   public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
     PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
-    log.info("{} loading data ... {}", Constants.LOG_ICON_NAME, compoundTag);
+    log.info("{} loading data ...", Constants.LOG_ICON_NAME);
     playerCompanionsData.lastUpdate = compoundTag.getLong(LAST_UPDATE_TAG);
 
     // Restoring companions data

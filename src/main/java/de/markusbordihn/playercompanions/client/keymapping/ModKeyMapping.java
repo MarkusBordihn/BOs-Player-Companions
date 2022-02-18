@@ -34,7 +34,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
-import de.markusbordihn.playercompanions.network.message.MessageOpenCompanionsMenu;
+//import de.markusbordihn.playercompanions.network.message.MessageOpenCompanionsMenu;
 
 public class ModKeyMapping {
 
@@ -46,14 +46,14 @@ public class ModKeyMapping {
       new KeyMapping(Constants.KEY_PREFIX + "control", KeyConflictContext.IN_GAME,
           InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL),
           Constants.KEY_PREFIX + "category");
-  public static final KeyMapping KEY_OPEN = new KeyMapping(
-      Constants.KEY_PREFIX + "player_companions", KeyConflictContext.IN_GAME,
-      InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_N), Constants.KEY_PREFIX + "category");
+  //public static final KeyMapping KEY_OPEN = new KeyMapping(
+  //   Constants.KEY_PREFIX + "player_companions", KeyConflictContext.IN_GAME,
+  //    InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_N), Constants.KEY_PREFIX + "category");
 
   public static void handleKeyMapping(InputEvent.KeyInputEvent event) {
-    if (KEY_OPEN.isDown()) {
-      NetworkHandler.INSTANCE.sendToServer(new MessageOpenCompanionsMenu());
-    }
+    //if (KEY_OPEN.isDown()) {
+    //  NetworkHandler.INSTANCE.sendToServer(new MessageOpenCompanionsMenu());
+    //}
   }
 
   public static void registerKeyMapping(final FMLClientSetupEvent event) {
@@ -61,7 +61,7 @@ public class ModKeyMapping {
 
     event.enqueueWork(() -> {
       ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_COMMAND);
-      ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_OPEN);
+      //ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_OPEN);
     });
   }
 }

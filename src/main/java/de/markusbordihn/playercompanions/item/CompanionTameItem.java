@@ -48,7 +48,7 @@ public class CompanionTameItem extends Item {
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public CompanionTameItem() {
-    this(new Item.Properties().stacksTo(1).durability(16).tab(PlayerCompanionsTab.TAB_TAME_ITEMS));
+    this(new Item.Properties().tab(PlayerCompanionsTab.TAB_TAME_ITEMS));
   }
 
   public CompanionTameItem(Properties properties) {

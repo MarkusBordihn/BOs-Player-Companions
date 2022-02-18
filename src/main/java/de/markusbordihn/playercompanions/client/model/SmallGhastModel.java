@@ -29,7 +29,6 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,7 +36,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
 
 @OnlyIn(Dist.CLIENT)
-public class SmallGhastModel<T extends Entity> extends HierarchicalModel<T> {
+public class SmallGhastModel extends HierarchicalModel<SmallGhast> {
 
   private final ModelPart root;
   private final ModelPart[] tentacles = new ModelPart[9];
@@ -59,9 +58,8 @@ public class SmallGhastModel<T extends Entity> extends HierarchicalModel<T> {
     Random random = new Random(1660L);
 
     for (int i = 0; i < 9; ++i) {
-      float f =
-          (((float) (i % 3) - (float) (i / 3 % 2) * 0.5F + 0.25F) / 2.0F * 2.0F - 1.0F) * 5.0F;
-      float f1 = ((float) (i / 3) / 2.0F * 2.0F - 1.0F) * 5.0F;
+      float f = (((i % 3) - (i / 3F % 2) * 0.5F + 0.25F) / 2.0F * 2.0F - 1.0F) * 5.0F;
+      float f1 = ((i / 3F) / 2.0F * 2.0F - 1.3F) * 5.0F;
       int j = random.nextInt(7) + 8;
       partDefinition.addOrReplaceChild("tentacle" + i,
           CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, j, 2.0F),
@@ -71,11 +69,10 @@ public class SmallGhastModel<T extends Entity> extends HierarchicalModel<T> {
     return LayerDefinition.create(meshDefinition, 64, 32);
   }
 
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+  public void setupAnim(
+      SmallGhast entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
-    if (entity instanceof SmallGhast smallGhast && smallGhast.isInSittingPose()) {
-      return;
-    } else {
+    if (!entity.isInSittingPose()) {
       for (int i = 0; i < this.tentacles.length; ++i) {
         this.tentacles[i].xRot = 0.2F * Mth.sin(ageInTicks * 0.3F + i) + 0.4F;
       }

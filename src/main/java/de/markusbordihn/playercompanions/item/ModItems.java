@@ -48,6 +48,9 @@ public class ModItems {
   @TemplateEntryPoint("Register Items")
 
   // Captured Companions
+  public static final RegistryObject<Item> FAIRY_DEFAULT =
+      ITEMS.register(FairyItem.ID + "_default", FairyItem::new);
+
   public static final RegistryObject<Item> SMALL_GHAST =
       ITEMS.register(SmallGhastItem.ID, SmallGhastItem::new);
 
@@ -100,6 +103,9 @@ public class ModItems {
 
   @TemplateEntryPoint("Register Spawn Eggs")
 
+  public static final RegistryObject<Item> FAIRY_SPAWN_EGG = ITEMS.register("fairy_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.FAIRY::get, MaterialColor.GOLD.col,
+          MaterialColor.SNOW.col, new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SNAIL_SPAWN_EGG = ITEMS.register("snail_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.GOLD.col,
           MaterialColor.SNOW.col, new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));

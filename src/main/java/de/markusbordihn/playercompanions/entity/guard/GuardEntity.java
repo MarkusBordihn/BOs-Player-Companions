@@ -77,15 +77,15 @@ public class GuardEntity extends PlayerCompanionEntity implements NeutralMob {
 
     @Override
     public boolean canUse() {
-      if (super.canUse() && this.toAvoid instanceof Llama) {
-        return !this.guard.isTame() && this.avoidLlama((Llama) this.toAvoid);
+      if (super.canUse() && this.toAvoid instanceof Llama lama) {
+        return !this.guard.isTame() && this.avoidLlama(lama);
       } else {
         return false;
       }
     }
 
-    private boolean avoidLlama(Llama p_30461_) {
-      return p_30461_.getStrength() >= GuardEntity.this.random.nextInt(5);
+    private boolean avoidLlama(Llama lama) {
+      return lama.getStrength() >= GuardEntity.this.random.nextInt(5);
     }
 
     @Override

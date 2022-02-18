@@ -57,45 +57,45 @@ public class PlayerCompanionManager {
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    log.info("Loaded Companion Manager ...");
+    log.info("{} Companion Manager ...", Constants.LOG_REGISTER_PREFIX);
   }
 
-  @SubscribeEvent(priority = EventPriority.LOWEST)
+  @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleEntityJoinWorldEvent(EntityJoinWorldEvent event) {
     updateOrRegisterCompanion(event.getEntity());
   }
 
-  @SubscribeEvent(priority = EventPriority.LOWEST)
+  @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleEntityTeleportEvent(EntityTeleportEvent event) {
     updateOrRegisterCompanion(event.getEntity());
   }
 
-  @SubscribeEvent(priority = EventPriority.LOWEST)
+  @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleEntityTravelToDimensionEvent(EntityTravelToDimensionEvent event) {
     updateOrRegisterCompanion(event.getEntity());
   }
 
-  @SubscribeEvent(priority = EventPriority.LOWEST)
+  @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleEntityLeaveWorldEvent(EntityLeaveWorldEvent event) {
     updateCompanionData(event.getEntity());
   }
 
-  @SubscribeEvent(priority = EventPriority.LOWEST)
+  @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleLivingDamageEvent(LivingDamageEvent event) {
     scheduleCompanionDataUpdate(event.getEntity());
   }
 
-  @SubscribeEvent(priority = EventPriority.LOWEST)
+  @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleLivingHurtEvent(LivingHurtEvent event) {
     scheduleCompanionDataUpdate(event.getEntity());
   }
 
-  @SubscribeEvent(priority = EventPriority.LOWEST)
+  @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleLivingHealEvent(LivingHealEvent event) {
     scheduleCompanionDataUpdate(event.getEntity());
   }
 
-  @SubscribeEvent(priority = EventPriority.LOWEST)
+  @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleLivingDeathEvent(LivingDeathEvent event) {
     updateCompanionData(event.getEntity());
   }
@@ -109,14 +109,16 @@ public class PlayerCompanionManager {
   }
 
   private static void scheduleCompanionDataUpdate(Entity entity) {
-    entitySet.add(entity);
+    if (entity instanceof PlayerCompanionEntity) {
+      entitySet.add(entity);
+    }
   }
 
   private static void syncCompanionData() {
     if (entitySet.isEmpty()) {
       return;
     }
-    log.debug("Sync {} companion data ...", entitySet.size());
+    log.debug("Sync {} companion data: {}", entitySet.size(), entitySet);
     Iterator<Entity> entityIterator = entitySet.iterator();
     while (entityIterator.hasNext()) {
       Entity entity = entityIterator.next();

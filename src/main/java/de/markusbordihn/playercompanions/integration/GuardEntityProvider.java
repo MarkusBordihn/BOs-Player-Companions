@@ -17,31 +17,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.client.renderer;
+package de.markusbordihn.playercompanions.integration;
 
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import mcp.mobius.waila.api.EntityAccessor;
+import mcp.mobius.waila.api.IEntityComponentProvider;
+import mcp.mobius.waila.api.ITooltip;
+import mcp.mobius.waila.api.config.IPluginConfig;
 
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.client.model.SnailModel;
-import de.markusbordihn.playercompanions.entity.collector.Snail;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
+import de.markusbordihn.playercompanions.entity.guard.GuardEntity;
 
-@OnlyIn(Dist.CLIENT)
-public class SnailRenderer extends MobRenderer<Snail, SnailModel> {
+public class GuardEntityProvider implements IEntityComponentProvider {
 
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail.png");
+  public static final GuardEntityProvider INSTANCE = new GuardEntityProvider();
 
-  public SnailRenderer(EntityRendererProvider.Context context) {
-    super(context, new SnailModel(context.bakeLayer(ClientRenderer.SNAIL)), 0.4F);
+  @Override
+  @OnlyIn(Dist.CLIENT)
+  public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
+    if (accessor.getEntity() instanceof GuardEntity guardEntity) {
+      PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(guardEntity);
+      tooltip.add(new TextComponent("Guard"));
+    }
   }
-
-  public ResourceLocation getTextureLocation(Snail entity) {
-    return TEXTURE_LOCATION;
-  }
-
 }

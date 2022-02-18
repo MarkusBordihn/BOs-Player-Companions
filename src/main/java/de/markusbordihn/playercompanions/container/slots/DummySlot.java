@@ -17,31 +17,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.client.renderer;
+package de.markusbordihn.playercompanions.container.slots;
 
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+public class DummySlot extends Slot {
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.client.model.SnailModel;
-import de.markusbordihn.playercompanions.entity.collector.Snail;
-
-@OnlyIn(Dist.CLIENT)
-public class SnailRenderer extends MobRenderer<Snail, SnailModel> {
-
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail.png");
-
-  public SnailRenderer(EntityRendererProvider.Context context) {
-    super(context, new SnailModel(context.bakeLayer(ClientRenderer.SNAIL)), 0.4F);
+  public DummySlot(Container container, int index, int x, int y) {
+    super(container, index, x, y);
   }
 
-  public ResourceLocation getTextureLocation(Snail entity) {
-    return TEXTURE_LOCATION;
+  @Override
+  public boolean mayPlace(ItemStack stack) {
+    return false;
+  }
+
+  @Override
+  public boolean mayPickup(Player player) {
+    return true;
   }
 
 }

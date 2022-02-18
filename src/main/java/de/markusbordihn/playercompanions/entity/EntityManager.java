@@ -49,9 +49,9 @@ import de.markusbordihn.playercompanions.config.CommonConfig;
 @EventBusSubscriber
 public class EntityManager {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public static final CommonConfig.Config COMMON = CommonConfig.COMMON;
+  private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static boolean friendlyFire = COMMON.friendlyFire.get();
   private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
   private static int respawnDelay = COMMON.respawnDelay.get();

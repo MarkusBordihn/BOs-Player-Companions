@@ -19,6 +19,9 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -27,12 +30,20 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import de.markusbordihn.playercompanions.Constants;
+
 public class PlayerCompanionEntityMoveControl extends MoveControl {
+
+  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
   public static final float MIN_SPEED = 5.0E-4F;
   public static final float MIN_SPEED_SQR = 2.5000003E-7F;
   protected static final int MAX_TURN = 90;
+
   private int jumpDelay;
   private int jumpMoveDelay;
   private int waitDelay;
@@ -50,8 +61,33 @@ public class PlayerCompanionEntityMoveControl extends MoveControl {
   public void tick() {
     if (this.mob instanceof PlayerCompanionEntity companionEntity) {
 
-      // More advanced moving for Monsters
-      if (this.operation == MoveControl.Operation.MOVE_TO) {
+      // Handle free flying entities (like Fairy)
+      if (this.operation == MoveControl.Operation.MOVE_TO && companionEntity.flyingAround()) {
+        Vec3 vec3 = new Vec3(this.wantedX - companionEntity.getX(),
+            this.wantedY - companionEntity.getY(), this.wantedZ - companionEntity.getZ());
+        double d0 = vec3.length();
+        if (d0 < companionEntity.getBoundingBox().getSize()) {
+          this.operation = MoveControl.Operation.WAIT;
+          companionEntity.setDeltaMovement(companionEntity.getDeltaMovement().scale(0.5D));
+        } else {
+          companionEntity.setDeltaMovement(
+              companionEntity.getDeltaMovement().add(vec3.scale(this.speedModifier * 0.05D / d0)));
+          if (companionEntity.getTarget() == null) {
+            Vec3 vec31 = companionEntity.getDeltaMovement();
+            companionEntity
+                .setYRot(-((float) Mth.atan2(vec31.x, vec31.z)) * (180F / (float) Math.PI));
+            companionEntity.yBodyRot = companionEntity.getYRot();
+          } else {
+            double d2 = companionEntity.getTarget().getX() - companionEntity.getX();
+            double d1 = companionEntity.getTarget().getZ() - companionEntity.getZ();
+            companionEntity.setYRot(-((float) Mth.atan2(d2, d1)) * (180F / (float) Math.PI));
+            companionEntity.yBodyRot = companionEntity.getYRot();
+          }
+        }
+      }
+
+      // More advanced moving for entities.
+      else if (this.operation == MoveControl.Operation.MOVE_TO) {
         boolean skipMovement = false;
         this.operation = MoveControl.Operation.WAIT;
         double newX = this.wantedX - this.mob.getX();
@@ -94,8 +130,8 @@ public class PlayerCompanionEntityMoveControl extends MoveControl {
         }
       }
 
+      // Wait on place if ordered to sit.
       else if (this.operation == MoveControl.Operation.WAIT && companionEntity.isOrderedToSit()) {
-        // Wait on place if ordered to sit.
         if (this.waitDelay-- <= 0) {
           this.waitDelay = companionEntity.getWaitDelay();
           this.mob.playSound(companionEntity.getWaitSound(), companionEntity.getSoundVolume(),
@@ -104,9 +140,9 @@ public class PlayerCompanionEntityMoveControl extends MoveControl {
       }
 
       else if (this.operation == MoveControl.Operation.WAIT) {
+
         // Keep jumping if not ordered to sit.
-        if (companionEntity.keepOnJumping()
-            && this.mob.isOnGround() && this.jumpDelay-- <= 0) {
+        if (companionEntity.keepOnJumping() && this.mob.isOnGround() && this.jumpDelay-- <= 0) {
           this.jumpDelay = companionEntity.getJumpDelay();
           this.mob.getJumpControl().jump();
           if (companionEntity.doPlayJumpSound()) {

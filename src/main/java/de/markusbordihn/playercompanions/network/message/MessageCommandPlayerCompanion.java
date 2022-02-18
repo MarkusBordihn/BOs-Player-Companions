@@ -19,50 +19,63 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
-public class MessagePlayerCompanionsData {
+public class MessageCommandPlayerCompanion {
 
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private final String data;
+  private final String playerCompanionUUID;
+  private final String command;
 
-  public MessagePlayerCompanionsData(String data) {
-    this.data = data;
+  public MessageCommandPlayerCompanion(String playerCompanionUUID, String command) {
+    this.playerCompanionUUID = playerCompanionUUID;
+    this.command = command;
   }
 
-  public String getData() {
-    return this.data;
+  public String getCommand() {
+    return this.command;
   }
 
-  public static void encode(MessageCommandPlayerCompanion message, FriendlyByteBuf buffer) {
-    buffer.writeUtf(message.getPlayerCompanionUUID());
-    buffer.writeUtf(message.getCommand());
+  public String getPlayerCompanionUUID() {
+    return this.playerCompanionUUID;
   }
 
-  public static void handle(MessagePlayerCompanionsData message,
+  public static void handle(MessageCommandPlayerCompanion message,
       Supplier<NetworkEvent.Context> contextSupplier) {
     NetworkEvent.Context context = contextSupplier.get();
-    context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-        () -> () -> handlePacket(message, context)));
+    context.enqueueWork(() -> handlePacket(message, context));
     context.setPacketHandled(true);
   }
 
-  public static void handlePacket(MessagePlayerCompanionsData message,
+  public static void handlePacket(MessageCommandPlayerCompanion message,
       NetworkEvent.Context context) {
-    log.info("Handle Packet {} {}: {}", message, context, message.getData());
-    PlayerCompanionsClientData.load(message.getData());
+    ServerPlayer serverPlayer = context.getSender();
+    ServerLevel serverLevel = serverPlayer.getLevel();
+    UUID uuid = UUID.fromString(message.getPlayerCompanionUUID());
+    Entity entity = serverLevel.getEntity(uuid);
+
+    // Only accepts commands from owner
+    if (entity instanceof PlayerCompanionEntity playerCompanionEntity
+        && serverPlayer.getUUID().equals(playerCompanionEntity.getOwnerUUID())) {
+      PlayerCompanionCommand command = PlayerCompanionCommand.valueOf(message.getCommand());
+      playerCompanionEntity.handleCommand(command);
+      log.debug("Player Companion command {} ({}) for {} from {}", command, message.getCommand(),
+          playerCompanionEntity, serverPlayer);
+    }
+
   }
 
 }

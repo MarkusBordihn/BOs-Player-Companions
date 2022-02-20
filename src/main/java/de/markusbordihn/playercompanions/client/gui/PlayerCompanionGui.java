@@ -57,7 +57,7 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class PlayerCompanionGui extends GuiComponent {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static GuiPosition guiPosition = COMMON.guiPosition.get();

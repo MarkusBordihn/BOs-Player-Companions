@@ -33,7 +33,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -47,10 +46,11 @@ import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.item.ModItems;
+import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
 
 public class Fairy extends HealerEntity {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // General Information
   public static final String ID = "fairy";
@@ -151,22 +151,27 @@ public class Fairy extends HealerEntity {
 
   @Override
   public SoundEvent getPetSound() {
-    return SoundEvents.VILLAGER_CELEBRATE;
+    return ModSoundEvents.COMPANION_FAIRY_HAGGLE.get();
   }
 
   @Override
   protected SoundEvent getAmbientSound() {
-    return SoundEvents.VILLAGER_AMBIENT;
+    return ModSoundEvents.COMPANION_FAIRY_AMBIENT.get();
   }
 
   @Override
   protected SoundEvent getHurtSound(DamageSource damageSource) {
-    return SoundEvents.VILLAGER_HURT;
+    return ModSoundEvents.COMPANION_FAIRY_HURT.get();
   }
 
   @Override
   protected SoundEvent getDeathSound() {
-    return SoundEvents.VILLAGER_DEATH;
+    return ModSoundEvents.COMPANION_FAIRY_DEATH.get();
+  }
+
+  @Override
+  protected float getSoundVolume() {
+    return 0.4F;
   }
 
   @Override

@@ -89,12 +89,10 @@ import de.markusbordihn.playercompanions.network.NetworkHandler;
 public class PlayerCompanionEntity extends PlayerCompanionEntityData
     implements TameablePlayerCompanion {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   // Custom name format
-  private static final ResourceLocation CUSTOM_NAME =
-      new ResourceLocation(Constants.MOD_ID, "companion");
   private static final ResourceLocation RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_respawn_message");
   private static final ResourceLocation WILL_RESPAWN_MESSAGE =
@@ -217,6 +215,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
+  protected void playSound(Player player, SoundEvent sound) {
+    playSound(player, sound, getSoundVolume(), getSoundPitch());
+  }
+
   protected void playSound(Player player, SoundEvent sound, float volume, float pitch) {
     if (player.level.isClientSide) {
       player.playSound(sound, volume, pitch);
@@ -307,6 +309,17 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   @Override
+  public int getAmbientSoundInterval() {
+    return 400;
+  }
+
+  @Override
+  protected float getSoundVolume() {
+    // Is needed to delegate protection for access from move controller.
+    return 1.0F;
+  }
+
+  @Override
   public void setRespawnTimer(int timer) {
     super.setRespawnTimer(timer);
     getServerData().updatePlayerCompanion(this);
@@ -381,11 +394,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   @Override
-  protected float getSoundVolume() {
-    return 1.0F;
-  }
-
-  @Override
   protected void registerGoals() {
     super.registerGoals();
     this.goalSelector.addGoal(1, new FloatGoal(this));
@@ -436,7 +444,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         else if (player.isCrouching() && itemStack.isEmpty()) {
           this.addParticle(ParticleTypes.HEART);
           if (this.getPetSound() != null) {
-            this.playSound(player, this.getPetSound(), 1.0F, 1.0F);
+            this.playSound(player, this.getPetSound());
           }
           NetworkHandler.commandPlayerCompanion(getStringUUID(), PlayerCompanionCommand.PET);
           return InteractionResult.SUCCESS;
@@ -465,7 +473,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       this.heal(item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 0.5F);
       SoundEvent eatingSound = this.getEatingSound(itemStack);
       if (eatingSound != null) {
-        playSound(eatingSound, 1F, 1F);
+        playSound(eatingSound, this.getSoundVolume(), this.getSoundPitch());
       }
       this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
       return InteractionResult.SUCCESS;

@@ -61,7 +61,7 @@ import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 
 public class CapturedCompanion extends Item {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String FALL_DISTANCE_TAG = "FallDistance";
   private static final String FIRE_TAG = "Fire";

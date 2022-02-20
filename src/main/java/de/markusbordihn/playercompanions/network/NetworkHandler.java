@@ -43,7 +43,7 @@ import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanions
 @EventBusSubscriber
 public class NetworkHandler {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String PROTOCOL_VERSION = "1";
   public static final SimpleChannel INSTANCE =

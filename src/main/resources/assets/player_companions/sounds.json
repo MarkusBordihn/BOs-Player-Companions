@@ -1,0 +1,45 @@
+{
+  "companion.fairy.death": {
+    "category": "neutral",
+    "sounds": ["player_companions:companion/fairy/fairy_dead"]
+  },
+  "companion.fairy.haggle": {
+    "category": "neutral",
+    "sounds": [
+      "player_companions:companion/fairy/fairy_haggle1",
+      "player_companions:companion/fairy/fairy_haggle2",
+      "player_companions:companion/fairy/fairy_haggle3"
+    ]
+  },
+  "companion.fairy.hurt": {
+    "category": "neutral",
+    "sounds": [
+      "player_companions:companion/fairy/fairy_hit1",
+      "player_companions:companion/fairy/fairy_hit2"
+    ]
+  },
+  "companion.fairy.ambient": {
+    "category": "neutral",
+    "sounds": [
+      "player_companions:companion/fairy/fairy_idle1",
+      "player_companions:companion/fairy/fairy_idle2",
+      "player_companions:companion/fairy/fairy_idle3"
+    ]
+  },
+  "companion.fairy.yes": {
+    "category": "neutral",
+    "sounds": [
+      "player_companions:companion/fairy/fairy_yes1",
+      "player_companions:companion/fairy/fairy_yes2",
+      "player_companions:companion/fairy/fairy_yes3"
+    ]
+  },
+  "companion.fairy.no": {
+    "category": "neutral",
+    "sounds": [
+      "player_companions:companion/fairy/fairy_no1",
+      "player_companions:companion/fairy/fairy_no2",
+      "player_companions:companion/fairy/fairy_no3"
+    ]
+  }
+}

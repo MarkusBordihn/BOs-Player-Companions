@@ -37,7 +37,7 @@ import de.markusbordihn.playercompanions.client.gui.GuiPosition;
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class CommonConfig {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final ForgeConfigSpec commonSpec;
   public static final Config COMMON;

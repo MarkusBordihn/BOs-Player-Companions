@@ -193,7 +193,7 @@ curseforge {
   project {
     id = "${curseforge_project_id}"
     changelog = 'Please see https://github.com/MarkusBordihn/BOs-Player-Companions ...'
-    releaseType = 'release'
+    releaseType = 'beta'
     addGameVersion("1.18.1")
     addGameVersion("Forge")
     mainArtifact(jar) {

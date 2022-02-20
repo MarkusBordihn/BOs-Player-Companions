@@ -41,7 +41,7 @@ import de.markusbordihn.playercompanions.item.ModItems;
 
 public class Snail extends CollectorEntity {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // General Information
   public static final String ID = "snail";

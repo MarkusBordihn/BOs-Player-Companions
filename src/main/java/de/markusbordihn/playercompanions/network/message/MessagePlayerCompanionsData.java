@@ -34,7 +34,7 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 
 public class MessagePlayerCompanionsData {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private final String data;
 

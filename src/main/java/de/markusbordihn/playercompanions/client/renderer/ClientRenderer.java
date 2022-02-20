@@ -39,7 +39,7 @@ import de.markusbordihn.playercompanions.entity.ModEntityType;
 @OnlyIn(Dist.CLIENT)
 public class ClientRenderer {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // Layer Definitions
   public static final ModelLayerLocation FAIRY =

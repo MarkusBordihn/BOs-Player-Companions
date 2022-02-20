@@ -46,7 +46,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionType;
 
 public class CompanionsMenu extends AbstractContainerMenu {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // Defining basic layout options
   private static int inventoryContainerSize = 16;

@@ -39,6 +39,7 @@ import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.level.spawner.SpawnHandler;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
+import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
 
 @Mod(Constants.MOD_ID)
 public class PlayerCompanions {
@@ -62,6 +63,9 @@ public class PlayerCompanions {
 
     log.info("{} Blocks ...", Constants.LOG_REGISTER_PREFIX);
     ModBlocks.BLOCKS.register(modEventBus);
+
+    log.info("{} Sound Events ...", Constants.LOG_REGISTER_PREFIX);
+    ModSoundEvents.SOUNDS.register(modEventBus);
 
     modEventBus.addListener(SpawnHandler::registerSpawnPlacements);
 

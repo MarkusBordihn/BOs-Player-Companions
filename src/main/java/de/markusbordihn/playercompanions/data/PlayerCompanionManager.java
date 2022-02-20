@@ -47,7 +47,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 @EventBusSubscriber
 public class PlayerCompanionManager {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static short ticks = 0;
   private static final short SYNC_TICK = 25;

@@ -35,7 +35,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 public class MessageCommandPlayerCompanion {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private final String playerCompanionUUID;
   private final String command;

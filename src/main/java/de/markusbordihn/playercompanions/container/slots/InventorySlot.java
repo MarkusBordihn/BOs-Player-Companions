@@ -34,7 +34,7 @@ import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
 public class InventorySlot extends Slot {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private CompanionsMenu menu;
   private final int slot;

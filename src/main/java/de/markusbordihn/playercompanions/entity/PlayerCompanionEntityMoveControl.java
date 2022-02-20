@@ -46,6 +46,7 @@ public class PlayerCompanionEntityMoveControl extends MoveControl {
   private int jumpDelay;
   private int jumpMoveDelay;
   private int waitDelay;
+  private int waitSoundDelay;
 
   public PlayerCompanionEntityMoveControl(Mob mob) {
     super(mob);
@@ -133,8 +134,13 @@ public class PlayerCompanionEntityMoveControl extends MoveControl {
       else if (this.operation == MoveControl.Operation.WAIT && companionEntity.isOrderedToSit()) {
         if (this.waitDelay-- <= 0) {
           this.waitDelay = companionEntity.getWaitDelay();
+
+          // Play wait sound in specific intervals.
+          if (waitSoundDelay++ >= companionEntity.getAmbientSoundInterval()) {
           this.mob.playSound(companionEntity.getWaitSound(), companionEntity.getSoundVolume(),
               companionEntity.getSoundPitch());
+              waitSoundDelay = 0;
+          }
         }
       }
 

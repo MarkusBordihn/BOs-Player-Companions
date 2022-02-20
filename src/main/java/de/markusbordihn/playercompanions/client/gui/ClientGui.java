@@ -31,7 +31,7 @@ import de.markusbordihn.playercompanions.Constants;
 
 public class ClientGui {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected ClientGui() { }
 

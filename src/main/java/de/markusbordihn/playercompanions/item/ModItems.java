@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.item;
 
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.MaterialColor;
 
@@ -55,37 +56,37 @@ public class ModItems {
       ITEMS.register(SmallGhastItem.ID, SmallGhastItem::new);
 
   public static final RegistryObject<Item> SMALL_SLIME_BLACK =
-      ITEMS.register(SmallSlimeItem.ID + "_black", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_black", () -> new SmallSlimeItem(DyeColor.BLACK));
   public static final RegistryObject<Item> SMALL_SLIME_BLUE =
-      ITEMS.register(SmallSlimeItem.ID + "_blue", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_blue", () -> new SmallSlimeItem(DyeColor.BLUE));
   public static final RegistryObject<Item> SMALL_SLIME_BROWN =
-      ITEMS.register(SmallSlimeItem.ID + "_brown", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_brown", () -> new SmallSlimeItem(DyeColor.BROWN));
   public static final RegistryObject<Item> SMALL_SLIME_CYAN =
-      ITEMS.register(SmallSlimeItem.ID + "_cyan", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_cyan", () -> new SmallSlimeItem(DyeColor.CYAN));
   public static final RegistryObject<Item> SMALL_SLIME_GRAY =
-      ITEMS.register(SmallSlimeItem.ID + "_gray", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_gray", () -> new SmallSlimeItem(DyeColor.GRAY));
   public static final RegistryObject<Item> SMALL_SLIME_GREEN =
-      ITEMS.register(SmallSlimeItem.ID + "_green", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_green", () -> new SmallSlimeItem(DyeColor.GREEN));
   public static final RegistryObject<Item> SMALL_SLIME_LIGHT_BLUE =
-      ITEMS.register(SmallSlimeItem.ID + "_light_blue", SmallSlimeItem::new);
-  public static final RegistryObject<Item> SMALL_SLIME_LIGHT_GRAY =
-      ITEMS.register(SmallSlimeItem.ID + "_light_gray", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_light_blue", () -> new SmallSlimeItem(DyeColor.BLUE));
+  public static final RegistryObject<Item> SMALL_SLIME_LIGHT_GRAY = ITEMS
+      .register(SmallSlimeItem.ID + "_light_gray", () -> new SmallSlimeItem(DyeColor.LIGHT_GRAY));
   public static final RegistryObject<Item> SMALL_SLIME_LIME =
-      ITEMS.register(SmallSlimeItem.ID + "_lime", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_lime", () -> new SmallSlimeItem(DyeColor.LIME));
   public static final RegistryObject<Item> SMALL_SLIME_MAGENTA =
-      ITEMS.register(SmallSlimeItem.ID + "_magenta", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_magenta", () -> new SmallSlimeItem(DyeColor.MAGENTA));
   public static final RegistryObject<Item> SMALL_SLIME_ORANGE =
-      ITEMS.register(SmallSlimeItem.ID + "_orange", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_orange", () -> new SmallSlimeItem(DyeColor.ORANGE));
   public static final RegistryObject<Item> SMALL_SLIME_PINK =
-      ITEMS.register(SmallSlimeItem.ID + "_pink", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_pink", () -> new SmallSlimeItem(DyeColor.PINK));
   public static final RegistryObject<Item> SMALL_SLIME_PURPLE =
-      ITEMS.register(SmallSlimeItem.ID + "_purple", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_purple", () -> new SmallSlimeItem(DyeColor.PURPLE));
   public static final RegistryObject<Item> SMALL_SLIME_RED =
-      ITEMS.register(SmallSlimeItem.ID + "_red", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_red", () -> new SmallSlimeItem(DyeColor.RED));
   public static final RegistryObject<Item> SMALL_SLIME_WHITE =
-      ITEMS.register(SmallSlimeItem.ID + "_white", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_white", () -> new SmallSlimeItem(DyeColor.WHITE));
   public static final RegistryObject<Item> SMALL_SLIME_YELLOW =
-      ITEMS.register(SmallSlimeItem.ID + "_yellow", SmallSlimeItem::new);
+      ITEMS.register(SmallSlimeItem.ID + "_yellow", () -> new SmallSlimeItem(DyeColor.YELLOW));
 
   public static final RegistryObject<Item> SNAIL = ITEMS.register(SnailItem.ID, SnailItem::new);
 
@@ -93,6 +94,7 @@ public class ModItems {
   public static final RegistryObject<Item> TAME_APPLE =
       ITEMS.register("tame_apple", TameApple::new);
   public static final RegistryObject<Item> TAME_BONE = ITEMS.register("tame_bone", TameBone::new);
+  public static final RegistryObject<Item> TAME_CAKE = ITEMS.register("tame_cake", TameCake::new);
   public static final RegistryObject<Item> TAME_SEAGRASS =
       ITEMS.register("tame_seagrass", TameBone::new);
 

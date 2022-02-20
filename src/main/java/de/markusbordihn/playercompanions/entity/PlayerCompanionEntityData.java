@@ -21,6 +21,7 @@ package de.markusbordihn.playercompanions.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -45,30 +46,31 @@ import de.markusbordihn.playercompanions.utils.Names;
 public class PlayerCompanionEntityData extends TamableAnimal {
 
   // Entity Data and Tags
+  private static final EntityDataAccessor<Boolean> DATA_ACTIVE =
+      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.BOOLEAN);
   private static final EntityDataAccessor<Integer> DATA_COLOR =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
-  private static final EntityDataAccessor<String> DATA_CUSTOM_COMPANION_NAME =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.STRING);
-  private static final EntityDataAccessor<Integer> DATA_EXPERIENCE_LEVEL =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_EXPERIENCE =
+      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
+  private static final EntityDataAccessor<Integer> DATA_EXPERIENCE_LEVEL =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
+  private static final EntityDataAccessor<String> DATA_CUSTOM_COMPANION_NAME =
+      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.STRING);
+  private static final String DATA_ACTIVE_TAG = "Active";
   private static final String DATA_COLOR_TAG = "Color";
   private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
   private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
   private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
-  private static final String DATA_REMAINING_ANGER_TIME_TAG = "CompanionAngerTimeRemaining";
   private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
   private static final String DATA_VARIANT_TAG = "Variant";
 
   // Temporary states
-  private boolean isActive = true;
   private boolean isFlying = false;
   private boolean isFlyingAround = false;
   private boolean isKeepOnJumping = false;
@@ -78,10 +80,7 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   protected PlayerCompanionEntityData(EntityType<? extends TamableAnimal> entityType, Level level) {
     super(entityType, level);
-  }
-
-  public boolean isActive() {
-    return this.isActive;
+    this.moveControl = new PlayerCompanionEntityMoveControl(this);
   }
 
   public boolean flying() {
@@ -139,6 +138,14 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.entityData.set(DATA_COLOR, dyeColor.getId());
   }
 
+  public boolean isActive() {
+    return this.entityData.get(DATA_ACTIVE);
+  }
+
+  public void setActive(boolean active) {
+    this.entityData.set(DATA_ACTIVE, active);
+  }
+
   public String getVariant() {
     return this.entityData.get(DATA_VARIANT);
   }
@@ -149,6 +156,10 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public String getCustomCompanionName() {
     return this.entityData.get(DATA_CUSTOM_COMPANION_NAME);
+  }
+
+  public TextComponent getCustomCompanionNameComponent() {
+    return new TextComponent(getCustomCompanionName());
   }
 
   public void setCustomCompanionName(String name) {
@@ -185,13 +196,13 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public void setRespawnTimer(int timer) {
     if (timer > java.time.Instant.now().getEpochSecond()) {
-      this.isActive = false;
+      this.setActive(false);
     }
     this.entityData.set(DATA_RESPAWN_TIMER, timer);
   }
 
   public void stopRespawnTimer() {
-    this.isActive = true;
+    this.setActive(true);
     this.setRespawnTimer(0);
   }
 
@@ -215,6 +226,10 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     return ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
   }
 
+  public void setWantedPosition(double x, double y, double z, double speed) {
+    this.moveControl.setWantedPosition(x, y, z, speed);
+  }
+
   public boolean hasOwner() {
     return this.getOwnerUUID() != null;
   }
@@ -222,7 +237,7 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   public BlockPos ownerBlockPosition() {
     if (this.hasOwner()) {
       LivingEntity owner = this.getOwner();
-      if (owner.isAlive() && owner.isAddedToWorld()) {
+      if (owner != null && owner.isAlive() && owner.isAddedToWorld()) {
         return owner.blockPosition();
       }
     }
@@ -241,6 +256,7 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   @Override
   protected void defineSynchedData() {
     super.defineSynchedData();
+    this.entityData.define(DATA_ACTIVE, true);
     this.entityData.define(DATA_COLOR, DyeColor.GREEN.getId());
     this.entityData.define(DATA_CUSTOM_COMPANION_NAME, getRandomName());
     this.entityData.define(DATA_EXPERIENCE, 0);
@@ -253,23 +269,23 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   @Override
   public void addAdditionalSaveData(CompoundTag compoundTag) {
     super.addAdditionalSaveData(compoundTag);
+    compoundTag.putBoolean(DATA_ACTIVE_TAG, this.isActive());
     compoundTag.putByte(DATA_COLOR_TAG, (byte) this.getColor().getId());
-    compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
-    compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_EXPERIENCE_LEVEL_TAG, this.getExperienceLevel());
+    compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
+    compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
     compoundTag.putString(DATA_VARIANT_TAG, this.getVariant());
   }
 
   @Override
   public void readAdditionalSaveData(CompoundTag compoundTag) {
     super.readAdditionalSaveData(compoundTag);
+    this.setActive(compoundTag.getBoolean(DATA_ACTIVE_TAG));
     if (compoundTag.contains(DATA_COLOR_TAG, 99)) {
       this.setColor(DyeColor.byId(compoundTag.getInt(DATA_COLOR_TAG)));
     }
-    if (compoundTag.contains(DATA_CUSTOM_COMPANION_NAME_TAG)) {
-      this.setCustomCompanionName(compoundTag.getString(DATA_CUSTOM_COMPANION_NAME_TAG));
-    }
+
     this.setExperience(compoundTag.getInt(DATA_EXPERIENCE_TAG));
     this.setExperienceLevel(compoundTag.getInt(DATA_EXPERIENCE_LEVEL_TAG));
 
@@ -278,7 +294,12 @@ public class PlayerCompanionEntityData extends TamableAnimal {
       this.setRespawnTimer(compoundTag.getInt(DATA_RESPAWN_TIMER_TAG));
     }
 
+    if (compoundTag.contains(DATA_CUSTOM_COMPANION_NAME_TAG)) {
+      this.setCustomCompanionName(compoundTag.getString(DATA_CUSTOM_COMPANION_NAME_TAG));
+    }
+
     this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
+
   }
 
   @Override

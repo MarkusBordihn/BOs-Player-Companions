@@ -144,6 +144,9 @@ dependencies {
   // Jade Integration
   implementation fg.deobf("curse.maven:jade-324717:3614180")
 
+  // Testing
+  // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
+
   // Additional helpful Mods for development (dev depenedency)
   runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
   runtimeOnly fg.deobf("curse.maven:jei-238222:3550020")
@@ -189,9 +192,15 @@ curseforge {
   apiKey = "${credentials.curseforge_api_token}"
   project {
     id = "${curseforge_project_id}"
-    changelog = 'Please set https://github.com/MarkusBordihn/BOs-Player-Companions ...'
+    changelog = 'Please see https://github.com/MarkusBordihn/BOs-Player-Companions ...'
     releaseType = 'release'
     addGameVersion("1.18.1")
     addGameVersion("Forge")
+    mainArtifact(jar) {
+      relations {
+        optionalDependency 'jade'
+        optionalDependency 'neat'
+      }
+    }
   }
 }

@@ -37,10 +37,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -54,7 +55,6 @@ public class Fairy extends HealerEntity {
   // General Information
   public static final String ID = "fairy";
   public static final String NAME = "Fairy";
-  public static final MobCategory CATEGORY = MobCategory.CREATURE;
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
@@ -84,13 +84,18 @@ public class Fairy extends HealerEntity {
   }
 
   @Override
-  public Item getCompanionItem() {
-    return COMPANION_ITEM_BY_VARIANT.get(this.getVariant());
+  public Item getTameItem() {
+    return ModItems.TAME_CAKE.get();
   }
 
   @Override
-  public Item getTameItem() {
-    return ModItems.TAME_APPLE.get();
+  protected Ingredient getFoodItems() {
+    return Ingredient.of(Items.CAKE);
+  }
+
+  @Override
+  public Item getCompanionItem() {
+    return COMPANION_ITEM_BY_VARIANT.get(this.getVariant());
   }
 
   class FairyRandomMoveGoal extends Goal {
@@ -117,8 +122,8 @@ public class Fairy extends HealerEntity {
 
       BlockPos blockPos = Fairy.this.ownerBlockPosition();
       for (int i = 0; i < 3; ++i) {
-        BlockPos randomBlockPos = blockPos.offset(Fairy.this.random.nextInt(15) - 7,
-            Fairy.this.random.nextInt(11) - 5, Fairy.this.random.nextInt(15) - 7);
+        BlockPos randomBlockPos = blockPos.offset(Fairy.this.random.nextInt(12) - 6,
+            Fairy.this.random.nextInt(12) - 6, Fairy.this.random.nextInt(12) - 6);
         if (Fairy.this.level.isEmptyBlock(randomBlockPos)) {
           Fairy.this.moveControl.setWantedPosition(randomBlockPos.getX() + 0.5D,
               randomBlockPos.getY() + 0.5D, randomBlockPos.getZ() + 0.5D, 0.25D);

@@ -86,7 +86,6 @@ public class PlayerCompanionGui extends GuiComponent {
 
   @SubscribeEvent()
   public void renderOverlay(RenderGameOverlayEvent.Pre event) {
-
     if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
       return;
     }

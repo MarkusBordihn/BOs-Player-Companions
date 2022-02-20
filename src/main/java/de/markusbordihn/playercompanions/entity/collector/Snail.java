@@ -27,7 +27,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -47,7 +46,6 @@ public class Snail extends CollectorEntity {
   // General Information
   public static final String ID = "snail";
   public static final String NAME = "Snail";
-  public static final MobCategory CATEGORY = MobCategory.CREATURE;
 
   public Snail(EntityType<? extends CollectorEntity> entityType, Level level) {
     super(entityType, level);

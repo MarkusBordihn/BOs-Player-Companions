@@ -26,10 +26,13 @@ import mcp.mobius.waila.api.config.IPluginConfig;
 import mcp.mobius.waila.api.ui.IElement;
 import mcp.mobius.waila.impl.ui.ElementHelper;
 
+import snownee.jade.VanillaPlugin;
+
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.UsernameCache;
 
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
@@ -47,8 +50,11 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
       tooltip.add(new TextComponent("Type: " + playerCompanionEntity.getCompanionType()));
       if (playerCompanionEntity.getOwner() != null) {
         PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
-        tooltip
-            .add(new TextComponent("Owner: ").append(playerCompanionEntity.getOwner().getName()));
+        if (!config.get(VanillaPlugin.ANIMAL_OWNER)) {
+          String ownerName =
+              UsernameCache.getLastKnownUsername(playerCompanionEntity.getOwnerUUID());
+          tooltip.add(new TextComponent("Owner: " + ownerName));
+        }
         if (data != null) {
           if (data.isOrderedToSit()) {
             tooltip.add(new TextComponent("Order: Sitting"));

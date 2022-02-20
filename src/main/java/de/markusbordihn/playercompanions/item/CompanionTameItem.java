@@ -19,12 +19,16 @@
 
 package de.markusbordihn.playercompanions.item;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -32,6 +36,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity.RemovalReason;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,10 +47,13 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
+import de.markusbordihn.playercompanions.text.TranslatableText;
 
 public class CompanionTameItem extends Item {
 
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
+  public static final Set<String> TAMEABLE_MOB_TYPES = Collections.emptySet();
 
   public CompanionTameItem() {
     this(new Item.Properties().tab(PlayerCompanionsTab.TAB_TAME_ITEMS));
@@ -56,7 +64,7 @@ public class CompanionTameItem extends Item {
   }
 
   public void convertEntityToItem(Item companionItem, Player player, LivingEntity livingEntity,
-      InteractionHand hand) {
+      InteractionHand hand, Level level) {
     log.info("Convert Living Entity: {}", livingEntity);
 
     // Capture mob inside item.
@@ -69,8 +77,15 @@ public class CompanionTameItem extends Item {
     // Discarded Entity from the world
     livingEntity.setRemoved(RemovalReason.DISCARDED);
 
-    // Give Player new item
-    player.getInventory().add(itemStack);
+    // Try to give Player new item or drop item.
+    if (!player.getInventory().add(itemStack)) {
+      BlockPos blockPos = livingEntity.blockPosition();
+      if (!level.addFreshEntity(
+          new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack))) {
+        log.error("Unable to give item {} to player {} or to drop it to the world {}!", itemStack,
+            player, level);
+      }
+    }
   }
 
   public boolean canTameCompanion(LivingEntity livingEntity) {
@@ -79,6 +94,10 @@ public class CompanionTameItem extends Item {
 
   public boolean canTameCompanionType(String mobType) {
     return !mobType.isEmpty();
+  }
+
+  public Set<String> getTameableMobTypes() {
+    return TAMEABLE_MOB_TYPES;
   }
 
   @Override
@@ -107,7 +126,7 @@ public class CompanionTameItem extends Item {
             if (livingEntity instanceof PlayerCompanionEntity companionEntity) {
               Item companionItem = companionEntity.getCompanionItem();
               if (companionItem != null) {
-                convertEntityToItem(companionItem, player, livingEntity, hand);
+                convertEntityToItem(companionItem, player, livingEntity, hand, level);
               } else {
                 log.error("Unable to capture companion entity {} in item {}!", livingEntity,
                     companionItem);
@@ -133,7 +152,31 @@ public class CompanionTameItem extends Item {
   @Override
   public void appendHoverText(ItemStack itemStack, @Nullable Level level,
       List<Component> tooltipList, TooltipFlag tooltipFlag) {
+    // Display description.
     tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tame_companion"));
+
+    // Display possible tameable mobs.
+    Set<String> tameableMobTypes = getTameableMobTypes();
+    if (!tameableMobTypes.isEmpty()) {
+      TranslatableComponent tameableMobTypeOverview =
+          (TranslatableComponent) new TranslatableComponent("")
+              .withStyle(ChatFormatting.DARK_GREEN);
+      for (String tamableMob : tameableMobTypes) {
+        TranslatableComponent acceptedMobName = TranslatableText.getEntityName(tamableMob);
+        if (!acceptedMobName.getString().isBlank()) {
+          tameableMobTypeOverview.append(acceptedMobName).append(", ")
+              .withStyle(ChatFormatting.DARK_GREEN);
+        }
+      }
+      if (!tameableMobTypeOverview.getString().isBlank()) {
+        TranslatableComponent tameableMobsOverview =
+            (TranslatableComponent) new TranslatableComponent(
+                Constants.TEXT_PREFIX + "tameable_companions").append(" ")
+                    .withStyle(ChatFormatting.GREEN);
+        tameableMobsOverview.append(tameableMobTypeOverview).append("...");
+        tooltipList.add(tameableMobsOverview);
+      }
+    }
   }
 
 }

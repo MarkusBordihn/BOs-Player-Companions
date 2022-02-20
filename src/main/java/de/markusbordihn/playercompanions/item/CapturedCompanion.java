@@ -42,6 +42,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -68,8 +69,21 @@ public class CapturedCompanion extends Item {
 
   public static final String COMPANION_UUID_TAG = "CompanionUUID";
 
+  private DyeColor color = null;
+  private String variant = null;
+
   public CapturedCompanion() {
     this(new Item.Properties().stacksTo(1).durability(16).tab(PlayerCompanionsTab.TAB_COMPANIONS));
+  }
+
+  public CapturedCompanion(DyeColor color) {
+    this();
+    this.color = color;
+  }
+
+  public CapturedCompanion(String variant) {
+    this();
+    this.variant = variant;
   }
 
   public CapturedCompanion(Properties properties) {
@@ -88,6 +102,13 @@ public class CapturedCompanion extends Item {
     return null;
   }
 
+  private CompoundTag setCompanionUUID(ItemStack itemStack, UUID uuid) {
+    CompoundTag compoundTag = itemStack.getOrCreateTag();
+    compoundTag.putUUID(COMPANION_UUID_TAG, uuid);
+    return compoundTag;
+  }
+
+
   public Entity getCompanionEntity(ItemStack itemStack, ServerLevel serverLevel) {
     UUID companionUUID = getCompanionUUID(itemStack);
     return serverLevel.getEntity(companionUUID);
@@ -105,15 +126,27 @@ public class CapturedCompanion extends Item {
 
     // If companion exits, just port the companion to the player.
     if (playerCompanion != null && playerCompanion.isAlive()) {
-
       if (playerCompanion.closerThan(player, 16)) {
-        player
-            .sendMessage(new TranslatableComponent(Constants.TEXT_PREFIX + "companion_is_near_you",
-                playerCompanion.getName()), Util.NIL_UUID);
+        if (playerCompanion instanceof PlayerCompanionEntity playerCompanionEntity) {
+          playerCompanionEntity.setWantedPosition(blockPos.getX() + 0.5, blockPos.getY(),
+              blockPos.getZ() + 0.5, 1.0);
+        } else {
+          player.sendMessage(
+              new TranslatableComponent(Constants.TEXT_PREFIX + "companion_is_near_you",
+                  playerCompanion.getName()),
+              Util.NIL_UUID);
+        }
       } else {
-        Vec3 playerPosition = player.position();
-        playerCompanion.teleportTo(playerPosition.x, playerPosition.y, playerPosition.z);
-        log.info("Teleport existing companion {}", playerCompanion);
+        BlockState blockState = level.getBlockState(blockPos);
+        if (blockState.is(Blocks.AIR) || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
+            || blockState.is(Blocks.SEAGRASS)) {
+          playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
+          log.debug("Teleport companion {} to position ...", playerCompanion, blockPos);
+        } else {
+          Vec3 playerPosition = player.position();
+          playerCompanion.teleportTo(playerPosition.x, playerPosition.y, playerPosition.z);
+          log.debug("Teleport companion {} to player ...", playerCompanion, player);
+        }
         return true;
       }
       return false;
@@ -134,7 +167,7 @@ public class CapturedCompanion extends Item {
       if (blockState.is(Blocks.AIR) || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
           || blockState.is(Blocks.SEAGRASS)) {
         // Adjust entity position to spawn position.
-        entity.setPosRaw(blockPos.getX(), blockPos.getY() + 0.001, blockPos.getZ());
+        entity.setPosRaw(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
 
         // Add entity to the world.
         log.debug("Spawn companion {} with {}", entity);
@@ -165,6 +198,26 @@ public class CapturedCompanion extends Item {
     return true;
   }
 
+  public boolean createCompanion(ItemStack itemStack, Player player, Level level) {
+    EntityType<?> entityType = this.getEntityType();
+    if (entityType != null) {
+      Entity entity = entityType.create(level);
+      if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
+        if (this.color != null) {
+          playerCompanionEntity.setColor(this.color);
+        }
+        if (this.variant != null && !this.variant.isBlank()) {
+          playerCompanionEntity.setVariant(this.variant);
+        }
+        playerCompanionEntity.finalizeSpawn();
+        playerCompanionEntity.tameAndFollow(player);
+        setCompanionUUID(itemStack, entity.getUUID());
+        return true;
+      }
+    }
+    return false;
+  }
+
   public Entity getCompanionEntity(ItemStack itemStack, Level level) {
     PlayerCompanionData playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
     EntityType<?> entityType = playerCompanion.getEntityType();
@@ -189,6 +242,10 @@ public class CapturedCompanion extends Item {
     return entity;
   }
 
+  public EntityType<?> getEntityType() {
+    return null;
+  }
+
   @Override
   public InteractionResult interactLivingEntity(ItemStack itemStack, Player player,
       LivingEntity livingEntity, InteractionHand hand) {
@@ -198,9 +255,9 @@ public class CapturedCompanion extends Item {
       return InteractionResult.FAIL;
     }
 
-    // Try to despawn companion.
+    // Try to despawn companion (server-side only).
     Level level = player.getLevel();
-    if (despawnCompanion(livingEntity, itemStack, level)) {
+    if (!level.isClientSide() && despawnCompanion(livingEntity, itemStack, level)) {
       return InteractionResult.CONSUME;
     }
 
@@ -221,8 +278,8 @@ public class CapturedCompanion extends Item {
     ItemStack itemStack = context.getItemInHand();
     Player player = context.getPlayer();
 
-    // Check if we have any captured companion.
-    if (!hasCompanion(itemStack)) {
+    // Check if we have any captured companion, if not try to create one.
+    if (!hasCompanion(itemStack) && !createCompanion(itemStack, player, level)) {
       return InteractionResult.FAIL;
     }
 
@@ -277,9 +334,9 @@ public class CapturedCompanion extends Item {
   public int getBarColor(ItemStack itemStack) {
     PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
     if (playerCompanion != null) {
-      float color =
+      float barColor =
           Math.max(0.0F, playerCompanion.getEntityHealth() / playerCompanion.getEntityHealthMax());
-      return Mth.hsvToRgb(color / 3.0F, 1.0F, 1.0F);
+      return Mth.hsvToRgb(barColor / 3.0F, 1.0F, 1.0F);
     }
     return super.getBarColor(itemStack);
   }
@@ -295,6 +352,9 @@ public class CapturedCompanion extends Item {
           playerCompanion.getEntityHealth()));
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_owner",
           playerCompanion.getOwnerName()));
+      tooltipList.add(new TranslatableComponent(
+          Constants.TEXT_PREFIX + (playerCompanion.isOrderedToSit() ? "tamed_companion_order_to_sit"
+              : "tamed_companion_order_to_follow")));
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_food"));
     }
   }

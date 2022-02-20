@@ -33,7 +33,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -64,7 +63,6 @@ public class SmallGhast extends GuardEntity {
   // General Information
   public static final String ID = "small_ghast";
   public static final String NAME = "Small Ghast";
-  public static final MobCategory CATEGORY = MobCategory.CREATURE;
   public static final EntityDimensions entityDimensions = new EntityDimensions(0.675f, 0.9f, false);
 
   // Config settings
@@ -87,9 +85,6 @@ public class SmallGhast extends GuardEntity {
   class SmallGhastShootFireballGoal extends Goal {
 
     private int chargeTime;
-
-    public SmallGhastShootFireballGoal() {
-    }
 
     public boolean canUse() {
       return SmallGhast.this.getTarget() != null;

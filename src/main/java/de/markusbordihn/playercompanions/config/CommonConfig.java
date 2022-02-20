@@ -69,6 +69,12 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue guiOffsetX;
     public final ForgeConfigSpec.IntValue guiOffsetY;
 
+    public final ForgeConfigSpec.BooleanValue hudEnabled;
+    public final ForgeConfigSpec.BooleanValue hudNameTagEnabled;
+    public final ForgeConfigSpec.BooleanValue hudOwnerEnabled;
+    public final ForgeConfigSpec.BooleanValue hudStatusEnabled;
+    public final ForgeConfigSpec.IntValue hudDisplayRadius;
+
     public final ForgeConfigSpec.IntValue collectorTypeRadius;
 
     public final ForgeConfigSpec.IntValue healerTypeRadius;
@@ -110,13 +116,24 @@ public class CommonConfig {
           .define("enableCompanionGhost", true);
       builder.pop();
 
-      builder.push("General");
+      builder.push("Gui");
       guiPosition = builder.comment("Position for the gui elements.").defineEnum("guiPosition",
           GuiPosition.HOTBAR_RIGHT);
       guiOffsetX = builder.comment("The offset on X axis from chosen position.")
           .defineInRange("guiOffsetX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
       guiOffsetY = builder.comment("The offset on X axis from chosen position.")
           .defineInRange("guiOffsetY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+      builder.pop();
+
+      builder.push("Hud");
+      hudEnabled = builder.comment("Enable hud.").define("hudEnabled", false);
+      hudNameTagEnabled = builder.comment("Enable additional display of name tag.")
+          .define("hudNameTagEnabled", false);
+      hudOwnerEnabled = builder.comment("Enable display of owner.").define("hudOwnerEnabled", true);
+      hudStatusEnabled = builder.comment("Enable display of status like sitting.")
+          .define("hudStatusEnabled", true);
+      hudDisplayRadius = builder.comment("Radius in which hud is displayed.")
+          .defineInRange("hudDisplayRadius", 32, 0, 256);
       builder.pop();
 
       builder.push("Collector Type");

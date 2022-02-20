@@ -19,7 +19,11 @@
 
 package de.markusbordihn.playercompanions.item.companions;
 
+import net.minecraft.world.entity.EntityType;
+
+import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
 
 public class SmallGhastItem extends CapturedCompanion {
 
@@ -31,6 +35,11 @@ public class SmallGhastItem extends CapturedCompanion {
 
   public SmallGhastItem(Properties properties) {
     super(properties);
+  }
+
+  @Override
+  public EntityType<SmallGhast> getEntityType() {
+    return ModEntityType.SMALL_GHAST.get();
   }
 
 }

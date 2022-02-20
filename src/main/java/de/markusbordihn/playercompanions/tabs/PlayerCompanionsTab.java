@@ -28,19 +28,19 @@ public class PlayerCompanionsTab {
 
   protected PlayerCompanionsTab() {}
 
-  public static final CreativeModeTab TAB_SPAWN_EGGS = new CreativeModeTab("companion_spawn_eggs") {
+  public static final CreativeModeTab TAB_SPAWN_EGGS = new CreativeModeTab("player_companions.spawn_eggs") {
     public ItemStack makeIcon() {
       return new ItemStack(ModItems.SMALL_GHAST_SPAWN_EGG.get());
     }
   };
 
-  public static final CreativeModeTab TAB_COMPANIONS = new CreativeModeTab("companions") {
+  public static final CreativeModeTab TAB_COMPANIONS = new CreativeModeTab("player_companions") {
     public ItemStack makeIcon() {
       return new ItemStack(ModItems.SMALL_SLIME_GREEN.get());
     }
   };
 
-  public static final CreativeModeTab TAB_TAME_ITEMS = new CreativeModeTab("companion_tame_items") {
+  public static final CreativeModeTab TAB_TAME_ITEMS = new CreativeModeTab("player_companions.tame_items") {
         public ItemStack makeIcon() {
       return new ItemStack(ModItems.TAME_APPLE.get());
     }

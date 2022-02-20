@@ -37,11 +37,11 @@ public class ClientGui {
 
   public static void registerClientGui(final FMLLoadCompleteEvent event) {
 
-    log.info("{} Client Gui ...", Constants.LOG_REGISTER_PREFIX);
+    log.info("{} Client Gui and Hud ...", Constants.LOG_REGISTER_PREFIX);
 
     event.enqueueWork(() -> {
       Minecraft minecraft = Minecraft.getInstance();
-      MinecraftForge.EVENT_BUS.register(new PlayerCompanionGui(minecraft));
+      // MinecraftForge.EVENT_BUS.register(new PlayerCompanionGui(minecraft));
       MinecraftForge.EVENT_BUS.register(new PlayerCompanionHud(minecraft));
     });
   }

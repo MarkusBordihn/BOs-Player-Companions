@@ -17,32 +17,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.client.screen;
+package de.markusbordihn.playercompanions.item.tameitems;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-import net.minecraft.client.gui.screens.MenuScreens;
+import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
+public class TameCake extends CompanionTameItem {
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.ModContainer;
+  private static final Set<String> tameableMobTypes = new HashSet<>(Arrays.asList(
+  // @formatter:off
+    "player_companions:fairy"
+  // @formatter:on
+  ));
 
-@OnlyIn(Dist.CLIENT)
-public class ClientScreens {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
-  protected ClientScreens() {}
-
-  public static void registerScreens(final FMLClientSetupEvent event) {
-    log.info("{} Client Screens ...", Constants.LOG_REGISTER_PREFIX);
-
-    event.enqueueWork(() -> {
-      MenuScreens.register(ModContainer.COMPANIONS_MENU.get(), CompanionsScreen::new);
-    });
+  public TameCake() {
+    super();
   }
+
+  public TameCake(Properties properties) {
+    super(properties);
+  }
+
+  @Override
+  public Set<String> getTameableMobTypes() {
+    return tameableMobTypes;
+  }
+
 }

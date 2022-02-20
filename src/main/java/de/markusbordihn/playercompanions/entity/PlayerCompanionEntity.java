@@ -99,10 +99,14 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       new ResourceLocation(Constants.MOD_ID, "companion_respawn_message");
   private static final ResourceLocation WILL_RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_will_respawn_message");
+  private static final ResourceLocation WILL_NOT_RESPAWN_MESSAGE =
+      new ResourceLocation(Constants.MOD_ID, "companion_will_not_respawn_message");
 
   // Config settings
   private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
   private static int respawnDelay = COMMON.respawnDelay.get();
+
+  private static final int INACTIVE_TICK = 100;
 
   // Temporary states
   private boolean wasOnGround;
@@ -110,12 +114,16 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Anger state
   private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
   private UUID persistentAngerTarget;
+  private int ticker = 0;
+
 
   public PlayerCompanionEntity(EntityType<? extends PlayerCompanionEntity> entityType,
       Level level) {
     super(entityType, level);
-    this.moveControl = new PlayerCompanionEntityMoveControl(this);
     this.setTame(false);
+
+    // Distribute Ticks along several entities
+    this.ticker = (short) this.random.nextInt(0, 50);
   }
 
   @SubscribeEvent
@@ -159,7 +167,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     return null;
   }
 
-  protected void tameAndFollow(Player player) {
+  public void tameAndFollow(Player player) {
     this.tame(player);
     this.follow();
 
@@ -177,7 +185,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
-  public SoundEvent getPetSound() {
+  protected SoundEvent getPetSound() {
     return SoundEvents.WOLF_WHINE;
   }
 
@@ -198,7 +206,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     this.persistentAngerTarget = uuid;
   }
 
-  public void addParticle(ParticleOptions particleOptions) {
+  protected void addParticle(ParticleOptions particleOptions) {
     for (int i = 0; i < 4; ++i) {
       float randomCircleDistance = this.random.nextFloat() * ((float) Math.PI * 2F);
       float randomOffset = this.random.nextFloat() * 0.5F + 0.5F;
@@ -209,7 +217,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
-  public void playSound(Player player, SoundEvent sound, float volume, float pitch) {
+  protected void playSound(Player player, SoundEvent sound, float volume, float pitch) {
     if (player.level.isClientSide) {
       player.playSound(sound, volume, pitch);
     }
@@ -246,12 +254,12 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
-  public void follow() {
+  protected void follow() {
     this.setOrderedToSit(false);
     this.navigation.recomputePath();
   }
 
-  public void sit() {
+  protected void sit() {
     this.setOrderedToSit(true);
     this.navigation.stop();
     this.setTarget((LivingEntity) null);
@@ -293,6 +301,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     return PlayerCompanionsServerData.get().getCompanion(getUUID());
   }
 
+  public void finalizeSpawn() {
+    // Set random custom companion name
+    this.setCustomName(this.getCustomCompanionNameComponent());
+  }
+
   @Override
   public void setRespawnTimer(int timer) {
     super.setRespawnTimer(timer);
@@ -320,7 +333,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public InteractionResult tamePlayerCompanion(ItemStack itemStack, Player player,
       LivingEntity livingEntity, InteractionHand hand) {
-    if (!player.getAbilities().instabuild) {
+    if (itemStack != null && !player.getAbilities().instabuild) {
       itemStack.shrink(1);
     }
     if (this.random.nextInt(4) == 0
@@ -381,7 +394,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     if (!this.isTame()) {
       this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, Ingredient.of(getTameItem()), false));
     }
-    this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 4.0F, 1.0F, flying()));
+    if (this.flyingAround()) {
+      this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 8.0F, 4.0F, true));
+    } else if (this.flying()) {
+      this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 8.0F, 2.0F, true));
+    } else {
+      this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 4.0F, 1.0F, false));
+    }
     this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
     this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
   }
@@ -477,21 +496,23 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
         spawnGroupData, compoundTag);
 
-    // Set random custom companion name
-    setCustomName(new TranslatableComponent(Util.makeDescriptionId("entity", CUSTOM_NAME),
-        new TextComponent(getCustomCompanionName())));
-
+    finalizeSpawn();
     return spawnGroupData;
   }
 
   @Override
   public void tick() {
+
     // Perform tick for AI and other important steps.
     super.tick();
 
     // Allow do disable entity to save performance and to allow basic respawn logic.
     if (!isActive()) {
-      return;
+      if (ticker++ >= INACTIVE_TICK) {
+        ticker = 0;
+      } else {
+        return;
+      }
     }
 
     // Shows particle and play sound after jump or fall.
@@ -523,14 +544,20 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     LivingEntity owner = getOwner();
     if (isTame() && owner != null && !this.level.isClientSide()) {
-      if (respawnDelay > 1) {
-        setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
-      }
       if (respawnOnDeath) {
+        if (respawnDelay > 1) {
+          setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
+        }
         owner.sendMessage(
             new TranslatableComponent(Util.makeDescriptionId("entity", WILL_RESPAWN_MESSAGE),
                 getCustomCompanionName(), respawnDelay),
             Util.NIL_UUID);
+      } else {
+        owner.sendMessage(
+            new TranslatableComponent(Util.makeDescriptionId("entity", WILL_NOT_RESPAWN_MESSAGE),
+                getCustomCompanionName()),
+            Util.NIL_UUID);
+        setActive(false);
       }
     }
     super.die(damageSource);

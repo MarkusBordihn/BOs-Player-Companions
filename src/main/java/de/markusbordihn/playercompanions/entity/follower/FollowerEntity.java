@@ -21,6 +21,7 @@ package de.markusbordihn.playercompanions.entity.follower;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
@@ -31,6 +32,8 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionType;
 
 public class FollowerEntity extends PlayerCompanionEntity {
+
+  public static final MobCategory CATEGORY = MobCategory.CREATURE;
 
   public FollowerEntity(EntityType<? extends FollowerEntity> entityType, Level level) {
     super(entityType, level);

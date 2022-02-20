@@ -25,6 +25,8 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 
 import de.markusbordihn.playercompanions.Constants;
@@ -34,6 +36,7 @@ import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
 import de.markusbordihn.playercompanions.client.model.SnailModel;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 
+@OnlyIn(Dist.CLIENT)
 public class ClientRenderer {
 
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);

@@ -19,6 +19,8 @@
 
 package de.markusbordihn.playercompanions;
 
+import net.minecraftforge.fml.ModList;
+
 public final class Constants {
 
   protected Constants() {
@@ -38,4 +40,9 @@ public final class Constants {
   // Prefixes
   public static final String TEXT_PREFIX = "text.player_companions.";
   public static final String KEY_PREFIX = "key.player_companions.";
+
+  // 3rd Party Mods
+  public static final String NEAT_MOD = "neat";
+  public static final String NEAT_NAME = "Neat";
+  public static final boolean NEAT_LOADED = ModList.get().isLoaded(NEAT_MOD);
 }

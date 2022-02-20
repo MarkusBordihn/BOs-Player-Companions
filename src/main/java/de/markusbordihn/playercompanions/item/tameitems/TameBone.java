@@ -19,9 +19,19 @@
 
 package de.markusbordihn.playercompanions.item.tameitems;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
 public class TameBone extends CompanionTameItem {
+
+  private static final Set<String> tameableMobTypes = new HashSet<>(Arrays.asList(
+  // @formatter:off
+    "player_companions:small_ghast"
+  // @formatter:on
+  ));
 
   public TameBone() {
     super();
@@ -29,6 +39,11 @@ public class TameBone extends CompanionTameItem {
 
   public TameBone(Properties properties) {
     super(properties);
+  }
+
+  @Override
+  public Set<String> getTameableMobTypes() {
+    return tameableMobTypes;
   }
 
 }

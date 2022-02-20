@@ -27,14 +27,12 @@ import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import net.minecraft.client.KeyMapping;
+
 import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.network.NetworkHandler;
-//import de.markusbordihn.playercompanions.network.message.MessageOpenCompanionsMenu;
 
 public class ModKeyMapping {
 
@@ -46,22 +44,10 @@ public class ModKeyMapping {
       new KeyMapping(Constants.KEY_PREFIX + "control", KeyConflictContext.IN_GAME,
           InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL),
           Constants.KEY_PREFIX + "category");
-  //public static final KeyMapping KEY_OPEN = new KeyMapping(
-  //   Constants.KEY_PREFIX + "player_companions", KeyConflictContext.IN_GAME,
-  //    InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_N), Constants.KEY_PREFIX + "category");
-
-  public static void handleKeyMapping(InputEvent.KeyInputEvent event) {
-    //if (KEY_OPEN.isDown()) {
-    //  NetworkHandler.INSTANCE.sendToServer(new MessageOpenCompanionsMenu());
-    //}
-  }
 
   public static void registerKeyMapping(final FMLClientSetupEvent event) {
     log.info("{} Key Mapping ...", Constants.LOG_REGISTER_PREFIX);
 
-    event.enqueueWork(() -> {
-      ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_COMMAND);
-      //ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_OPEN);
-    });
+    event.enqueueWork(() -> ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_COMMAND));
   }
 }

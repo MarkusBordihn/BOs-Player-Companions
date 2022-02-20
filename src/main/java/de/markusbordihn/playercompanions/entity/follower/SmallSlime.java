@@ -38,7 +38,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -63,7 +62,6 @@ public class SmallSlime extends FollowerEntity {
   // General Information
   public static final String ID = "small_slime";
   public static final String NAME = "Small Slime";
-  public static final MobCategory CATEGORY = MobCategory.CREATURE;
 
   // Entity texture by color
   private static final Map<DyeColor, ResourceLocation> TEXTURE_BY_COLOR =

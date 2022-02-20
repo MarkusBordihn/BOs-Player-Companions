@@ -68,7 +68,6 @@ public class PlayerCompanions {
     forgeEventBus.addListener(ServerSetup::handleServerStartingEvent);
 
     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-      forgeEventBus.addListener(ModKeyMapping::handleKeyMapping);
       modEventBus.addListener(ClientGui::registerClientGui);
       modEventBus.addListener(ClientRenderer::registerEntityLayerDefinitions);
       modEventBus.addListener(ClientRenderer::registerEntityRenderers);

@@ -50,6 +50,7 @@ public class NetworkHandler {
       NetworkRegistry.newSimpleChannel(new ResourceLocation(Constants.MOD_ID, "network"),
           () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
   private static int id = 0;
+  private static String lastCompanionDataPackage;
 
   protected NetworkHandler() {}
 
@@ -67,9 +68,9 @@ public class NetworkHandler {
           MessageCommandPlayerCompanion::handle);
 
       // Sync Player Companion Data: Server -> Client
-      INSTANCE.registerMessage(id++, MessagePlayerCompanionsData.class, (message, buffer) -> {
-        buffer.writeUtf(message.getData());
-      }, buffer -> new MessagePlayerCompanionsData(buffer.readUtf()),
+      INSTANCE.registerMessage(id++, MessagePlayerCompanionsData.class,
+          (message, buffer) -> buffer.writeUtf(message.getData()),
+          buffer -> new MessagePlayerCompanionsData(buffer.readUtf()),
           MessagePlayerCompanionsData::handle);
     });
   }
@@ -88,17 +89,20 @@ public class NetworkHandler {
       PlayerCompanionCommand command) {
     if (playerCompanionUUID != null && command != null) {
       log.debug("commandPlayerCompanion {} {}", playerCompanionUUID, command);
-      INSTANCE.sendToServer(new MessageCommandPlayerCompanion(playerCompanionUUID, command.toString()));
+      INSTANCE
+          .sendToServer(new MessageCommandPlayerCompanion(playerCompanionUUID, command.toString()));
     }
   }
 
   public static void updatePlayerCompanionsData(ServerPlayer serverPlayer) {
     String companionData =
         PlayerCompanionsServerData.get().exportClientData(serverPlayer.getUUID());
-    if (companionData != null && !companionData.isBlank()) {
+    if (companionData != null && !companionData.isBlank()
+        && !companionData.equals(lastCompanionDataPackage)) {
       log.debug("Sending Player Companions data {} to {}", companionData, serverPlayer);
       INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
           new MessagePlayerCompanionsData(companionData));
+      lastCompanionDataPackage = companionData;
     }
   }
 

@@ -32,7 +32,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -168,19 +167,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void tameAndFollow(Player player) {
     this.tame(player);
     this.follow();
-
-    // Set and/or update custom name with owner name.
-    if (this.getCustomCompanionName().isBlank()) {
-      if (this.hasCustomName()) {
-        this.setCustomCompanionName(this.getCustomName().getString());
-      } else {
-        this.setCustomCompanionName(getRandomName());
-      }
-    }
-    this.setCustomName(new TextComponent(getCustomCompanionName()));
-    if (player instanceof ServerPlayer) {
-      this.getServerData().updateOrRegisterCompanion(this);
-    }
   }
 
   protected SoundEvent getPetSound() {
@@ -304,8 +290,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   public void finalizeSpawn() {
-    // Set random custom companion name
-    this.setCustomName(this.getCustomCompanionNameComponent());
+    // Set random custom companion name, if not set.
+    if (!this.hasCustomName()) {
+      this.setCustomName(this.getCustomCompanionNameComponent());
+    }
   }
 
   @Override
@@ -364,7 +352,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void tame(Player player) {
     super.tame(player);
     if (player instanceof ServerPlayer) {
-      getServerData().updateOrRegisterCompanion(this);
+      this.getServerData().updateOrRegisterCompanion(this);
     }
   }
 
@@ -398,9 +386,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     super.registerGoals();
     this.goalSelector.addGoal(1, new FloatGoal(this));
     this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-    this.goalSelector.addGoal(3, new TemptGoal(this, 0.5D, getFoodItems(), false));
+    this.goalSelector.addGoal(3, new TemptGoal(this, 0.75D, getFoodItems(), false));
     if (!this.isTame()) {
-      this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, Ingredient.of(getTameItem()), false));
+      this.goalSelector.addGoal(3, new TemptGoal(this, 0.9D, Ingredient.of(getTameItem()), false));
     }
     if (this.flyingAround()) {
       this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 8.0F, 4.0F, true));
@@ -573,8 +561,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   public void setOrderedToSit(boolean sit) {
-    super.setOrderedToSit(sit);
-    getServerData().updatePlayerCompanion(this);
+    if (this.isOrderedToSit() != sit) {
+      super.setOrderedToSit(sit);
+      getServerData().updatePlayerCompanion(this);
+    }
   }
 
   @Override

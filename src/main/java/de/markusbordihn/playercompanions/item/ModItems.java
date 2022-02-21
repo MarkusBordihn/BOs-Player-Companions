@@ -52,6 +52,8 @@ public class ModItems {
   public static final RegistryObject<Item> FAIRY_DEFAULT =
       ITEMS.register(FairyItem.ID + "_default", FairyItem::new);
 
+  public static final RegistryObject<Item> PIG = ITEMS.register(PigItem.ID, PigItem::new);
+
   public static final RegistryObject<Item> SMALL_GHAST =
       ITEMS.register(SmallGhastItem.ID, SmallGhastItem::new);
 
@@ -94,6 +96,8 @@ public class ModItems {
   public static final RegistryObject<Item> TAME_APPLE =
       ITEMS.register("tame_apple", TameApple::new);
   public static final RegistryObject<Item> TAME_BONE = ITEMS.register("tame_bone", TameBone::new);
+  public static final RegistryObject<Item> TAME_CARROT =
+      ITEMS.register("tame_carrot", TameCarrot::new);
   public static final RegistryObject<Item> TAME_CAKE = ITEMS.register("tame_cake", TameCake::new);
   public static final RegistryObject<Item> TAME_SEAGRASS =
       ITEMS.register("tame_seagrass", TameBone::new);
@@ -108,6 +112,10 @@ public class ModItems {
   public static final RegistryObject<Item> FAIRY_SPAWN_EGG = ITEMS.register("fairy_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.FAIRY::get, MaterialColor.GOLD.col,
           MaterialColor.SNOW.col, new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+  public static final RegistryObject<Item> PIG_SPAWN_EGG = ITEMS.register("pig_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.GOLD.col,
+          MaterialColor.COLOR_PINK.col,
+          new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SNAIL_SPAWN_EGG = ITEMS.register("snail_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.GOLD.col,
           MaterialColor.SNOW.col, new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));

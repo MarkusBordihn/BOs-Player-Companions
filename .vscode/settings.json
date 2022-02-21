@@ -22,6 +22,7 @@
     "curseforge",
     "despawn",
     "DISPLAYTEST",
+    "eyebrown",
     "Favourite",
     "firstperson",
     "Framebuffer",
@@ -61,7 +62,16 @@
     "Waila",
     "Worldgen"
   ],
-  "cSpell.ignorePaths": ["*.yml", ".gradle", ".vscode", "build", "run"],
+  "cSpell.ignorePaths": [
+    "*.yml",
+    ".git",
+    ".gradle",
+    ".vscode",
+    "build",
+    "models",
+    "run",
+    "src/main/java/de/markusbordihn/playercompanions/utils"
+  ],
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.format.settings.url": "./java-google-style.xml",
   "java.format.settings.profile": "GoogleStyle",

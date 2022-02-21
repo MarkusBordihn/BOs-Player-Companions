@@ -31,6 +31,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.collector.CollectorEntity;
+import de.markusbordihn.playercompanions.entity.collector.Pig;
 import de.markusbordihn.playercompanions.entity.collector.Snail;
 import de.markusbordihn.playercompanions.entity.follower.FollowerEntity;
 import de.markusbordihn.playercompanions.entity.follower.SmallSlime;
@@ -50,6 +51,9 @@ public class ModEntityType {
       DeferredRegister.create(ForgeRegistries.ENTITIES, Constants.MOD_ID);
 
   // Collector Entity
+  public static final RegistryObject<EntityType<Pig>> PIG = ENTITIES.register(Pig.ID,
+      () -> EntityType.Builder.<Pig>of(Pig::new, CollectorEntity.CATEGORY).sized(0.9F, 1.2F)
+          .clientTrackingRange(8).build(Pig.ID));
   public static final RegistryObject<EntityType<Snail>> SNAIL =
       ENTITIES.register(Snail.ID, () -> EntityType.Builder.<Snail>of(Snail::new, CollectorEntity.CATEGORY)
           .sized(0.9F, 1.2F).clientTrackingRange(8).build(Snail.ID));
@@ -73,6 +77,7 @@ public class ModEntityType {
   public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
     // Create Attributes for Entities
     event.put(FAIRY.get(), HealerEntity.createAttributes().build());
+    event.put(PIG.get(), Pig.createAttributes().build());
     event.put(SMALL_GHAST.get(), GuardEntity.createAttributes().build());
     event.put(SMALL_SLIME.get(), SmallSlime.createAttributes().build());
     event.put(SNAIL.get(), Snail.createAttributes().build());

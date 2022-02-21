@@ -19,74 +19,138 @@
 
 package de.markusbordihn.playercompanions.utils;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-
-import com.google.common.collect.Maps;
-
-import net.minecraft.Util;
+import com.google.common.collect.Sets;
 
 public class Names {
 
   private static Random rand = new Random();
 
-  public static final Map<Integer, String> NPC_NAMES = Util.make(Maps.newHashMap(), hashMap -> {
-    hashMap.put(1, "Parn");
-    hashMap.put(2, "Deedlit");
-    hashMap.put(3, "Amy");
-    hashMap.put(4, "Ethan");
-    hashMap.put(5, "Guy");
-    hashMap.put(6, "Adam");
-    hashMap.put(7, "Asuna");
-    hashMap.put(8, "Beowulf");
-    hashMap.put(9, "Romolo");
-    hashMap.put(10, "Miso");
-    hashMap.put(11, "Kawo");
-    hashMap.put(12, "Faith");
-    hashMap.put(13, "Klein");
-    hashMap.put(14, "Jason");
-    hashMap.put(15, "Monika");
-    hashMap.put(16, "Bob");
-    hashMap.put(17, "Cain");
-    hashMap.put(18, "Aron");
-    hashMap.put(19, "Meredith");
-    hashMap.put(20, "John");
-    hashMap.put(21, "Jack");
-  });
+  protected static final List<String> NPC_FEMALE_NAMES = new ArrayList<>(Sets.newHashSet(
+  // @formatter:off
+    "Amy",
+    "Asuna",
+    "Deedlit",
+    "Faith",
+    "Sonya",
+    "Meredith",
+    "Monika",
+    "Elizabeth"
+  // @formatter:on
+  ));
 
-  public static final Map<Integer, String> MOB_NAMES = Util.make(Maps.newHashMap(), hashMap -> {
-    hashMap.put(0, "Coco");
-    hashMap.put(1, "Chloe");
-    hashMap.put(2, "Oskar");
-    hashMap.put(3, "Simba");
-    hashMap.put(4, "Tiger");
-    hashMap.put(5, "Lina");
-    hashMap.put(6, "Creamy");
-    hashMap.put(7, "Roker");
-    hashMap.put(8, "Marin");
-    hashMap.put(9, "Marina");
-    hashMap.put(10, "Smokie");
-    hashMap.put(11, "Charlie");
-    hashMap.put(12, "Max");
-    hashMap.put(13, "Buddy");
-    hashMap.put(14, "Bella");
-    hashMap.put(15, "Luna");
-    hashMap.put(16, "Princess");
-    hashMap.put(17, "Lucy");
-    hashMap.put(18, "Larry");
-    hashMap.put(19, "Spike");
-    hashMap.put(20, "Derek");
-    hashMap.put(21, "Andrew");
-  });
+  protected static final List<String> NPC_MALE_NAMES = new ArrayList<>(Sets.newHashSet(
+  // @formatter:off
+    "Adam",
+    "Aron",
+    "Beowulf",
+    "Bob",
+    "Cain",
+    "Ethan",
+    "Guy",
+    "Jack",
+    "Jason",
+    "John",
+    "Kawo",
+    "Miso",
+    "Parn",
+    "Romolo"
+  // @formatter:on
+  ));
+
+  protected static final List<String> NPC_MISC_NAMES = new ArrayList<>(Sets.newHashSet(
+  // @formatter:off
+    "Quinn"
+  // @formatter:on
+  ));
+
+  protected static final List<String> MOB_FEMALE_NAMES = new ArrayList<>(Sets.newHashSet(
+  // @formatter:off
+    "Alice",
+    "Bella",
+    "Bonnie",
+    "Chloe",
+    "Lina",
+    "Lucy",
+    "Luna",
+    "Marina",
+    "Princess"
+  // @formatter:on
+  ));
+
+  protected static final List<String> MOB_MALE_NAMES = new ArrayList<>(Sets.newHashSet(
+  // @formatter:off
+    "Andrew",
+    "Coco",
+    "Derek",
+    "Larry",
+    "Marin",
+    "Max",
+    "Oskar",
+    "Prince",
+    "Roker",
+    "Simba",
+    "Spike",
+    "Tiger"
+  // @formatter:on
+  ));
+
+  protected static final List<String> MOB_MISC_NAMES = new ArrayList<>(Sets.newHashSet(
+  // @formatter:off
+    "Alex",
+    "Angel",
+    "Charlie",
+    "Buddy",
+    "Jule",
+    "Creamy",
+    "Smokie"
+  // @formatter:on
+  ));
 
   protected Names() {}
 
-  public static String getRandomNpcName() {
-    return MOB_NAMES.getOrDefault(rand.nextInt(0, NPC_NAMES.size() + 1), NPC_NAMES.get(0));
+  public static String getRandomFemaleNpcName() {
+    return NPC_FEMALE_NAMES.get(rand.nextInt(0, NPC_FEMALE_NAMES.size()));
+  }
+
+  public static String getRandomMaleNpcName() {
+    return NPC_MALE_NAMES.get(rand.nextInt(0, NPC_MALE_NAMES.size()));
+  }
+
+  public static String getRandomMiscNpcName() {
+    return NPC_MISC_NAMES.get(rand.nextInt(0, NPC_MISC_NAMES.size()));
   }
 
   public static String getRandomMobName() {
-    return MOB_NAMES.getOrDefault(rand.nextInt(0, MOB_NAMES.size() + 1), MOB_NAMES.get(0));
+    int pool = rand.nextInt(0,3);
+    if (pool == 0) {
+      return getRandomMaleMobName();
+    } else if (pool == 1) {
+      return getRandomFemaleMobName();
+    } else {
+      return getRandomMiscMobName();
+    }
   }
 
+  public static String getRandomFemaleMobName() {
+    return MOB_FEMALE_NAMES.get(rand.nextInt(0, MOB_FEMALE_NAMES.size()));
+  }
+
+  public static String getRandomFemaleAndMiscMobName() {
+    int pool = rand.nextInt(0, 2);
+    if (pool == 0) {
+      return getRandomMiscMobName();
+    }
+    return getRandomFemaleMobName();
+  }
+
+  public static String getRandomMaleMobName() {
+    return MOB_MALE_NAMES.get(rand.nextInt(0, MOB_MALE_NAMES.size()));
+  }
+
+  public static String getRandomMiscMobName() {
+    return MOB_MISC_NAMES.get(rand.nextInt(0, MOB_MISC_NAMES.size()));
+  }
 }

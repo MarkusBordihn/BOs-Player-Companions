@@ -31,6 +31,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.FairyModel;
+import de.markusbordihn.playercompanions.client.model.PigModel;
 import de.markusbordihn.playercompanions.client.model.SmallGhastModel;
 import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
 import de.markusbordihn.playercompanions.client.model.SnailModel;
@@ -44,6 +45,8 @@ public class ClientRenderer {
   // Layer Definitions
   public static final ModelLayerLocation FAIRY =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "fairy"), "main");
+  public static final ModelLayerLocation PIG =
+      new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "pig"), "main");
   public static final ModelLayerLocation SMALL_GHAST =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "small_ghast"), "main");
   public static final ModelLayerLocation SMALL_SLIME =
@@ -59,6 +62,7 @@ public class ClientRenderer {
     log.info("{} Entity Renders ...", Constants.LOG_REGISTER_PREFIX);
 
     event.registerEntityRenderer(ModEntityType.FAIRY.get(), FairyRenderer::new);
+    event.registerEntityRenderer(ModEntityType.PIG.get(), PigRenderer::new);
     event.registerEntityRenderer(ModEntityType.SMALL_GHAST.get(), SmallGhastRenderer::new);
     event.registerEntityRenderer(ModEntityType.SMALL_SLIME.get(), SmallSlimeRenderer::new);
     event.registerEntityRenderer(ModEntityType.SNAIL.get(), SnailRenderer::new);
@@ -69,6 +73,7 @@ public class ClientRenderer {
     log.info("{} Entity Layer Definitions ...", Constants.LOG_REGISTER_PREFIX);
 
     event.registerLayerDefinition(FAIRY, FairyModel::createBodyLayer);
+    event.registerLayerDefinition(PIG, PigModel::createBodyLayer);
     event.registerLayerDefinition(SMALL_GHAST, SmallGhastModel::createBodyLayer);
     event.registerLayerDefinition(SMALL_SLIME, SmallSlimeModel::createInnerBodyLayer);
     event.registerLayerDefinition(SMALL_SLIME_OUTER, SmallSlimeModel::createOuterBodyLayer);

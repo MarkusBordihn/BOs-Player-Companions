@@ -47,6 +47,7 @@ import net.minecraft.world.phys.Vec3;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
+import de.markusbordihn.playercompanions.utils.Names;
 
 public class Fairy extends HealerEntity {
 
@@ -66,7 +67,7 @@ public class Fairy extends HealerEntity {
             new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_default.png"));
       });
 
-  // Companion Item by color
+  // Companion Item by variant
   private static final Map<String, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT, ModItems.FAIRY_DEFAULT.get());
@@ -81,21 +82,6 @@ public class Fairy extends HealerEntity {
   public ResourceLocation getResourceLocation() {
     return TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
         TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT));
-  }
-
-  @Override
-  public Item getTameItem() {
-    return ModItems.TAME_CAKE.get();
-  }
-
-  @Override
-  protected Ingredient getFoodItems() {
-    return Ingredient.of(Items.CAKE);
-  }
-
-  @Override
-  public Item getCompanionItem() {
-    return COMPANION_ITEM_BY_VARIANT.get(this.getVariant());
   }
 
   class FairyRandomMoveGoal extends Goal {
@@ -142,6 +128,26 @@ public class Fairy extends HealerEntity {
   protected void registerGoals() {
     super.registerGoals();
     this.goalSelector.addGoal(8, new Fairy.FairyRandomMoveGoal());
+  }
+
+  @Override
+  public Item getTameItem() {
+    return ModItems.TAME_CAKE.get();
+  }
+
+  @Override
+  protected Ingredient getFoodItems() {
+    return Ingredient.of(Items.CAKE, Items.COOKIE);
+  }
+
+  @Override
+  public Item getCompanionItem() {
+    return COMPANION_ITEM_BY_VARIANT.get(this.getVariant());
+  }
+
+  @Override
+  protected String getRandomName() {
+    return Names.getRandomFemaleAndMiscMobName();
   }
 
   @Override

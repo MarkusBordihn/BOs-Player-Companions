@@ -147,6 +147,10 @@ dependencies {
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
 
+  // Compability tests for other npc / custom mods
+  runtimeOnly fg.deobf("curse.maven:human-companions-570319:3655860")
+  runtimeOnly fg.deobf("curse.maven:guard-villagers-360203:3548222")
+
   // Additional helpful Mods for development (dev depenedency)
   runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
   runtimeOnly fg.deobf("curse.maven:jei-238222:3550020")

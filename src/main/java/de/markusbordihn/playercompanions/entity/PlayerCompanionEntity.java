@@ -52,6 +52,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -102,6 +103,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Config settings
   private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
   private static int respawnDelay = COMMON.respawnDelay.get();
+  private static boolean friendlyFire = COMMON.friendlyFire.get();
 
   private static final int INACTIVE_TICK = 100;
 
@@ -127,11 +129,15 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     respawnOnDeath = COMMON.respawnOnDeath.get();
     respawnDelay = COMMON.respawnDelay.get();
+    friendlyFire = COMMON.friendlyFire.get();
     if (respawnOnDeath) {
       log.info("{} will be respawn on death with a {} secs delay.", Constants.LOG_ICON_NAME,
           COMMON.respawnDelay.get(), respawnDelay);
     } else {
       log.warn("{} will NOT respawn on death!", Constants.LOG_ICON_NAME);
+    }
+    if (!friendlyFire) {
+      log.info("{} ignore entities from the same owner as attack target!");
     }
   }
 
@@ -250,7 +256,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   protected void sit() {
     this.setOrderedToSit(true);
     this.navigation.stop();
-    this.setTarget((LivingEntity) null);
+    super.setTarget(null);
   }
 
   public void handleCommand(PlayerCompanionCommand command) {
@@ -294,6 +300,12 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     if (!this.hasCustomName()) {
       this.setCustomName(this.getCustomCompanionNameComponent());
     }
+
+    // Reset respawn timer, if needed.
+    int respawnTimer = this.getRespawnTimer();
+    if (respawnTimer < java.time.Instant.now().getEpochSecond()) {
+      this.stopRespawnTimer();
+    }
   }
 
   @Override
@@ -322,6 +334,25 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           this.getCustomCompanionName()), Util.NIL_UUID);
     }
     getServerData().updatePlayerCompanion(this);
+  }
+
+  @Override
+  public void setTarget(@Nullable LivingEntity livingEntity) {
+    // Early return for resetting target.
+    if (livingEntity == null) {
+      super.setTarget(null);
+      return;
+    }
+
+    // Ignore entities from the same Owner.
+    if (!friendlyFire && livingEntity instanceof TamableAnimal tamableAnimal
+        && tamableAnimal.getOwner() == this.getOwner()) {
+      return;
+    }
+
+    if (livingEntity.isAlive()) {
+      super.setTarget(livingEntity);
+    }
   }
 
   @Override
@@ -498,7 +529,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   public void tick() {
-
     // Perform tick for AI and other important steps.
     super.tick();
 

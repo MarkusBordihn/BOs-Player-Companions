@@ -51,7 +51,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.ModItems;
 
 @EventBusSubscriber
@@ -97,7 +96,7 @@ public class SmallGhast extends GuardEntity {
 
     @Override
     public void stop() {
-       SmallGhast.this.setCharging(false);
+      SmallGhast.this.setCharging(false);
     }
 
     @Override
@@ -107,44 +106,40 @@ public class SmallGhast extends GuardEntity {
 
     @Override
     public void tick() {
-      LivingEntity livingEntity =  SmallGhast.this.getTarget();
-      if (livingEntity != null) {
-        // Ignore entities from the same Owner.
-        if (livingEntity instanceof PlayerCompanionEntity companionEntity
-            && companionEntity.getOwner() ==  SmallGhast.this.getOwner()) {
-           SmallGhast.this.setTarget(null);
-          return;
-        }
+      super.tick();
+
+      LivingEntity livingEntity = SmallGhast.this.getTarget();
+      if (livingEntity != null && livingEntity.isAlive()) {
 
         // Only shot if we have a line of sight.
-        if (livingEntity.distanceToSqr( SmallGhast.this) < 4096.0D
-            &&  SmallGhast.this.hasLineOfSight(livingEntity)) {
-          Level level =  SmallGhast.this.level;
+        if (livingEntity.distanceToSqr(SmallGhast.this) < 4096.0D
+            && SmallGhast.this.hasLineOfSight(livingEntity)) {
+          Level level = SmallGhast.this.level;
           ++this.chargeTime;
-          if (this.chargeTime == 10 && ! SmallGhast.this.isSilent()) {
-            level.levelEvent((Player) null, 1015,  SmallGhast.this.blockPosition(), 0);
+          if (this.chargeTime == 10 && !SmallGhast.this.isSilent()) {
+            level.levelEvent((Player) null, 1015, SmallGhast.this.blockPosition(), 0);
           }
 
           if (this.chargeTime == 20) {
-            Vec3 vec3 =  SmallGhast.this.getViewVector(1.0F);
-            double d2 = livingEntity.getX() - ( SmallGhast.this.getX() + vec3.x * 4.0D);
-            double d3 = livingEntity.getY(0.5D) - (0.5D +  SmallGhast.this.getY(0.5D));
-            double d4 = livingEntity.getZ() - ( SmallGhast.this.getZ() + vec3.z * 4.0D);
-            if (! SmallGhast.this.isSilent()) {
-              level.levelEvent((Player) null, 1016,  SmallGhast.this.blockPosition(), 0);
+            Vec3 vec3 = SmallGhast.this.getViewVector(1.0F);
+            double d2 = livingEntity.getX() - (SmallGhast.this.getX() + vec3.x * 4.0D);
+            double d3 = livingEntity.getY(0.5D) - (0.5D + SmallGhast.this.getY(0.5D));
+            double d4 = livingEntity.getZ() - (SmallGhast.this.getZ() + vec3.z * 4.0D);
+            if (!SmallGhast.this.isSilent()) {
+              level.levelEvent((Player) null, 1016, SmallGhast.this.blockPosition(), 0);
             }
 
-            LargeFireball largeFireball = new LargeFireball(level,  SmallGhast.this, d2, d3, d4,
-                 SmallGhast.this.getExplosionPower());
-            largeFireball.setPos( SmallGhast.this.getX() + vec3.x * 4.0D,
-                 SmallGhast.this.getY(0.5D) + 0.5D, largeFireball.getZ() + vec3.z * 4.0D);
+            LargeFireball largeFireball = new LargeFireball(level, SmallGhast.this, d2, d3, d4,
+                SmallGhast.this.getExplosionPower());
+            largeFireball.setPos(SmallGhast.this.getX() + vec3.x * 4.0D,
+                SmallGhast.this.getY(0.5D) + 0.5D, largeFireball.getZ() + vec3.z * 4.0D);
             level.addFreshEntity(largeFireball);
             this.chargeTime = -40;
           }
         } else if (this.chargeTime > 0) {
           --this.chargeTime;
         }
-         SmallGhast.this.setCharging(this.chargeTime > 10);
+        SmallGhast.this.setCharging(this.chargeTime > 10);
       }
     }
   }

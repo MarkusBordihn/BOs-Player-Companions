@@ -173,6 +173,9 @@ public class CapturedCompanion extends Item {
         log.debug("Spawn companion {} with {}", entity);
         if (level.addFreshEntity(entity)) {
           playerCompanion = entity;
+          if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
+            playerCompanionEntity.finalizeSpawn();
+          }
           return true;
         }
         return false;
@@ -287,8 +290,6 @@ public class CapturedCompanion extends Item {
     PlayerCompanionData playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
     if (playerCompanion != null && playerCompanion.hasEntityRespawnTimer()
         && playerCompanion.getEntityRespawnTimer() > java.time.Instant.now().getEpochSecond()) {
-      log.info("Companion could respawn in {} secs ...",
-          playerCompanion.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond());
       return InteractionResult.FAIL;
     }
 
@@ -355,6 +356,15 @@ public class CapturedCompanion extends Item {
       tooltipList.add(new TranslatableComponent(
           Constants.TEXT_PREFIX + (playerCompanion.isOrderedToSit() ? "tamed_companion_order_to_sit"
               : "tamed_companion_order_to_follow")));
+
+      // Display respawn timer, if any.
+      long respawnTimer =
+          playerCompanion.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
+      if (respawnTimer >= 0) {
+        tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_respawn",
+            respawnTimer).withStyle(ChatFormatting.RED));
+      }
+
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_food"));
     }
   }

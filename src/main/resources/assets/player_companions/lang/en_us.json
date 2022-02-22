@@ -18,6 +18,7 @@
   "text.player_companions.tamed_companion_health": "Health: %1$s",
   "text.player_companions.tamed_companion_name": "Name: %1$s",
   "text.player_companions.tamed_companion_owner": "Owner: %1$s",
+  "text.player_companions.tamed_companion_respawn": "Respawn Timer: %1$s secs remaining",
   "text.player_companions.tamed_companion_order_to_sit": "Status: Is order to sit",
   "text.player_companions.tamed_companion_order_to_follow": "Status: Is order to follow",
 

@@ -73,6 +73,12 @@ With the corresponding item, you can spawn / respawn your companion at any time 
 
 With the corresponding item, you can de-spawn your companion at any time. Just click with the right item on the spawned companion.
 
+## Compatible NPC / companion Mods
+
+Most of the NPC / companion mods should be supported out of the box, but this is a list of mods which I personally tested to make sure there are compatible:
+
+- ✅ [Human Companions][human_companions]
+
 ## Note
 
 Please only download the mod from the official CurseForge page or with the official CurseForge launcher like:
@@ -80,3 +86,5 @@ Please only download the mod from the official CurseForge page or with the offic
 🚀 https://www.curseforge.com/minecraft/mc-mods/player-companions
 
 If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
+
+[human_companions]: https://www.curseforge.com/minecraft/mc-mods/human-companions

@@ -28,6 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -94,7 +95,7 @@ public class HealerEntity extends PlayerCompanionEntity implements NeutralMob {
     // Automatic heal entities in the defined radius.
     if (!this.level.isClientSide && healerTypeRadius > 0 && ticker++ >= HEALER_TICK) {
 
-      // Heal all players in radius.
+      // 1. Priority: heal all players in radius.
       List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
           new AABB(this.blockPosition()).inflate(healerTypeRadius), entity -> true);
       for (Player player : playerEntities) {
@@ -103,15 +104,16 @@ public class HealerEntity extends PlayerCompanionEntity implements NeutralMob {
         }
       }
 
-      // Heal owned player companions.
+      // 2. Priority: Heal owned tamed animals regardless of type.
       if (this.hasOwner()) {
-        List<PlayerCompanionEntity> playerCompanions =
-            this.level.getEntitiesOfClass(PlayerCompanionEntity.class,
+        List<TamableAnimal> tamableAnimals =
+            this.level.getEntitiesOfClass(
+                TamableAnimal.class,
                 new AABB(this.blockPosition()).inflate(healerTypeRadius), entity -> true);
-        for (PlayerCompanionEntity playerCompanion : playerCompanions) {
-          if (playerCompanion.getOwner() == this.getOwner() && playerCompanion.isAlive()
-              && playerCompanion.getHealth() < playerCompanion.getMaxHealth()) {
-            playerCompanion.heal(healerTypeAmount);
+        for (TamableAnimal tamableAnimal : tamableAnimals) {
+          if (tamableAnimal.isAlive() && tamableAnimal.getOwner() == this.getOwner() &&
+              tamableAnimal.getHealth() < tamableAnimal.getMaxHealth()) {
+            tamableAnimal.heal(healerTypeAmount);
           }
         }
       }

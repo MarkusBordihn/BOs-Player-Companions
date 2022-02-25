@@ -26,6 +26,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -43,10 +44,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
-import de.markusbordihn.playercompanions.entity.collector.Snail;
-import de.markusbordihn.playercompanions.entity.follower.SmallSlime;
-import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
-import de.markusbordihn.playercompanions.entity.healer.Fairy;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.companions.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.Pig;
+import de.markusbordihn.playercompanions.entity.companions.Rooster;
+import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
+import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
+import de.markusbordihn.playercompanions.entity.companions.Snail;
+
 
 @Mod.EventBusSubscriber()
 public class SpawnHandler {
@@ -61,6 +66,10 @@ public class SpawnHandler {
   public static void onWorldLoad(ServerAboutToStartEvent event) {
     logSpawn(Fairy.NAME, COMMON.fairySpawnEnable.get(), COMMON.fairyWeight.get(),
         COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get());
+    logSpawn(Pig.NAME, COMMON.pigSpawnEnable.get(), COMMON.pigWeight.get(),
+        COMMON.pigMinGroup.get(), COMMON.pigMaxGroup.get());
+    logSpawn(Rooster.NAME, COMMON.roosterSpawnEnable.get(), COMMON.roosterWeight.get(),
+        COMMON.roosterMinGroup.get(), COMMON.roosterMaxGroup.get());
     logSpawn(SmallGhast.NAME, COMMON.smallGhastSpawnEnable.get(), COMMON.smallGhastWeight.get(),
         COMMON.smallGhastMinGroup.get(), COMMON.smallGhastMaxGroup.get());
     logSpawn(SmallSlime.NAME, COMMON.smallSlimeSpawnEnable.get(), COMMON.smallSlimeWeight.get(),
@@ -77,28 +86,43 @@ public class SpawnHandler {
     }
     BiomeCategory biomeCategory = event.getCategory();
     ResourceKey<Biome> biomeKey = ResourceKey.create(Registry.BIOME_REGISTRY, biomeRegistry);
-    boolean isSwamp =
-        biomeCategory == BiomeCategory.SWAMP || BiomeDictionary.hasType(biomeKey, Type.SWAMP);
+    boolean isBeach =
+        biomeCategory == BiomeCategory.BEACH || BiomeDictionary.hasType(biomeKey, Type.BEACH);
+    boolean isFlowerForest = biomeKey == Biomes.FLOWER_FOREST;
     boolean isJungle =
         biomeCategory == BiomeCategory.JUNGLE || BiomeDictionary.hasType(biomeKey, Type.JUNGLE);
     boolean isNether =
         biomeCategory == BiomeCategory.NETHER || BiomeDictionary.hasType(biomeKey, Type.NETHER);
-    boolean isBeach =
-        biomeCategory == BiomeCategory.BEACH || BiomeDictionary.hasType(biomeKey, Type.BEACH);
     boolean isNetherWastes = biomeKey == Biomes.NETHER_WASTES;
-    boolean isFlowerForest = biomeKey == Biomes.FLOWER_FOREST;
+    boolean isPlains =
+        biomeCategory == BiomeCategory.PLAINS || BiomeDictionary.hasType(biomeKey, Type.PLAINS);
+    boolean isSwamp =
+        biomeCategory == BiomeCategory.SWAMP || BiomeDictionary.hasType(biomeKey, Type.SWAMP);
 
     // Fairy Spawn
     if (Boolean.TRUE.equals(COMMON.fairySpawnEnable.get()) && isFlowerForest) {
-      event.getSpawns().getSpawner(Fairy.CATEGORY)
-          .add(new MobSpawnSettings.SpawnerData(ModEntityType.FAIRY.get(),
-              COMMON.fairyWeight.get(), COMMON.fairyMinGroup.get(),
-              COMMON.fairyMaxGroup.get()));
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.FAIRY.get(), COMMON.fairyWeight.get(),
+              COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get()));
+    }
+
+    // Pig Spawn
+    if (Boolean.TRUE.equals(COMMON.pigSpawnEnable.get()) && isPlains && !isFlowerForest) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.PIG.get(), COMMON.pigWeight.get(),
+              COMMON.pigMinGroup.get(), COMMON.pigMaxGroup.get()));
+    }
+
+    // Rooster Spawn
+    if (Boolean.TRUE.equals(COMMON.roosterSpawnEnable.get()) && isPlains && !isFlowerForest) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.ROOSTER.get(), COMMON.roosterWeight.get(),
+              COMMON.roosterMinGroup.get(), COMMON.roosterMaxGroup.get()));
     }
 
     // Small Ghast Spawn
     if (Boolean.TRUE.equals(COMMON.smallGhastSpawnEnable.get()) && (isNetherWastes || isNether)) {
-      event.getSpawns().getSpawner(SmallGhast.CATEGORY)
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.SMALL_GHAST.get(),
               COMMON.smallGhastWeight.get(), COMMON.smallGhastMinGroup.get(),
               COMMON.smallGhastMaxGroup.get()));
@@ -106,7 +130,7 @@ public class SpawnHandler {
 
     // Small Slime Spawn
     if (Boolean.TRUE.equals(COMMON.smallSlimeSpawnEnable.get()) && (isJungle || isSwamp)) {
-      event.getSpawns().getSpawner(SmallSlime.CATEGORY)
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.SMALL_SLIME.get(),
               COMMON.smallSlimeWeight.get(), COMMON.smallSlimeMinGroup.get(),
               COMMON.smallSlimeMaxGroup.get()));
@@ -114,7 +138,7 @@ public class SpawnHandler {
 
     // Snail
     if (Boolean.TRUE.equals(COMMON.snailSpawnEnable.get()) && isBeach) {
-      event.getSpawns().getSpawner(Snail.CATEGORY)
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.SNAIL.get(), COMMON.snailWeight.get(),
               COMMON.snailMinGroup.get(), COMMON.snailMaxGroup.get()));
     }
@@ -125,6 +149,10 @@ public class SpawnHandler {
     event.enqueueWork(() -> {
       SpawnPlacements.register(ModEntityType.FAIRY.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.ROOSTER.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.SMALL_GHAST.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SmallGhast::checkGhastSpawnRules);
       SpawnPlacements.register(ModEntityType.SMALL_SLIME.get(), SpawnPlacements.Type.ON_GROUND,

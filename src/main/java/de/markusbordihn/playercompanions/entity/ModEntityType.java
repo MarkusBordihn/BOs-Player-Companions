@@ -30,15 +30,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.collector.CollectorEntity;
-import de.markusbordihn.playercompanions.entity.collector.Pig;
-import de.markusbordihn.playercompanions.entity.collector.Snail;
-import de.markusbordihn.playercompanions.entity.follower.FollowerEntity;
-import de.markusbordihn.playercompanions.entity.follower.SmallSlime;
-import de.markusbordihn.playercompanions.entity.guard.GuardEntity;
-import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
-import de.markusbordihn.playercompanions.entity.healer.Fairy;
-import de.markusbordihn.playercompanions.entity.healer.HealerEntity;
+import de.markusbordihn.playercompanions.entity.companions.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.Pig;
+import de.markusbordihn.playercompanions.entity.companions.Rooster;
+import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
+import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
+import de.markusbordihn.playercompanions.entity.companions.Snail;
 
 @EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntityType {
@@ -52,33 +49,39 @@ public class ModEntityType {
 
   // Collector Entity
   public static final RegistryObject<EntityType<Pig>> PIG = ENTITIES.register(Pig.ID,
-      () -> EntityType.Builder.<Pig>of(Pig::new, CollectorEntity.CATEGORY).sized(0.9F, 1.2F)
+      () -> EntityType.Builder.<Pig>of(Pig::new, PlayerCompanionEntity.CATEGORY).sized(0.9F, 1.2F)
           .clientTrackingRange(8).build(Pig.ID));
-  public static final RegistryObject<EntityType<Snail>> SNAIL =
-      ENTITIES.register(Snail.ID, () -> EntityType.Builder.<Snail>of(Snail::new, CollectorEntity.CATEGORY)
+  public static final RegistryObject<EntityType<Snail>> SNAIL = ENTITIES.register(Snail.ID,
+      () -> EntityType.Builder.<Snail>of(Snail::new, PlayerCompanionEntity.CATEGORY)
           .sized(0.9F, 1.2F).clientTrackingRange(8).build(Snail.ID));
 
   // Follower Entity
-  public static final RegistryObject<EntityType<SmallSlime>> SMALL_SLIME = ENTITIES.register(
-      SmallSlime.ID, () -> EntityType.Builder.<SmallSlime>of(SmallSlime::new, FollowerEntity.CATEGORY)
-          .sized(0.5F, 0.5F).clientTrackingRange(8).build(SmallSlime.ID));
+  public static final RegistryObject<EntityType<SmallSlime>> SMALL_SLIME =
+      ENTITIES.register(SmallSlime.ID,
+          () -> EntityType.Builder.<SmallSlime>of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)
+              .sized(0.5F, 0.5F).clientTrackingRange(8).build(SmallSlime.ID));
 
   // Healer Entity
-  public static final RegistryObject<EntityType<Fairy>> FAIRY =
-      ENTITIES.register(Fairy.ID, () -> EntityType.Builder.<Fairy>of(Fairy::new, HealerEntity.CATEGORY)
+  public static final RegistryObject<EntityType<Fairy>> FAIRY = ENTITIES.register(Fairy.ID,
+      () -> EntityType.Builder.<Fairy>of(Fairy::new, PlayerCompanionEntity.CATEGORY)
           .sized(0.9F, 1.2F).clientTrackingRange(16).build(Fairy.ID));
 
   // Guard Entity
-  public static final RegistryObject<EntityType<SmallGhast>> SMALL_GHAST = ENTITIES.register(
-      SmallGhast.ID, () -> EntityType.Builder.<SmallGhast>of(SmallGhast::new, GuardEntity.CATEGORY)
-          .sized(0.9F, 1.2F).clientTrackingRange(16).build(SmallGhast.ID));
+  public static final RegistryObject<EntityType<Rooster>> ROOSTER = ENTITIES.register(Rooster.ID,
+      () -> EntityType.Builder.<Rooster>of(Rooster::new, PlayerCompanionEntity.CATEGORY)
+          .sized(0.9F, 1.2F).clientTrackingRange(16).build(Rooster.ID));
+  public static final RegistryObject<EntityType<SmallGhast>> SMALL_GHAST =
+      ENTITIES.register(SmallGhast.ID,
+          () -> EntityType.Builder.<SmallGhast>of(SmallGhast::new, PlayerCompanionEntity.CATEGORY)
+              .sized(0.9F, 1.2F).clientTrackingRange(16).build(SmallGhast.ID));
 
   @SubscribeEvent
   public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
     // Create Attributes for Entities
-    event.put(FAIRY.get(), HealerEntity.createAttributes().build());
+    event.put(FAIRY.get(), Fairy.createAttributes().build());
     event.put(PIG.get(), Pig.createAttributes().build());
-    event.put(SMALL_GHAST.get(), GuardEntity.createAttributes().build());
+    event.put(ROOSTER.get(), Rooster.createAttributes().build());
+    event.put(SMALL_GHAST.get(), SmallGhast.createAttributes().build());
     event.put(SMALL_SLIME.get(), SmallSlime.createAttributes().build());
     event.put(SNAIL.get(), Snail.createAttributes().build());
   }

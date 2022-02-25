@@ -19,6 +19,9 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import java.util.UUID;
+import javax.annotation.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
@@ -26,6 +29,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.TimeUtil;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,12 +46,15 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.level.Level;
 
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import de.markusbordihn.playercompanions.utils.Names;
 
 public class PlayerCompanionEntityData extends TamableAnimal {
 
-  // Entity Data and Tags
+  // Synced Entity Data
   private static final EntityDataAccessor<Boolean> DATA_ACTIVE =
+      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.BOOLEAN);
+  private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.BOOLEAN);
   private static final EntityDataAccessor<Integer> DATA_COLOR =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
@@ -62,6 +70,8 @@ public class PlayerCompanionEntityData extends TamableAnimal {
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.STRING);
+
+  // Stored Entity Data Tags
   private static final String DATA_ACTIVE_TAG = "Active";
   private static final String DATA_COLOR_TAG = "Color";
   private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
@@ -70,48 +80,25 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
   private static final String DATA_VARIANT_TAG = "Variant";
 
+  // Default values
+  private int explosionPower = 0;
+  private int jumpMoveDelay = 10;
+
   // Temporary states
-  private boolean isFlying = false;
-  private boolean isFlyingAround = false;
-  private boolean isKeepOnJumping = false;
-  private boolean isTamable = true;
-  private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
+  private BlockPos orderedToPosition = null;
   private ItemStack companionTypeIcon = new ItemStack(Items.BONE);
+  private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
+  private UUID persistentAngerTarget;
+  private boolean isDirty = false;
+
+  private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
   protected PlayerCompanionEntityData(EntityType<? extends TamableAnimal> entityType, Level level) {
     super(entityType, level);
-    this.moveControl = new PlayerCompanionEntityMoveControl(this);
-  }
-
-  public boolean flying() {
-    return this.isFlying;
-  }
-
-  public void flying(boolean flying) {
-    this.isFlying = flying;
-  }
-
-  public boolean flyingAround() {
-    return this.isFlyingAround;
-  }
-
-  public void flyingAround(boolean flyingAround) {
-    if (flyingAround) {
-      this.setNoGravity(true);
-    }
-    this.isFlyingAround = flyingAround;
   }
 
   public boolean isTamable() {
-    return this.isTamable;
-  }
-
-  protected boolean keepOnJumping() {
-    return this.isKeepOnJumping;
-  }
-
-  protected void keepOnJumping(boolean keepOnJumping) {
-    this.isKeepOnJumping = keepOnJumping;
+    return !this.hasOwner();
   }
 
   public PlayerCompanionType getCompanionType() {
@@ -130,6 +117,14 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.companionTypeIcon = icon;
   }
 
+  public boolean isCharging() {
+    return this.entityData.get(DATA_IS_CHARGING);
+  }
+
+  public void setCharging(boolean charging) {
+    this.entityData.set(DATA_IS_CHARGING, charging);
+  }
+
   public DyeColor getColor() {
     return DyeColor.byId(this.entityData.get(DATA_COLOR));
   }
@@ -144,6 +139,28 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public void setActive(boolean active) {
     this.entityData.set(DATA_ACTIVE, active);
+  }
+
+  public void setDirty() {
+    this.isDirty = true;
+  }
+
+  public void setDirty(boolean dirty) {
+    if (!this.level.isClientSide) {
+      this.isDirty = dirty;
+    }
+  }
+
+  public boolean getDirty() {
+    return this.isDirty;
+  }
+
+  public int getExplosionPower() {
+    return this.explosionPower;
+  }
+
+  public void setExplosionPower(int explosionPower) {
+    this.explosionPower = explosionPower;
   }
 
   public String getVariant() {
@@ -190,6 +207,19 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.entityData.set(DATA_REMAINING_ANGER_TIME, angerTime);
   }
 
+  public void startPersistentAngerTimer() {
+    this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
+  }
+
+  @Nullable
+  public UUID getPersistentAngerTarget() {
+    return this.persistentAngerTarget;
+  }
+
+  public void setPersistentAngerTarget(@Nullable UUID uuid) {
+    this.persistentAngerTarget = uuid;
+  }
+
   public int getRespawnTimer() {
     return this.entityData.get(DATA_RESPAWN_TIMER);
   }
@@ -210,19 +240,19 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     return Names.getRandomMobName();
   }
 
-  protected int getJumpDelay() {
+  public int getJumpDelay() {
     return this.random.nextInt(20) + 10;
   }
 
-  protected int getWaitDelay() {
+  public int getWaitDelay() {
     return this.random.nextInt(200) + 10;
   }
 
-  protected int getJumpMoveDelay() {
-    return 10;
+  public int getJumpMoveDelay() {
+    return this.jumpMoveDelay;
   }
 
-  protected float getSoundPitch() {
+  public float getSoundPitch() {
     return ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
   }
 
@@ -232,6 +262,19 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public boolean hasOwner() {
     return this.getOwnerUUID() != null;
+  }
+
+  public boolean isOrderedToPosition() {
+    return this.orderedToPosition != null;
+  }
+
+  public void setOrderedToPosition(BlockPos blockPos) {
+    this.orderedToPosition = blockPos;
+    this.setDirty();
+  }
+
+  public BlockPos getOrderedToPosition() {
+    return this.orderedToPosition;
   }
 
   public BlockPos ownerBlockPosition() {
@@ -261,6 +304,7 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.entityData.define(DATA_CUSTOM_COMPANION_NAME, getRandomName());
     this.entityData.define(DATA_EXPERIENCE, 0);
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 0);
+    this.entityData.define(DATA_IS_CHARGING, false);
     this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
     this.entityData.define(DATA_VARIANT, "default");

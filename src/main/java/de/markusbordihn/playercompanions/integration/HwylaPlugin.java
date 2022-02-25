@@ -25,9 +25,10 @@ import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
 
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.collector.CollectorEntity;
-import de.markusbordihn.playercompanions.entity.follower.FollowerEntity;
-import de.markusbordihn.playercompanions.entity.guard.GuardEntity;
+import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityFloating;
+import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityWalking;
+import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFloating;
+import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
 
 @WailaPlugin
 public class HwylaPlugin implements IWailaPlugin {
@@ -42,11 +43,13 @@ public class HwylaPlugin implements IWailaPlugin {
 
     // Type specific provider
     registrar.registerComponentProvider(CollectorEntityProvider.INSTANCE, TooltipPosition.BODY,
-        CollectorEntity.class);
-    registrar.registerComponentProvider(FollowerEntityProvider.INSTANCE, TooltipPosition.BODY,
-        FollowerEntity.class);
+        CollectorEntityFloating.class);
+    registrar.registerComponentProvider(CollectorEntityProvider.INSTANCE, TooltipPosition.BODY,
+        CollectorEntityWalking.class);
     registrar.registerComponentProvider(GuardEntityProvider.INSTANCE, TooltipPosition.BODY,
-        GuardEntity.class);
+        GuardEntityFloating.class);
+    registrar.registerComponentProvider(GuardEntityProvider.INSTANCE, TooltipPosition.BODY,
+        GuardEntityWalking.class);
   }
 
 }

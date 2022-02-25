@@ -22,7 +22,7 @@ package de.markusbordihn.playercompanions.item.companions;
 import net.minecraft.world.entity.EntityType;
 
 import de.markusbordihn.playercompanions.entity.ModEntityType;
-import de.markusbordihn.playercompanions.entity.collector.Pig;
+import de.markusbordihn.playercompanions.entity.companions.Pig;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
 public class PigItem extends CapturedCompanion {

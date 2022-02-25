@@ -85,16 +85,26 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue fairyMaxGroup;
     public final ForgeConfigSpec.IntValue fairyWeight;
 
-    public final ForgeConfigSpec.BooleanValue smallSlimeSpawnEnable;
-    public final ForgeConfigSpec.IntValue smallSlimeMinGroup;
-    public final ForgeConfigSpec.IntValue smallSlimeMaxGroup;
-    public final ForgeConfigSpec.IntValue smallSlimeWeight;
+    public final ForgeConfigSpec.BooleanValue pigSpawnEnable;
+    public final ForgeConfigSpec.IntValue pigMinGroup;
+    public final ForgeConfigSpec.IntValue pigMaxGroup;
+    public final ForgeConfigSpec.IntValue pigWeight;
+
+    public final ForgeConfigSpec.BooleanValue roosterSpawnEnable;
+    public final ForgeConfigSpec.IntValue roosterMinGroup;
+    public final ForgeConfigSpec.IntValue roosterMaxGroup;
+    public final ForgeConfigSpec.IntValue roosterWeight;
 
     public final ForgeConfigSpec.BooleanValue smallGhastSpawnEnable;
     public final ForgeConfigSpec.IntValue smallGhastMinGroup;
     public final ForgeConfigSpec.IntValue smallGhastMaxGroup;
     public final ForgeConfigSpec.IntValue smallGhastWeight;
     public final ForgeConfigSpec.IntValue smallGhastExplosionPower;
+
+    public final ForgeConfigSpec.BooleanValue smallSlimeSpawnEnable;
+    public final ForgeConfigSpec.IntValue smallSlimeMinGroup;
+    public final ForgeConfigSpec.IntValue smallSlimeMaxGroup;
+    public final ForgeConfigSpec.IntValue smallSlimeWeight;
 
     public final ForgeConfigSpec.BooleanValue snailSpawnEnable;
     public final ForgeConfigSpec.IntValue snailMinGroup;
@@ -155,6 +165,24 @@ public class CommonConfig {
       fairyMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fairyMinGroup", 1, 0, 64);
       fairyMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fairyMaxGroup", 2, 0, 64);
       fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 6, 0, 100);
+      builder.pop();
+
+      builder.push("Pig");
+      pigSpawnEnable =
+          builder.comment("Enable/Disable the pig spawn.").define("pigSpawnEnable", true);
+      pigMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("pigMinGroup", 1, 0, 64);
+      pigMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("pigMaxGroup", 1, 0, 64);
+      pigWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("pigWeight", 6, 0, 100);
+      builder.pop();
+
+      builder.push("Rooster");
+      roosterSpawnEnable =
+          builder.comment("Enable/Disable the rooster spawn.").define("roosterSpawnEnable", true);
+      roosterMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("roosterMinGroup", 1, 0, 64);
+      roosterMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("roosterMaxGroup", 2, 0, 64);
+      roosterWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("roosterWeight", 6, 0, 100);
       builder.pop();
 
       builder.push("Small Slime");

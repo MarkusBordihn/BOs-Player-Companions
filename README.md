@@ -79,6 +79,15 @@ Most of the NPC / companion mods should be supported out of the box, but this is
 
 - ✅ [Human Companions][human_companions]
 
+## Version Status Overview 🛠️
+
+| Version        | Status                |
+| -------------- | --------------------- |
+| Fabric Version | ❌ Not planned        |
+| Forge 1.16.5   | ❌ Not planned        |
+| Forge 1.17.1   | ❌ Not planned        |
+| Forge 1.18.1   | ✔️ Active development |
+
 ## Note
 
 Please only download the mod from the official CurseForge page or with the official CurseForge launcher like:

@@ -45,4 +45,8 @@ public final class Constants {
   public static final String NEAT_MOD = "neat";
   public static final String NEAT_NAME = "Neat";
   public static final boolean NEAT_LOADED = ModList.get().isLoaded(NEAT_MOD);
+
+  // Animation Math
+  public static final float MATH_27DEG_TO_RAD = 0.47123894F;
+  public static final float MATH_27DEG_TO_RAD_INVERTED = -0.47123894F;
 }

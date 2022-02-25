@@ -40,6 +40,10 @@ public class ModKeyMapping {
 
   protected ModKeyMapping() {}
 
+  public static final KeyMapping KEY_ALT = new KeyMapping(Constants.KEY_PREFIX + "alt",
+      KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_ALT),
+      Constants.KEY_PREFIX + "category");
+
   public static final KeyMapping KEY_COMMAND =
       new KeyMapping(Constants.KEY_PREFIX + "control", KeyConflictContext.IN_GAME,
           InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL),
@@ -48,6 +52,9 @@ public class ModKeyMapping {
   public static void registerKeyMapping(final FMLClientSetupEvent event) {
     log.info("{} Key Mapping ...", Constants.LOG_REGISTER_PREFIX);
 
-    event.enqueueWork(() -> ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_COMMAND));
+    event.enqueueWork(() -> {
+      ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_ALT);
+      ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_COMMAND);
+    });
   }
 }

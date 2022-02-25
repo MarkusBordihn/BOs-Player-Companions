@@ -33,8 +33,8 @@ import net.minecraft.util.Mth;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import de.markusbordihn.playercompanions.entity.healer.Fairy;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.companions.Fairy;
 
 @OnlyIn(Dist.CLIENT)
 public class FairyModel extends HumanoidModel<Fairy> {
@@ -109,12 +109,12 @@ public class FairyModel extends HumanoidModel<Fairy> {
     this.leftWing.z = 2.0F;
     this.rightWing.y = 1.0F;
     this.leftWing.y = 1.0F;
-    this.rightWing.yRot = 0.47123894F
+    this.rightWing.yRot = Constants.MATH_27DEG_TO_RAD
         + Mth.cos(ageInTicks * 45.836624F * ((float) Math.PI / 180F)) * (float) Math.PI * 0.05F;
     this.leftWing.yRot = -this.rightWing.yRot;
-    this.leftWing.zRot = -0.47123894F;
-    this.leftWing.xRot = 0.47123894F;
-    this.rightWing.xRot = 0.47123894F;
-    this.rightWing.zRot = 0.47123894F;
+    this.leftWing.zRot = Constants.MATH_27DEG_TO_RAD_INVERTED;
+    this.leftWing.xRot = Constants.MATH_27DEG_TO_RAD;
+    this.rightWing.xRot = Constants.MATH_27DEG_TO_RAD;
+    this.rightWing.zRot = Constants.MATH_27DEG_TO_RAD;
   }
 }

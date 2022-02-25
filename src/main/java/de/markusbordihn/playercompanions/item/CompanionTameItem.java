@@ -64,8 +64,8 @@ public class CompanionTameItem extends Item {
   }
 
   public void convertEntityToItem(Item companionItem, Player player, LivingEntity livingEntity,
-      InteractionHand hand, Level level) {
-    log.info("Convert Living Entity: {}", livingEntity);
+      Level level) {
+    log.info("Convert Living Entity {} for {} ...", livingEntity, player);
 
     // Capture mob inside item.
     log.debug("Capturing mob {} ...", livingEntity.getName());
@@ -126,7 +126,7 @@ public class CompanionTameItem extends Item {
             if (livingEntity instanceof PlayerCompanionEntity companionEntity) {
               Item companionItem = companionEntity.getCompanionItem();
               if (companionItem != null) {
-                convertEntityToItem(companionItem, player, livingEntity, hand, level);
+                convertEntityToItem(companionItem, player, livingEntity, level);
               } else {
                 log.error("Unable to capture companion entity {} in item {}!", livingEntity,
                     companionItem);

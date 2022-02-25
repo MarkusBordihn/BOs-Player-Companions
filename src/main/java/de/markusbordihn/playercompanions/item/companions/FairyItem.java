@@ -22,7 +22,7 @@ package de.markusbordihn.playercompanions.item.companions;
 import net.minecraft.world.entity.EntityType;
 
 import de.markusbordihn.playercompanions.entity.ModEntityType;
-import de.markusbordihn.playercompanions.entity.healer.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.Fairy;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
 public class FairyItem extends CapturedCompanion {

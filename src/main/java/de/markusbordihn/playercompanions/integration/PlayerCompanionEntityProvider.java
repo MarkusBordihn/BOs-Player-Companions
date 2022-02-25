@@ -56,6 +56,9 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
           tooltip.add(new TextComponent("Owner: " + ownerName));
         }
         if (data != null) {
+          if (data.isOrderedToPosition()) {
+            tooltip.add(new TextComponent("Order: To Position"));
+          }
           if (data.isOrderedToSit()) {
             tooltip.add(new TextComponent("Order: Sitting"));
           } else {

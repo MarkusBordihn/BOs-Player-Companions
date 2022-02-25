@@ -32,9 +32,16 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.FairyModel;
 import de.markusbordihn.playercompanions.client.model.PigModel;
+import de.markusbordihn.playercompanions.client.model.RoosterModel;
 import de.markusbordihn.playercompanions.client.model.SmallGhastModel;
 import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
 import de.markusbordihn.playercompanions.client.model.SnailModel;
+import de.markusbordihn.playercompanions.client.renderer.companions.FairyRenderer;
+import de.markusbordihn.playercompanions.client.renderer.companions.PigRenderer;
+import de.markusbordihn.playercompanions.client.renderer.companions.RoosterRenderer;
+import de.markusbordihn.playercompanions.client.renderer.companions.SmallGhastRenderer;
+import de.markusbordihn.playercompanions.client.renderer.companions.SmallSlimeRenderer;
+import de.markusbordihn.playercompanions.client.renderer.companions.SnailRenderer;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 
 @OnlyIn(Dist.CLIENT)
@@ -47,6 +54,8 @@ public class ClientRenderer {
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "fairy"), "main");
   public static final ModelLayerLocation PIG =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "pig"), "main");
+  public static final ModelLayerLocation ROOSTER =
+      new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "rooster"), "main");
   public static final ModelLayerLocation SMALL_GHAST =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "small_ghast"), "main");
   public static final ModelLayerLocation SMALL_SLIME =
@@ -63,6 +72,7 @@ public class ClientRenderer {
 
     event.registerEntityRenderer(ModEntityType.FAIRY.get(), FairyRenderer::new);
     event.registerEntityRenderer(ModEntityType.PIG.get(), PigRenderer::new);
+    event.registerEntityRenderer(ModEntityType.ROOSTER.get(), RoosterRenderer::new);
     event.registerEntityRenderer(ModEntityType.SMALL_GHAST.get(), SmallGhastRenderer::new);
     event.registerEntityRenderer(ModEntityType.SMALL_SLIME.get(), SmallSlimeRenderer::new);
     event.registerEntityRenderer(ModEntityType.SNAIL.get(), SnailRenderer::new);
@@ -74,6 +84,7 @@ public class ClientRenderer {
 
     event.registerLayerDefinition(FAIRY, FairyModel::createBodyLayer);
     event.registerLayerDefinition(PIG, PigModel::createBodyLayer);
+    event.registerLayerDefinition(ROOSTER, RoosterModel::createBodyLayer);
     event.registerLayerDefinition(SMALL_GHAST, SmallGhastModel::createBodyLayer);
     event.registerLayerDefinition(SMALL_SLIME, SmallSlimeModel::createInnerBodyLayer);
     event.registerLayerDefinition(SMALL_SLIME_OUTER, SmallSlimeModel::createOuterBodyLayer);

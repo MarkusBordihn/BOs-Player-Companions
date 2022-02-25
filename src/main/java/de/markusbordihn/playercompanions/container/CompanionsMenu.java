@@ -42,7 +42,7 @@ import de.markusbordihn.playercompanions.container.slots.InventorySlot;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionType;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
 public class CompanionsMenu extends AbstractContainerMenu {
 

@@ -33,7 +33,7 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.entity.guard.SmallGhast;
+import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 
 @OnlyIn(Dist.CLIENT)
 public class SmallGhastModel extends HierarchicalModel<SmallGhast> {

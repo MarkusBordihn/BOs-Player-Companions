@@ -32,13 +32,13 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import de.markusbordihn.playercompanions.entity.PlayerCompanionType;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
 public class PlayerCompanionData {
 
@@ -51,6 +51,8 @@ public class PlayerCompanionData {
   private static final String ENTITY_ID_TAG = "EntityId";
   private static final String ENTITY_RESPAWN_TIMER_TAG = "EntityRespawnTimer";
   private static final String ENTITY_SITTING_TAG = "EntitySitting";
+  private static final String ENTITY_ORDERED_TO_POSITION = "EntityOrderedToPosition";
+  private static final String ENTITY_TARGET_TAG = "EntityTarget";
   private static final String ENTITY_TYPE_TAG = "EntityType";
   private static final String LEVEL_TAG = "Level";
   private static final String NAME_TAG = "Name";
@@ -75,8 +77,10 @@ public class PlayerCompanionData {
   private UUID ownerUUID = null;
   private boolean active = true;
   private boolean entitySitting = false;
+  private boolean entityOrderedToPosition = false;
   private boolean hasOwner = false;
   private boolean isRemoved = false;
+  private String entityTarget = "";
   private float entityHealth;
   private float entityHealthMax;
   private int entityId;
@@ -96,6 +100,10 @@ public class PlayerCompanionData {
 
   public boolean isOrderedToSit() {
     return this.entitySitting;
+  }
+
+  public boolean isOrderedToPosition() {
+    return this.entityOrderedToPosition;
   }
 
   public UUID getUUID() {
@@ -148,6 +156,14 @@ public class PlayerCompanionData {
 
   public int getEntityRespawnTimer() {
     return this.entityRespawnTimer;
+  }
+
+  public String getEntityTarget() {
+    return this.entityTarget;
+  }
+
+  public boolean hasEntityTarget() {
+    return !this.entityTarget.isBlank();
   }
 
   public NonNullList<ItemStack> getInventory() {
@@ -216,7 +232,11 @@ public class PlayerCompanionData {
     this.entityHealthMax = companion.getMaxHealth();
     this.entityRespawnTimer = companion.getRespawnTimer();
     this.entitySitting = companion.isOrderedToSit();
+    this.entityOrderedToPosition = companion.isOrderedToPosition();
     this.entityData = companion.serializeNBT();
+
+    LivingEntity targetEntity = companion.getTarget();
+    this.entityTarget = targetEntity == null ? "" : targetEntity.getEncodeId();
 
     log.debug("Loaded PlayerCompanion {} data over entity with {}", this.name, this);
   }
@@ -257,6 +277,8 @@ public class PlayerCompanionData {
     this.entityHealthMax = compoundTag.getFloat(ENTITY_HEALTH_MAX_TAG);
     this.entityRespawnTimer = compoundTag.getInt(ENTITY_RESPAWN_TIMER_TAG);
     this.entitySitting = compoundTag.getBoolean(ENTITY_SITTING_TAG);
+    this.entityOrderedToPosition = compoundTag.getBoolean(ENTITY_ORDERED_TO_POSITION);
+    this.entityTarget = compoundTag.getString(ENTITY_TARGET_TAG);
     this.entityData = compoundTag.getCompound(ENTITY_DATA_TAG);
 
     // Load inventory
@@ -289,10 +311,12 @@ public class PlayerCompanionData {
     }
     compoundTag.putInt(ENTITY_ID_TAG, this.entityId);
     compoundTag.putString(ENTITY_TYPE_TAG, this.entityType.getRegistryName().toString());
-    compoundTag.putFloat(ENTITY_HEALTH_TAG, this.entityHealth);
-    compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.entityHealthMax);
-    compoundTag.putInt(ENTITY_RESPAWN_TIMER_TAG, this.entityRespawnTimer);
     compoundTag.putBoolean(ENTITY_SITTING_TAG, this.entitySitting);
+    compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION, this.entityOrderedToPosition);
+    compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.entityHealthMax);
+    compoundTag.putFloat(ENTITY_HEALTH_TAG, this.entityHealth);
+    compoundTag.putInt(ENTITY_RESPAWN_TIMER_TAG, this.entityRespawnTimer);
+    compoundTag.putString(ENTITY_TARGET_TAG, this.entityTarget);
 
     // Storing current companion entity data if available (regardless of disc status)
     if (includeData) {
@@ -307,11 +331,18 @@ public class PlayerCompanionData {
     // Sync specific meta data from entity directly, if available.
     if (this.companionEntity != null && this.companionEntity.isAlive()) {
       compoundTag.putBoolean(ENTITY_SITTING_TAG, this.companionEntity.isOrderedToSit());
+      compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION,
+          this.companionEntity.isOrderedToPosition());
       compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.companionEntity.getMaxHealth());
       compoundTag.putFloat(ENTITY_HEALTH_TAG, this.companionEntity.getHealth());
       if (this.companionEntity.getOwner() != null) {
         compoundTag.putString(OWNER_NAME_TAG,
             this.companionEntity.getOwner().getName().getString());
+      }
+      if (this.companionEntity.getTarget() == null) {
+        compoundTag.putString(ENTITY_TARGET_TAG, "");
+      } else {
+        compoundTag.putString(ENTITY_TARGET_TAG, this.companionEntity.getTarget().getEncodeId());
       }
     }
 
@@ -328,7 +359,11 @@ public class PlayerCompanionData {
         || companion.getCompanionType() != this.getType() || companion.getId() != this.getEntityId()
         || companion.getHealth() != this.getEntityHealth()
         || companion.getRespawnTimer() != this.getEntityRespawnTimer()
-        || companion.isOrderedToSit() != this.isOrderedToSit();
+        || companion.isOrderedToSit() != this.isOrderedToSit()
+        || companion.isOrderedToPosition() != this.isOrderedToPosition()
+        || ((companion.getTarget() == null && !this.getEntityTarget().isEmpty())
+            || (companion.getTarget() != null
+                && !companion.getTarget().getEncodeId().equals(this.getEntityTarget())));
   }
 
   public boolean changed(PlayerCompanionData playerCompanion) {
@@ -339,7 +374,9 @@ public class PlayerCompanionData {
         || playerCompanion.getEntityId() != this.getEntityId()
         || playerCompanion.getEntityHealth() != this.getEntityHealth()
         || playerCompanion.getEntityRespawnTimer() != this.getEntityRespawnTimer()
-        || playerCompanion.isOrderedToSit() != this.isOrderedToSit();
+        || !playerCompanion.getEntityTarget().equals(this.getEntityTarget())
+        || playerCompanion.isOrderedToSit() != this.isOrderedToSit()
+        || playerCompanion.isOrderedToPosition() != this.isOrderedToPosition();
   }
 
   public String toString() {

@@ -27,7 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -39,8 +38,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.util.TimeUtil;
-import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -50,16 +47,12 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -69,7 +62,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -92,6 +84,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
+  // Shared constants
+  public static final MobCategory CATEGORY = MobCategory.CREATURE;
+
   // Custom name format
   private static final ResourceLocation RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_respawn_message");
@@ -105,24 +100,23 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   private static int respawnDelay = COMMON.respawnDelay.get();
   private static boolean friendlyFire = COMMON.friendlyFire.get();
 
+  // Additional ticker
   private static final int INACTIVE_TICK = 100;
+  private static final int DATA_SYNC_TICK = 10;
+  private int ticker = 0;
+  private int dataSyncTicker = 0;
 
   // Temporary states
   private boolean wasOnGround;
 
-  // Anger state
-  private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
-  private UUID persistentAngerTarget;
-  private int ticker = 0;
-
-
   public PlayerCompanionEntity(EntityType<? extends PlayerCompanionEntity> entityType,
       Level level) {
     super(entityType, level);
-    this.setTame(false);
 
     // Distribute Ticks along several entities
     this.ticker = (short) this.random.nextInt(0, 50);
+
+    this.setDirty();
   }
 
   @SubscribeEvent
@@ -137,7 +131,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       log.warn("{} will NOT respawn on death!", Constants.LOG_ICON_NAME);
     }
     if (!friendlyFire) {
-      log.info("{} ignore entities from the same owner as attack target!");
+      log.info("{} ignore entities from the same owner as attack target!", Constants.LOG_ICON_NAME);
     }
   }
 
@@ -146,11 +140,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         .add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
-  protected SoundEvent getJumpSound() {
+  public SoundEvent getJumpSound() {
     return SoundEvents.SLIME_JUMP_SMALL;
   }
 
-  protected SoundEvent getWaitSound() {
+  public SoundEvent getWaitSound() {
     return getAmbientSound();
   }
 
@@ -162,17 +156,12 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     return Ingredient.of(getTameItem());
   }
 
-  protected boolean doPlayJumpSound() {
+  public boolean doPlayJumpSound() {
     return true;
   }
 
   public Item getCompanionItem() {
     return null;
-  }
-
-  public void tameAndFollow(Player player) {
-    this.tame(player);
-    this.follow();
   }
 
   protected SoundEvent getPetSound() {
@@ -181,19 +170,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   protected ParticleOptions getParticleType() {
     return null;
-  }
-
-  public void startPersistentAngerTimer() {
-    this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
-  }
-
-  @Nullable
-  public UUID getPersistentAngerTarget() {
-    return this.persistentAngerTarget;
-  }
-
-  public void setPersistentAngerTarget(@Nullable UUID uuid) {
-    this.persistentAngerTarget = uuid;
   }
 
   protected void addParticle(ParticleOptions particleOptions) {
@@ -248,7 +224,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
-  protected void follow() {
+  public void follow() {
     this.setOrderedToSit(false);
     this.navigation.recomputePath();
   }
@@ -284,6 +260,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   public PlayerCompanionsServerData getServerData() {
+    if (this.level.isClientSide) {
+      return null;
+    }
     return PlayerCompanionsServerData.get();
   }
 
@@ -308,13 +287,19 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
+  public void syncData() {
+    if (!this.level.isClientSide) {
+      getServerData().updateOrRegisterCompanion(this);
+    }
+  }
+
   @Override
   public int getAmbientSoundInterval() {
     return 400;
   }
 
   @Override
-  protected float getSoundVolume() {
+  public float getSoundVolume() {
     // Is needed to delegate protection for access from move controller.
     return 1.0F;
   }
@@ -322,7 +307,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void setRespawnTimer(int timer) {
     super.setRespawnTimer(timer);
-    getServerData().updatePlayerCompanion(this);
+    setDirty();
   }
 
   @Override
@@ -333,14 +318,20 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       owner.sendMessage(new TranslatableComponent(Util.makeDescriptionId("entity", RESPAWN_MESSAGE),
           this.getCustomCompanionName()), Util.NIL_UUID);
     }
-    getServerData().updatePlayerCompanion(this);
+    setDirty();
   }
 
   @Override
   public void setTarget(@Nullable LivingEntity livingEntity) {
-    // Early return for resetting target.
-    if (livingEntity == null) {
+    // Not set the same target again.
+    if (this.getTarget() == livingEntity) {
+      return;
+    }
+
+    // Early return for resetting target or dead targets.
+    if (livingEntity == null || !livingEntity.isAlive()) {
       super.setTarget(null);
+      this.setDirty();
       return;
     }
 
@@ -350,9 +341,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       return;
     }
 
-    if (livingEntity.isAlive()) {
-      super.setTarget(livingEntity);
-    }
+    // Add target if it passed all former criteria.
+    super.setTarget(livingEntity);
+    this.setDirty();
   }
 
   @Override
@@ -370,7 +361,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
     if (this.random.nextInt(4) == 0
         && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
-      this.tameAndFollow(player);
+      this.tame(player);
+      this.follow();
       this.level.broadcastEntityEvent(this, (byte) 7);
       return InteractionResult.SUCCESS;
     } else {
@@ -383,53 +375,23 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void tame(Player player) {
     super.tame(player);
     if (player instanceof ServerPlayer) {
-      this.getServerData().updateOrRegisterCompanion(this);
+      this.syncData();
     }
-  }
-
-  @Override
-  public boolean causeFallDamage(float start, float end, DamageSource damageSource) {
-    if (this.flying()) {
-      return false;
-    }
-    return super.causeFallDamage(start, end, damageSource);
-  }
-
-  @Override
-  protected void checkFallDamage(double height, boolean flag, BlockState blockState,
-      BlockPos blockPos) {
-    if (this.flying()) {
-      return;
-    }
-    super.checkFallDamage(height, flag, blockState, blockPos);
-  }
-
-  @Override
-  public boolean onClimbable() {
-    if (this.flying()) {
-      return false;
-    }
-    return super.onClimbable();
   }
 
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    this.goalSelector.addGoal(1, new FloatGoal(this));
-    this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
-    this.goalSelector.addGoal(3, new TemptGoal(this, 0.75D, getFoodItems(), false));
-    if (!this.isTame()) {
-      this.goalSelector.addGoal(3, new TemptGoal(this, 0.9D, Ingredient.of(getTameItem()), false));
+
+    // Adding food goals for tamed and untamed player companions.
+    if (this.getFoodItems() != null) {
+      // Cause issues.
+      // this.goalSelector.addGoal(3, new TemptGoal(this, 0.75D, this.getFoodItems(), false));
     }
-    if (this.flyingAround()) {
-      this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 8.0F, 4.0F, true));
-    } else if (this.flying()) {
-      this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 8.0F, 2.0F, true));
-    } else {
-      this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 4.0F, 1.0F, false));
+    if (!this.isTame() && getTameItem() != null) {
+      // this.goalSelector.addGoal(3, new TemptGoal(this, 0.9D, Ingredient.of(getTameItem()),
+      // false));
     }
-    this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
-    this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
   }
 
   @Override
@@ -512,7 +474,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void readAdditionalSaveData(CompoundTag compoundTag) {
     super.readAdditionalSaveData(compoundTag);
-    getServerData().updateOrRegisterCompanion(this);
+    this.setDirty();
   }
 
   @Override
@@ -532,10 +494,17 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     // Perform tick for AI and other important steps.
     super.tick();
 
+    // Automatically Sync Data, if needed
+    if (this.getDirty() && this.dataSyncTicker++ >= DATA_SYNC_TICK) {
+      this.syncData();
+      this.dataSyncTicker = 0;
+      this.setDirty(false);
+    }
+
     // Allow do disable entity to save performance and to allow basic respawn logic.
     if (!isActive()) {
-      if (ticker++ >= INACTIVE_TICK) {
-        ticker = 0;
+      if (this.ticker++ >= INACTIVE_TICK) {
+        this.ticker = 0;
       } else {
         return;
       }
@@ -593,7 +562,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void setOrderedToSit(boolean sit) {
     if (this.isOrderedToSit() != sit) {
       super.setOrderedToSit(sit);
-      getServerData().updatePlayerCompanion(this);
+      this.setDirty();
     }
   }
 

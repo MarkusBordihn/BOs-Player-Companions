@@ -128,8 +128,8 @@ public class CapturedCompanion extends Item {
     if (playerCompanion != null && playerCompanion.isAlive()) {
       if (playerCompanion.closerThan(player, 16)) {
         if (playerCompanion instanceof PlayerCompanionEntity playerCompanionEntity) {
-          playerCompanionEntity.setWantedPosition(blockPos.getX() + 0.5, blockPos.getY(),
-              blockPos.getZ() + 0.5, 1.0);
+          playerCompanionEntity.setOrderedToPosition(
+              new BlockPos(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5));
         } else {
           player.sendMessage(
               new TranslatableComponent(Constants.TEXT_PREFIX + "companion_is_near_you",
@@ -140,7 +140,7 @@ public class CapturedCompanion extends Item {
         BlockState blockState = level.getBlockState(blockPos);
         if (blockState.is(Blocks.AIR) || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
             || blockState.is(Blocks.SEAGRASS)) {
-          playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
+          playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
           log.debug("Teleport companion {} to position ...", playerCompanion, blockPos);
         } else {
           Vec3 playerPosition = player.position();
@@ -184,13 +184,12 @@ public class CapturedCompanion extends Item {
     return false;
   }
 
-  public boolean despawnCompanion(LivingEntity livingEntity, ItemStack itemStack, Level level) {
+  public boolean despawnCompanion(LivingEntity livingEntity, ItemStack itemStack) {
     UUID capturedCompanionUUID = getCompanionUUID(itemStack);
     if (!(livingEntity instanceof PlayerCompanionEntity playerCompanionEntity)
         || !playerCompanionEntity.getUUID().equals(capturedCompanionUUID)) {
       return false;
     }
-    log.info("Capture Companion for transportation ...");
 
     // Sync data before we despawn entity.
     PlayerCompanionsServerData.get().updatePlayerCompanion(playerCompanionEntity);
@@ -213,7 +212,8 @@ public class CapturedCompanion extends Item {
           playerCompanionEntity.setVariant(this.variant);
         }
         playerCompanionEntity.finalizeSpawn();
-        playerCompanionEntity.tameAndFollow(player);
+        playerCompanionEntity.tame(player);
+        playerCompanionEntity.follow();
         setCompanionUUID(itemStack, entity.getUUID());
         return true;
       }
@@ -260,7 +260,7 @@ public class CapturedCompanion extends Item {
 
     // Try to despawn companion (server-side only).
     Level level = player.getLevel();
-    if (!level.isClientSide() && despawnCompanion(livingEntity, itemStack, level)) {
+    if (!level.isClientSide() && despawnCompanion(livingEntity, itemStack)) {
       return InteractionResult.CONSUME;
     }
 

@@ -24,13 +24,16 @@ import mcp.mobius.waila.api.IEntityComponentProvider;
 import mcp.mobius.waila.api.ITooltip;
 import mcp.mobius.waila.api.config.IPluginConfig;
 
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
-import de.markusbordihn.playercompanions.entity.guard.GuardEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.text.TranslatableText;
 
 public class GuardEntityProvider implements IEntityComponentProvider {
 
@@ -39,9 +42,12 @@ public class GuardEntityProvider implements IEntityComponentProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-    if (accessor.getEntity() instanceof GuardEntity guardEntity) {
-      PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(guardEntity);
-      tooltip.add(new TextComponent("Guard"));
+    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
+      PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
+      if (data != null && data.hasEntityTarget()) {
+        tooltip.add(new TranslatableComponent("Target: ").append(
+            TranslatableText.getEntityName(data.getEntityTarget())).withStyle(ChatFormatting.RED));
+      }
     }
   }
 }

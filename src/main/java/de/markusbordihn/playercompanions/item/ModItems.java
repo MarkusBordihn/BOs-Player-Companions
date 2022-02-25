@@ -54,6 +54,9 @@ public class ModItems {
 
   public static final RegistryObject<Item> PIG = ITEMS.register(PigItem.ID, PigItem::new);
 
+  public static final RegistryObject<Item> ROOSTER =
+      ITEMS.register(RoosterItem.ID, RoosterItem::new);
+
   public static final RegistryObject<Item> SMALL_GHAST =
       ITEMS.register(SmallGhastItem.ID, SmallGhastItem::new);
 
@@ -96,11 +99,13 @@ public class ModItems {
   public static final RegistryObject<Item> TAME_APPLE =
       ITEMS.register("tame_apple", TameApple::new);
   public static final RegistryObject<Item> TAME_BONE = ITEMS.register("tame_bone", TameBone::new);
+  public static final RegistryObject<Item> TAME_CAKE = ITEMS.register("tame_cake", TameCake::new);
   public static final RegistryObject<Item> TAME_CARROT =
       ITEMS.register("tame_carrot", TameCarrot::new);
-  public static final RegistryObject<Item> TAME_CAKE = ITEMS.register("tame_cake", TameCake::new);
   public static final RegistryObject<Item> TAME_SEAGRASS =
       ITEMS.register("tame_seagrass", TameBone::new);
+  public static final RegistryObject<Item> TAME_WHEAT_SEEDS =
+      ITEMS.register("tame_wheat_seeds", TameWheatSeeds::new);
 
   @TemplateEntryPoint("Register Block Items")
 
@@ -115,6 +120,10 @@ public class ModItems {
   public static final RegistryObject<Item> PIG_SPAWN_EGG = ITEMS.register("pig_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.GOLD.col,
           MaterialColor.COLOR_PINK.col,
+          new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+  public static final RegistryObject<Item> ROOSTER_SPAWN_EGG = ITEMS.register("rooster_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.ROOSTER::get, MaterialColor.GOLD.col,
+          MaterialColor.COLOR_RED.col,
           new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SNAIL_SPAWN_EGG = ITEMS.register("snail_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.GOLD.col,

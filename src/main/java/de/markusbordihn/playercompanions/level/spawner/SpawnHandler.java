@@ -52,7 +52,6 @@ import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
 
-
 @Mod.EventBusSubscriber()
 public class SpawnHandler {
 
@@ -116,8 +115,9 @@ public class SpawnHandler {
     // Rooster Spawn
     if (Boolean.TRUE.equals(COMMON.roosterSpawnEnable.get()) && isPlains && !isFlowerForest) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
-          .add(new MobSpawnSettings.SpawnerData(ModEntityType.ROOSTER.get(), COMMON.roosterWeight.get(),
-              COMMON.roosterMinGroup.get(), COMMON.roosterMaxGroup.get()));
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.ROOSTER.get(),
+              COMMON.roosterWeight.get(), COMMON.roosterMinGroup.get(),
+              COMMON.roosterMaxGroup.get()));
     }
 
     // Small Ghast Spawn
@@ -165,8 +165,13 @@ public class SpawnHandler {
   private static void logSpawn(String name, boolean enabled, int weight, int minGroup,
       int maxGroup) {
     if (enabled) {
-      log.info("{} {} with {} weight and {}-{} per group.", Constants.LOG_SPAWN_PREFIX, name,
-          weight, minGroup, maxGroup);
+      if (minGroup == maxGroup) {
+        log.info("{} {} with {} weight and {} per group.", Constants.LOG_SPAWN_PREFIX, name, weight,
+            maxGroup);
+      } else {
+        log.info("{} {} with {} weight and {}-{} per group.", Constants.LOG_SPAWN_PREFIX, name,
+            weight, minGroup, maxGroup);
+      }
     }
   }
 

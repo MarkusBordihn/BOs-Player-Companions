@@ -32,14 +32,14 @@ import de.markusbordihn.playercompanions.container.CompanionsMenu;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
-public class InventorySlot extends Slot {
+public class HandSlot extends Slot {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private CompanionsMenu menu;
   private final int slot;
 
-  public InventorySlot(CompanionsMenu menu, Container container, int slot, int x, int y) {
+  public HandSlot(CompanionsMenu menu, Container container, int slot, int x, int y) {
     super(container, slot, x, y);
     this.menu = menu;
     this.slot = slot;
@@ -50,7 +50,7 @@ public class InventorySlot extends Slot {
     super.set(itemStack);
 
     // Update menu only if we changed the slot to avoid updated for place and take actions.
-    this.menu.setInventoryChanged(this.slot, itemStack);
+    this.menu.setHandChanged(this.slot, itemStack);
   }
 
   @Override

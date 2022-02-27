@@ -140,7 +140,8 @@ public class CapturedCompanion extends Item {
         BlockState blockState = level.getBlockState(blockPos);
         if (blockState.is(Blocks.AIR) || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
             || blockState.is(Blocks.SEAGRASS)) {
-          playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+          playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5,
+              blockPos.getZ() + 0.5);
           log.debug("Teleport companion {} to position ...", playerCompanion, blockPos);
         } else {
           Vec3 playerPosition = player.position();
@@ -170,7 +171,7 @@ public class CapturedCompanion extends Item {
         entity.setPosRaw(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
 
         // Add entity to the world.
-        log.debug("Spawn companion {} with {}", entity);
+        log.debug("Spawn companion {} ...", entity);
         if (level.addFreshEntity(entity)) {
           playerCompanion = entity;
           if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
@@ -192,7 +193,9 @@ public class CapturedCompanion extends Item {
     }
 
     // Sync data before we despawn entity.
-    PlayerCompanionsServerData.get().updatePlayerCompanion(playerCompanionEntity);
+    PlayerCompanionData playerCompanionData = PlayerCompanionsServerData.get().updatePlayerCompanion(playerCompanionEntity);
+    playerCompanionData.syncEntityData(livingEntity);
+    log.debug("Despawn companion {} with {} ...", livingEntity, playerCompanionData);
 
     // Discarded Entity from the world.
     livingEntity.setRemoved(RemovalReason.DISCARDED);
@@ -347,19 +350,33 @@ public class CapturedCompanion extends Item {
       List<Component> tooltipList, TooltipFlag tooltipFlag) {
     PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
     if (playerCompanion != null) {
+      long respawnTimer =
+          playerCompanion.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
+
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_name",
           playerCompanion.getName()).withStyle(ChatFormatting.GOLD));
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_health",
           playerCompanion.getEntityHealth()));
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_owner",
           playerCompanion.getOwnerName()));
-      tooltipList.add(new TranslatableComponent(
-          Constants.TEXT_PREFIX + (playerCompanion.isOrderedToSit() ? "tamed_companion_order_to_sit"
-              : "tamed_companion_order_to_follow")));
+
+      if (respawnTimer <= 0) {
+        if (playerCompanion.isOrderedToPosition()) {
+          tooltipList.add(new TranslatableComponent(
+              Constants.TEXT_PREFIX + "tamed_companion_status_order_to_position"));
+        } else if (playerCompanion.isOrderedToSit()) {
+          tooltipList.add(new TranslatableComponent(
+              Constants.TEXT_PREFIX + "tamed_companion_status_order_to_sit"));
+        } else {
+          tooltipList.add(new TranslatableComponent(
+              Constants.TEXT_PREFIX + "tamed_companion_status_order_to_follow"));
+        }
+      } else {
+        tooltipList
+            .add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_status_dead"));
+      }
 
       // Display respawn timer, if any.
-      long respawnTimer =
-          playerCompanion.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
       if (respawnTimer >= 0) {
         tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_respawn",
             respawnTimer).withStyle(ChatFormatting.RED));

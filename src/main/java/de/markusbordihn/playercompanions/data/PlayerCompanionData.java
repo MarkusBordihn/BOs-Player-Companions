@@ -24,6 +24,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -31,11 +32,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
@@ -66,21 +70,24 @@ public class PlayerCompanionData {
   private BlockPos blockPos;
   private CompoundTag entityData;
   private EntityType<?> entityType;
-  private NonNullList<ItemStack> inventory = NonNullList.withSize(16, ItemStack.EMPTY);
+  private NonNullList<ItemStack> handItems = NonNullList.withSize(2, ItemStack.EMPTY);
+  private NonNullList<ItemStack> inventoryItems = NonNullList.withSize(16, ItemStack.EMPTY);
   private PlayerCompanionEntity companionEntity;
   private PlayerCompanionType type = PlayerCompanionType.UNKNOWN;
   private ResourceKey<Level> level;
+  private ClientLevel clientLevel;
+  private ServerLevel serverLevel;
+  private String entityTarget = "";
   private String levelName = "";
   private String name = "";
   private String ownerName = "";
   private UUID companionUUID = null;
   private UUID ownerUUID = null;
   private boolean active = true;
-  private boolean entitySitting = false;
   private boolean entityOrderedToPosition = false;
+  private boolean entitySitting = false;
   private boolean hasOwner = false;
   private boolean isRemoved = false;
-  private String entityTarget = "";
   private float entityHealth;
   private float entityHealthMax;
   private int entityId;
@@ -142,6 +149,21 @@ public class PlayerCompanionData {
     return this.entityType;
   }
 
+  public PlayerCompanionEntity getPlayerCompanionEntity() {
+    if (this.companionEntity == null) {
+      Entity entity = null;
+      if (this.serverLevel != null && this.companionUUID != null) {
+        entity = this.serverLevel.getEntity(this.companionUUID);
+      } else if (this.clientLevel != null && this.entityId > 0) {
+        entity = this.clientLevel.getEntity(this.entityId);
+      }
+      if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
+        this.companionEntity = playerCompanionEntity;
+      }
+    }
+    return this.companionEntity;
+  }
+
   public float getEntityHealth() {
     return this.entityHealth;
   }
@@ -152,6 +174,17 @@ public class PlayerCompanionData {
 
   public CompoundTag getEntityData() {
     return this.entityData;
+  }
+
+  public void syncEntityData(LivingEntity livingEntity) {
+    if (livingEntity != null) {
+      this.entityData = livingEntity.serializeNBT();
+    }
+  }
+
+  public void syncEntityData() {
+    PlayerCompanionEntity playerCompanionEntity = getPlayerCompanionEntity();
+    syncEntityData(playerCompanionEntity);
   }
 
   public int getEntityRespawnTimer() {
@@ -166,33 +199,55 @@ public class PlayerCompanionData {
     return !this.entityTarget.isBlank();
   }
 
-  public NonNullList<ItemStack> getInventory() {
-    return this.inventory;
+  public NonNullList<ItemStack> getHandItems() {
+    return this.handItems;
   }
 
-  public void setInventory(NonNullList<ItemStack> inventory) {
-    this.inventory = inventory;
+  public void setHandItems(NonNullList<ItemStack> hand) {
+    this.handItems = hand;
+    this.setDirty();
+  }
+
+  public void setHandItem(int index, ItemStack itemStack) {
+    this.handItems.set(index, itemStack);
+    this.setDirty();
+  }
+
+  public ItemStack getHandItem(int index) {
+    return this.handItems.get(index);
+  }
+
+  public int getHandItemsSize() {
+    return this.handItems.size();
+  }
+
+  public NonNullList<ItemStack> getInventoryItems() {
+    return this.inventoryItems;
+  }
+
+  public void setInventoryItems(NonNullList<ItemStack> inventory) {
+    this.inventoryItems = inventory;
     this.setDirty();
   }
 
   public void setInventoryItem(int index, ItemStack itemStack) {
-    this.inventory.set(index, itemStack);
+    this.inventoryItems.set(index, itemStack);
     this.setDirty();
   }
 
   public ItemStack getInventoryItem(int index) {
-    return this.inventory.get(index);
+    return this.inventoryItems.get(index);
   }
 
-  public int getInventorySize() {
-    return this.inventory.size();
+  public int getInventoryItemsSize() {
+    return this.inventoryItems.size();
   }
 
   public boolean storeInventoryItem(ItemStack itemStack) {
     // Iterate trough item stacks to find a matching or empty item stack to store the item.
     Item item = itemStack.getItem();
     int numberOfItems = itemStack.getCount();
-    for (int index = 0; index < getInventorySize(); index++) {
+    for (int index = 0; index < getInventoryItemsSize(); index++) {
       ItemStack existingItems = getInventoryItem(index);
       if (!existingItems.isEmpty() && existingItems.is(item)
           && existingItems.getCount() + numberOfItems < existingItems.getMaxStackSize()) {
@@ -238,6 +293,19 @@ public class PlayerCompanionData {
     LivingEntity targetEntity = companion.getTarget();
     this.entityTarget = targetEntity == null ? "" : targetEntity.getEncodeId();
 
+    // Handle level references (client and server)
+    Level companionLevel = companion.getLevel();
+    if (companionLevel != null) {
+      if (companionLevel.isClientSide) {
+        this.clientLevel = (ClientLevel) companion.getLevel();
+      } else {
+        this.serverLevel = (ServerLevel) companion.getLevel();
+      }
+    }
+
+    // Handle hand items.
+    setHandItems((NonNullList<ItemStack>) companion.getHandSlots());
+
     log.debug("Loaded PlayerCompanion {} data over entity with {}", this.name, this);
   }
 
@@ -281,8 +349,11 @@ public class PlayerCompanionData {
     this.entityTarget = compoundTag.getString(ENTITY_TARGET_TAG);
     this.entityData = compoundTag.getCompound(ENTITY_DATA_TAG);
 
+    // Load Hand
+    PlayerCompanionDataHelper.loadHandItems(compoundTag, this.handItems);
+
     // Load inventory
-    PlayerCompanionDataHelper.loadInventory(compoundTag, this.inventory);
+    PlayerCompanionDataHelper.loadInventoryItems(compoundTag, this.inventoryItems);
 
     log.debug("Loaded PlayerCompanion {} data over compoundTag with {}", this.name, this);
   }
@@ -318,36 +389,46 @@ public class PlayerCompanionData {
     compoundTag.putInt(ENTITY_RESPAWN_TIMER_TAG, this.entityRespawnTimer);
     compoundTag.putString(ENTITY_TARGET_TAG, this.entityTarget);
 
+    // Try to get current Player Companion if not exists.
+    PlayerCompanionEntity playerCompanionEntity = this.getPlayerCompanionEntity();
+
     // Storing current companion entity data if available (regardless of disc status)
     if (includeData) {
-      if (this.companionEntity != null && this.companionEntity.isAlive()) {
-        CompoundTag companionData = this.companionEntity.serializeNBT();
-        compoundTag.put(ENTITY_DATA_TAG, companionData);
-      } else if (this.entityData != null) {
+      if (playerCompanionEntity != null && playerCompanionEntity.isAlive()) {
+        this.entityData = playerCompanionEntity.serializeNBT();
+      }
+      if (this.entityData != null) {
         compoundTag.put(ENTITY_DATA_TAG, this.entityData);
       }
     }
 
     // Sync specific meta data from entity directly, if available.
-    if (this.companionEntity != null && this.companionEntity.isAlive()) {
-      compoundTag.putBoolean(ENTITY_SITTING_TAG, this.companionEntity.isOrderedToSit());
+    if (playerCompanionEntity != null && playerCompanionEntity.isAlive()) {
+      compoundTag.putBoolean(ENTITY_SITTING_TAG, playerCompanionEntity.isOrderedToSit());
       compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION,
-          this.companionEntity.isOrderedToPosition());
-      compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.companionEntity.getMaxHealth());
-      compoundTag.putFloat(ENTITY_HEALTH_TAG, this.companionEntity.getHealth());
-      if (this.companionEntity.getOwner() != null) {
+          playerCompanionEntity.isOrderedToPosition());
+      compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, playerCompanionEntity.getMaxHealth());
+      compoundTag.putFloat(ENTITY_HEALTH_TAG, playerCompanionEntity.getHealth());
+
+      if (playerCompanionEntity.getOwner() != null) {
         compoundTag.putString(OWNER_NAME_TAG,
-            this.companionEntity.getOwner().getName().getString());
+            playerCompanionEntity.getOwner().getName().getString());
       }
-      if (this.companionEntity.getTarget() == null) {
+      if (playerCompanionEntity.getTarget() == null) {
         compoundTag.putString(ENTITY_TARGET_TAG, "");
       } else {
-        compoundTag.putString(ENTITY_TARGET_TAG, this.companionEntity.getTarget().getEncodeId());
+        compoundTag.putString(ENTITY_TARGET_TAG, playerCompanionEntity.getTarget().getEncodeId());
       }
+
+      // Handle hand items.
+      setHandItems((NonNullList<ItemStack>) playerCompanionEntity.getHandSlots());
     }
 
+    // Store hand
+    PlayerCompanionDataHelper.saveHandItems(compoundTag, this.handItems);
+
     // Store inventory
-    PlayerCompanionDataHelper.saveInventory(compoundTag, this.inventory);
+    PlayerCompanionDataHelper.saveInventoryItems(compoundTag, this.inventoryItems);
 
     return compoundTag;
   }
@@ -361,6 +442,7 @@ public class PlayerCompanionData {
         || companion.getRespawnTimer() != this.getEntityRespawnTimer()
         || companion.isOrderedToSit() != this.isOrderedToSit()
         || companion.isOrderedToPosition() != this.isOrderedToPosition()
+        || companion.getHandSlots().hashCode() != this.getHandItems().hashCode()
         || ((companion.getTarget() == null && !this.getEntityTarget().isEmpty())
             || (companion.getTarget() != null
                 && !companion.getTarget().getEncodeId().equals(this.getEntityTarget())));
@@ -376,15 +458,16 @@ public class PlayerCompanionData {
         || playerCompanion.getEntityRespawnTimer() != this.getEntityRespawnTimer()
         || !playerCompanion.getEntityTarget().equals(this.getEntityTarget())
         || playerCompanion.isOrderedToSit() != this.isOrderedToSit()
-        || playerCompanion.isOrderedToPosition() != this.isOrderedToPosition();
+        || playerCompanion.isOrderedToPosition() != this.isOrderedToPosition()
+        || playerCompanion.getHandItems().hashCode() != this.getHandItems().hashCode();
   }
 
   public String toString() {
     return "PlayerCompanion['" + this.name + "', type=" + this.type + ", owner=" + this.ownerUUID
         + "(" + this.ownerName + "), entity=" + this.entityType + ", health=" + this.entityHealth
         + "/" + this.entityHealthMax + ", x=" + this.blockPos.getX() + ", y=" + this.blockPos.getY()
-        + ", z=" + this.blockPos.getZ() + ", respawnTimer=" + this.entityRespawnTimer + ", id="
-        + this.entityId + ", UUID=" + this.companionUUID + "]";
+        + ", z=" + this.blockPos.getZ() + ", hand=" + this.getHandItems() + ", respawnTimer="
+        + this.entityRespawnTimer + ", id=" + this.entityId + ", UUID=" + this.companionUUID + "]";
   }
 
   private void setDirty() {

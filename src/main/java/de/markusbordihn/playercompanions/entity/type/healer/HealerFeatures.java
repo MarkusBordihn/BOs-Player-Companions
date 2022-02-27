@@ -45,7 +45,7 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
   private static int healerTypeAmount = COMMON.healerTypeAmount.get();
 
   private static final short HEALER_TICK = 50;
-  private static final int PARTICLE_FRAMES = 4;
+  private static final int PARTICLE_FRAMES = 3;
 
   protected HealerFeatures(PlayerCompanionEntity playerCompanionEntity, Level level) {
     super(playerCompanionEntity, level);
@@ -100,44 +100,46 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
   public void healEntity(Level level, LivingEntity livingEntity, float amount) {
     if (level.isClientSide) {
-       healAnimation(livingEntity, level);
+      healAnimation(livingEntity, level);
     } else {
       livingEntity.heal(amount);
     }
   }
 
   public void healAnimation(LivingEntity livingEntity, Level level) {
-    if (!level.isClientSide) {
+    if (!level.isClientSide || livingEntity == null) {
+      return;
+    }
+
+    // Target position
+    double targetX = livingEntity.getX() + 0.5;
+    double targetY = livingEntity.getY() + 0.5;
+    double targetZ = livingEntity.getZ() + 0.5;
+
+    // Show particles at ?
+    for (int i = 0; i < 3; ++i) {
+      level.addParticle(ParticleTypes.HEART, targetX, targetY, targetZ, 1D, 1D, 1D);
+    }
+
+    // Is Target healing itself ?
+    if (livingEntity == playerCompanionEntity) {
       return;
     }
 
     // Source position
-    double x = playerCompanionEntity.getX();
-    double y = playerCompanionEntity.getY();
-    double z = playerCompanionEntity.getZ();
+    double x = playerCompanionEntity.getX() + 0.5;
+    double y = playerCompanionEntity.getY() + 0.5;
+    double z = playerCompanionEntity.getZ() + 0.5;
 
-    // Is Target healing itself ?
-    if (livingEntity == playerCompanionEntity) {
-      for (int i = 0; i < 3; ++i) {
-        level.addParticle(ParticleTypes.HEART, x, y, z, 1D, 1D, 1D);
-      }
-      return;
-    }
-
-    // Show particle to targeted direction.
-    if (livingEntity != null) {
-      double targetX = livingEntity.getX() + 0.5;
-      double targetY = livingEntity.getY() + 0.5;
-      double targetZ = livingEntity.getZ() + 0.5;
-      double targetXRatio = (targetX - x) / PARTICLE_FRAMES;
-      double targetYRatio = (targetY - y) / PARTICLE_FRAMES;
-      double targetZRatio = (targetZ - z) / PARTICLE_FRAMES;
-      for (int i = 0; i < PARTICLE_FRAMES; ++i) {
-        x += targetXRatio;
-        y += targetYRatio;
-        z += targetZRatio;
-        level.addParticle(ParticleTypes.HEART, x, y, z, 1D, 1D, 1D);
-      }
+    // Show particle trail to targeted direction.
+    double targetXRatio = (targetX - x) / PARTICLE_FRAMES;
+    double targetYRatio = (targetY - y) / PARTICLE_FRAMES;
+    double targetZRatio = (targetZ - z) / PARTICLE_FRAMES;
+    for (int i = 0; i < PARTICLE_FRAMES; ++i) {
+      x += targetXRatio;
+      y += targetYRatio;
+      z += targetZRatio;
+      level.addParticle(ParticleTypes.HEART, x, y, z, 1D, 1D, 1D);
     }
   }
 

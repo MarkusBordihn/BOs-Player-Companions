@@ -90,7 +90,7 @@ public class Pig extends CollectorEntityWalking {
   }
 
   @Override
-  protected Ingredient getFoodItems() {
+  public Ingredient getFoodItems() {
     return Ingredient.of(Items.CARROT, Items.POTATO, Items.BEETROOT);
   }
 

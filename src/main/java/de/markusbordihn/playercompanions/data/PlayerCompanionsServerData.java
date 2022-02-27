@@ -156,17 +156,18 @@ public class PlayerCompanionsServerData extends SavedData {
     }
   }
 
-  public void updatePlayerCompanion(PlayerCompanionEntity companionEntity) {
+  public PlayerCompanionData updatePlayerCompanion(PlayerCompanionEntity companionEntity) {
     PlayerCompanionData playerCompanion = playerCompanionsMap.get(companionEntity.getUUID());
     if (playerCompanion == null) {
-      log.error("Failed to update player companion {} because it does not exists!", companionEntity);
+      log.error("Failed to update player companion {} because it does not exists!",
+          companionEntity);
       registerCompanion(companionEntity);
-      return;
+      return null;
     }
 
     // Only update the data in the case there is a relevant change.
     if (!playerCompanion.changed(companionEntity)) {
-      return;
+      return playerCompanion;
     }
     playerCompanion.load(companionEntity);
 
@@ -188,6 +189,8 @@ public class PlayerCompanionsServerData extends SavedData {
 
     // Sync data (server -> client-side) with player companion owner, if any.
     syncPlayerCompanion(playerCompanion);
+
+    return playerCompanion;
   }
 
   public void updatePlayerCompanionData(PlayerCompanionEntity companionEntity) {
@@ -196,14 +199,24 @@ public class PlayerCompanionsServerData extends SavedData {
     }
   }
 
-  public void registerCompanion(PlayerCompanionEntity companionEntity) {
+  public PlayerCompanionData registerCompanion(PlayerCompanionEntity companionEntity) {
     if (playerCompanionsMap.get(companionEntity.getUUID()) != null) {
       log.warn("Companion {} is already registered!", companionEntity);
-      return;
+      return null;
     }
-    log.debug("Register companion {} ...", companionEntity);
-    addPlayerCompanion(new PlayerCompanionData(companionEntity));
+    if (!companionEntity.hasOwner()) {
+      log.debug("Skipping companions {} which has no owner, yet!", companionEntity);
+      return null;
+    }
+    log.info("Register companion {} for {} ...", companionEntity, companionEntity.getOwner());
+    PlayerCompanionData playerCompanion = new PlayerCompanionData(companionEntity);
+    addPlayerCompanion(playerCompanion);
     this.setDirty();
+
+    // Sync data (server -> client-side) with player companion owner, if any.
+    syncPlayerCompanion(playerCompanion);
+
+    return playerCompanion;
   }
 
   private static void addPlayerCompanion(PlayerCompanionData playerCompanion) {

@@ -87,7 +87,7 @@ public class Snail extends CollectorEntityFloating {
   }
 
   @Override
-  protected Ingredient getFoodItems() {
+  public Ingredient getFoodItems() {
     return Ingredient.of(Items.SEAGRASS);
   }
 

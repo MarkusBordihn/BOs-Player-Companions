@@ -38,10 +38,12 @@ import net.minecraft.world.level.Level;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.slots.DummySlot;
+import de.markusbordihn.playercompanions.container.slots.HandSlot;
 import de.markusbordihn.playercompanions.container.slots.InventorySlot;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
 public class CompanionsMenu extends AbstractContainerMenu {
@@ -49,47 +51,57 @@ public class CompanionsMenu extends AbstractContainerMenu {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // Defining basic layout options
-  private static int inventoryContainerSize = 16;
   private static int equipmentContainerSize = 8;
+  private static int handContainerSize = 2;
+  private static int inventoryContainerSize = 16;
   private static int slotSize = 18;
 
   // Define containers
-  private final Container inventoryContainer;
   private final Container equipmentContainer;
-  private final Player player;
-  private final UUID playerCompanionUUID;
-  private final PlayerCompanionData playerCompanionData;
+  private final Container handContainer;
+  private final Container inventoryContainer;
+
+  // Define others
+  private PlayerCompanionEntity playerCompanionEntity;
   private final Level level;
+  private final Player player;
+  private final PlayerCompanionData playerCompanionData;
+  private final UUID playerCompanionUUID;
 
   // Define states
   private boolean dataLoaded = false;
 
   public CompanionsMenu(int windowId, Inventory inventory, UUID playerCompanionUUID) {
     this(windowId, inventory, new SimpleContainer(inventoryContainerSize),
-        new SimpleContainer(equipmentContainerSize), playerCompanionUUID);
+        new SimpleContainer(equipmentContainerSize), new SimpleContainer(handContainerSize),
+        playerCompanionUUID);
   }
 
   public CompanionsMenu(int windowId, Inventory playerInventory, FriendlyByteBuf data) {
     this(windowId, playerInventory, new SimpleContainer(inventoryContainerSize),
-        new SimpleContainer(equipmentContainerSize), data.readUUID());
+        new SimpleContainer(equipmentContainerSize), new SimpleContainer(handContainerSize),
+        data.readUUID());
   }
 
   public CompanionsMenu(final int windowId, final Inventory playerInventory,
       final Container inventoryContainer, final Container equipmentContainer,
-      UUID playerCompanionUUID) {
+      final Container handContainer, UUID playerCompanionUUID) {
     super(ModContainer.COMPANIONS_MENU.get(), windowId);
 
     // Make sure the passed container matched the expected sizes
-    checkContainerSize(inventoryContainer, inventoryContainerSize);
     checkContainerSize(equipmentContainer, equipmentContainerSize);
+    checkContainerSize(handContainer, handContainerSize);
+    checkContainerSize(inventoryContainer, inventoryContainerSize);
 
     this.dataLoaded = false;
     this.player = playerInventory.player;
-    this.inventoryContainer = inventoryContainer;
     this.equipmentContainer = equipmentContainer;
+    this.handContainer = handContainer;
+    this.inventoryContainer = inventoryContainer;
     this.playerCompanionUUID = playerCompanionUUID;
     this.level = this.player.getLevel();
 
+    // Getting relevant data from client or server side.
     if (this.level.isClientSide) {
       this.playerCompanionData = PlayerCompanionsClientData.getCompanion(this.playerCompanionUUID);
     } else {
@@ -101,13 +113,16 @@ public class CompanionsMenu extends AbstractContainerMenu {
           this.level.isClientSide);
       return;
     }
-    PlayerCompanionType companionType = this.playerCompanionData.getType();
 
-    log.debug("CompanionsMenu client:{} companion:{} data:{}", this.level.isClientSide,
-        this.playerCompanionUUID, this.playerCompanionData);
+    // Get relevant entity, if available.
+    this.playerCompanionEntity = this.playerCompanionData.getPlayerCompanionEntity();
+
+    PlayerCompanionType companionType = this.playerCompanionData.getType();
+    log.debug("CompanionsMenu client:{} companion:{} data:{} entity:{}", this.level.isClientSide,
+        this.playerCompanionUUID, this.playerCompanionData, this.playerCompanionEntity);
 
     // Player Companion Equipment Slots (left / slot: 0 - 3)
-    int playerCompanionEquipmentLeftStartPositionY = 21;
+    int playerCompanionEquipmentLeftStartPositionY = 18;
     int playerCompanionEquipmentLeftStartPositionX = 8;
     for (int inventoryRow = 0; inventoryRow < 4; ++inventoryRow) {
       this.addSlot(new DummySlot(this.equipmentContainer, inventoryRow,
@@ -116,7 +131,7 @@ public class CompanionsMenu extends AbstractContainerMenu {
     }
 
     // Player Companion Equipment Slots (right / slot: 4 - 7)
-    int playerCompanionEquipmentRightStartPositionY = 21;
+    int playerCompanionEquipmentRightStartPositionY = 18;
     int playerCompanionEquipmentRightStartPositionX = 77;
     for (int inventoryRow = 0; inventoryRow < 4; ++inventoryRow) {
       this.addSlot(new DummySlot(this.equipmentContainer, inventoryRow + 4,
@@ -124,10 +139,17 @@ public class CompanionsMenu extends AbstractContainerMenu {
           playerCompanionEquipmentRightStartPositionY + inventoryRow * slotSize));
     }
 
+    // Player Companion Hand Slot
+    loadHand();
+    int playerCompanionHandLeftStartPositionY = 90;
+    int playerCompanionHandLeftStartPositionX = 8;
+    this.addSlot(new HandSlot(this, this.handContainer, 0, playerCompanionHandLeftStartPositionX,
+        playerCompanionHandLeftStartPositionY));
+
+    // Player Companion Inventory Slots
     if (companionType == PlayerCompanionType.COLLECTOR) {
-      // Player Companion Inventory Slots
       loadInventory();
-      int playerCompanionInventoryStartPositionY = 21;
+      int playerCompanionInventoryStartPositionY = 18;
       int playerCompanionInventoryStartPositionX = 98;
       for (int inventoryRow = 0; inventoryRow < 4; ++inventoryRow) {
         for (int inventoryColumn = 0; inventoryColumn < 4; ++inventoryColumn) {
@@ -140,7 +162,7 @@ public class CompanionsMenu extends AbstractContainerMenu {
     }
 
     // Player Inventory Slots
-    int playerInventoryStartPositionY = 110;
+    int playerInventoryStartPositionY = 130;
     int playerInventoryStartPositionX = 8;
     for (int inventoryRow = 0; inventoryRow < 3; ++inventoryRow) {
       for (int inventoryColumn = 0; inventoryColumn < 9; ++inventoryColumn) {
@@ -151,7 +173,7 @@ public class CompanionsMenu extends AbstractContainerMenu {
     }
 
     // Player Hotbar Slots
-    int hotbarStartPositionY = 168;
+    int hotbarStartPositionY = 188;
     int hotbarStartPositionX = 8;
     for (int playerInventorySlot = 0; playerInventorySlot < 9; ++playerInventorySlot) {
       this.addSlot(new Slot(playerInventory, playerInventorySlot,
@@ -163,11 +185,39 @@ public class CompanionsMenu extends AbstractContainerMenu {
     }
   }
 
+  public void loadHand() {
+    if (this.playerCompanionData == null) {
+      return;
+    }
+    NonNullList<ItemStack> hand = this.playerCompanionData.getHandItems();
+    for (int index = 0; index < hand.size(); index++) {
+      this.handContainer.setItem(index, hand.get(index));
+    }
+  }
+
+  public void saveHand() {
+    if (this.playerCompanionData == null) {
+      return;
+    }
+    for (int index = 0; index < handContainerSize; index++) {
+      this.playerCompanionData.setHandItem(index, this.handContainer.getItem(index));
+    }
+  }
+
+  public void setHandChanged(int slot, ItemStack itemStack) {
+    // Hand inventory needs to be synced to entity, if possible.
+    if (this.playerCompanionEntity != null) {
+      this.playerCompanionEntity.setHandItem(slot, itemStack);
+    } else if (this.dataLoaded && this.playerCompanionData != null) {
+      this.playerCompanionData.setHandItem(slot, itemStack);
+    }
+  }
+
   public void loadInventory() {
     if (this.playerCompanionData == null) {
       return;
     }
-    NonNullList<ItemStack> inventory = this.playerCompanionData.getInventory();
+    NonNullList<ItemStack> inventory = this.playerCompanionData.getInventoryItems();
     for (int index = 0; index < inventory.size(); index++) {
       this.inventoryContainer.setItem(index, inventory.get(index));
     }
@@ -182,7 +232,8 @@ public class CompanionsMenu extends AbstractContainerMenu {
     }
   }
 
-  public void setChanged(int slot, ItemStack itemStack) {
+  public void setInventoryChanged(int slot, ItemStack itemStack) {
+    // Inventory only needs to be synced to our own data.
     if (this.dataLoaded && this.playerCompanionData != null) {
       this.playerCompanionData.setInventoryItem(slot, itemStack);
     }

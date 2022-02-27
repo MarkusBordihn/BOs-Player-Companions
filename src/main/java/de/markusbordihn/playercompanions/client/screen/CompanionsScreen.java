@@ -53,10 +53,11 @@ public class CompanionsScreen extends AbstractContainerScreen<CompanionsMenu> {
   @Override
   public void init() {
     super.init();
-    this.imageHeight = 190;
-    this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+    this.imageHeight = 210;
+    this.titleLabelX = 7;
+    this.titleLabelY = 7;
     this.topPos = (this.height - this.imageHeight) / 2;
-    this.inventoryLabelY = this.imageHeight - 93;
+    this.inventoryLabelY = this.imageHeight - 92;
   }
 
   @Override
@@ -66,7 +67,7 @@ public class CompanionsScreen extends AbstractContainerScreen<CompanionsMenu> {
     if (entity instanceof LivingEntity livingEntity) {
       InventoryScreen.renderEntityInInventory(
           this.leftPos + 50,
-          this.topPos + 90, 30, 0F, 0F,
+          this.topPos + 87, 30, 0F, 0F,
           livingEntity);
     }
   }

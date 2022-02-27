@@ -175,7 +175,7 @@ public class SmallGhast extends GuardEntityFloating {
   }
 
   @Override
-  protected Ingredient getFoodItems() {
+  public Ingredient getFoodItems() {
     return Ingredient.of(Items.BONE);
   }
 

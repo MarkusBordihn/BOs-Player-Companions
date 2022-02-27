@@ -111,14 +111,19 @@ public class Fairy extends HealerEntityFlyingAround {
     this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
     this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 8.0F, 1.0F, true));
     this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-    this.goalSelector.addGoal(3, new RandomFlyAroundGoal(this));
-    this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+    this.goalSelector.addGoal(4, new RandomFlyAroundGoal(this));
+    this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
   }
 
   @Override
   public void finalizeSpawn() {
     super.finalizeSpawn();
-    this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.POTION));
+
+    // Give default item, if hand is empty.
+    ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+    if (itemStack != null && itemStack.isEmpty()) {
+      this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.POTION));
+    }
   }
 
   @Override
@@ -127,7 +132,7 @@ public class Fairy extends HealerEntityFlyingAround {
   }
 
   @Override
-  protected Ingredient getFoodItems() {
+  public Ingredient getFoodItems() {
     return Ingredient.of(Items.CAKE, Items.COOKIE);
   }
 

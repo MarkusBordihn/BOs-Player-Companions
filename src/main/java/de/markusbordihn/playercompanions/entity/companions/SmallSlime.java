@@ -178,7 +178,7 @@ public class SmallSlime extends FollowerEntityJumping {
   }
 
   @Override
-  protected Ingredient getFoodItems() {
+  public Ingredient getFoodItems() {
     return Ingredient.of(Items.APPLE);
   }
 

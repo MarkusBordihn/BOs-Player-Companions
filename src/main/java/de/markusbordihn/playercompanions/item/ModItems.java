@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.item;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.MaterialColor;
 
 import net.minecraftforge.registries.RegistryObject;
@@ -116,26 +117,28 @@ public class ModItems {
 
   public static final RegistryObject<Item> FAIRY_SPAWN_EGG = ITEMS.register("fairy_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.FAIRY::get, MaterialColor.GOLD.col,
-          MaterialColor.SNOW.col, new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+          MaterialColor.COLOR_PURPLE.col,
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> PIG_SPAWN_EGG = ITEMS.register("pig_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.GOLD.col,
           MaterialColor.COLOR_PINK.col,
-          new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> ROOSTER_SPAWN_EGG = ITEMS.register("rooster_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.ROOSTER::get, MaterialColor.GOLD.col,
           MaterialColor.COLOR_RED.col,
-          new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SNAIL_SPAWN_EGG = ITEMS.register("snail_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.GOLD.col,
-          MaterialColor.SNOW.col, new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+          MaterialColor.COLOR_BLUE.col,
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SMALL_GHAST_SPAWN_EGG =
       ITEMS.register("small_ghast_spawn_egg",
           () -> new ForgeSpawnEggItem(ModEntityType.SMALL_GHAST::get, MaterialColor.GOLD.col,
               MaterialColor.SNOW.col,
-              new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+              new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SMALL_SLIME_SPAWN_EGG =
       ITEMS.register("small_slime_spawn_egg",
           () -> new ForgeSpawnEggItem(ModEntityType.SMALL_SLIME::get, MaterialColor.GOLD.col,
               MaterialColor.COLOR_GREEN.col,
-              new Item.Properties().tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+              new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
 }

@@ -123,7 +123,7 @@ public class Rooster extends GuardEntityWalking {
   }
 
   @Override
-  protected Ingredient getFoodItems() {
+  public Ingredient getFoodItems() {
     return Ingredient.of(Items.WHEAT_SEEDS);
   }
 

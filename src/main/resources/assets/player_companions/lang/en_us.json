@@ -10,7 +10,7 @@
   "entity.player_companions.snail": "Snail",
   "entity.player_companions.rooster": "Rooster",
 
-  "entity.player_companions.companion_respawn_message": "Your companion %1$s could been re-spawned!",
+  "entity.player_companions.companion_respawn_message": "Your companion %1$s has been re-spawned!",
   "entity.player_companions.companion_will_respawn_message": "%1$s could be respawn in %2$s seconds!",
   "entity.player_companions.companion_will_not_respawn_message": "Your companion %1$s is dead and could not be respawn!",
 
@@ -20,8 +20,11 @@
   "text.player_companions.tamed_companion_name": "Name: %1$s",
   "text.player_companions.tamed_companion_owner": "Owner: %1$s",
   "text.player_companions.tamed_companion_respawn": "Respawn Timer: %1$s secs remaining",
-  "text.player_companions.tamed_companion_order_to_sit": "Status: Is order to sit",
-  "text.player_companions.tamed_companion_order_to_follow": "Status: Is order to follow",
+
+  "text.player_companions.tamed_companion_status_dead": "Status: Dead",
+  "text.player_companions.tamed_companion_status_order_to_sit": "Status: Is order to sit",
+  "text.player_companions.tamed_companion_status_order_to_follow": "Status: Is order to follow",
+  "text.player_companions.tamed_companion_status_order_to_position": "Status: Is order to position",
 
   "text.player_companions.tame_companion": "The item is used to tame the different type of player companions.",
   "text.player_companions.tameable_companions": "Tameable Companions:",

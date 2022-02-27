@@ -33,6 +33,7 @@ import net.minecraft.util.Mth;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
 
@@ -96,12 +97,6 @@ public class FairyModel extends HumanoidModel<Fairy> {
   public void setupAnim(Fairy entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
     super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-    /*
-     * if (entity.isCharging()) { if (entity.getMainHandItem().isEmpty()) { this.rightArm.xRot =
-     * ((float) Math.PI * 1.5F); this.leftArm.xRot = ((float) Math.PI * 1.5F); } else if
-     * (entity.getMainArm() == HumanoidArm.RIGHT) { this.rightArm.xRot = 3.7699115F; } else {
-     * this.leftArm.xRot = 3.7699115F; } }
-     */
 
     // Wing animations
     this.rightLeg.xRot += ((float) Math.PI / 5F);

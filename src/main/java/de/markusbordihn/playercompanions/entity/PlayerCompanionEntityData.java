@@ -33,8 +33,11 @@ import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
@@ -46,6 +49,8 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.level.Level;
 
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import de.markusbordihn.playercompanions.utils.Names;
 
@@ -98,7 +103,11 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   }
 
   public boolean isTamable() {
-    return !this.hasOwner();
+    return !isTame();
+  }
+
+  public Player getNearestPlayer(TargetingConditions targetingConditions) {
+    return this.level.getNearestPlayer(targetingConditions, this);
   }
 
   public PlayerCompanionType getCompanionType() {
@@ -294,6 +303,51 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     Item item = itemStack.getItem();
     return item instanceof SwordItem || item instanceof CrossbowItem || item instanceof TridentItem
         || item instanceof BowItem || item instanceof AxeItem;
+  }
+
+  public PlayerCompanionsServerData getServerData() {
+    if (this.level.isClientSide) {
+      return null;
+    }
+    return PlayerCompanionsServerData.get();
+  }
+
+  public PlayerCompanionData getData() {
+    PlayerCompanionsServerData serverData = getServerData();
+    if (serverData == null) {
+      return null;
+    }
+    return PlayerCompanionsServerData.get().getCompanion(getUUID());
+  }
+
+  public void syncData(PlayerCompanionEntity playerCompanionEntity) {
+    if (!this.level.isClientSide) {
+      getServerData().updateOrRegisterCompanion(playerCompanionEntity);
+    }
+  }
+
+  public void setHandItem(int slot, ItemStack itemStack) {
+    if (slot == 0) {
+      setItemSlot(EquipmentSlot.MAINHAND, itemStack);
+    } else if (slot == 1) {
+      setItemSlot(EquipmentSlot.OFFHAND, itemStack);
+    }
+  }
+
+  @Override
+  public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
+    super.setItemSlot(equipmentSlot, itemStack);
+    PlayerCompanionData data = this.getData();
+    if (data != null) {
+      switch (equipmentSlot.getType()) {
+        case HAND:
+          data.setHandItem(equipmentSlot.getIndex(), itemStack);
+          break;
+        case ARMOR:
+          // data.armorItems.set(equipmentSlot.getIndex(), itemStack);
+          break;
+      }
+    }
   }
 
   @Override

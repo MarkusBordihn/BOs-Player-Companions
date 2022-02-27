@@ -28,7 +28,8 @@ public class PlayerCompanionDataHelper {
 
   protected PlayerCompanionDataHelper() {}
 
-  public static CompoundTag saveInventory(CompoundTag compoundTag, NonNullList<ItemStack> inventory) {
+  public static CompoundTag saveInventoryItems(CompoundTag compoundTag,
+      NonNullList<ItemStack> inventory) {
     ListTag listTag = new ListTag();
     for (int i = 0; i < inventory.size(); ++i) {
       ItemStack itemStack = inventory.get(i);
@@ -45,13 +46,41 @@ public class PlayerCompanionDataHelper {
     return compoundTag;
   }
 
-  public static void loadInventory(CompoundTag compoundTag, NonNullList<ItemStack> inventory) {
+  public static void loadInventoryItems(CompoundTag compoundTag, NonNullList<ItemStack> inventory) {
     ListTag listTag = compoundTag.getList("Inventory", 10);
     for (int i = 0; i < listTag.size(); ++i) {
       CompoundTag compoundTagSlot = listTag.getCompound(i);
       int index = compoundTagSlot.getByte("Slot") & 255;
       if (index >= 0 && index < inventory.size()) {
         inventory.set(index, ItemStack.of(compoundTagSlot));
+      }
+    }
+  }
+
+  public static CompoundTag saveHandItems(CompoundTag compoundTag, NonNullList<ItemStack> hand) {
+    ListTag listTag = new ListTag();
+    for (int i = 0; i < hand.size(); ++i) {
+      ItemStack itemStack = hand.get(i);
+      if (!itemStack.isEmpty()) {
+        CompoundTag compoundTagSlot = new CompoundTag();
+        compoundTagSlot.putByte("Slot", (byte) i);
+        itemStack.save(compoundTagSlot);
+        listTag.add(compoundTagSlot);
+      }
+    }
+    if (!listTag.isEmpty()) {
+      compoundTag.put("Hand", listTag);
+    }
+    return compoundTag;
+  }
+
+  public static void loadHandItems(CompoundTag compoundTag, NonNullList<ItemStack> hand) {
+    ListTag listTag = compoundTag.getList("Hand", 10);
+    for (int i = 0; i < listTag.size(); ++i) {
+      CompoundTag compoundTagSlot = listTag.getCompound(i);
+      int index = compoundTagSlot.getByte("Slot") & 255;
+      if (index >= 0 && index < hand.size()) {
+        hand.set(index, ItemStack.of(compoundTagSlot));
       }
     }
   }

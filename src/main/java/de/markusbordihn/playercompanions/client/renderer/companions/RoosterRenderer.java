@@ -29,6 +29,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.RoosterModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.client.renderer.layers.HandItemLayer;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
 
 @OnlyIn(Dist.CLIENT)
@@ -39,6 +40,7 @@ public class RoosterRenderer extends MobRenderer<Rooster, RoosterModel<Rooster>>
 
   public RoosterRenderer(EntityRendererProvider.Context context) {
     super(context, new RoosterModel<>(context.bakeLayer(ClientRenderer.ROOSTER)), 0.4F);
+    this.addLayer(new HandItemLayer<>(this));
   }
 
   public ResourceLocation getTextureLocation(Rooster entity) {

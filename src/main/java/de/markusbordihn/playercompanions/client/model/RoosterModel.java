@@ -32,7 +32,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
-public class RoosterModel<T extends Entity> extends AgeableListModel<T> {
+public class RoosterModel<T extends Entity> extends AgeableListModel<T> implements PlayerCompanionModel {
 
   private final ModelPart body;
   private final ModelPart head;
@@ -40,6 +40,7 @@ public class RoosterModel<T extends Entity> extends AgeableListModel<T> {
   private final ModelPart leftLeg;
   private final ModelPart rightWing;
   private final ModelPart leftWing;
+  private final ModelPart rightHand;
 
   public RoosterModel(ModelPart modelPart) {
     this.body = modelPart.getChild("body");
@@ -48,6 +49,7 @@ public class RoosterModel<T extends Entity> extends AgeableListModel<T> {
     this.leftLeg = modelPart.getChild("left_leg");
     this.rightWing = modelPart.getChild("right_wing");
     this.leftWing = modelPart.getChild("left_wing");
+    this.rightHand = modelPart.getChild("right_hand");
   }
 
   public static LayerDefinition createBodyLayer() {
@@ -122,6 +124,9 @@ public class RoosterModel<T extends Entity> extends AgeableListModel<T> {
         .addBox(0.0F, 0.0F, -3.0F, 1.0F, 5.0F, 8.0F, new CubeDeformation(0.0F)),
         PartPose.offset(3.0F, 13.0F, 0.0F));
 
+    partDefinition.addOrReplaceChild("right_hand", CubeListBuilder.create(),
+        PartPose.offsetAndRotation(-0.2F, 0.4F, 0.3F, -120.0F, 180.0F, 0.0F));
+
     return LayerDefinition.create(meshDefinition, 64, 64);
   }
 
@@ -131,6 +136,10 @@ public class RoosterModel<T extends Entity> extends AgeableListModel<T> {
 
   protected Iterable<ModelPart> bodyParts() {
     return List.of(this.body, this.rightLeg, this.leftLeg, this.rightWing, this.leftWing);
+  }
+
+  public ModelPart rightHand() {
+    return this.rightHand;
   }
 
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,

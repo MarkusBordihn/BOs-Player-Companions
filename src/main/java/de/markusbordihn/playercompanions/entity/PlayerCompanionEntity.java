@@ -26,6 +26,8 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -43,6 +45,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,7 +56,6 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -73,8 +75,9 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.container.CompanionsMenu;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
 
 @EventBusSubscriber
@@ -148,11 +151,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     return getAmbientSound();
   }
 
-  protected Item getTameItem() {
+  public Item getTameItem() {
     return null;
   }
 
-  protected Ingredient getFoodItems() {
+  public Ingredient getFoodItems() {
     return Ingredient.of(getTameItem());
   }
 
@@ -199,10 +202,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       ServerPlayer player = this.level.getServer().getPlayerList().getPlayer(owner.getUUID());
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = this.getUUID();
+        Component playerCompanionName = this.getCustomName();
         MenuProvider provider = new MenuProvider() {
           @Override
           public Component getDisplayName() {
-            return new TranslatableComponent("container.player_companions.companions_menu");
+            return playerCompanionName;
           }
 
           @Nullable
@@ -227,6 +231,38 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void follow() {
     this.setOrderedToSit(false);
     this.navigation.recomputePath();
+  }
+
+  public boolean eat(ItemStack itemStack, Player player) {
+    if (!canEat(itemStack)) {
+      return false;
+    }
+    this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
+    SoundEvent eatingSound = this.getEatingSound(itemStack);
+    if (eatingSound != null) {
+      playSound(eatingSound, this.getSoundVolume(), this.getSoundPitch());
+    }
+    Item item = itemStack.getItem();
+    this.heal(item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 0.5F);
+    for (Pair<MobEffectInstance, Float> pair : item.getFoodProperties().getEffects()) {
+      if (!this.level.isClientSide && pair.getFirst() != null
+          && this.level.random.nextFloat() < pair.getSecond()) {
+        this.addEffect(new MobEffectInstance(pair.getFirst()));
+      }
+    }
+    if (player != null && !player.getAbilities().instabuild) {
+      itemStack.shrink(1);
+    }
+    this.gameEvent(GameEvent.EAT);
+    return true;
+  }
+
+  public boolean canEat() {
+    return this.getHealth() < this.getMaxHealth();
+  }
+
+  public boolean canEat(ItemStack itemStack) {
+    return this.isFood(itemStack) && this.getHealth() < this.getMaxHealth();
   }
 
   protected void sit() {
@@ -259,21 +295,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
-  public PlayerCompanionsServerData getServerData() {
-    if (this.level.isClientSide) {
-      return null;
-    }
-    return PlayerCompanionsServerData.get();
-  }
-
-  public PlayerCompanionData getData() {
-    PlayerCompanionsServerData serverData = getServerData();
-    if (serverData == null) {
-      return null;
-    }
-    return PlayerCompanionsServerData.get().getCompanion(getUUID());
-  }
-
   public void finalizeSpawn() {
     // Set random custom companion name, if not set.
     if (!this.hasCustomName()) {
@@ -282,14 +303,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     // Reset respawn timer, if needed.
     int respawnTimer = this.getRespawnTimer();
-    if (respawnTimer < java.time.Instant.now().getEpochSecond()) {
+    if (respawnTimer > 0 && respawnTimer < java.time.Instant.now().getEpochSecond()) {
       this.stopRespawnTimer();
-    }
-  }
-
-  public void syncData() {
-    if (!this.level.isClientSide) {
-      getServerData().updateOrRegisterCompanion(this);
     }
   }
 
@@ -349,8 +364,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public boolean canTamePlayerCompanion(ItemStack itemStack, Player player,
       LivingEntity livingEntity, InteractionHand hand) {
-    return this.isTamable() && !this.isTame() && getTameItem() != null
-        && itemStack.is(getTameItem()) && player.getInventory().canPlaceItem(1, itemStack);
+    return this.isTamable() && getTameItem() != null && itemStack.is(getTameItem())
+        && player.getInventory().canPlaceItem(1, itemStack);
   }
 
   @Override
@@ -375,7 +390,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void tame(Player player) {
     super.tame(player);
     if (player instanceof ServerPlayer) {
-      this.syncData();
+      this.syncData(this);
     }
   }
 
@@ -383,14 +398,14 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   protected void registerGoals() {
     super.registerGoals();
 
+    // It not tamed, the companion will react to tame items.
+    if (this.isTamable() && this.getTameItem() != null) {
+      this.goalSelector.addGoal(3, new TameItemGoal(this, 0.8D));
+    }
+
     // Adding food goals for tamed and untamed player companions.
     if (this.getFoodItems() != null) {
-      // Cause issues.
-      // this.goalSelector.addGoal(3, new TemptGoal(this, 0.75D, this.getFoodItems(), false));
-    }
-    if (!this.isTame() && getTameItem() != null) {
-      // this.goalSelector.addGoal(3, new TemptGoal(this, 0.9D, Ingredient.of(getTameItem()),
-      // false));
+      this.goalSelector.addGoal(3, new FoodItemGoal(this, 1.0D));
     }
   }
 
@@ -446,18 +461,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
 
     // Health companion with food item, from any player.
-    Item item = itemStack.getItem();
-    if (this.isTame() && this.isFood(itemStack) && this.getHealth() < this.getMaxHealth()) {
-      if (!player.getAbilities().instabuild) {
-        itemStack.shrink(1);
-      }
-      this.heal(item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 0.5F);
-      SoundEvent eatingSound = this.getEatingSound(itemStack);
-      if (eatingSound != null) {
-        playSound(eatingSound, this.getSoundVolume(), this.getSoundPitch());
-      }
-      this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
-      return InteractionResult.SUCCESS;
+    if (this.canEat(itemStack) && this.eat(itemStack, player)) {
+      return InteractionResult.sidedSuccess(this.level.isClientSide);
     }
 
     return super.mobInteract(player, hand);
@@ -465,8 +470,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   public boolean isFood(ItemStack itemStack) {
-    if (getTameItem() != null) {
-      return getFoodItems().test(itemStack);
+    if (!itemStack.isEdible()) {
+      return false;
+    }
+    if (this.getFoodItems() != null) {
+      return this.getFoodItems().test(itemStack);
     }
     return super.isFood(itemStack);
   }
@@ -496,7 +504,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     // Automatically Sync Data, if needed
     if (this.getDirty() && this.dataSyncTicker++ >= DATA_SYNC_TICK) {
-      this.syncData();
+      this.syncData(this);
       this.dataSyncTicker = 0;
       this.setDirty(false);
     }

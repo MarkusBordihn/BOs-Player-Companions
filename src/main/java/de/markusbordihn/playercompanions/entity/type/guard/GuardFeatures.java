@@ -33,7 +33,7 @@ public class GuardFeatures extends PlayerCompanionsFeatures {
 
   @Override
   public void aiStep() {
-    if (!this.level.isClientSide) {
+    if (!this.level.isClientSide && this.neutralMob != null) {
       this.neutralMob.updatePersistentAnger((ServerLevel) this.level, true);
     }
   }

@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.entity.type.collector;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -29,7 +28,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityFloating;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
-public class CollectorEntityFloating extends PlayerCompanionEntityFloating implements NeutralMob {
+public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
 
   protected CollectorFeatures collectorFeatures;
 

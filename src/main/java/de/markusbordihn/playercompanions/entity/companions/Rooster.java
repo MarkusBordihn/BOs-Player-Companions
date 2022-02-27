@@ -19,9 +19,14 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.UUID;
+import javax.annotation.Nullable;
+
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -45,12 +50,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
+
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
 import de.markusbordihn.playercompanions.item.ModItems;
 
-public class Rooster extends GuardEntityWalking {
+public class Rooster extends GuardEntityWalking implements NeutralMob {
 
   // General information
   public static final String ID = "rooster";
@@ -83,6 +89,26 @@ public class Rooster extends GuardEntityWalking {
     return this.guardFeatures.getFlapSpeed();
   }
 
+  public int getRemainingPersistentAngerTime() {
+    return this.entityData.get(DATA_REMAINING_ANGER_TIME);
+  }
+
+  public void setRemainingPersistentAngerTime(int angerTime) {
+    this.entityData.set(DATA_REMAINING_ANGER_TIME, angerTime);
+  }
+
+  public UUID getPersistentAngerTarget() {
+    return this.persistentAngerTarget;
+  }
+
+  public void setPersistentAngerTarget(@Nullable UUID uuid) {
+    this.persistentAngerTarget = uuid;
+  }
+
+  public void startPersistentAngerTimer() {
+    this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
+  }
+
   @Override
   protected void registerGoals() {
     super.registerGoals();
@@ -104,6 +130,24 @@ public class Rooster extends GuardEntityWalking {
     this.targetSelector.addGoal(7,
         new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
     this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
+  }
+
+  @Override
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
+  }
+
+  @Override
+  public void addAdditionalSaveData(CompoundTag compoundTag) {
+    super.addAdditionalSaveData(compoundTag);
+    this.addPersistentAngerSaveData(compoundTag);
+  }
+
+  @Override
+  public void readAdditionalSaveData(CompoundTag compoundTag) {
+    super.readAdditionalSaveData(compoundTag);
+    this.readPersistentAngerSaveData(this.level, compoundTag);
   }
 
   @Override

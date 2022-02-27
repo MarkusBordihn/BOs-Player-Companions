@@ -23,10 +23,12 @@ import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
 import de.markusbordihn.playercompanions.Constants;
 
 public class PlayerCompanionsFeatures {

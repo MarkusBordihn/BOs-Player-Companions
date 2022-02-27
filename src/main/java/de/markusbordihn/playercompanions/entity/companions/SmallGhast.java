@@ -21,11 +21,14 @@ package de.markusbordihn.playercompanions.entity.companions;
 
 import java.util.EnumSet;
 import java.util.Random;
+import java.util.UUID;
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -37,6 +40,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -73,7 +77,7 @@ import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFloating;
 import de.markusbordihn.playercompanions.item.ModItems;
 
 @EventBusSubscriber
-public class SmallGhast extends GuardEntityFloating {
+public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
@@ -136,6 +140,26 @@ public class SmallGhast extends GuardEntityFloating {
         && checkMobSpawnRules(entityType, level, mobSpawnType, blockPos, random);
   }
 
+  public int getRemainingPersistentAngerTime() {
+    return this.entityData.get(DATA_REMAINING_ANGER_TIME);
+  }
+
+  public void setRemainingPersistentAngerTime(int angerTime) {
+    this.entityData.set(DATA_REMAINING_ANGER_TIME, angerTime);
+  }
+
+  public UUID getPersistentAngerTarget() {
+    return this.persistentAngerTarget;
+  }
+
+  public void setPersistentAngerTarget(@Nullable UUID uuid) {
+    this.persistentAngerTarget = uuid;
+  }
+
+  public void startPersistentAngerTimer() {
+    this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
+  }
+
   @Override
   protected void registerGoals() {
     super.registerGoals();
@@ -157,6 +181,24 @@ public class SmallGhast extends GuardEntityFloating {
     this.targetSelector.addGoal(7,
         new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
     this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
+  }
+
+  @Override
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
+  }
+
+  @Override
+  public void addAdditionalSaveData(CompoundTag compoundTag) {
+    super.addAdditionalSaveData(compoundTag);
+    this.addPersistentAngerSaveData(compoundTag);
+  }
+
+  @Override
+  public void readAdditionalSaveData(CompoundTag compoundTag) {
+    super.readAdditionalSaveData(compoundTag);
+    this.readPersistentAngerSaveData(this.level, compoundTag);
   }
 
   @Override

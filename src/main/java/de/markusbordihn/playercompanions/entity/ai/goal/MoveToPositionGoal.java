@@ -27,6 +27,9 @@ public class MoveToPositionGoal extends PlayerCompanionGoal {
 
   @Override
   public boolean canUse() {
+    if (!this.playerCompanionEntity.hasOwner()) {
+      return false;
+    }
     BlockPos blockPos = this.playerCompanionEntity.getOrderedToPosition();
     if (blockPos == null || !this.playerCompanionEntity.isOrderedToPosition()
         || this.playerCompanionEntity.distanceToSqr(blockPos.getX(), blockPos.getY(),
@@ -39,7 +42,7 @@ public class MoveToPositionGoal extends PlayerCompanionGoal {
 
   @Override
   public boolean canContinueToUse() {
-    if (this.navigation.isDone() || !this.playerCompanionEntity.isOrderedToPosition()) {
+    if (!this.playerCompanionEntity.hasOwner() || this.navigation.isDone() || !this.playerCompanionEntity.isOrderedToPosition()) {
       return false;
     } else {
       return this.playerCompanionEntity.distanceToSqr(this.targetPosition.getX(),

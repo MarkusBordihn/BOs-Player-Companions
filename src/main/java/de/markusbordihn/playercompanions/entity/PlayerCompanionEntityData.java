@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.entity;
 
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -67,7 +66,7 @@ public class PlayerCompanionEntityData extends TamableAnimal {
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_EXPERIENCE_LEVEL =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
-  private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
+  protected static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
       SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
@@ -93,10 +92,10 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   private BlockPos orderedToPosition = null;
   private ItemStack companionTypeIcon = new ItemStack(Items.BONE);
   private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
-  private UUID persistentAngerTarget;
+  protected UUID persistentAngerTarget;
   private boolean isDirty = false;
 
-  private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
+  protected static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
   protected PlayerCompanionEntityData(EntityType<? extends TamableAnimal> entityType, Level level) {
     super(entityType, level);
@@ -206,27 +205,6 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public void setExperienceLevel(Integer experience) {
     this.entityData.set(DATA_EXPERIENCE_LEVEL, experience);
-  }
-
-  public int getRemainingPersistentAngerTime() {
-    return this.entityData.get(DATA_REMAINING_ANGER_TIME);
-  }
-
-  public void setRemainingPersistentAngerTime(int angerTime) {
-    this.entityData.set(DATA_REMAINING_ANGER_TIME, angerTime);
-  }
-
-  public void startPersistentAngerTimer() {
-    this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
-  }
-
-  @Nullable
-  public UUID getPersistentAngerTarget() {
-    return this.persistentAngerTarget;
-  }
-
-  public void setPersistentAngerTarget(@Nullable UUID uuid) {
-    this.persistentAngerTarget = uuid;
   }
 
   public int getRespawnTimer() {
@@ -359,7 +337,6 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.entityData.define(DATA_EXPERIENCE, 0);
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 0);
     this.entityData.define(DATA_IS_CHARGING, false);
-    this.entityData.define(DATA_REMAINING_ANGER_TIME, 0);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
     this.entityData.define(DATA_VARIANT, "default");
   }

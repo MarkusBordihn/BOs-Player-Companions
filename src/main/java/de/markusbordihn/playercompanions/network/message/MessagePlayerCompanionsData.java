@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -36,7 +35,7 @@ public class MessagePlayerCompanionsData {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private final String data;
+  protected final String data;
 
   public MessagePlayerCompanionsData(String data) {
     this.data = data;
@@ -46,22 +45,15 @@ public class MessagePlayerCompanionsData {
     return this.data;
   }
 
-  public static void encode(MessageCommandPlayerCompanion message, FriendlyByteBuf buffer) {
-    buffer.writeUtf(message.getPlayerCompanionUUID());
-    buffer.writeUtf(message.getCommand());
-  }
-
   public static void handle(MessagePlayerCompanionsData message,
       Supplier<NetworkEvent.Context> contextSupplier) {
     NetworkEvent.Context context = contextSupplier.get();
     context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-        () -> () -> handlePacket(message, context)));
+        () -> () -> handlePacket(message)));
     context.setPacketHandled(true);
   }
 
-  public static void handlePacket(MessagePlayerCompanionsData message,
-      NetworkEvent.Context context) {
-    log.info("Handle Packet {} {}: {}", message, context, message.getData());
+  public static void handlePacket(MessagePlayerCompanionsData message) {
     PlayerCompanionsClientData.load(message.getData());
   }
 

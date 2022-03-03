@@ -16,10 +16,12 @@
 
   "container.player_companions.companions_menu": "Player Companions",
 
+  "text.player_companions.tamed_companion_dimension": "Dimension: %1$s",
   "text.player_companions.tamed_companion_health": "Health: %1$s",
   "text.player_companions.tamed_companion_name": "Name: %1$s",
   "text.player_companions.tamed_companion_owner": "Owner: %1$s",
   "text.player_companions.tamed_companion_respawn": "Respawn Timer: %1$s secs remaining",
+  "text.player_companions.tamed_companion_type": "Type: %1$s",
 
   "text.player_companions.tamed_companion_status_dead": "Status: Dead",
   "text.player_companions.tamed_companion_status_order_to_sit": "Status: Is order to sit",

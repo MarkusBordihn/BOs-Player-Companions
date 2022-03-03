@@ -80,4 +80,5 @@ public class PlayerCompanions {
       modEventBus.addListener(ModKeyMapping::registerKeyMapping);
     });
   }
+
 }

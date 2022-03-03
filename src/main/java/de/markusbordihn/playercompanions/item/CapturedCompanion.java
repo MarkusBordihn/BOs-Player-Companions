@@ -19,6 +19,7 @@
 
 package de.markusbordihn.playercompanions.item;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +33,9 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -118,14 +121,25 @@ public class CapturedCompanion extends Item {
       Level level) {
     Entity playerCompanion = null;
 
-    // Check if companion already exists
+    // Check if companion already exists in current level.
     if (level instanceof ServerLevel serverLevel) {
       playerCompanion = getCompanionEntity(itemStack, serverLevel);
-      log.debug("Found existing player companion {}", playerCompanion);
+      if (playerCompanion != null && playerCompanion.isAlive()) {
+        log.debug("Found existing player companion {}", playerCompanion);
+      }
+      // Make sure companion doesn't exists in other levels
+      despawnCompanionExcept(itemStack, serverLevel);
     }
 
-    // If companion exits, just port the companion to the player.
+    // Remove dead companions before respawn.
+    if (playerCompanion != null && !playerCompanion.isAlive()) {
+      playerCompanion.remove(RemovalReason.KILLED);
+      playerCompanion = null;
+    }
+
+    // If companion exits and alive, just port the companion to the player.
     if (playerCompanion != null && playerCompanion.isAlive()) {
+
       if (playerCompanion.closerThan(player, 16)) {
         if (playerCompanion instanceof PlayerCompanionEntity playerCompanionEntity) {
           playerCompanionEntity.setOrderedToPosition(
@@ -138,7 +152,7 @@ public class CapturedCompanion extends Item {
         }
       } else {
         BlockState blockState = level.getBlockState(blockPos);
-        if (blockState.is(Blocks.AIR) || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
+        if (blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
             || blockState.is(Blocks.SEAGRASS)) {
           playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5,
               blockPos.getZ() + 0.5);
@@ -165,10 +179,10 @@ public class CapturedCompanion extends Item {
       }
 
       // Only spawn on empty blocks like air,water, grass, sea grass.
-      if (blockState.is(Blocks.AIR) || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
+      if (blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
           || blockState.is(Blocks.SEAGRASS)) {
         // Adjust entity position to spawn position.
-        entity.setPosRaw(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
+        entity.setPosRaw(blockPos.getX() + 0.5, blockPos.getY() + 0.1, blockPos.getZ() + 0.5);
 
         // Add entity to the world.
         log.debug("Spawn companion {} ...", entity);
@@ -193,7 +207,8 @@ public class CapturedCompanion extends Item {
     }
 
     // Sync data before we despawn entity.
-    PlayerCompanionData playerCompanionData = PlayerCompanionsServerData.get().updatePlayerCompanion(playerCompanionEntity);
+    PlayerCompanionData playerCompanionData =
+        PlayerCompanionsServerData.get().updatePlayerCompanion(playerCompanionEntity);
     playerCompanionData.syncEntityData(livingEntity);
     log.debug("Despawn companion {} with {} ...", livingEntity, playerCompanionData);
 
@@ -201,6 +216,20 @@ public class CapturedCompanion extends Item {
     livingEntity.setRemoved(RemovalReason.DISCARDED);
 
     return true;
+  }
+
+  public void despawnCompanionExcept(ItemStack itemStack, ServerLevel serverLevel) {
+    MinecraftServer server = serverLevel.getServer();
+    Iterator<ServerLevel> serverLevels = server.getAllLevels().iterator();
+    while (serverLevels.hasNext()) {
+      ServerLevel serverLevelToCheck = serverLevels.next();
+      if (serverLevelToCheck != serverLevel) {
+        Entity playerCompanion = getCompanionEntity(itemStack, serverLevelToCheck);
+        if (playerCompanion != null) {
+          playerCompanion.remove(RemovalReason.CHANGED_DIMENSION);
+        }
+      }
+    }
   }
 
   public boolean createCompanion(ItemStack itemStack, Player player, Level level) {
@@ -250,6 +279,16 @@ public class CapturedCompanion extends Item {
 
   public EntityType<?> getEntityType() {
     return null;
+  }
+
+  @Override
+  public Component getName(ItemStack itemStack) {
+    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
+    if (playerCompanion != null) {
+      return new TranslatableComponent(this.getDescriptionId(itemStack))
+          .append(new TextComponent(": " + playerCompanion.getName()));
+    }
+    return new TranslatableComponent(this.getDescriptionId(itemStack));
   }
 
   @Override
@@ -305,7 +344,7 @@ public class CapturedCompanion extends Item {
     // Check if we can release the captured mob above.
     BlockPos blockPosAbove = blockPos.above();
     BlockState blockStateBlockAbove = level.getBlockState(blockPosAbove);
-    if ((blockStateBlockAbove.is(Blocks.AIR) || blockStateBlockAbove.is(Blocks.WATER))
+    if ((blockStateBlockAbove.isAir() || blockStateBlockAbove.is(Blocks.WATER))
         && spawnCompanion(itemStack, blockPosAbove, player, level)) {
       return InteractionResult.CONSUME;
     }
@@ -346,6 +385,11 @@ public class CapturedCompanion extends Item {
   }
 
   @Override
+  public boolean isEnchantable(ItemStack itemStack) {
+    return false;
+  }
+
+  @Override
   public void appendHoverText(ItemStack itemStack, @Nullable Level level,
       List<Component> tooltipList, TooltipFlag tooltipFlag) {
     PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
@@ -359,6 +403,8 @@ public class CapturedCompanion extends Item {
           playerCompanion.getEntityHealth()));
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_owner",
           playerCompanion.getOwnerName()));
+      tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_type",
+          playerCompanion.getType()).withStyle(ChatFormatting.GRAY));
 
       if (respawnTimer <= 0) {
         if (playerCompanion.isOrderedToPosition()) {
@@ -381,6 +427,9 @@ public class CapturedCompanion extends Item {
         tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_respawn",
             respawnTimer).withStyle(ChatFormatting.RED));
       }
+
+      tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_dimension",
+          playerCompanion.getDimensionName()).withStyle(ChatFormatting.GRAY));
 
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_food"));
     }

@@ -17,44 +17,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.container.slots;
+package de.markusbordihn.playercompanions.network.message;
+
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.world.Container;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkEvent;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.CompanionsMenu;
-import de.markusbordihn.playercompanions.item.CapturedCompanion;
-import de.markusbordihn.playercompanions.item.CompanionTameItem;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 
-public class InventorySlot extends Slot {
+public class MessagePlayerCompanionData {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private CompanionsMenu menu;
+  protected final String data;
+  protected final String playerCompanionUUID;
 
-  public InventorySlot(CompanionsMenu menu, Container container, int index, int x, int y) {
-    super(container, index, x, y);
-    this.menu = menu;
+  public MessagePlayerCompanionData(String playerCompanionUUID, String data) {
+    this.playerCompanionUUID = playerCompanionUUID;
+    this.data = data;
   }
 
-  @Override
-  public void set(ItemStack itemStack) {
-    super.set(itemStack);
-
-    // Update menu only if we changed the slot to avoid updated for place and take actions.
-    this.menu.setInventoryChanged(this.getSlotIndex(), itemStack);
+  public String getData() {
+    return this.data;
   }
 
-  @Override
-  public boolean mayPlace(ItemStack itemStack) {
-    Item item = itemStack.getItem();
-    return (!(item instanceof CapturedCompanion) && !(item instanceof CompanionTameItem));
+  public String getPlayerCompanionUUID() {
+    return this.playerCompanionUUID;
+  }
+
+  public static void handle(MessagePlayerCompanionData message,
+      Supplier<NetworkEvent.Context> contextSupplier) {
+    NetworkEvent.Context context = contextSupplier.get();
+    context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+        () -> () -> handlePacket(message)));
+    context.setPacketHandled(true);
+  }
+
+  public static void handlePacket(MessagePlayerCompanionData message) {
+    PlayerCompanionsClientData.load(message.getPlayerCompanionUUID(), message.getData());
   }
 
 }

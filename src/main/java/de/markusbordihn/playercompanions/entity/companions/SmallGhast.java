@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.entity.companions;
 import java.util.EnumSet;
 import java.util.Random;
 import java.util.UUID;
+
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;

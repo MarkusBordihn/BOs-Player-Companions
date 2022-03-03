@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "player_companions:fairy",
+    "player_companions:pig",
+    "player_companions:rooster",
+    "player_companions:small_ghast",
+    "player_companions:small_slime",
+    "player_companions:snail"
+  ]
+}

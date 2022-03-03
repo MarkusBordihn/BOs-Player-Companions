@@ -37,8 +37,8 @@ public class MessageCommandPlayerCompanion {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private final String playerCompanionUUID;
-  private final String command;
+  protected final String playerCompanionUUID;
+  protected final String command;
 
   public MessageCommandPlayerCompanion(String playerCompanionUUID, String command) {
     this.playerCompanionUUID = playerCompanionUUID;

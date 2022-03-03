@@ -22,20 +22,18 @@ package de.markusbordihn.playercompanions.entity.ai.goal;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
-public class ShootLargeFireballGoal extends PlayerCompanionGoal {
+public class ShootSmallFireballGoal extends PlayerCompanionGoal {
 
-  private final int explosionPower;
   private int chargeTime;
 
-  public ShootLargeFireballGoal(PlayerCompanionEntity playerCompanionEntity) {
+  public ShootSmallFireballGoal(PlayerCompanionEntity playerCompanionEntity) {
     super(playerCompanionEntity);
-    this.explosionPower = this.playerCompanionEntity.getExplosionPower();
   }
 
   @Override
@@ -84,8 +82,8 @@ public class ShootLargeFireballGoal extends PlayerCompanionGoal {
             level.levelEvent((Player) null, 1016, this.playerCompanionEntity.blockPosition(), 0);
           }
 
-          LargeFireball largeFireball =
-              new LargeFireball(level, this.playerCompanionEntity, x, y, z, this.explosionPower);
+          SmallFireball largeFireball =
+              new SmallFireball(level, this.playerCompanionEntity, x, y, z);
           largeFireball.setPos(this.playerCompanionEntity.getX() + vec3.x * 4.0D,
               this.playerCompanionEntity.getY(0.5D) + 0.5D, largeFireball.getZ() + vec3.z * 4.0D);
           level.addFreshEntity(largeFireball);

@@ -65,8 +65,6 @@ public class CompanionTameItem extends Item {
 
   public void convertEntityToItem(Item companionItem, Player player, LivingEntity livingEntity,
       Level level) {
-    log.info("Convert Living Entity {} for {} ...", livingEntity, player);
-
     // Capture mob inside item.
     log.debug("Capturing mob {} ...", livingEntity.getName());
     ItemStack itemStack = new ItemStack(companionItem);

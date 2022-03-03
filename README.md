@@ -12,8 +12,9 @@ Player Companions adds additional creatures which will follow, protect or help y
 - Persistent Player companions
 - Different player companion types like collector, follower, guard and healer
 - Different sub-types and colors
-- Friendly fire
+- Friendly fire (for all of your tamed companions)
 - Advanced control
+- Easy to spawn and de-spawn with corresponding player companion item.
 - Jade / Hwyla plugin
 
 ## Player Companion Types
@@ -36,6 +37,7 @@ Is more like a cosmetic mob which will follow you around the world.
 ### Guard
 
 The guard will protected you from hostile mobs and will attack any target you are attacking.
+Equip your guard with weapons and armor to deal more damage and to have a better protection.
 
 ### Healer
 
@@ -81,12 +83,13 @@ Most of the NPC / companion mods should be supported out of the box, but this is
 
 ## Version Status Overview 🛠️
 
-| Version        | Status                |
-| -------------- | --------------------- |
-| Fabric Version | ❌ Not planned        |
-| Forge 1.16.5   | ❌ Not planned        |
-| Forge 1.17.1   | ❌ Not planned        |
-| Forge 1.18.1   | ✔️ Active development |
+| Version        | Status                  |
+| -------------- | ----------------------- |
+| Fabric Version | ❌ Not planned          |
+| Forge 1.16.5   | ❌ Not planned          |
+| Forge 1.17.1   | ❌ Not planned          |
+| Forge 1.18.1   | ✔️ Active development   |
+| Forge 1.18.2   | ✔️ Planned after 1.18.1 |
 
 ## Note
 

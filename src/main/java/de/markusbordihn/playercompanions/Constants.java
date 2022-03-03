@@ -19,6 +19,7 @@
 
 package de.markusbordihn.playercompanions;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 
 public final class Constants {
@@ -45,6 +46,10 @@ public final class Constants {
   public static final String NEAT_MOD = "neat";
   public static final String NEAT_NAME = "Neat";
   public static final boolean NEAT_LOADED = ModList.get().isLoaded(NEAT_MOD);
+
+  // Resource Paths
+  public static final ResourceLocation BLOCK_ATLAS =
+      new ResourceLocation(Constants.MOD_ID, "textures/atlas/blocks.png");
 
   // Animation Math
   public static final float MATH_27DEG_TO_RAD = 0.47123894F;

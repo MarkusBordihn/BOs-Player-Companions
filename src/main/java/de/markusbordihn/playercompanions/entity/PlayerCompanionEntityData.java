@@ -94,11 +94,13 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
   protected UUID persistentAngerTarget;
   private boolean isDirty = false;
+  private String dimensionName = "";
 
   protected static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
   protected PlayerCompanionEntityData(EntityType<? extends TamableAnimal> entityType, Level level) {
     super(entityType, level);
+    this.dimensionName = level.dimension().location().toString();
   }
 
   public boolean isTamable() {
@@ -150,7 +152,9 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   }
 
   public void setDirty() {
-    this.isDirty = true;
+    if (!this.level.isClientSide) {
+      this.isDirty = true;
+    }
   }
 
   public void setDirty(boolean dirty) {
@@ -161,6 +165,10 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public boolean getDirty() {
     return this.isDirty;
+  }
+
+  public String getDimensionName() {
+    return this.dimensionName;
   }
 
   public int getExplosionPower() {
@@ -299,9 +307,13 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   }
 
   public void syncData(PlayerCompanionEntity playerCompanionEntity) {
-    if (!this.level.isClientSide) {
+    if (!this.level.isClientSide && this.hasOwner()) {
       getServerData().updateOrRegisterCompanion(playerCompanionEntity);
     }
+  }
+
+  public void setArmorItem(EquipmentSlot equipmentSlot, ItemStack itemStack) {
+    setItemSlot(equipmentSlot, itemStack);
   }
 
   public void setHandItem(int slot, ItemStack itemStack) {
@@ -322,10 +334,11 @@ public class PlayerCompanionEntityData extends TamableAnimal {
           data.setHandItem(equipmentSlot.getIndex(), itemStack);
           break;
         case ARMOR:
-          // data.armorItems.set(equipmentSlot.getIndex(), itemStack);
+          data.setArmorItem(equipmentSlot.getIndex(), itemStack);
           break;
       }
     }
+    setDirty();
   }
 
   @Override

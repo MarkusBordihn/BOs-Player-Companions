@@ -139,7 +139,7 @@ dependencies {
   // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
   // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-  minecraft 'net.minecraftforge:forge:1.18.1-39.0.88'
+  minecraft 'net.minecraftforge:forge:1.18.1-39.1.2'
 
   // Jade Integration
   implementation fg.deobf("curse.maven:jade-324717:3614180")
@@ -150,6 +150,7 @@ dependencies {
   // Compability tests for other npc / custom mods
   runtimeOnly fg.deobf("curse.maven:human-companions-570319:3655860")
   runtimeOnly fg.deobf("curse.maven:guard-villagers-360203:3548222")
+  // runtimeOnly fg.deobf("curse.maven:carry-on-274259:3601938")
 
   // Additional helpful Mods for development (dev depenedency)
   runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")

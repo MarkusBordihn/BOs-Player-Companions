@@ -19,14 +19,18 @@
 
 package de.markusbordihn.playercompanions.network;
 
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -35,9 +39,9 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
 import de.markusbordihn.playercompanions.network.message.MessageCommandPlayerCompanion;
+import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionData;
 import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionsData;
 
 @EventBusSubscriber
@@ -49,10 +53,27 @@ public class NetworkHandler {
   public static final SimpleChannel INSTANCE =
       NetworkRegistry.newSimpleChannel(new ResourceLocation(Constants.MOD_ID, "network"),
           () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+  private static ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
   private static int id = 0;
   private static String lastCompanionDataPackage;
+  private static String lastCompanionsDataPackage;
 
   protected NetworkHandler() {}
+
+  @SubscribeEvent(priority = EventPriority.HIGHEST)
+  public static void handlePlayerChangedDimensionEvent(PlayerChangedDimensionEvent event) {
+    addServerPlayer(event.getPlayer());
+  }
+
+  @SubscribeEvent(priority = EventPriority.HIGHEST)
+  public static void handlePlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+    addServerPlayer(event.getPlayer());
+  }
+
+  @SubscribeEvent(priority = EventPriority.HIGHEST)
+  public static void handlePlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
+    removeServerPlayer(event.getPlayer());
+  }
 
   public static void registerNetworkHandler(final FMLCommonSetupEvent event) {
 
@@ -67,24 +88,24 @@ public class NetworkHandler {
       }, buffer -> new MessageCommandPlayerCompanion(buffer.readUtf(), buffer.readUtf()),
           MessageCommandPlayerCompanion::handle);
 
-      // Sync Player Companion Data: Server -> Client
+      // Sync full Player Companion Data: Server -> Client
       INSTANCE.registerMessage(id++, MessagePlayerCompanionsData.class,
           (message, buffer) -> buffer.writeUtf(message.getData()),
           buffer -> new MessagePlayerCompanionsData(buffer.readUtf()),
           MessagePlayerCompanionsData::handle);
+
+      // Sync single Player Companion Data: Server -> Client
+      INSTANCE.registerMessage(id++, MessagePlayerCompanionData.class, (message, buffer) -> {
+        buffer.writeUtf(message.getPlayerCompanionUUID());
+        buffer.writeUtf(message.getData());
+      }, buffer -> new MessagePlayerCompanionData(buffer.readUtf(), buffer.readUtf()),
+          MessagePlayerCompanionData::handle);
     });
   }
 
-  @SubscribeEvent
-  public static void handlePlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-    Player player = event.getPlayer();
-
-    // Sending companion Data
-    if (player instanceof ServerPlayer serverPlayer) {
-      updatePlayerCompanionsData(serverPlayer);
-    }
-  }
-
+  /**
+   * Send player companion commands.
+   */
   public static void commandPlayerCompanion(String playerCompanionUUID,
       PlayerCompanionCommand command) {
     if (playerCompanionUUID != null && command != null) {
@@ -94,16 +115,69 @@ public class NetworkHandler {
     }
   }
 
-  public static void updatePlayerCompanionsData(ServerPlayer serverPlayer) {
-    String companionData =
-        PlayerCompanionsServerData.get().exportClientData(serverPlayer.getUUID());
-    if (companionData != null && !companionData.isBlank()
-        && !companionData.equals(lastCompanionDataPackage)) {
-      log.debug("Sending Player Companions data {} to {}", companionData, serverPlayer);
+  /**
+   * Send full companion data to the owner.
+   */
+  public static void updatePlayerCompanionsData(UUID ownerUUID, String companionsData) {
+    if (ownerUUID != null && companionsData != null && !companionsData.isBlank()
+        && !companionsData.equals(lastCompanionsDataPackage)) {
+      ServerPlayer serverPlayer = getServerPlayer(ownerUUID);
+      if (serverPlayer == null) {
+        log.warn("Unable to send player companions data to {} because user seems to be off-line!",
+            ownerUUID);
+        return;
+      }
+      log.debug("Sending Player Companions data to {}: {}", serverPlayer, companionsData);
       INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-          new MessagePlayerCompanionsData(companionData));
+          new MessagePlayerCompanionsData(companionsData));
+      lastCompanionsDataPackage = companionsData;
+    }
+  }
+
+  /**
+   * Send specific player companion data to the owner.
+   */
+  public static void updatePlayerCompanionData(UUID playerCompanionUUID, UUID ownerUUID,
+      String companionData) {
+    if (playerCompanionUUID != null && ownerUUID != null && companionData != null
+        && !companionData.isBlank() && !companionData.equals(lastCompanionDataPackage)) {
+      ServerPlayer serverPlayer = getServerPlayer(ownerUUID);
+      if (serverPlayer == null) {
+        log.warn("Unable to send player companion data to {} because user seems to be off-line!",
+            ownerUUID);
+        return;
+      }
+
+      log.debug("Sending Player Companions data for {} to {}: {}", playerCompanionUUID,
+          serverPlayer, companionData);
+      INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+          new MessagePlayerCompanionData(playerCompanionUUID.toString(), companionData));
       lastCompanionDataPackage = companionData;
     }
+  }
+
+  public static void addServerPlayer(Player player) {
+    if (player instanceof ServerPlayer serverPlayer) {
+      addServerPlayer(serverPlayer.getUUID(), serverPlayer);
+    }
+  }
+
+  public static void addServerPlayer(UUID uuid, ServerPlayer serverPlayer) {
+    serverPlayerMap.put(uuid, serverPlayer);
+  }
+
+  public static void removeServerPlayer(Player player) {
+    if (player instanceof ServerPlayer serverPlayer) {
+      removeServerPlayer(serverPlayer.getUUID());
+    }
+  }
+
+  public static void removeServerPlayer(UUID uuid) {
+    serverPlayerMap.remove(uuid);
+  }
+
+  public static ServerPlayer getServerPlayer(UUID uuid) {
+    return serverPlayerMap.get(uuid);
   }
 
 }

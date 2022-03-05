@@ -17,34 +17,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.item.tameitems;
+package de.markusbordihn.playercompanions.item.companions;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import net.minecraft.world.entity.EntityType;
 
-import de.markusbordihn.playercompanions.item.CompanionTameItem;
+import de.markusbordihn.playercompanions.entity.ModEntityType;
+import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
-public class TameBone extends CompanionTameItem {
+public class WelshCorgiItem extends CapturedCompanion {
 
-  private static final Set<String> tameableMobTypes = new HashSet<>(Arrays.asList(
-  // @formatter:off
-    "player_companions:small_ghast",
-    "player_companions:welsh_corgi"
-  // @formatter:on
-  ));
+  public static final String ID = "welsh_corgi";
 
-  public TameBone() {
+  public WelshCorgiItem() {
     super();
   }
 
-  public TameBone(Properties properties) {
+  public WelshCorgiItem(Properties properties) {
     super(properties);
   }
 
   @Override
-  public Set<String> getTameableMobTypes() {
-    return tameableMobTypes;
+  public EntityType<WelshCorgi> getEntityType() {
+    return ModEntityType.WELSH_CORGI.get();
   }
-
 }

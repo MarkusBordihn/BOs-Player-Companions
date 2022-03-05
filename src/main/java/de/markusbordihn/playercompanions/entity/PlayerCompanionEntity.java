@@ -244,10 +244,12 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
     Item item = itemStack.getItem();
     this.heal(item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 0.5F);
-    for (Pair<MobEffectInstance, Float> pair : item.getFoodProperties().getEffects()) {
-      if (!this.level.isClientSide && pair.getFirst() != null
-          && this.level.random.nextFloat() < pair.getSecond()) {
-        this.addEffect(new MobEffectInstance(pair.getFirst()));
+    if (item.getFoodProperties() != null) {
+      for (Pair<MobEffectInstance, Float> pair : item.getFoodProperties().getEffects()) {
+        if (!this.level.isClientSide && pair.getFirst() != null
+            && this.level.random.nextFloat() < pair.getSecond()) {
+          this.addEffect(new MobEffectInstance(pair.getFirst()));
+        }
       }
     }
     if (player != null && !player.getAbilities().instabuild) {
@@ -411,12 +413,14 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   public PlayerCompanionEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+    // Nope no breeding for now.
     return null;
   }
 
   @Override
   public InteractionResult mobInteract(Player player, InteractionHand hand) {
-    ItemStack itemStack = player.getItemInHand(hand);
+    // We are using the used item hand instead of interaction hand.
+    ItemStack itemStack = player.getItemInHand(player.getUsedItemHand());
     boolean isOwner = this.isTame() && this.isOwnedBy(player);
 
     // Most of the events will be client -> server side to make sure we have most of the flexibility
@@ -446,8 +450,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           return InteractionResult.SUCCESS;
         }
 
-        // Open Player Companion Inventory
-        else if (itemStack.isEmpty()) {
+        // Open Player Companion Inventory, if none eatable item.
+        else if (!this.isFood(itemStack)) {
           NetworkHandler.commandPlayerCompanion(getStringUUID(), PlayerCompanionCommand.OPEN_MENU);
           return InteractionResult.SUCCESS;
         }
@@ -470,11 +474,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   public boolean isFood(ItemStack itemStack) {
-    if (!itemStack.isEdible()) {
-      return false;
-    }
     if (this.getFoodItems() != null) {
       return this.getFoodItems().test(itemStack);
+    }
+    if (!itemStack.isEdible()) {
+      return false;
     }
     return super.isFood(itemStack);
   }

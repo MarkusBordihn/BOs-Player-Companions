@@ -96,6 +96,9 @@ public class ModItems {
 
   public static final RegistryObject<Item> SNAIL = ITEMS.register(SnailItem.ID, SnailItem::new);
 
+  public static final RegistryObject<Item> WELSH_CORGI =
+      ITEMS.register(WelshCorgiItem.ID, WelshCorgiItem::new);
+
   // Tame Items
   public static final RegistryObject<Item> TAME_APPLE =
       ITEMS.register("tame_apple", TameApple::new);
@@ -104,7 +107,7 @@ public class ModItems {
   public static final RegistryObject<Item> TAME_CARROT =
       ITEMS.register("tame_carrot", TameCarrot::new);
   public static final RegistryObject<Item> TAME_SEAGRASS =
-      ITEMS.register("tame_seagrass", TameBone::new);
+      ITEMS.register("tame_seagrass", TameSeagrass::new);
   public static final RegistryObject<Item> TAME_WHEAT_SEEDS =
       ITEMS.register("tame_wheat_seeds", TameWheatSeeds::new);
 
@@ -140,5 +143,10 @@ public class ModItems {
       ITEMS.register("small_slime_spawn_egg",
           () -> new ForgeSpawnEggItem(ModEntityType.SMALL_SLIME::get, MaterialColor.GOLD.col,
               MaterialColor.COLOR_GREEN.col,
+              new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+  public static final RegistryObject<Item> WELSH_CORGI_SPAWN_EGG =
+      ITEMS.register("welsh_corgi_spawn_egg",
+          () -> new ForgeSpawnEggItem(ModEntityType.WELSH_CORGI::get, MaterialColor.GOLD.col,
+              MaterialColor.COLOR_ORANGE.col,
               new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
 }

@@ -19,40 +19,31 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.core.BlockPos;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.client.model.FairyModel;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.client.model.WelshCorgiModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
-import de.markusbordihn.playercompanions.entity.companions.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
 
 @OnlyIn(Dist.CLIENT)
-public class FairyRenderer extends HumanoidMobRenderer<Fairy, FairyModel<Fairy>> {
+public class WelshCorgiRenderer extends MobRenderer<WelshCorgi, WelshCorgiModel<WelshCorgi>> {
 
-  public FairyRenderer(EntityRendererProvider.Context context) {
-    super(context, new FairyModel<>(context.bakeLayer(ClientRenderer.FAIRY)), 0.3F);
+  public WelshCorgiRenderer(EntityRendererProvider.Context context) {
+    super(context, new WelshCorgiModel<>(context.bakeLayer(ClientRenderer.WELSH_CORGI)), 0.7F);
+    //TODO Auto-generated constructor stub
   }
 
-  @Override
-  protected int getBlockLightLevel(Fairy entity, BlockPos blockPos) {
-    return 15;
-  }
+  private static final ResourceLocation TEXTURE_LOCATION =
+      new ResourceLocation(Constants.MOD_ID, "textures/entity/welsh_corgi/welsh_corgi_default.png");
 
-  @Override
-  protected void scale(Fairy entity, PoseStack poseStack, float unused) {
-    poseStack.scale(0.4F, 0.4F, 0.4F);
-  }
-
-  @Override
-  public ResourceLocation getTextureLocation(Fairy entity) {
-    return entity.getResourceLocation();
+  public ResourceLocation getTextureLocation(WelshCorgi entity) {
+    return TEXTURE_LOCATION;
   }
 
 }

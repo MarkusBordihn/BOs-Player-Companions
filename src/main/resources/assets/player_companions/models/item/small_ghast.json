@@ -169,14 +169,5 @@
 			"translation": [0, 2.5, 0],
 			"scale": [0.5, 0.5, 0.5]
 		}
-	},
-	"groups": [
-		0,
-		{
-			"name": "tentacles",
-			"origin": [0, 0, 0],
-			"color": 0,
-			"children": [1, 2, 3, 4, 5, 6, 7, 8, 9]
-		}
-	]
+	}
 }

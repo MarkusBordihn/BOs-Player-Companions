@@ -36,12 +36,14 @@ import de.markusbordihn.playercompanions.client.model.RoosterModel;
 import de.markusbordihn.playercompanions.client.model.SmallGhastModel;
 import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
 import de.markusbordihn.playercompanions.client.model.SnailModel;
+import de.markusbordihn.playercompanions.client.model.WelshCorgiModel;
 import de.markusbordihn.playercompanions.client.renderer.companions.FairyRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.PigRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.RoosterRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.SmallGhastRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.SmallSlimeRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.SnailRenderer;
+import de.markusbordihn.playercompanions.client.renderer.companions.WelshCorgiRenderer;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 
 @OnlyIn(Dist.CLIENT)
@@ -64,6 +66,8 @@ public class ClientRenderer {
       new ResourceLocation(Constants.MOD_ID, "small_slime"), "small_slime_outer");
   public static final ModelLayerLocation SNAIL =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "snail"), "main");
+  public static final ModelLayerLocation WELSH_CORGI =
+      new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "welsh_corgi"), "main");
 
   protected ClientRenderer() {}
 
@@ -76,6 +80,8 @@ public class ClientRenderer {
     event.registerEntityRenderer(ModEntityType.SMALL_GHAST.get(), SmallGhastRenderer::new);
     event.registerEntityRenderer(ModEntityType.SMALL_SLIME.get(), SmallSlimeRenderer::new);
     event.registerEntityRenderer(ModEntityType.SNAIL.get(), SnailRenderer::new);
+    event.registerEntityRenderer(ModEntityType.WELSH_CORGI.get(),
+        WelshCorgiRenderer::new);
   }
 
   public static void registerEntityLayerDefinitions(
@@ -89,5 +95,6 @@ public class ClientRenderer {
     event.registerLayerDefinition(SMALL_SLIME, SmallSlimeModel::createInnerBodyLayer);
     event.registerLayerDefinition(SMALL_SLIME_OUTER, SmallSlimeModel::createOuterBodyLayer);
     event.registerLayerDefinition(SNAIL, SnailModel::createBodyLayer);
+    event.registerLayerDefinition(WELSH_CORGI, WelshCorgiModel::createBodyLayer);
   }
 }

@@ -28,6 +28,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.AgeableMob;
@@ -88,13 +89,17 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   private int explosionPower = 0;
   private int jumpMoveDelay = 10;
 
-  // Temporary states
+  // Temporary stats
   private BlockPos orderedToPosition = null;
   private ItemStack companionTypeIcon = new ItemStack(Items.BONE);
   private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
   protected UUID persistentAngerTarget;
   private boolean isDirty = false;
   private String dimensionName = "";
+
+  // Animation stats
+  private float interestedAngle;
+  private float interestedAngleO;
 
   protected static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
@@ -272,6 +277,11 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     return this.orderedToPosition;
   }
 
+  public float getHeadRollAngle(float p_30449_) {
+    return Mth.lerp(p_30449_, this.interestedAngleO, this.interestedAngle) * 0.15F
+        * (float) Math.PI;
+  }
+
   public BlockPos ownerBlockPosition() {
     if (this.hasOwner()) {
       LivingEntity owner = this.getOwner();
@@ -393,5 +403,18 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   @Override
   public PlayerCompanionEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
     return null;
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+    if (this.isAlive()) {
+      this.interestedAngleO = this.interestedAngle;
+      //if (this.isInterested()) {
+      //  this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
+      //} else {
+        this.interestedAngle += (0.0F - this.interestedAngle) * 0.4F;
+      //}
+    }
   }
 }

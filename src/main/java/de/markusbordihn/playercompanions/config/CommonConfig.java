@@ -111,6 +111,11 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue snailMaxGroup;
     public final ForgeConfigSpec.IntValue snailWeight;
 
+    public final ForgeConfigSpec.BooleanValue welshCorgiSpawnEnable;
+    public final ForgeConfigSpec.IntValue welshCorgiMinGroup;
+    public final ForgeConfigSpec.IntValue welshCorgiMaxGroup;
+    public final ForgeConfigSpec.IntValue welshCorgiWeight;
+
     Config(ForgeConfigSpec.Builder builder) {
       builder.comment("Player Companion's (General configuration)");
 
@@ -217,6 +222,16 @@ public class CommonConfig {
       snailWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("snailWeight", 6, 0, 100);
       builder.pop();
 
+      builder.push("Welsh Corgi");
+      welshCorgiSpawnEnable = builder.comment("Enable/Disable the welsh corgi spawn.")
+          .define("welshCorgiSpawnEnable", true);
+      welshCorgiMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("welshCorgiMinGroup", 1, 0, 64);
+      welshCorgiMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("welshCorgiMaxGroup", 2, 0, 64);
+      welshCorgiWeight =
+          builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("welshCorgiWeight", 6, 0, 100);
+      builder.pop();
     }
   }
 

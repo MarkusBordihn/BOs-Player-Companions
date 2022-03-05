@@ -51,6 +51,7 @@ import de.markusbordihn.playercompanions.entity.companions.Rooster;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
+import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
 
 @Mod.EventBusSubscriber()
 public class SpawnHandler {
@@ -75,6 +76,8 @@ public class SpawnHandler {
         COMMON.smallSlimeMinGroup.get(), COMMON.smallSlimeMaxGroup.get());
     logSpawn(Snail.NAME, COMMON.snailSpawnEnable.get(), COMMON.snailWeight.get(),
         COMMON.snailMinGroup.get(), COMMON.snailMaxGroup.get());
+    logSpawn(WelshCorgi.NAME, COMMON.welshCorgiSpawnEnable.get(), COMMON.welshCorgiWeight.get(),
+        COMMON.welshCorgiMinGroup.get(), COMMON.welshCorgiMaxGroup.get());
   }
 
   @SubscribeEvent()
@@ -97,6 +100,7 @@ public class SpawnHandler {
         biomeCategory == BiomeCategory.PLAINS || BiomeDictionary.hasType(biomeKey, Type.PLAINS);
     boolean isSwamp =
         biomeCategory == BiomeCategory.SWAMP || BiomeDictionary.hasType(biomeKey, Type.SWAMP);
+    boolean isTaiga = biomeCategory == BiomeCategory.TAIGA;
 
     // Fairy Spawn
     if (Boolean.TRUE.equals(COMMON.fairySpawnEnable.get()) && isFlowerForest) {
@@ -142,6 +146,14 @@ public class SpawnHandler {
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.SNAIL.get(), COMMON.snailWeight.get(),
               COMMON.snailMinGroup.get(), COMMON.snailMaxGroup.get()));
     }
+
+    // Welsh Corgi
+    if (Boolean.TRUE.equals(COMMON.welshCorgiSpawnEnable.get()) && isTaiga) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.WELSH_CORGI.get(),
+              COMMON.welshCorgiWeight.get(), COMMON.welshCorgiMinGroup.get(),
+              COMMON.welshCorgiMaxGroup.get()));
+    }
   }
 
   public static void registerSpawnPlacements(final FMLCommonSetupEvent event) {
@@ -158,6 +170,8 @@ public class SpawnHandler {
       SpawnPlacements.register(ModEntityType.SMALL_SLIME.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SmallSlime::checkMobSpawnRules);
       SpawnPlacements.register(ModEntityType.SNAIL.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Snail::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.WELSH_CORGI.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Snail::checkAnimalSpawnRules);
     });
   }

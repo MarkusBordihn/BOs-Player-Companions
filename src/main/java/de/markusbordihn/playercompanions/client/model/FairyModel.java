@@ -30,15 +30,15 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.companions.Fairy;
 
 @OnlyIn(Dist.CLIENT)
-public class FairyModel extends HumanoidModel<Fairy> {
+public class FairyModel<T extends LivingEntity> extends HumanoidModel<T> {
 
   private final ModelPart leftArmSmall;
   private final ModelPart leftWing;
@@ -94,7 +94,7 @@ public class FairyModel extends HumanoidModel<Fairy> {
   }
 
   @Override
-  public void setupAnim(Fairy entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
     super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 

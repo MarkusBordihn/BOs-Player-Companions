@@ -36,6 +36,7 @@ import de.markusbordihn.playercompanions.entity.companions.Rooster;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
+import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
 
 @EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntityType {
@@ -61,11 +62,6 @@ public class ModEntityType {
           () -> EntityType.Builder.<SmallSlime>of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)
               .sized(0.5F, 0.5F).clientTrackingRange(8).build(SmallSlime.ID));
 
-  // Healer Entity
-  public static final RegistryObject<EntityType<Fairy>> FAIRY = ENTITIES.register(Fairy.ID,
-      () -> EntityType.Builder.<Fairy>of(Fairy::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.9F, 1.2F).clientTrackingRange(16).build(Fairy.ID));
-
   // Guard Entity
   public static final RegistryObject<EntityType<Rooster>> ROOSTER = ENTITIES.register(Rooster.ID,
       () -> EntityType.Builder.<Rooster>of(Rooster::new, PlayerCompanionEntity.CATEGORY)
@@ -74,6 +70,18 @@ public class ModEntityType {
       ENTITIES.register(SmallGhast.ID,
           () -> EntityType.Builder.<SmallGhast>of(SmallGhast::new, PlayerCompanionEntity.CATEGORY)
               .sized(0.9F, 1.2F).clientTrackingRange(16).build(SmallGhast.ID));
+
+  // Healer Entity
+  public static final RegistryObject<EntityType<Fairy>> FAIRY = ENTITIES.register(Fairy.ID,
+      () -> EntityType.Builder.<Fairy>of(Fairy::new, PlayerCompanionEntity.CATEGORY)
+          .sized(0.9F, 1.2F).clientTrackingRange(16).build(Fairy.ID));
+
+  // Supporter Entity
+  public static final RegistryObject<EntityType<WelshCorgi>> WELSH_CORGI =
+      ENTITIES.register(WelshCorgi.ID,
+          () -> EntityType.Builder
+              .<WelshCorgi>of(WelshCorgi::new, PlayerCompanionEntity.CATEGORY)
+              .sized(0.6F, 1.0F).clientTrackingRange(16).build(WelshCorgi.ID));
 
   @SubscribeEvent
   public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
@@ -84,5 +92,6 @@ public class ModEntityType {
     event.put(SMALL_GHAST.get(), SmallGhast.createAttributes().build());
     event.put(SMALL_SLIME.get(), SmallSlime.createAttributes().build());
     event.put(SNAIL.get(), Snail.createAttributes().build());
+    event.put(WELSH_CORGI.get(), WelshCorgi.createAttributes().build());
   }
 }

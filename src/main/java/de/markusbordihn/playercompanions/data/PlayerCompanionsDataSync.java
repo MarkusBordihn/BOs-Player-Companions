@@ -2,15 +2,11 @@ package de.markusbordihn.playercompanions.data;
 
 import java.util.UUID;
 
-import net.minecraft.world.level.Level;
-
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 public interface PlayerCompanionsDataSync {
 
   public PlayerCompanionEntity getSyncReference();
-
-  public Level getLevel();
 
   public void setDataSyncNeeded(boolean dirty);
 
@@ -47,13 +43,10 @@ public interface PlayerCompanionsDataSync {
     if (serverData == null || uuid == null) {
       return null;
     }
-    return PlayerCompanionsServerData.get().getCompanion(uuid);
+    return serverData.getCompanion(uuid);
   }
 
   public default PlayerCompanionsServerData getServerData() {
-    if (getLevel() == null || getLevel().isClientSide()) {
-      return null;
-    }
     return PlayerCompanionsServerData.get();
   }
 

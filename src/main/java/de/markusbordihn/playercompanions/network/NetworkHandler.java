@@ -123,8 +123,6 @@ public class NetworkHandler {
         && !companionsData.equals(lastCompanionsDataPackage)) {
       ServerPlayer serverPlayer = getServerPlayer(ownerUUID);
       if (serverPlayer == null) {
-        log.warn("Unable to send player companions data to {} because user seems to be off-line!",
-            ownerUUID);
         return;
       }
       log.debug("Sending Player Companions data to {}: {}", serverPlayer, companionsData);
@@ -143,11 +141,8 @@ public class NetworkHandler {
         && !companionData.isBlank() && !companionData.equals(lastCompanionDataPackage)) {
       ServerPlayer serverPlayer = getServerPlayer(ownerUUID);
       if (serverPlayer == null) {
-        log.warn("Unable to send player companion data to {} because user seems to be off-line!",
-            ownerUUID);
         return;
       }
-
       log.debug("Sending Player Companions data for {} to {}: {}", playerCompanionUUID,
           serverPlayer, companionData);
       INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),

@@ -43,6 +43,11 @@ Equip your guard with weapons and armor to deal more damage and to have a better
 The healer companion heals any player and your own companions in a specific radius.
 Additional healer will stack up the effect, so if you are traveling with your friends it good to have 1-2 healers in the group.
 
+### Supporter
+
+The supporter companions gives buffs to any player and your own companions in a specific radius.
+Additional supporter will not stack up, but they will be able to buff the whole group.
+
 ### Trader (wip)
 
 ## Spawn

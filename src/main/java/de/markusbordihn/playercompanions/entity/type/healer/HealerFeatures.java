@@ -42,9 +42,10 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static int healerTypeRadius = COMMON.healerTypeRadius.get();
-  private static int healerTypeAmount = COMMON.healerTypeAmount.get();
+  private static int healerTypeMinAmount = COMMON.healerTypeMinAmount.get();
+  private static int healerTypeMaxAmount = COMMON.healerTypeMaxAmount.get();
 
-  private static final short HEALER_TICK = 50;
+  private static final short HEALER_TICK = 45;
   private static final int PARTICLE_FRAMES = 3;
 
   protected HealerFeatures(PlayerCompanionEntity playerCompanionEntity, Level level) {
@@ -54,11 +55,12 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     healerTypeRadius = COMMON.healerTypeRadius.get();
-    healerTypeAmount = COMMON.healerTypeAmount.get();
+    healerTypeMinAmount = COMMON.healerTypeMinAmount.get();
+    healerTypeMaxAmount = COMMON.healerTypeMaxAmount.get();
 
-    if (healerTypeRadius > 0) {
-      log.info("{} Healer will automatically heal {} hp in a {} block radius.", Constants.LOG_ICON,
-          healerTypeAmount, healerTypeRadius);
+    if (healerTypeRadius > 0 && healerTypeMinAmount < healerTypeMaxAmount) {
+      log.info("{} Healer will automatically heal between {} - {} hp in a {} block radius.",
+          Constants.LOG_ICON, healerTypeMinAmount, healerTypeMaxAmount, healerTypeRadius);
     } else {
       log.info("{} Healer will not automatically heal!", Constants.LOG_ICON);
     }
@@ -68,42 +70,69 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
     // Automatic heal entities in the defined radius.
     if (healerTypeRadius > 0 && ticker++ >= HEALER_TICK) {
+      boolean hasHealthSomething = false;
 
-      // 1. Priority: heal all players in radius.
-      List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
-          new AABB(playerCompanionEntity.blockPosition()).inflate(healerTypeRadius),
-          entity -> true);
-      for (Player player : playerEntities) {
-        if (player.isAlive() && player.getHealth() < player.getMaxHealth()) {
-          healEntity(level, player, healerTypeAmount);
+      // 1. Priority: Heal owner
+      if (this.getOwner() != null && healEntity(level, this.getOwner())) {
+        hasHealthSomething = true;
+      }
+
+      // 2. Priority: Heal self
+      if (!hasHealthSomething && healEntity(level, this.playerCompanionEntity)) {
+        hasHealthSomething = true;
+      }
+
+      // 3. Priority: Heal other players in radius.
+      if (!hasHealthSomething) {
+        List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
+            new AABB(playerCompanionEntity.blockPosition()).inflate(healerTypeRadius),
+            entity -> true);
+        for (Player player : playerEntities) {
+          if (player != this.getOwner() && healEntity(level, player)) {
+            hasHealthSomething = true;
+            break;
+          }
         }
       }
 
-      // 2. Priority: Heal owned tamed animals regardless of type.
-      if (playerCompanionEntity.hasOwner()) {
+      // 4. Priority: Heal owned tamed animals regardless of type.
+      if (!hasHealthSomething && this.getOwner() != null) {
         List<TamableAnimal> tamableAnimals =
             playerCompanionEntity.level.getEntitiesOfClass(TamableAnimal.class,
                 new AABB(playerCompanionEntity.blockPosition()).inflate(healerTypeRadius),
                 entity -> true);
         for (TamableAnimal tamableAnimal : tamableAnimals) {
-          if (tamableAnimal.isAlive()
-              && tamableAnimal.getOwner() == playerCompanionEntity.getOwner()
-              && tamableAnimal.getHealth() < tamableAnimal.getMaxHealth()) {
-            healEntity(level, tamableAnimal, healerTypeAmount);
+          if (tamableAnimal != this.playerCompanionEntity
+              && tamableAnimal.getOwner() == this.getOwner() && healEntity(level, tamableAnimal)) {
+            hasHealthSomething = true;
+            break;
           }
         }
+      }
+
+      // Increase experience if we have health something (server-side)
+      if (hasHealthSomething && !level.isClientSide) {
+        playerCompanionEntity.increaseExperience(1);
       }
 
       ticker = 0;
     }
   }
 
-  public void healEntity(Level level, LivingEntity livingEntity, float amount) {
+  public boolean healEntity(Level level, LivingEntity livingEntity) {
+    if (!livingEntity.isAlive() || livingEntity.getHealth() >= livingEntity.getMaxHealth()) {
+      return false;
+    }
+
     if (level.isClientSide) {
       healAnimation(livingEntity, level);
     } else {
-      livingEntity.heal(amount);
+      int healingAmount = playerCompanionEntity.getHealingAmountFromExperienceLevel(
+          getExperienceLevel(), healerTypeMinAmount, healerTypeMaxAmount);
+      livingEntity.heal(healingAmount);
+      return true;
     }
+    return false;
   }
 
   public void healAnimation(LivingEntity livingEntity, Level level) {

@@ -56,9 +56,12 @@ public class PlayerCompanionData {
   private static final String ENTITY_ID_TAG = "EntityId";
   private static final String ENTITY_ORDERED_TO_POSITION = "EntityOrderedToPosition";
   private static final String ENTITY_RESPAWN_TIMER_TAG = "EntityRespawnTimer";
+  private static final String ENTITY_SITTING_ON_SHOULDER_TAG = "EntitySittingOnShoulder";
   private static final String ENTITY_SITTING_TAG = "EntitySitting";
   private static final String ENTITY_TARGET_TAG = "EntityTarget";
   private static final String ENTITY_TYPE_TAG = "EntityType";
+  private static final String ENTITY_EXPERIENCE_TAG = "EntityExperience";
+  private static final String ENTITY_EXPERIENCE_LEVEL_TAG = "EntityExperienceLevel";
   private static final String LEVEL_TAG = "Level";
   private static final String NAME_TAG = "Name";
   private static final String OWNER_NAME_TAG = "OwnerName";
@@ -88,11 +91,14 @@ public class PlayerCompanionData {
   private UUID ownerUUID = null;
   private boolean active = true;
   private boolean entityOrderedToPosition = false;
+  private boolean entitySitOnShoulder = false;
   private boolean entitySitting = false;
   private boolean hasOwner = false;
   private boolean isRemoved = false;
   private float entityHealth;
   private float entityHealthMax;
+  private int entityExperience = 1;
+  private int entityExperienceLevel = 1;
   private int entityId;
   private int entityRespawnTimer;
 
@@ -106,6 +112,10 @@ public class PlayerCompanionData {
 
   public boolean hasOwner() {
     return this.ownerUUID != null;
+  }
+
+  public boolean isSittingOnShoulder() {
+    return this.entitySitOnShoulder;
   }
 
   public boolean isOrderedToSit() {
@@ -154,6 +164,14 @@ public class PlayerCompanionData {
 
   public String getDimensionName() {
     return this.entityDimension;
+  }
+
+  public int getExperience() {
+    return this.entityExperience;
+  }
+
+  public int getExperienceLevel() {
+    return this.entityExperienceLevel;
   }
 
   public PlayerCompanionEntity getPlayerCompanionEntity() {
@@ -312,12 +330,15 @@ public class PlayerCompanionData {
     this.levelName = this.level.getRegistryName() + "/" + this.level.location();
     this.entityId = companion.getId();
     this.entityDimension = companion.getDimensionName();
-    this.entityType = companion.getType();
+    this.entityExperience = companion.getExperience();
+    this.entityExperienceLevel = companion.getExperienceLevel();
     this.entityHealth = companion.getHealth();
     this.entityHealthMax = companion.getMaxHealth();
+    this.entityType = companion.getType();
     this.entityRespawnTimer = companion.getRespawnTimer();
     this.entitySitting = companion.isOrderedToSit();
     this.entityOrderedToPosition = companion.isOrderedToPosition();
+    this.entitySitOnShoulder = companion.isSitOnShoulder();
     this.entityData = companion.serializeNBT();
 
     LivingEntity targetEntity = companion.getTarget();
@@ -376,12 +397,15 @@ public class PlayerCompanionData {
     }
     this.entityData = compoundTag.getCompound(ENTITY_DATA_TAG);
     this.entityDimension = compoundTag.getString(ENTITY_DIMENSION);
+    this.entityExperience = compoundTag.getInt(ENTITY_EXPERIENCE_TAG);
+    this.entityExperienceLevel = compoundTag.getInt(ENTITY_EXPERIENCE_LEVEL_TAG);
     this.entityHealth = compoundTag.getFloat(ENTITY_HEALTH_TAG);
     this.entityHealthMax = compoundTag.getFloat(ENTITY_HEALTH_MAX_TAG);
     this.entityOrderedToPosition = compoundTag.getBoolean(ENTITY_ORDERED_TO_POSITION);
     this.entityRespawnTimer = compoundTag.getInt(ENTITY_RESPAWN_TIMER_TAG);
     this.entitySitting = compoundTag.getBoolean(ENTITY_SITTING_TAG);
     this.entityTarget = compoundTag.getString(ENTITY_TARGET_TAG);
+    this.entitySitOnShoulder = compoundTag.getBoolean(ENTITY_SITTING_ON_SHOULDER_TAG);
 
     // Load Armor
     PlayerCompanionDataHelper.loadArmorItems(compoundTag, this.armorItems);
@@ -421,11 +445,14 @@ public class PlayerCompanionData {
     compoundTag.putString(ENTITY_DIMENSION, this.entityDimension);
     compoundTag.putString(ENTITY_TYPE_TAG, this.entityType.getRegistryName().toString());
     compoundTag.putBoolean(ENTITY_SITTING_TAG, this.entitySitting);
+    compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG, this.entitySitOnShoulder);
     compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION, this.entityOrderedToPosition);
     compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.entityHealthMax);
     compoundTag.putFloat(ENTITY_HEALTH_TAG, this.entityHealth);
     compoundTag.putInt(ENTITY_RESPAWN_TIMER_TAG, this.entityRespawnTimer);
     compoundTag.putString(ENTITY_TARGET_TAG, this.entityTarget);
+    compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, this.entityExperienceLevel);
+    compoundTag.putInt(ENTITY_EXPERIENCE_TAG, this.entityExperience);
 
     // Try to get current Player Companion if not exists.
     PlayerCompanionEntity playerCompanionEntity = this.getPlayerCompanionEntity();
@@ -444,10 +471,14 @@ public class PlayerCompanionData {
     if (playerCompanionEntity != null && playerCompanionEntity.isAlive()) {
       compoundTag.putString(ENTITY_DIMENSION, playerCompanionEntity.getDimensionName());
       compoundTag.putBoolean(ENTITY_SITTING_TAG, playerCompanionEntity.isOrderedToSit());
+      compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG,
+          playerCompanionEntity.isSitOnShoulder());
       compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION,
           playerCompanionEntity.isOrderedToPosition());
       compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, playerCompanionEntity.getMaxHealth());
       compoundTag.putFloat(ENTITY_HEALTH_TAG, playerCompanionEntity.getHealth());
+      compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, playerCompanionEntity.getExperienceLevel());
+      compoundTag.putInt(ENTITY_EXPERIENCE_TAG, playerCompanionEntity.getExperience());
 
       if (playerCompanionEntity.getOwner() != null) {
         compoundTag.putString(OWNER_NAME_TAG,
@@ -480,11 +511,13 @@ public class PlayerCompanionData {
 
   public String toString() {
     return "PlayerCompanion['" + this.name + "', type=" + this.type + ", owner=" + this.ownerUUID
-        + "(" + this.ownerName + "), entity=" + this.entityType + ", health=" + this.entityHealth
-        + "/" + this.entityHealthMax + ", x=" + this.blockPos.getX() + ", y=" + this.blockPos.getY()
-        + ", z=" + this.blockPos.getZ() + ", armor=" + this.getArmorItems() + ", hand="
-        + this.getHandItems() + ", dimension=" + this.entityDimension + ", respawnTimer="
-        + this.entityRespawnTimer + ", id=" + this.entityId + ", UUID=" + this.companionUUID + "]";
+        + "(" + this.ownerName + "), entity=" + this.entityType + ", experience="
+        + this.entityExperience + ", level=" + this.entityExperienceLevel + ", health="
+        + this.entityHealth + "/" + this.entityHealthMax + ", x=" + this.blockPos.getX() + ", y="
+        + this.blockPos.getY() + ", z=" + this.blockPos.getZ() + ", armor=" + this.getArmorItems()
+        + ", hand=" + this.getHandItems() + ", dimension=" + this.entityDimension
+        + ", respawnTimer=" + this.entityRespawnTimer + ", id=" + this.entityId + ", UUID="
+        + this.companionUUID + "]";
   }
 
   private void setDirty() {

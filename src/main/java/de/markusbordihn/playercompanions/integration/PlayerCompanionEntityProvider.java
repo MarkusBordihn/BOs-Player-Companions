@@ -28,12 +28,16 @@ import mcp.mobius.waila.impl.ui.ElementHelper;
 
 import snownee.jade.VanillaPlugin;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.UsernameCache;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.Experience;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
@@ -55,14 +59,27 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
               UsernameCache.getLastKnownUsername(playerCompanionEntity.getOwnerUUID());
           tooltip.add(new TextComponent("Owner: " + ownerName));
         }
+        tooltip.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_level",
+            playerCompanionEntity.getExperienceLevel(), playerCompanionEntity.getExperience(),
+            Experience.getExperienceForNextLevel(playerCompanionEntity.getExperienceLevel())));
         if (data != null) {
-          if (data.isOrderedToPosition()) {
-            tooltip.add(new TextComponent("Order: To Position"));
+          long respawnTimer =
+              data.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
+
+          if (respawnTimer <= 0) {
+            if (data.isOrderedToPosition()) {
+              tooltip.add(new TextComponent("Order: To Position"));
+            }
+            if (data.isOrderedToSit()) {
+              tooltip.add(new TextComponent("Order: Sitting"));
+            } else {
+              tooltip.add(new TextComponent("Order: Following"));
+            }
           }
-          if (data.isOrderedToSit()) {
-            tooltip.add(new TextComponent("Order: Sitting"));
-          } else {
-            tooltip.add(new TextComponent("Order: Following"));
+          // Display respawn timer, if any.
+          if (respawnTimer >= 0) {
+            tooltip.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_respawn",
+                respawnTimer).withStyle(ChatFormatting.RED));
           }
         }
       }

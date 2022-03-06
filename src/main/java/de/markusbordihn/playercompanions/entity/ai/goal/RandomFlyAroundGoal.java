@@ -35,7 +35,8 @@ public class RandomFlyAroundGoal extends PlayerCompanionGoal {
 
   @Override
   public boolean canUse() {
-    if (this.playerCompanionEntity.isOrderedToSit()
+    if (!this.playerCompanionEntity.hasOwnerAndIsAlive()
+        || this.playerCompanionEntity.isOrderedToSit()
         || this.playerCompanionEntity.isOrderedToPosition()) {
       return false;
     }

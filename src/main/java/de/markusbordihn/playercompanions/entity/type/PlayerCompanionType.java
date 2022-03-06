@@ -25,5 +25,6 @@ public enum PlayerCompanionType {
   GUARD,
   HEALER,
   NPC,
+  SUPPORTER,
   UNKNOWN
 }

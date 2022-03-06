@@ -17,32 +17,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.client.renderer.companions;
+package de.markusbordihn.playercompanions.entity.type.supporter;
 
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityWalking;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.client.model.SnailModel;
-import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
-import de.markusbordihn.playercompanions.entity.companions.Snail;
+public class SupporterWalking extends PlayerCompanionEntityWalking {
 
-@OnlyIn(Dist.CLIENT)
-public class SnailRenderer extends MobRenderer<Snail, SnailModel> {
+  protected SupporterFeatures supporterFeatures;
 
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail.png");
+  public SupporterWalking(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
+    super(entityType, level);
+    this.setCompanionType(PlayerCompanionType.SUPPORTER);
+    this.setCompanionTypeIcon(new ItemStack(Items.ENCHANTED_BOOK));
 
-  public SnailRenderer(EntityRendererProvider.Context context) {
-    super(context, new SnailModel(context.bakeLayer(ClientRenderer.SNAIL)), 0.45F);
+    // Shared Guard Features
+    this.supporterFeatures = new SupporterFeatures(this, level);
   }
 
-  public ResourceLocation getTextureLocation(Snail entity) {
-    return TEXTURE_LOCATION;
+  @Override
+  public void tick() {
+    super.tick();
+    this.supporterFeatures.supporterTick();
   }
 
 }

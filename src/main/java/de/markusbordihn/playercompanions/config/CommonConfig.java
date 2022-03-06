@@ -64,6 +64,7 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue respawnDelay;
     public final ForgeConfigSpec.BooleanValue enableCompanionGhost;
     public final ForgeConfigSpec.BooleanValue friendlyFire;
+    public final ForgeConfigSpec.IntValue maxHealth;
 
     public final ForgeConfigSpec.EnumValue<GuiPosition> guiPosition;
     public final ForgeConfigSpec.IntValue guiOffsetX;
@@ -78,7 +79,13 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue collectorTypeRadius;
 
     public final ForgeConfigSpec.IntValue healerTypeRadius;
-    public final ForgeConfigSpec.IntValue healerTypeAmount;
+    public final ForgeConfigSpec.IntValue healerTypeMinAmount;
+    public final ForgeConfigSpec.IntValue healerTypeMaxAmount;
+
+    public final ForgeConfigSpec.IntValue supporterTypeRadius;
+    public final ForgeConfigSpec.IntValue supporterTypeDamageBoostDuration;
+    public final ForgeConfigSpec.IntValue supporterTypeDamageResistanceDuration;
+    public final ForgeConfigSpec.IntValue supporterTypeFireResistanceDuration;
 
     public final ForgeConfigSpec.BooleanValue fairySpawnEnable;
     public final ForgeConfigSpec.IntValue fairyMinGroup;
@@ -129,6 +136,8 @@ public class CommonConfig {
           .define("friendlyFire", false);
       enableCompanionGhost = builder.comment("Enable / Disable ghosts for died player companions.")
           .define("enableCompanionGhost", true);
+      maxHealth = builder.comment("The max health a companion can get with level 60.")
+          .defineInRange("maxHealth", 20, 0, 200);
       builder.pop();
 
       builder.push("Gui");
@@ -160,8 +169,28 @@ public class CommonConfig {
       builder.push("Healer Type");
       healerTypeRadius = builder.comment("Defines the radius in which players are healed.")
           .defineInRange("healerTypeRadius", 8, 0, 32);
-      healerTypeAmount = builder.comment("Defines the healing amount.")
-          .defineInRange("healerTypeAmount", 2, 0, 16);
+      healerTypeMinAmount =
+          builder.comment("Defines the min. healing amount depending on the level.")
+              .defineInRange("healerTypeMinAmount", 2, 0, 16);
+      healerTypeMaxAmount =
+          builder.comment("Defines the max. healing amount depending on the level.")
+              .defineInRange("healerTypeMaxAmount", 10, 0, 16);
+      builder.pop();
+
+      builder.push("Supporter Type");
+      supporterTypeRadius = builder.comment("Defines the radius in which players are buffed.")
+          .defineInRange("supporterTypeRadius", 8, 0, 32);
+      supporterTypeDamageBoostDuration =
+          builder.comment("Defines the amount of ticks how long the damage boost is enabled.")
+              .defineInRange("supporterTypeDamageBoostDuration", 1200, 20, 6000);
+      supporterTypeDamageResistanceDuration = builder
+          .comment(
+              "Defines the amount of ticks how long the damage resistance protection is enabled.")
+          .defineInRange("supporterTypeDamageResistanceDuration", 1200, 20, 6000);
+      supporterTypeFireResistanceDuration = builder
+          .comment(
+              "Defines the amount of ticks how long the fire resistance protection is enabled.")
+          .defineInRange("supporterTypeFireResistanceDuration", 1200, 20, 6000);
       builder.pop();
 
       builder.push("Fairy");

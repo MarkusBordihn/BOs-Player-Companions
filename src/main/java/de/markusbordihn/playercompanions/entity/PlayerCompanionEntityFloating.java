@@ -25,14 +25,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntityWalkControl;
+import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntityFloatingControl;
 
 public class PlayerCompanionEntityFloating extends PlayerCompanionEntity {
 
   public PlayerCompanionEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType,
       Level level) {
     super(entityType, level);
-    this.moveControl = new PlayerCompanionEntityWalkControl(this);
+    this.moveControl = new PlayerCompanionEntityFloatingControl(this);
   }
 
   @Override

@@ -24,7 +24,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 
-public class PlayerCompanionEntityFlyControl extends PlayerCompanionEntityMoveControl {
+public class PlayerCompanionEntityFlyControl extends PlayerCompanionEntityFloatingControl {
 
   private final int maxTurn;
   private final boolean hoversInPlace;
@@ -67,7 +67,7 @@ public class PlayerCompanionEntityFlyControl extends PlayerCompanionEntityMoveCo
         this.mob.setYya(d1 > 0.0D ? f1 : -f1);
       }
     } else {
-      if (!this.hoversInPlace) {
+      if (!this.hoversInPlace || !this.mob.isAlive()) {
         this.mob.setNoGravity(false);
       }
       this.mob.setYya(0.0F);

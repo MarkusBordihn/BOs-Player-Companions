@@ -49,7 +49,7 @@ public class PlayerCompanionGoal extends Goal {
 
   @Override
   public boolean canUse() {
-    return false;
+    return playerCompanionEntity.hasOwnerAndIsAlive();
   }
 
 }

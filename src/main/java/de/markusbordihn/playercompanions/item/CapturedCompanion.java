@@ -56,6 +56,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.Experience;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
@@ -400,14 +401,24 @@ public class CapturedCompanion extends Item {
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_name",
           playerCompanion.getName()).withStyle(ChatFormatting.GOLD));
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_health",
-          playerCompanion.getEntityHealth()));
+          playerCompanion.getEntityHealth(), playerCompanion.getEntityHealthMax()));
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_owner",
           playerCompanion.getOwnerName()));
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_type",
           playerCompanion.getType()).withStyle(ChatFormatting.GRAY));
 
+      // Add experience and level, if available.
+      if (playerCompanion.getExperience() > 0) {
+        tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_level",
+            playerCompanion.getExperienceLevel(), playerCompanion.getExperience(),
+            Experience.getExperienceForNextLevel(playerCompanion.getExperienceLevel())));
+      }
+
       if (respawnTimer <= 0) {
-        if (playerCompanion.isOrderedToPosition()) {
+        if (playerCompanion.isSittingOnShoulder()) {
+          tooltipList.add(new TranslatableComponent(
+              Constants.TEXT_PREFIX + "tamed_companion_status_sit_on_shoulder"));
+        } else if (playerCompanion.isOrderedToPosition()) {
           tooltipList.add(new TranslatableComponent(
               Constants.TEXT_PREFIX + "tamed_companion_status_order_to_position"));
         } else if (playerCompanion.isOrderedToSit()) {

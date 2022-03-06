@@ -35,8 +35,7 @@ import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
 public class WelshCorgiRenderer extends MobRenderer<WelshCorgi, WelshCorgiModel<WelshCorgi>> {
 
   public WelshCorgiRenderer(EntityRendererProvider.Context context) {
-    super(context, new WelshCorgiModel<>(context.bakeLayer(ClientRenderer.WELSH_CORGI)), 0.7F);
-    //TODO Auto-generated constructor stub
+    super(context, new WelshCorgiModel<>(context.bakeLayer(ClientRenderer.WELSH_CORGI)), 0.5F);
   }
 
   private static final ResourceLocation TEXTURE_LOCATION =

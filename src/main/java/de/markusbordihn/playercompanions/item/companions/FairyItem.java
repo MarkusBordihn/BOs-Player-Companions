@@ -33,6 +33,10 @@ public class FairyItem extends CapturedCompanion {
     super();
   }
 
+  public FairyItem(String variant) {
+    super(variant);
+  }
+
   public FairyItem(Properties properties) {
     super(properties);
   }

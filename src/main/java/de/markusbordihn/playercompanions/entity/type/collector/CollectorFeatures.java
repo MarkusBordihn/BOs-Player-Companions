@@ -69,10 +69,17 @@ public class CollectorFeatures extends PlayerCompanionsFeatures {
       if (!itemEntities.isEmpty()) {
         PlayerCompanionData companionData = playerCompanionEntity.getData();
         if (companionData != null) {
+          boolean hasCollectSomething = false;
           for (ItemEntity itemEntity : itemEntities) {
             if (itemEntity.isAlive() && companionData.storeInventoryItem(itemEntity.getItem())) {
               itemEntity.remove(RemovalReason.DISCARDED);
+              hasCollectSomething = true;
             }
+          }
+
+          // Increase experience, if we collected something (server-side).
+          if (hasCollectSomething) {
+            playerCompanionEntity.increaseExperience(1);
           }
         }
       }

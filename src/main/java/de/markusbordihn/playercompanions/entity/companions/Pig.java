@@ -48,6 +48,7 @@ import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityWalking;
 import de.markusbordihn.playercompanions.item.ModItems;
@@ -74,8 +75,9 @@ public class Pig extends CollectorEntityWalking {
     super.registerGoals();
 
     this.goalSelector.addGoal(1, new FloatGoal(this));
-    this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
-    this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));
+    this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
+    this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 0.5D, 0.5F));
+    this.goalSelector.addGoal(2, new AvoidCreeperGoal(this));
     this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
     this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
     this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 6.0F, 2.0F, false));

@@ -24,7 +24,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.phys.Vec3;
 
-public class PlayerCompanionEntityFlyAroundControl extends PlayerCompanionEntityMoveControl {
+public class PlayerCompanionEntityFlyAroundControl extends PlayerCompanionEntityFloatingControl {
 
   public PlayerCompanionEntityFlyAroundControl(Mob mob) {
     super(mob);
@@ -53,7 +53,12 @@ public class PlayerCompanionEntityFlyAroundControl extends PlayerCompanionEntity
           this.companionEntity.yBodyRot = this.companionEntity.getYRot();
         }
       }
-
+    } else {
+      if (!this.mob.isAlive()) {
+        this.mob.setNoGravity(false);
+      }
+      this.mob.setYya(0.0F);
+      this.mob.setZza(0.0F);
     }
   }
 }

@@ -21,6 +21,9 @@ package de.markusbordihn.playercompanions.entity;
 
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
@@ -28,6 +31,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -36,6 +40,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.EquipmentSlot.Type;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
@@ -48,13 +55,26 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsDataSync;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import de.markusbordihn.playercompanions.utils.Names;
 
-public class PlayerCompanionEntityData extends TamableAnimal {
+@EventBusSubscriber
+public class PlayerCompanionEntityData extends TamableAnimal
+    implements PlayerCompanionsDataSync, PlayerCompanionExperience {
+
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
+  // Config values
+  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
+  private static int maxHealth = COMMON.maxHealth.get();
 
   // Synced Entity Data
   private static final EntityDataAccessor<Boolean> DATA_ACTIVE =
@@ -86,26 +106,57 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   private static final String DATA_VARIANT_TAG = "Variant";
 
   // Default values
+  private static final int JUMP_MOVE_DELAY = 10;
+  protected static final int RIDE_COOLDOWN = 600;
   private int explosionPower = 0;
-  private int jumpMoveDelay = 10;
 
   // Temporary stats
   private BlockPos orderedToPosition = null;
   private ItemStack companionTypeIcon = new ItemStack(Items.BONE);
   private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
-  protected UUID persistentAngerTarget;
-  private boolean isDirty = false;
   private String dimensionName = "";
+  private boolean isDataSyncNeeded = false;
+  private boolean sitOnShoulder = false;
+  protected UUID persistentAngerTarget;
+  protected int rideCooldownCounter;
 
   // Animation stats
   private float interestedAngle;
   private float interestedAngleO;
 
+  // Internal references
+  private PlayerCompanionEntity playerCompanionEntity;
+
+  // Additional ticker
+  private static final int DATA_SYNC_TICK = 10;
+  private int dataSyncTicker = 0;
+
   protected static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
   protected PlayerCompanionEntityData(EntityType<? extends TamableAnimal> entityType, Level level) {
     super(entityType, level);
+
+    // Dimension Name reference.
     this.dimensionName = level.dimension().location().toString();
+  }
+
+  @SubscribeEvent
+  public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
+    maxHealth = COMMON.maxHealth.get();
+    if (maxHealth > 0) {
+      log.info("The max health for player companions is set to {}.", maxHealth);
+    } else {
+      log.warn("The max health for player companions will not be adjusted!");
+    }
+  }
+
+  public void setSyncReference(PlayerCompanionEntity playerCompanionEntity) {
+    // Internal reference for handling syncing and shared tasks.
+    this.playerCompanionEntity = playerCompanionEntity;
+  }
+
+  public PlayerCompanionEntity getSyncReference() {
+    return this.playerCompanionEntity;
   }
 
   public boolean isTamable() {
@@ -156,20 +207,20 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.entityData.set(DATA_ACTIVE, active);
   }
 
-  public void setDirty() {
+  public void setDataSyncNeeded() {
     if (!this.level.isClientSide) {
-      this.isDirty = true;
+      this.isDataSyncNeeded = true;
     }
   }
 
-  public void setDirty(boolean dirty) {
+  public void setDataSyncNeeded(boolean dirty) {
     if (!this.level.isClientSide) {
-      this.isDirty = dirty;
+      this.isDataSyncNeeded = dirty;
     }
   }
 
-  public boolean getDirty() {
-    return this.isDirty;
+  public boolean getDataSyncNeeded() {
+    return this.isDataSyncNeeded;
   }
 
   public String getDimensionName() {
@@ -204,20 +255,50 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.entityData.set(DATA_CUSTOM_COMPANION_NAME, name);
   }
 
-  public Integer getExperience() {
+  public int getExperience() {
     return this.entityData.get(DATA_EXPERIENCE);
   }
 
-  public void setExperience(Integer experience) {
-    this.entityData.set(DATA_EXPERIENCE, experience);
+  public int setExperience(int experience) {
+    if (experience >= 1) {
+      this.entityData.set(DATA_EXPERIENCE, experience);
+      if (isMaxExperienceLevel()) {
+        return -1;
+      } else if (getExperienceForNextLevel() <= getExperience()) {
+        return increaseExperienceLevel(1);
+      } else if (getExperienceForLevel() >= getExperience()) {
+        decreaseExperienceLevel(1);
+      }
+    }
+    return -1;
   }
 
-  public Integer getExperienceLevel() {
+  public int getExperienceLevel() {
     return this.entityData.get(DATA_EXPERIENCE_LEVEL);
   }
 
-  public void setExperienceLevel(Integer experience) {
-    this.entityData.set(DATA_EXPERIENCE_LEVEL, experience);
+  public int setExperienceLevel(int level) {
+    if (level >= getMinExperienceLevel() && level != getExperienceLevel()) {
+      this.entityData.set(DATA_EXPERIENCE_LEVEL, level);
+      this.syncData();
+    }
+    return getExperienceLevel();
+  }
+
+  public void onLevelUp(int level) {
+    log.debug("Level up for {} to {} ...", this, level);
+    adjustMaxHealthPerLevel(level);
+    this.syncData();
+  }
+
+  public void onLevelDown(int level) {
+    log.debug("Level down for {} to {} ...", this, level);
+    adjustMaxHealthPerLevel(level);
+    this.syncData();
+  }
+
+  public void onExperienceChange(int experience) {
+    this.setDataSyncNeeded();
   }
 
   public int getRespawnTimer() {
@@ -249,19 +330,69 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   }
 
   public int getJumpMoveDelay() {
-    return this.jumpMoveDelay;
+    return JUMP_MOVE_DELAY;
   }
 
   public float getSoundPitch() {
     return ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
   }
 
+  public boolean hasRideCooldown() {
+    return this.rideCooldownCounter > RIDE_COOLDOWN;
+  }
+
+  public int getRideCooldownCounter() {
+    return this.rideCooldownCounter;
+  }
+
+  public void setRideCooldownCounter(int cooldown) {
+    this.rideCooldownCounter = cooldown;
+  }
+
+  public void increaseRideCooldownCounter() {
+    ++this.rideCooldownCounter;
+  }
+
   public void setWantedPosition(double x, double y, double z, double speed) {
     this.moveControl.setWantedPosition(x, y, z, speed);
   }
 
+  public boolean setEntityOnShoulder(ServerPlayer serverPlayer) {
+    CompoundTag compoundTag = new CompoundTag();
+    compoundTag.putString("id", this.getEncodeId());
+    this.saveWithoutId(compoundTag);
+    if (serverPlayer.setEntityOnShoulder(compoundTag)) {
+      this.discard();
+      this.setSitOnShoulder(true);
+      return true;
+    } else {
+      this.setSitOnShoulder(false);
+      return false;
+    }
+  }
+
+  public boolean canSitOnShoulder() {
+    return false;
+  }
+
+  public void setSitOnShoulder(boolean sitOnShoulder) {
+    if (this.sitOnShoulder == sitOnShoulder) {
+      return;
+    }
+    this.sitOnShoulder = sitOnShoulder;
+    this.syncData();
+  }
+
+  public boolean isSitOnShoulder() {
+    return this.sitOnShoulder;
+  }
+
   public boolean hasOwner() {
     return this.getOwnerUUID() != null;
+  }
+
+  public boolean hasOwnerAndIsAlive() {
+    return this.getOwnerUUID() != null && this.isAlive();
   }
 
   public boolean isOrderedToPosition() {
@@ -270,7 +401,7 @@ public class PlayerCompanionEntityData extends TamableAnimal {
 
   public void setOrderedToPosition(BlockPos blockPos) {
     this.orderedToPosition = blockPos;
-    this.setDirty();
+    this.setDataSyncNeeded();
   }
 
   public BlockPos getOrderedToPosition() {
@@ -301,25 +432,8 @@ public class PlayerCompanionEntityData extends TamableAnimal {
         || item instanceof BowItem || item instanceof AxeItem;
   }
 
-  public PlayerCompanionsServerData getServerData() {
-    if (this.level.isClientSide) {
-      return null;
-    }
-    return PlayerCompanionsServerData.get();
-  }
-
   public PlayerCompanionData getData() {
-    PlayerCompanionsServerData serverData = getServerData();
-    if (serverData == null) {
-      return null;
-    }
-    return PlayerCompanionsServerData.get().getCompanion(getUUID());
-  }
-
-  public void syncData(PlayerCompanionEntity playerCompanionEntity) {
-    if (!this.level.isClientSide && this.hasOwner()) {
-      getServerData().updateOrRegisterCompanion(playerCompanionEntity);
-    }
+    return getData(getUUID());
   }
 
   public void setArmorItem(EquipmentSlot equipmentSlot, ItemStack itemStack) {
@@ -334,21 +448,36 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     }
   }
 
+  public void adjustMaxHealthPerLevel(int level) {
+    int healthAdjustment = getHealthAdjustmentFromExperienceLevel(level, maxHealth,
+        (int) getAttribute(Attributes.MAX_HEALTH).getBaseValue());
+    increaseMaxHealth(healthAdjustment);
+  }
+
+  public void increaseMaxHealth(int health) {
+    if (health > 0) {
+      AttributeModifier increaseHealth =
+          new AttributeModifier("Increase Health", health, AttributeModifier.Operation.ADDITION);
+      getAttribute(Attributes.MAX_HEALTH).removeModifiers();
+      getAttribute(Attributes.MAX_HEALTH).addTransientModifier(increaseHealth);
+      if (isAlive()) {
+        heal(getMaxHealth());
+      }
+    }
+  }
+
   @Override
   public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
     super.setItemSlot(equipmentSlot, itemStack);
     PlayerCompanionData data = this.getData();
     if (data != null) {
-      switch (equipmentSlot.getType()) {
-        case HAND:
-          data.setHandItem(equipmentSlot.getIndex(), itemStack);
-          break;
-        case ARMOR:
-          data.setArmorItem(equipmentSlot.getIndex(), itemStack);
-          break;
+      if (equipmentSlot.getType() == Type.HAND) {
+        data.setHandItem(equipmentSlot.getIndex(), itemStack);
+      } else if (equipmentSlot.getType() == Type.ARMOR) {
+        data.setArmorItem(equipmentSlot.getIndex(), itemStack);
       }
     }
-    setDirty();
+    setDataSyncNeeded();
   }
 
   @Override
@@ -357,8 +486,8 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     this.entityData.define(DATA_ACTIVE, true);
     this.entityData.define(DATA_COLOR, DyeColor.GREEN.getId());
     this.entityData.define(DATA_CUSTOM_COMPANION_NAME, getRandomName());
-    this.entityData.define(DATA_EXPERIENCE, 0);
-    this.entityData.define(DATA_EXPERIENCE_LEVEL, 0);
+    this.entityData.define(DATA_EXPERIENCE, 1);
+    this.entityData.define(DATA_EXPERIENCE_LEVEL, 1);
     this.entityData.define(DATA_IS_CHARGING, false);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
     this.entityData.define(DATA_VARIANT, "default");
@@ -384,8 +513,13 @@ public class PlayerCompanionEntityData extends TamableAnimal {
       this.setColor(DyeColor.byId(compoundTag.getInt(DATA_COLOR_TAG)));
     }
 
-    this.setExperience(compoundTag.getInt(DATA_EXPERIENCE_TAG));
-    this.setExperienceLevel(compoundTag.getInt(DATA_EXPERIENCE_LEVEL_TAG));
+    // Handle experience, level and relevant modifier.
+    this.setExperienceLevel(Math.max(compoundTag.getInt(DATA_EXPERIENCE_LEVEL_TAG), 1));
+    this.setExperience(Math.max(compoundTag.getInt(DATA_EXPERIENCE_TAG), 1));
+    int experienceLevel = this.getExperienceLevel();
+    if (experienceLevel > getMinExperienceLevel()) {
+      adjustMaxHealthPerLevel(experienceLevel);
+    }
 
     // Handle respawn ticker
     if (compoundTag.contains(DATA_RESPAWN_TIMER_TAG)) {
@@ -397,7 +531,6 @@ public class PlayerCompanionEntityData extends TamableAnimal {
     }
 
     this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
-
   }
 
   @Override
@@ -408,13 +541,20 @@ public class PlayerCompanionEntityData extends TamableAnimal {
   @Override
   public void tick() {
     super.tick();
+
+    // Automatically Sync Data, if needed
+    if (this.dataSyncTicker++ >= DATA_SYNC_TICK && syncDataIfNeeded()) {
+      this.dataSyncTicker = 0;
+    }
+
     if (this.isAlive()) {
       this.interestedAngleO = this.interestedAngle;
-      //if (this.isInterested()) {
-      //  this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
-      //} else {
-        this.interestedAngle += (0.0F - this.interestedAngle) * 0.4F;
-      //}
+      // if (this.isInterested()) {
+      // this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
+      // } else {
+      this.interestedAngle += (0.0F - this.interestedAngle) * 0.4F;
+      // }
     }
   }
+
 }

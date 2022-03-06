@@ -35,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
-public class PlayerCompanionEntityMoveControl extends MoveControl {
+public class PlayerCompanionEntityFloatingControl extends MoveControl {
 
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
@@ -43,7 +43,7 @@ public class PlayerCompanionEntityMoveControl extends MoveControl {
   private int waitSoundDelay;
   protected PlayerCompanionEntity companionEntity;
 
-  public PlayerCompanionEntityMoveControl(Mob mob) {
+  public PlayerCompanionEntityFloatingControl(Mob mob) {
     super(mob);
     if (this.mob instanceof PlayerCompanionEntity playerCompanionEntity) {
       this.companionEntity = playerCompanionEntity;

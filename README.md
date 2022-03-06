@@ -9,13 +9,12 @@ Player Companions adds additional creatures which will follow, protect or help y
 
 ## Features
 
-- Persistent Player companions
-- Different player companion types like collector, follower, guard and healer
-- Different sub-types and colors
-- Friendly fire (for all of your tamed companions)
-- Advanced control
-- Easy to spawn and de-spawn with corresponding player companion item.
-- Jade / Hwyla plugin
+- Persistent Player companions with dedicated item to easy spawn and despawn.
+- Different player companion types like collector, follower, guard, healer and supporter.
+- Different sub-types and colors.
+- Friendly fire (for all of your tamed companions).
+- Advanced control and experience level system.
+- Jade / Hwyla plugin integration
 
 ## Player Companion Types
 

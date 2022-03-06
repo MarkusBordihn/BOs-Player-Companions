@@ -32,6 +32,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
+import de.markusbordihn.playercompanions.entity.companions.Fairy;
 import de.markusbordihn.playercompanions.item.companions.*;
 import de.markusbordihn.playercompanions.item.tameitems.*;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
@@ -49,18 +50,24 @@ public class ModItems {
 
   @TemplateEntryPoint("Register Items")
 
-  // Captured Companions
+  // Fairies
   public static final RegistryObject<Item> FAIRY_DEFAULT =
-      ITEMS.register(FairyItem.ID + "_default", FairyItem::new);
+      ITEMS.register(FairyItem.ID + "_default", () -> new FairyItem(Fairy.DEFAULT_VARIANT));
+  public static final RegistryObject<Item> FAIRY_RED_HAIR =
+      ITEMS.register(FairyItem.ID + "_red_hair", () -> new FairyItem(Fairy.RED_HAIR_VARIANT));
 
+  // Pigs
   public static final RegistryObject<Item> PIG = ITEMS.register(PigItem.ID, PigItem::new);
 
+  // Rooster
   public static final RegistryObject<Item> ROOSTER =
       ITEMS.register(RoosterItem.ID, RoosterItem::new);
 
+  // Small Ghast
   public static final RegistryObject<Item> SMALL_GHAST =
       ITEMS.register(SmallGhastItem.ID, SmallGhastItem::new);
 
+  // Slimes
   public static final RegistryObject<Item> SMALL_SLIME_BLACK =
       ITEMS.register(SmallSlimeItem.ID + "_black", () -> new SmallSlimeItem(DyeColor.BLACK));
   public static final RegistryObject<Item> SMALL_SLIME_BLUE =

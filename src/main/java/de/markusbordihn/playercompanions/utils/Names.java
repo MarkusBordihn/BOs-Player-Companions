@@ -30,14 +30,23 @@ public class Names {
 
   protected static final List<String> NPC_FEMALE_NAMES = new ArrayList<>(Sets.newHashSet(
   // @formatter:off
+    "Aika",
     "Amy",
     "Asuna",
+    "Beatrice",
+    "Calypso",
+    "Cassandra",
     "Deedlit",
+    "Elizabeth",
+    "Enya",
     "Faith",
-    "Sonya",
+    "Freya",
+    "Giselle",
+    "Isolde",
+    "Julia",
     "Meredith",
     "Monika",
-    "Elizabeth"
+    "Sonya"
   // @formatter:on
   ));
 
@@ -53,7 +62,10 @@ public class Names {
     "Jack",
     "Jason",
     "John",
+    "Julian",
     "Kawo",
+    "Luca",
+    "Markus",
     "Miso",
     "Parn",
     "Romolo"
@@ -62,6 +74,7 @@ public class Names {
 
   protected static final List<String> NPC_MISC_NAMES = new ArrayList<>(Sets.newHashSet(
   // @formatter:off
+    "Alexis",
     "Quinn"
   // @formatter:on
   ));
@@ -69,31 +82,70 @@ public class Names {
   protected static final List<String> MOB_FEMALE_NAMES = new ArrayList<>(Sets.newHashSet(
   // @formatter:off
     "Alice",
+    "Alina",
+    "Amy",
+    "Beauty",
     "Bella",
     "Bonnie",
+    "Celina",
     "Chloe",
+    "Conny",
+    "Dina",
+    "Emma",
+    "Fluffy",
+    "Gina",
+    "Hope",
+    "Iivy",
+    "Jessie",
+    "Kacy",
+    "Keira",
     "Lina",
     "Lucy",
     "Luna",
     "Marina",
-    "Princess"
+    "Melody",
+    "Nicky",
+    "Princess",
+    "Rainy",
+    "Sandy",
+    "Trixie",
+    "Vivi",
+    "Yona",
+    "Zoe"
   // @formatter:on
   ));
 
   protected static final List<String> MOB_MALE_NAMES = new ArrayList<>(Sets.newHashSet(
   // @formatter:off
+    "Alex",
     "Andrew",
+    "Archie",
+    "Benny",
+    "Charlie",
     "Coco",
     "Derek",
+    "Felix",
+    "Frankie",
+    "Henry",
+    "Hunter",
+    "Kasimir",
     "Larry",
     "Marin",
     "Max",
     "Oskar",
     "Prince",
     "Roker",
+    "Rufus",
+    "Shadow",
     "Simba",
+    "Snickers",
+    "Sparky",
     "Spike",
-    "Tiger"
+    "Tiger",
+    "Timmy",
+    "Turbo",
+    "Yoshi",
+    "Zottel"
   // @formatter:on
   ));
 
@@ -101,10 +153,11 @@ public class Names {
   // @formatter:off
     "Alex",
     "Angel",
-    "Charlie",
     "Buddy",
-    "Jule",
+    "Charlie",
     "Creamy",
+    "Jule",
+    "Sasha",
     "Smokie"
   // @formatter:on
   ));

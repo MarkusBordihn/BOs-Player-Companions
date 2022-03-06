@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -51,6 +52,7 @@ public class PlayerCompanionsFeatures {
   private float flapping = 1.0F;
 
   public PlayerCompanionsFeatures(PlayerCompanionEntity playerCompanionEntity, Level level) {
+    // Store general references
     this.level = level;
     this.playerCompanionEntity = playerCompanionEntity;
 
@@ -61,6 +63,14 @@ public class PlayerCompanionsFeatures {
 
     // Distribute Ticks along several entities
     this.ticker = (short) this.random.nextInt(0, 25);
+  }
+
+  public int getExperienceLevel() {
+    return this.playerCompanionEntity.getExperienceLevel();
+  }
+
+  public LivingEntity getOwner() {
+    return playerCompanionEntity.getOwner();
   }
 
   public float getOFlap() {

@@ -149,12 +149,13 @@ public class WelshCorgiModel<T extends Entity> extends AgeableListModel<T> {
       if (playerCompanionEntity.isInSittingPose()) {
         this.body.xRot = ((float) Math.PI / -5F);
         this.tail.xRot = ((float) Math.PI / 4F);
-        this.head.setPos(0.0F, 10.0F, -1.5F);
+        if (this.young) {
+          this.head.setPos(0.0F, 13.0F, -4.5F);
+        } else {
+          this.head.setPos(0.0F, 10.0F, -1.5F);
+        }
         this.head.xRot = 0.0F;
         this.head.yRot = 0.0F;
-        if (this.young) {
-          this.head.setPos(-1.0F, 13.0F, -3.75F);
-        }
         this.rightHindLeg.xRot = 80.0F;
         this.rightHindLeg.setPos(0.0F, 16.5F, 0.5F);
         this.leftHindLeg.xRot = 80.0F;
@@ -177,6 +178,11 @@ public class WelshCorgiModel<T extends Entity> extends AgeableListModel<T> {
         this.leftFrontLeg.xRot = Mth.cos(p_102665_ * 1.6662F) * 0.2F * p_102666_;
         this.leftFrontLeg.setPos(0.0F, 24.0F, -1.0F);
         this.head.setPos(0.0F, 11.0F, -1.0F);
+        if (this.young) {
+          this.head.setPos(0.0F, 14.0F, -4.0F);
+        } else {
+          this.head.setPos(0.0F, 11.0F, -1.0F);
+        }
         this.tail.setPos(0.0F, 1.5F, 7.5F);
         this.tail.xRot = 0.0F;
         this.rightHindLeg.visible = true;

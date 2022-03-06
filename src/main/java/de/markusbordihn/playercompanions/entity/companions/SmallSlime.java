@@ -47,6 +47,7 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.player.Player;
@@ -62,6 +63,7 @@ import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityJumping;
 import de.markusbordihn.playercompanions.item.ModItems;
@@ -148,7 +150,9 @@ public class SmallSlime extends FollowerEntityJumping {
     super.registerGoals();
 
     this.goalSelector.addGoal(1, new FloatGoal(this));
+    this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));
+    this.goalSelector.addGoal(2, new AvoidCreeperGoal(this));
     this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
     this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
     this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 6.0F, 2.0F, false));
@@ -164,7 +168,7 @@ public class SmallSlime extends FollowerEntityJumping {
     spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
         spawnGroupData, compoundTag);
     // Use random different color for spawn
-    if (this.random.nextInt(3) == 0) {
+    if (this.random.nextInt(2) == 0) {
       // Select one of the DyeColors from 0 .. 15.
       DyeColor spawnColor = DyeColor.byId(this.random.nextInt(16));
       setColor(spawnColor);

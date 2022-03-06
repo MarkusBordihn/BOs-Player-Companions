@@ -39,14 +39,14 @@ import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
 @EventBusSubscriber
-public class PlayerCompanionEntityDamageManager {
+public class PlayerCompanionDamageManager {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static boolean friendlyFire = COMMON.friendlyFire.get();
 
-  protected PlayerCompanionEntityDamageManager() {}
+  protected PlayerCompanionDamageManager() {}
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {

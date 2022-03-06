@@ -1,0 +1,208 @@
+/**
+ * Copyright 2022 Markus Bordihn
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package de.markusbordihn.playercompanions.entity.type.supporter;
+
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import java.util.List;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
+
+@EventBusSubscriber
+public class SupporterFeatures extends PlayerCompanionsFeatures {
+
+  private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
+  private static int supporterTypeDamageBoostDuration =
+      COMMON.supporterTypeDamageBoostDuration.get();
+  private static int supporterTypeDamageResistanceDuration =
+      COMMON.supporterTypeDamageResistanceDuration.get();
+      private static int supporterTypeFireResistanceDuration =
+      COMMON.supporterTypeFireResistanceDuration.get();
+  private static int supporterTypeRadius = COMMON.supporterTypeRadius.get();
+
+  private static final short SUPPORTER_TICK = 180;
+
+  protected SupporterFeatures(PlayerCompanionEntity playerCompanionEntity, Level level) {
+    super(playerCompanionEntity, level);
+  }
+
+  @SubscribeEvent
+  public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
+    supporterTypeDamageBoostDuration = COMMON.supporterTypeDamageBoostDuration.get();
+    supporterTypeDamageResistanceDuration = COMMON.supporterTypeDamageResistanceDuration.get();
+    supporterTypeFireResistanceDuration = COMMON.supporterTypeFireResistanceDuration.get();
+    supporterTypeRadius = COMMON.supporterTypeRadius.get();
+
+    if (supporterTypeRadius > 0) {
+      log.info("{} Supporter will automatically buff in a {} block radius.", Constants.LOG_ICON,
+          supporterTypeRadius);
+    } else {
+      log.info("{} Supporter will not automatically buff!", Constants.LOG_ICON);
+    }
+  }
+
+  public void supporterTick() {
+
+    // Automatic buff entities in the defined radius.
+    if (!level.isClientSide && supporterTypeRadius > 0 && ticker++ >= SUPPORTER_TICK) {
+      boolean hasBuffSomething = false;
+
+      // 1. Priority: Buff owner.
+      if (this.getOwner() != null && buffLivingEntity(this.getOwner())) {
+        hasBuffSomething = true;
+      }
+
+      // 2. Priority: Buff self.
+      if (!hasBuffSomething && buffLivingEntity(this.playerCompanionEntity)) {
+        hasBuffSomething = true;
+      }
+
+      // 3. Priority: Buff other players in radius.
+      if (!hasBuffSomething) {
+        List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
+            new AABB(playerCompanionEntity.blockPosition()).inflate(supporterTypeRadius),
+            entity -> true);
+        for (Player player : playerEntities) {
+          if (player != this.getOwner() && buffLivingEntity(player)) {
+            hasBuffSomething = true;
+            break;
+          }
+        }
+      }
+
+      // 4. Priority: Buff owned healer.
+      if (!hasBuffSomething && this.getOwner() != null) {
+        List<PlayerCompanionEntity> playerCompanions =
+            playerCompanionEntity.level.getEntitiesOfClass(PlayerCompanionEntity.class,
+                new AABB(playerCompanionEntity.blockPosition()).inflate(supporterTypeRadius),
+                entity -> true);
+        for (PlayerCompanionEntity playerCompanion : playerCompanions) {
+          if (playerCompanion != this.playerCompanionEntity
+              && playerCompanion.getCompanionType() == PlayerCompanionType.HEALER
+              && playerCompanion.getOwner() == this.getOwner()
+              && buffLivingEntity(playerCompanion)) {
+            hasBuffSomething = true;
+            break;
+          }
+        }
+      }
+
+      // 5. Priority: Buff owned tamed animals regardless of type.
+      if (!hasBuffSomething && this.getOwner() != null) {
+        List<TamableAnimal> tamableAnimals =
+            playerCompanionEntity.level.getEntitiesOfClass(TamableAnimal.class,
+                new AABB(playerCompanionEntity.blockPosition()).inflate(supporterTypeRadius),
+                entity -> true);
+        for (TamableAnimal tamableAnimal : tamableAnimals) {
+          if (tamableAnimal != this.playerCompanionEntity
+              && tamableAnimal.getOwner() == this.getOwner() && buffLivingEntity(tamableAnimal)) {
+            hasBuffSomething = true;
+            break;
+          }
+        }
+      }
+
+      // Increase experience if we have buff something (server-side)
+      if (hasBuffSomething) {
+        playerCompanionEntity.increaseExperience(1);
+      }
+
+      ticker = 0;
+    }
+  }
+
+  public boolean buffLivingEntity(LivingEntity livingEntity) {
+    if (!livingEntity.isAlive()) {
+      return false;
+    }
+
+    boolean level1Buff = false;
+    boolean level5Buff = false;
+    boolean level10Buff = false;
+    boolean level20Buff = false;
+
+    // Level 1
+    level1Buff = buffLivingEntityDamageResistance(livingEntity);
+
+    // Level 5
+    if (getExperienceLevel() >= 5) {
+      level5Buff = buffLivingEntityDamageBoost(livingEntity);
+    }
+
+    // Level 10 tbd
+
+    // Level 20 tbd
+    if (getExperienceLevel() >= 20) {
+      level20Buff = buffLivingEntityFireResistance(livingEntity);
+    }
+
+    // Level 30 tbd
+
+    // Level 40 tbd
+
+    // Level 50 tbd
+
+    // Level 60 tbd
+
+    return level1Buff || level5Buff || level10Buff || level20Buff;
+  }
+
+  public boolean buffLivingEntityDamageBoost(LivingEntity livingEntity) {
+    if (supporterTypeDamageBoostDuration > 0 && !livingEntity.hasEffect(MobEffects.DAMAGE_BOOST)) {
+      livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,
+          supporterTypeDamageBoostDuration, 0, false, false, true));
+      return true;
+    }
+    return false;
+  }
+
+  public boolean buffLivingEntityDamageResistance(LivingEntity livingEntity) {
+    if (supporterTypeDamageResistanceDuration > 0
+        && !livingEntity.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+      livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE,
+          supporterTypeDamageResistanceDuration, 0, false, false, true));
+      return true;
+    }
+    return false;
+  }
+
+  public boolean buffLivingEntityFireResistance(LivingEntity livingEntity) {
+    if (supporterTypeFireResistanceDuration > 0
+        && !livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+      livingEntity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,
+          supporterTypeFireResistanceDuration, 0, false, false, true));
+      return true;
+    }
+    return false;
+  }
+
+}

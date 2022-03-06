@@ -21,13 +21,18 @@ package de.markusbordihn.playercompanions.entity.companions;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.player.Player;
@@ -36,12 +41,15 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
+import de.markusbordihn.playercompanions.entity.type.supporter.SupporterWalking;
 import de.markusbordihn.playercompanions.item.ModItems;
 
-public class WelshCorgi extends PlayerCompanionEntity {
+public class WelshCorgi extends SupporterWalking {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
@@ -53,12 +61,19 @@ public class WelshCorgi extends PlayerCompanionEntity {
     super(entityType, level);
   }
 
+  public static AttributeSupplier.Builder createAttributes() {
+    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.2F)
+        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 1.0D);
+  }
+
   @Override
   protected void registerGoals() {
     super.registerGoals();
 
     this.goalSelector.addGoal(1, new FloatGoal(this));
+    this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));
+    this.goalSelector.addGoal(2, new AvoidCreeperGoal(this));
     this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
     this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
     this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 6.0F, 2.0F, false));

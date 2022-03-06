@@ -40,7 +40,7 @@ public class ShootLargeFireballGoal extends PlayerCompanionGoal {
 
   @Override
   public boolean canUse() {
-    return this.playerCompanionEntity.getTarget() != null
+    return this.playerCompanionEntity.isAlive() && this.playerCompanionEntity.getTarget() != null
         && this.playerCompanionEntity.getTarget().isAlive();
   }
 

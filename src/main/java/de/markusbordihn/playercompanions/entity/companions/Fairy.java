@@ -19,8 +19,10 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-
+import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 
 import org.apache.logging.log4j.LogManager;
@@ -29,32 +31,41 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.RandomFlyAroundGoal;
 import de.markusbordihn.playercompanions.entity.type.healer.HealerEntityFlyingAround;
@@ -72,18 +83,22 @@ public class Fairy extends HealerEntityFlyingAround {
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
+  public static final String RED_HAIR_VARIANT = "red_hair";
 
   // Entity texture by color
   private static final Map<String, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_default.png"));
+        hashMap.put(RED_HAIR_VARIANT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_red_hair.png"));
       });
 
   // Companion Item by variant
   private static final Map<String, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT, ModItems.FAIRY_DEFAULT.get());
+        hashMap.put(RED_HAIR_VARIANT, ModItems.FAIRY_RED_HAIR.get());
       });
 
   public Fairy(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
@@ -106,13 +121,40 @@ public class Fairy extends HealerEntityFlyingAround {
     super.registerGoals();
 
     this.goalSelector.addGoal(0, new FloatGoal(this));
+    this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 8.0F));
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));
+    this.goalSelector.addGoal(2, new AvoidCreeperGoal(this));
     this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
     this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 8.0F, 1.0F, true));
     this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     this.goalSelector.addGoal(4, new RandomFlyAroundGoal(this));
     this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+  }
+
+  @Override
+  protected PathNavigation createNavigation(Level level) {
+    FlyingPathNavigation flyingPathNavigation = new FlyingPathNavigation(this, level);
+    flyingPathNavigation.setCanOpenDoors(true);
+    flyingPathNavigation.setCanFloat(true);
+    flyingPathNavigation.setCanPassDoors(true);
+    return flyingPathNavigation;
+  }
+
+  @Override
+  @Nullable
+  public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor,
+      DifficultyInstance difficulty, MobSpawnType mobSpawnType,
+      @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
+    spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
+        spawnGroupData, compoundTag);
+    // Use random different variants for spawn
+    if (this.random.nextInt(2) == 0) {
+      // Select one of the variants.
+      List<String> variants = new ArrayList<>(TEXTURE_BY_VARIANT.keySet());
+      setVariant(variants.get(this.random.nextInt(variants.size())));
+    }
+    return spawnGroupData;
   }
 
   @Override
@@ -189,6 +231,17 @@ public class Fairy extends HealerEntityFlyingAround {
   @Override
   public EntityDimensions getDimensions(Pose pose) {
     return new EntityDimensions(0.4f, 0.8f, false);
+  }
+
+  @Override
+  public boolean canSitOnShoulder() {
+    return this.hasRideCooldown();
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+    this.increaseRideCooldownCounter();
   }
 
 }

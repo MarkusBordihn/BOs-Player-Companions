@@ -39,7 +39,7 @@ public class RoosterRenderer extends MobRenderer<Rooster, RoosterModel<Rooster>>
       new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster.png");
 
   public RoosterRenderer(EntityRendererProvider.Context context) {
-    super(context, new RoosterModel<>(context.bakeLayer(ClientRenderer.ROOSTER)), 0.4F);
+    super(context, new RoosterModel<>(context.bakeLayer(ClientRenderer.ROOSTER)), 0.35F);
     this.addLayer(new HandItemLayer<>(this));
   }
 

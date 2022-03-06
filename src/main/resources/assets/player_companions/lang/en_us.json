@@ -11,14 +11,17 @@
   "entity.player_companions.rooster": "Rooster",
   "entity.player_companions.welsh_corgi": "Welsh Corgi",
 
+  "entity.player_companions.companion_level_up_message": "Congratulation. Your companion %1$s has reached level %2$s!",
+  "entity.player_companions.companion_level_down_message": "Your companion %1$s has lost one level and is now level %2$s!",
   "entity.player_companions.companion_respawn_message": "Your companion %1$s has been re-spawned!",
-  "entity.player_companions.companion_will_respawn_message": "%1$s could be respawn in %2$s seconds!",
   "entity.player_companions.companion_will_not_respawn_message": "Your companion %1$s is dead and could not be respawn!",
+  "entity.player_companions.companion_will_respawn_message": "%1$s could be respawn in %2$s seconds!",
 
   "container.player_companions.companions_menu": "Player Companions",
 
   "text.player_companions.tamed_companion_dimension": "Dimension: %1$s",
-  "text.player_companions.tamed_companion_health": "Health: %1$s",
+  "text.player_companions.tamed_companion_health": "Health: %1$s (%2$s)",
+  "text.player_companions.tamed_companion_level": "Level: %1$s (%2$s / %3$s exp)",
   "text.player_companions.tamed_companion_name": "Name: %1$s",
   "text.player_companions.tamed_companion_owner": "Owner: %1$s",
   "text.player_companions.tamed_companion_respawn": "Respawn Timer: %1$s secs remaining",
@@ -49,6 +52,7 @@
   "item.player_companions.welsh_corgi_spawn_egg": "Welsh Corgi Spawn Egg",
 
   "item.player_companions.fairy_default": "Fairy (default)",
+  "item.player_companions.fairy_red_hair": "Fairy (red hair)",
   "item.player_companions.pig": "Pig",
   "item.player_companions.rooster": "Rooster",
   "item.player_companions.small_ghast": "Small Ghast",

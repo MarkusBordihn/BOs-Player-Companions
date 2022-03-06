@@ -96,6 +96,10 @@ public class FairyModel<T extends LivingEntity> extends HumanoidModel<T> {
   @Override
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
+    if (!entity.isAlive()) {
+      return;
+    }
+    // General animations
     super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
     // Wing animations

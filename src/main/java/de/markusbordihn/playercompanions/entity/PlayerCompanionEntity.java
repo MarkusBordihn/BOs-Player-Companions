@@ -23,9 +23,6 @@ import java.util.Locale;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.Util;
@@ -73,7 +70,6 @@ import net.minecraftforge.network.NetworkHooks;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
-import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.container.CompanionsMenu;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
@@ -84,15 +80,14 @@ import de.markusbordihn.playercompanions.network.NetworkHandler;
 public class PlayerCompanionEntity extends PlayerCompanionEntityData
     implements TameablePlayerCompanion {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-  private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-
   // Shared constants
   public static final MobCategory CATEGORY = MobCategory.CREATURE;
 
   // Custom name format
   private static final ResourceLocation RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_respawn_message");
+  private static final ResourceLocation LEVEL_UP_MESSAGE =
+      new ResourceLocation(Constants.MOD_ID, "companion_level_up_message");
   private static final ResourceLocation WILL_RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_will_respawn_message");
   private static final ResourceLocation WILL_NOT_RESPAWN_MESSAGE =
@@ -105,9 +100,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
-  private static final int DATA_SYNC_TICK = 10;
   private int ticker = 0;
-  private int dataSyncTicker = 0;
 
   // Temporary states
   private boolean wasOnGround;
@@ -116,10 +109,14 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       Level level) {
     super(entityType, level);
 
+    // Set Reference to this object for easier sync and other tasks.
+    this.setSyncReference(this);
+
     // Distribute Ticks along several entities
     this.ticker = (short) this.random.nextInt(0, 50);
 
-    this.setDirty();
+    // Sync data
+    setDataSyncNeeded();
   }
 
   @SubscribeEvent
@@ -310,6 +307,24 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
+  public void sendOwnerMessage(Component component) {
+    LivingEntity owner = this.getOwner();
+    if (component != null && owner != null) {
+      owner.sendMessage(component, Util.NIL_UUID);
+    }
+  }
+
+  @Override
+  public void onLevelUp(int level) {
+    super.onLevelUp(level);
+
+    if (level > 1) {
+      addParticle(ParticleTypes.ENCHANT);
+      sendOwnerMessage(new TranslatableComponent(Util.makeDescriptionId("entity", LEVEL_UP_MESSAGE),
+          this.getCustomCompanionName(), level));
+    }
+  }
+
   @Override
   public int getAmbientSoundInterval() {
     return 400;
@@ -324,18 +339,15 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void setRespawnTimer(int timer) {
     super.setRespawnTimer(timer);
-    setDirty();
+    setDataSyncNeeded();
   }
 
   @Override
   public void stopRespawnTimer() {
     super.stopRespawnTimer();
-    LivingEntity owner = this.getOwner();
-    if (owner != null) {
-      owner.sendMessage(new TranslatableComponent(Util.makeDescriptionId("entity", RESPAWN_MESSAGE),
-          this.getCustomCompanionName()), Util.NIL_UUID);
-    }
-    setDirty();
+    sendOwnerMessage(new TranslatableComponent(Util.makeDescriptionId("entity", RESPAWN_MESSAGE),
+        this.getCustomCompanionName()));
+    setDataSyncNeeded();
   }
 
   @Override
@@ -348,7 +360,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     // Early return for resetting target or dead targets.
     if (livingEntity == null || !livingEntity.isAlive()) {
       super.setTarget(null);
-      this.setDirty();
+      setDataSyncNeeded();
       return;
     }
 
@@ -360,7 +372,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     // Add target if it passed all former criteria.
     super.setTarget(livingEntity);
-    this.setDirty();
+    setDataSyncNeeded();
   }
 
   @Override
@@ -392,7 +404,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void tame(Player player) {
     super.tame(player);
     if (player instanceof ServerPlayer) {
-      this.syncData(this);
+      this.syncData();
     }
   }
 
@@ -486,7 +498,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void readAdditionalSaveData(CompoundTag compoundTag) {
     super.readAdditionalSaveData(compoundTag);
-    this.setDirty();
+    setDataSyncNeeded();
   }
 
   @Override
@@ -505,13 +517,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void tick() {
     // Perform tick for AI and other important steps.
     super.tick();
-
-    // Automatically Sync Data, if needed
-    if (this.getDirty() && this.dataSyncTicker++ >= DATA_SYNC_TICK) {
-      this.syncData(this);
-      this.dataSyncTicker = 0;
-      this.setDirty(false);
-    }
 
     // Allow do disable entity to save performance and to allow basic respawn logic.
     if (!isActive()) {
@@ -543,38 +548,40 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   public void die(DamageSource damageSource) {
+    super.die(damageSource);
 
     // Remove fire, effects and items before dying but before we are storing the data.
     clearFire();
     dropLeash(true, true);
     removeAllEffects();
+    setNoGravity(false);
 
-    LivingEntity owner = getOwner();
-    if (isTame() && owner != null && !this.level.isClientSide()) {
+    if (isTame() && !this.level.isClientSide()) {
+
+      // Decrease Experience Level
+      decreaseExperienceLevel();
+
       if (respawnOnDeath) {
         if (respawnDelay > 1) {
           setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
         }
-        owner.sendMessage(
+        sendOwnerMessage(
             new TranslatableComponent(Util.makeDescriptionId("entity", WILL_RESPAWN_MESSAGE),
-                getCustomCompanionName(), respawnDelay),
-            Util.NIL_UUID);
+                getCustomCompanionName(), respawnDelay));
       } else {
-        owner.sendMessage(
-            new TranslatableComponent(Util.makeDescriptionId("entity", WILL_NOT_RESPAWN_MESSAGE),
-                getCustomCompanionName()),
-            Util.NIL_UUID);
+        sendOwnerMessage(new TranslatableComponent(
+            Util.makeDescriptionId("entity", WILL_NOT_RESPAWN_MESSAGE), getCustomCompanionName()));
         setActive(false);
       }
     }
-    super.die(damageSource);
+
   }
 
   @Override
   public void setOrderedToSit(boolean sit) {
     if (this.isOrderedToSit() != sit) {
       super.setOrderedToSit(sit);
-      this.setDirty();
+      setDataSyncNeeded();
     }
   }
 

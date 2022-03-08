@@ -20,7 +20,8 @@
 package de.markusbordihn.playercompanions.entity;
 
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -106,6 +107,10 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
   private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
   private static final String DATA_VARIANT_TAG = "Variant";
+
+  // Attribute Names
+  private static final String ATTRIBUTE_MAX_HEALTH = "Player Companions Max Health";
+  private static final String ATTRIBUTE_ATTACK_DAMAGE = "Player Companions Attack Damage";
 
   // Default values
   private int explosionPower = 0;
@@ -460,10 +465,24 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void increaseMaxHealth(int health) {
     if (health > 0) {
-      AttributeModifier increaseHealth =
-          new AttributeModifier("Increase Health", health, AttributeModifier.Operation.ADDITION);
-      getAttribute(Attributes.MAX_HEALTH).removeModifiers();
-      getAttribute(Attributes.MAX_HEALTH).addTransientModifier(increaseHealth);
+      // Remove previous attribute modifier, if needed.
+      Set<AttributeModifier> attributeModifiers =
+          getAttribute(Attributes.MAX_HEALTH).getModifiers();
+      if (!attributeModifiers.isEmpty()) {
+        Iterator<AttributeModifier> attributeModifierIterator = attributeModifiers.iterator();
+        while (attributeModifierIterator.hasNext()) {
+          AttributeModifier attributeModifier = attributeModifierIterator.next();
+          if (attributeModifier != null
+              && attributeModifier.getName().equals(ATTRIBUTE_MAX_HEALTH)) {
+            getAttribute(Attributes.MAX_HEALTH).removeModifier(attributeModifier);
+          }
+        }
+      }
+
+      // Add new health modifier
+      AttributeModifier increaseHealthModifier =
+          new AttributeModifier(ATTRIBUTE_MAX_HEALTH, health, AttributeModifier.Operation.ADDITION);
+      getAttribute(Attributes.MAX_HEALTH).addTransientModifier(increaseHealthModifier);
       if (isAlive()) {
         heal(getMaxHealth());
       }
@@ -471,16 +490,20 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public int getAttackDamage() {
+    // Calculate the possible attack damage
     double baseAttackDamage = getAttribute(Attributes.ATTACK_DAMAGE).getValue();
     ItemStack mainHandItem = getMainHandItem();
     if (mainHandItem != null && !mainHandItem.isEmpty()) {
       Collection<AttributeModifier> attributeModifierCollection =
           mainHandItem.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE);
       if (attributeModifierCollection != null && !attributeModifierCollection.isEmpty()) {
-        Optional<AttributeModifier> attributeModifier =
-            attributeModifierCollection.stream().findFirst();
-        if (attributeModifier.isPresent()) {
-          baseAttackDamage += attributeModifier.get().getAmount();
+        Iterator<AttributeModifier> attributeModifierIterator =
+            attributeModifierCollection.iterator();
+        while (attributeModifierIterator.hasNext()) {
+          AttributeModifier attributeModifier = attributeModifierIterator.next();
+          if (attributeModifier != null) {
+            baseAttackDamage += attributeModifier.getAmount();
+          }
         }
       }
     }

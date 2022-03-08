@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.entity.type.healer;
 
 import java.util.List;
+
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,7 +46,7 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
   private static int healerTypeMinAmount = COMMON.healerTypeMinAmount.get();
   private static int healerTypeMaxAmount = COMMON.healerTypeMaxAmount.get();
 
-  private static final short HEALER_TICK = 45;
+  private static final short HEALER_TICK = 20 * 2;
   private static final int PARTICLE_FRAMES = 3;
 
   protected HealerFeatures(PlayerCompanionEntity playerCompanionEntity, Level level) {
@@ -66,7 +67,7 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
     }
   }
 
-  public void healerTick() {
+  private void healerTick() {
 
     // Automatic heal entities in the defined radius.
     if (healerTypeRadius > 0 && ticker++ >= HEALER_TICK) {
@@ -112,7 +113,7 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
       // Increase experience if we have health something (server-side)
       if (hasHealthSomething && !level.isClientSide) {
-        playerCompanionEntity.increaseExperience(1);
+        distributeExperience(1);
       }
 
       ticker = 0;
@@ -170,6 +171,12 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
       z += targetZRatio;
       level.addParticle(ParticleTypes.HEART, x, y, z, 1D, 1D, 1D);
     }
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+    healerTick();
   }
 
 }

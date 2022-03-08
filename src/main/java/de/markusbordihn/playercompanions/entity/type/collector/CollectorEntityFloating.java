@@ -44,7 +44,7 @@ public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
   @Override
   public void tick() {
     super.tick();
-    this.collectorFeatures.collectorTick();
+    this.collectorFeatures.tick();
   }
 
 }

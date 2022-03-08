@@ -19,6 +19,8 @@
 
 package de.markusbordihn.playercompanions.entity.type.supporter;
 
+import java.util.List;
+
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -27,10 +29,11 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import java.util.List;
+
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
@@ -70,7 +73,7 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
     }
   }
 
-  public void supporterTick() {
+  private void supporterTick() {
 
     // Automatic buff entities in the defined radius.
     if (!level.isClientSide && supporterTypeRadius > 0 && ticker++ >= SUPPORTER_TICK) {
@@ -133,7 +136,7 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
 
       // Increase experience if we have buff something (server-side)
       if (hasBuffSomething) {
-        playerCompanionEntity.increaseExperience(1);
+        distributeExperience(1);
       }
 
       ticker = 0;
@@ -203,6 +206,12 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+    supporterTick();
   }
 
 }

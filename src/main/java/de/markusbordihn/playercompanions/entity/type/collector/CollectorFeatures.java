@@ -43,7 +43,7 @@ public class CollectorFeatures extends PlayerCompanionsFeatures {
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static int collectorTypeRadius = COMMON.collectorTypeRadius.get();
 
-  private static final short COLLECT_TICK = 60;
+  private static final short COLLECT_TICK = 20 * 3;
 
   public CollectorFeatures(PlayerCompanionEntity playerCompanionEntity, Level level) {
     super(playerCompanionEntity, level);
@@ -60,12 +60,12 @@ public class CollectorFeatures extends PlayerCompanionsFeatures {
     }
   }
 
-  public void collectorTick() {
+  private void collectorTick() {
     // Automatic collect items in the defined radius
     if (!this.level.isClientSide && collectorTypeRadius > 0 && ticker++ >= COLLECT_TICK) {
       List<ItemEntity> itemEntities = this.level.getEntities(EntityType.ITEM,
-          new AABB(
-              playerCompanionEntity.blockPosition()).inflate(collectorTypeRadius), entity -> true);
+          new AABB(playerCompanionEntity.blockPosition()).inflate(collectorTypeRadius),
+          entity -> true);
       if (!itemEntities.isEmpty()) {
         PlayerCompanionData companionData = playerCompanionEntity.getData();
         if (companionData != null) {
@@ -79,12 +79,18 @@ public class CollectorFeatures extends PlayerCompanionsFeatures {
 
           // Increase experience, if we collected something (server-side).
           if (hasCollectSomething) {
-            playerCompanionEntity.increaseExperience(1);
+            distributeExperience(1);
           }
         }
       }
       ticker = 0;
     }
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+    collectorTick();
   }
 
 }

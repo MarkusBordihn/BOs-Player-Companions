@@ -27,8 +27,16 @@ import net.minecraft.world.level.Level;
 
 public class GuardFeatures extends PlayerCompanionsFeatures {
 
+  private static final short GUARD_TICK = 20 * 60;
+
   public GuardFeatures(PlayerCompanionEntity playerCompanionEntity, Level level) {
     super(playerCompanionEntity, level);
+  }
+
+  private void guardTick() {
+    if (!level.isClientSide && ticker++ >= GUARD_TICK) {
+      ticker = 0;
+    }
   }
 
   @Override
@@ -36,6 +44,12 @@ public class GuardFeatures extends PlayerCompanionsFeatures {
     if (!this.level.isClientSide && this.neutralMob != null) {
       this.neutralMob.updatePersistentAnger((ServerLevel) this.level, true);
     }
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+    guardTick();
   }
 
 }

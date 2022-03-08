@@ -44,7 +44,7 @@ public class HealerEntityFlying extends PlayerCompanionEntityFlying {
   @Override
   public void tick() {
     super.tick();
-    this.healerFeatures.healerTick();
+    this.healerFeatures.tick();
   }
 
 }

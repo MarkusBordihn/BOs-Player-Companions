@@ -65,7 +65,7 @@ public class Snail extends CollectorEntityFloating {
 
   public static AttributeSupplier.Builder createAttributes() {
     return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.2F)
-        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 1.0D);
+        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 0.5D);
   }
 
   @Override
@@ -111,6 +111,16 @@ public class Snail extends CollectorEntityFloating {
   @Override
   public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
     return 0.60F;
+  }
+
+  @Override
+  public int getEntityGuiScaling() {
+    return 50;
+  }
+
+  @Override
+  public int getEntityGuiTop() {
+    return 14;
   }
 
 }

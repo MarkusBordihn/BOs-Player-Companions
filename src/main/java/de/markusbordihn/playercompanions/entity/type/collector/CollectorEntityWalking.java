@@ -45,7 +45,7 @@ public class CollectorEntityWalking extends PlayerCompanionEntityWalking {
   @Override
   public void tick() {
     super.tick();
-    this.collectorFeatures.collectorTick();
+    this.collectorFeatures.tick();
   }
 
 }

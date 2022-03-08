@@ -30,11 +30,22 @@ import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
 public class FollowerEntityJumping  extends PlayerCompanionEntityJumping {
 
+  protected FollowerFeatures followerFeatures;
+
   public FollowerEntityJumping(EntityType<? extends PlayerCompanionEntity> entityType,
       Level level) {
     super(entityType, level);
     this.setCompanionType(PlayerCompanionType.FOLLOWER);
     this.setCompanionTypeIcon(new ItemStack(Items.CARROT_ON_A_STICK));
+
+    // Shared Follower Features
+    this.followerFeatures = new FollowerFeatures(this, level);
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+    this.followerFeatures.tick();
   }
 
 }

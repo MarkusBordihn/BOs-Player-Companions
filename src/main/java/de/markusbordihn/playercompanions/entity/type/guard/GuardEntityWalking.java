@@ -47,4 +47,10 @@ public class GuardEntityWalking extends PlayerCompanionEntityWalking {
     guardFeatures.aiStep();
   }
 
+  @Override
+  public void tick() {
+    super.tick();
+    this.guardFeatures.tick();
+  }
+
 }

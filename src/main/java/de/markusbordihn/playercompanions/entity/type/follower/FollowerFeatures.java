@@ -26,8 +26,22 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
 
 public class FollowerFeatures extends PlayerCompanionsFeatures {
 
+  private static final short FOLLOWER_TICK = 20 * 60;
+
   public FollowerFeatures(PlayerCompanionEntity playerCompanionEntity, Level level) {
     super(playerCompanionEntity, level);
+  }
+
+  private void followerTick() {
+    if (!level.isClientSide && ticker++ >= FOLLOWER_TICK) {
+      ticker = 0;
+    }
+  }
+
+  @Override
+  public void tick() {
+    super.tick();
+    followerTick();
   }
 
 }

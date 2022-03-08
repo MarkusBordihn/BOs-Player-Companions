@@ -142,7 +142,7 @@ public class SmallSlime extends FollowerEntityJumping {
 
   public static AttributeSupplier.Builder createAttributes() {
     return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+        .add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.ATTACK_DAMAGE, 0.5D);
   }
 
   @Override
@@ -261,6 +261,16 @@ public class SmallSlime extends FollowerEntityJumping {
   @Override
   public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
     return 0.35F;
+  }
+
+  @Override
+  public int getEntityGuiScaling() {
+    return 60;
+  }
+
+  @Override
+  public int getEntityGuiTop() {
+    return 8;
   }
 
 }

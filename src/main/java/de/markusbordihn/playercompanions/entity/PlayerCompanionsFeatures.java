@@ -19,15 +19,19 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import java.util.List;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
@@ -38,8 +42,17 @@ public class PlayerCompanionsFeatures {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
+  // Ticker
+  protected static final int EXPERIENCE_TICKER = 20 * 60;
+  protected static final int EXPERIENCE_OWNER_BONUS_TICKER = 20 * 60 * 5;
   protected short ticker = 0;
+  protected short experienceDistributeTicker = 0;
+  protected short experienceOwnerBonusTicker = 0;
 
+  // Internal states
+  protected int distributedExperience = 0;
+
+  // References
   protected Level level;
   protected PlayerCompanionEntity playerCompanionEntity;
   protected NeutralMob neutralMob;
@@ -63,6 +76,21 @@ public class PlayerCompanionsFeatures {
 
     // Distribute Ticks along several entities
     this.ticker = (short) this.random.nextInt(0, 25);
+
+    // Experience ticker
+    this.experienceDistributeTicker = 0;
+  }
+
+  public void distributeExperience(int experience) {
+    if (experience > this.distributedExperience) {
+      this.distributedExperience = experience;
+    }
+  }
+
+  public void increaseExperience(int experience) {
+    if (experience > 0) {
+      playerCompanionEntity.increaseExperience(experience);
+    }
   }
 
   public int getExperienceLevel() {
@@ -96,7 +124,8 @@ public class PlayerCompanionsFeatures {
   public void aiFlappingStep() {
     this.oFlap = this.flap;
     this.oFlapSpeed = this.flapSpeed;
-    this.flapSpeed = (float) (this.flapSpeed + (this.playerCompanionEntity.isOnGround() ? -1 : 4) * 0.3D);
+    this.flapSpeed =
+        (float) (this.flapSpeed + (this.playerCompanionEntity.isOnGround() ? -1 : 4) * 0.3D);
     this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
     if (!this.playerCompanionEntity.isOnGround() && this.flapping < 1.0F) {
       this.flapping = 1.0F;
@@ -112,7 +141,29 @@ public class PlayerCompanionsFeatures {
   }
 
   protected void tick() {
-    // Placeholder function
+    if (!level.isClientSide) {
+
+      // Check if owner is near (8 blocks) to give additional bonus experience over time.
+      if (this.experienceOwnerBonusTicker++ >= EXPERIENCE_OWNER_BONUS_TICKER
+          && this.distributedExperience == 0) {
+        List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
+            new AABB(playerCompanionEntity.blockPosition()).inflate(8), entity -> true);
+        for (Player player : playerEntities) {
+          if (player == this.getOwner()) {
+            distributeExperience(1);
+            break;
+          }
+        }
+        this.experienceOwnerBonusTicker = 0;
+      }
+
+      // Distribute and cap experience for network friendly updates.
+      if (this.experienceDistributeTicker++ >= EXPERIENCE_TICKER) {
+        increaseExperience(this.distributedExperience);
+        this.distributedExperience = 0;
+        this.experienceDistributeTicker = 0;
+      }
+    }
   }
 
 }

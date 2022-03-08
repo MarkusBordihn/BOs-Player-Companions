@@ -139,8 +139,8 @@ public class CompanionsMenu extends AbstractContainerMenu {
         this.playerCompanionUUID, this.playerCompanionData, this.playerCompanionEntity);
 
     // Player Companion Amor Slots (left / slot: 3 - 0)
-    int playerCompanionEquipmentLeftStartPositionY = 18;
-    int playerCompanionEquipmentLeftStartPositionX = 8;
+    int playerCompanionEquipmentLeftStartPositionY = 17;
+    int playerCompanionEquipmentLeftStartPositionX = 6;
     for (int armorSlot = 3; armorSlot >= 0; armorSlot--) {
       this.addSlot(new ArmorSlot(this, this.armorContainer, 3 - armorSlot,
           playerCompanionEquipmentLeftStartPositionX,
@@ -148,30 +148,30 @@ public class CompanionsMenu extends AbstractContainerMenu {
     }
 
     // Player Companion Equipment Slots (right / slot: 4 - 7)
-    int playerCompanionEquipmentRightStartPositionY = 18;
-    int playerCompanionEquipmentRightStartPositionX = 77;
+    int playerCompanionEquipmentRightStartPositionY = 17;
+    int playerCompanionEquipmentRightStartPositionX = 96;
     for (int equipmentSlot = 0; equipmentSlot < 4; ++equipmentSlot) {
       this.addSlot(new DummySlot(this.equipmentContainer, equipmentSlot + 4,
           playerCompanionEquipmentRightStartPositionX,
           playerCompanionEquipmentRightStartPositionY + equipmentSlot * slotSize));
     }
 
-    // Player Companion Main Hand Slot (right / bottom: 0)
-    int playerCompanionMainHandStartPositionY = 90;
-    int playerCompanionMainHandStartPositionX = 8;
+    // Player Companion Main Hand Slot (left / bottom: 0)
+    int playerCompanionMainHandStartPositionY = 89;
+    int playerCompanionMainHandStartPositionX = 6;
     this.addSlot(new HandSlot(this, this.handContainer, EquipmentSlot.MAINHAND.getIndex(),
         playerCompanionMainHandStartPositionX, playerCompanionMainHandStartPositionY));
 
-    // Player Companion Off Hand Slot (left / bottom: 1)
-    int playerCompanionOffHandStartPositionY = 90;
-    int playerCompanionOffHandStartPositionX = 77;
+    // Player Companion Off Hand Slot (right / bottom: 1)
+    int playerCompanionOffHandStartPositionY = 89;
+    int playerCompanionOffHandStartPositionX = 96;
     this.addSlot(new HandSlot(this, this.handContainer, EquipmentSlot.OFFHAND.getIndex(),
         playerCompanionOffHandStartPositionX, playerCompanionOffHandStartPositionY));
 
     // Player Companion Inventory Slots
     if (companionType == PlayerCompanionType.COLLECTOR) {
-      int playerCompanionInventoryStartPositionY = 18;
-      int playerCompanionInventoryStartPositionX = 98;
+      int playerCompanionInventoryStartPositionY = 17;
+      int playerCompanionInventoryStartPositionX = 119;
       for (int inventoryRow = 0; inventoryRow < 4; ++inventoryRow) {
         for (int inventoryColumn = 0; inventoryColumn < 4; ++inventoryColumn) {
           this.addSlot(
@@ -183,8 +183,8 @@ public class CompanionsMenu extends AbstractContainerMenu {
     }
 
     // Player Inventory Slots
-    int playerInventoryStartPositionY = 130;
-    int playerInventoryStartPositionX = 8;
+    int playerInventoryStartPositionY = 151;
+    int playerInventoryStartPositionX = 6;
     for (int inventoryRow = 0; inventoryRow < 3; ++inventoryRow) {
       for (int inventoryColumn = 0; inventoryColumn < 9; ++inventoryColumn) {
         this.addSlot(new Slot(playerInventory, inventoryColumn + inventoryRow * 9 + 9,
@@ -194,8 +194,8 @@ public class CompanionsMenu extends AbstractContainerMenu {
     }
 
     // Player Hotbar Slots
-    int hotbarStartPositionY = 188;
-    int hotbarStartPositionX = 8;
+    int hotbarStartPositionY = 209;
+    int hotbarStartPositionX = 6;
     for (int playerInventorySlot = 0; playerInventorySlot < 9; ++playerInventorySlot) {
       this.addSlot(new Slot(playerInventory, playerInventorySlot,
           hotbarStartPositionX + playerInventorySlot * slotSize, hotbarStartPositionY));

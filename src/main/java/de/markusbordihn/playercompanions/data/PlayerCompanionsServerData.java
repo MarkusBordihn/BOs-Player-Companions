@@ -220,10 +220,10 @@ public class PlayerCompanionsServerData extends SavedData {
   public PlayerCompanionData registerCompanion(PlayerCompanionEntity companionEntity) {
     if (playerCompanionsMap.get(companionEntity.getUUID()) != null) {
       log.warn("Companion {} is already registered!", companionEntity);
-      return null;
+      return playerCompanionsMap.get(companionEntity.getUUID());
     }
     if (!companionEntity.hasOwner()) {
-      log.debug("Skipping companions {} which has no owner, yet!", companionEntity);
+      log.debug("Skipping companion {} for registration because it has no owner, yet!", companionEntity);
       return null;
     }
     log.info("Register companion {} for {} ...", companionEntity, companionEntity.getOwner());

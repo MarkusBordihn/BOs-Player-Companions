@@ -47,4 +47,10 @@ public class GuardEntityFloating extends PlayerCompanionEntityFloating {
     guardFeatures.aiStep();
   }
 
+  @Override
+  public void tick() {
+    super.tick();
+    this.guardFeatures.tick();
+  }
+
 }

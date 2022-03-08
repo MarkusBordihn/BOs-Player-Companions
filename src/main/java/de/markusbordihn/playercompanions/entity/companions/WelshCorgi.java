@@ -106,4 +106,14 @@ public class WelshCorgi extends SupporterWalking {
     return 0.9F;
   }
 
+  @Override
+  public int getEntityGuiScaling() {
+    return 45;
+  }
+
+  @Override
+  public int getEntityGuiTop() {
+    return 18;
+  }
+
 }

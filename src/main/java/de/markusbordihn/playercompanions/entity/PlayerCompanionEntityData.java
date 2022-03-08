@@ -19,6 +19,8 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -106,9 +108,11 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private static final String DATA_VARIANT_TAG = "Variant";
 
   // Default values
+  private int explosionPower = 0;
+  private static final int ENTITY_GUI_SCALING = 60;
+  private static final int ENTITY_GUI_TOP = 20;
   private static final int JUMP_MOVE_DELAY = 10;
   protected static final int RIDE_COOLDOWN = 600;
-  private int explosionPower = 0;
 
   // Temporary stats
   private BlockPos orderedToPosition = null;
@@ -466,6 +470,31 @@ public class PlayerCompanionEntityData extends TamableAnimal
     }
   }
 
+  public int getAttackDamage() {
+    double baseAttackDamage = getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+    ItemStack mainHandItem = getMainHandItem();
+    if (mainHandItem != null && !mainHandItem.isEmpty()) {
+      Collection<AttributeModifier> attributeModifierCollection =
+          mainHandItem.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE);
+      if (attributeModifierCollection != null && !attributeModifierCollection.isEmpty()) {
+        Optional<AttributeModifier> attributeModifier =
+            attributeModifierCollection.stream().findFirst();
+        if (attributeModifier.isPresent()) {
+          baseAttackDamage += attributeModifier.get().getAmount();
+        }
+      }
+    }
+    return (int) baseAttackDamage;
+  }
+
+  public int getEntityGuiScaling() {
+    return ENTITY_GUI_SCALING;
+  }
+
+  public int getEntityGuiTop() {
+    return ENTITY_GUI_TOP;
+  }
+
   @Override
   public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
     super.setItemSlot(equipmentSlot, itemStack);
@@ -552,7 +581,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
       // if (this.isInterested()) {
       // this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
       // } else {
-      this.interestedAngle += (0.0F - this.interestedAngle) * 0.4F;
+      this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
       // }
     }
   }

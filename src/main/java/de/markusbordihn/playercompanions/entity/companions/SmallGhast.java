@@ -273,4 +273,14 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
     return entityDimensions;
   }
 
+  @Override
+  public int getEntityGuiScaling() {
+    return 40;
+  }
+
+  @Override
+  public int getEntityGuiTop() {
+    return 35;
+  }
+
 }

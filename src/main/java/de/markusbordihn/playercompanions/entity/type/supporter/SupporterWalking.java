@@ -44,7 +44,7 @@ public class SupporterWalking extends PlayerCompanionEntityWalking {
   @Override
   public void tick() {
     super.tick();
-    this.supporterFeatures.supporterTick();
+    this.supporterFeatures.tick();
   }
 
 }

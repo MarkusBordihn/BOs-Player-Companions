@@ -108,7 +108,7 @@ public class Fairy extends HealerEntityFlyingAround {
   public static AttributeSupplier.Builder createAttributes() {
     return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.5F)
         .add(Attributes.FLYING_SPEED, 0.5F).add(Attributes.MAX_HEALTH, 10.0D)
-        .add(Attributes.ATTACK_DAMAGE, 0.5D);
+        .add(Attributes.ATTACK_DAMAGE, 1.0D);
   }
 
   public ResourceLocation getResourceLocation() {
@@ -236,6 +236,11 @@ public class Fairy extends HealerEntityFlyingAround {
   @Override
   public boolean canSitOnShoulder() {
     return this.hasRideCooldown();
+  }
+
+  @Override
+  public int getEntityGuiScaling() {
+    return 65;
   }
 
   @Override

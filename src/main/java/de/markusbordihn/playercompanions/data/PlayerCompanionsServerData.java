@@ -37,7 +37,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.saveddata.SavedData;
 
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -111,10 +110,6 @@ public class PlayerCompanionsServerData extends SavedData {
 
   public static String getFileId() {
     return PLAYER_COMPANIONS_FILE_ID;
-  }
-
-  public static String getFileId(DimensionType dimensionType) {
-    return PLAYER_COMPANIONS_FILE_ID + dimensionType.getFileSuffix();
   }
 
   public long getLastUpdate() {

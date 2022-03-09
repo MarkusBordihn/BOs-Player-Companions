@@ -30,7 +30,6 @@ apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-compileJava {options.encoding = "UTF-8"}
 
 version = "${version_major}.${version_minor}.${version_patch}"
 archivesBaseName = "${mod_id}_${mc_version}"
@@ -45,7 +44,7 @@ minecraft {
   // stable_#            Stables are built at the discretion of the MCP team.
   // Use non-default mappings at your own risk. they may not always work.
   // Simply re-run your setup task after changing the mappings to update your workspace.
-  mappings channel: 'official', version: '1.18.1'
+  mappings channel: 'official', version: '1.18.2'
   // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
   // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -139,31 +138,31 @@ dependencies {
   // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
   // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-  minecraft 'net.minecraftforge:forge:1.18.1-39.1.2'
+  minecraft 'net.minecraftforge:forge:1.18.2-40.0.12'
 
   // Jade Integration
-  implementation fg.deobf("curse.maven:jade-324717:3614180")
+  implementation fg.deobf("curse.maven:jade-324717:3681449")
 
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
 
   // Compability tests for other npc / custom mods
-  runtimeOnly fg.deobf("curse.maven:human-companions-570319:3668103")
-  runtimeOnly fg.deobf("curse.maven:guard-villagers-360203:3548222")
+  // runtimeOnly fg.deobf("curse.maven:human-companions-570319:3668103")
+  // runtimeOnly fg.deobf("curse.maven:guard-villagers-360203:3548222")
   // runtimeOnly fg.deobf("curse.maven:carry-on-274259:3601938")
 
   // Compability tests for other health mods
-  runtimeOnly fg.deobf("curse.maven:silent-lib-242998:3661417")
-  runtimeOnly fg.deobf("curse.maven:scaling-health-248027:3580899")
+  // runtimeOnly fg.deobf("curse.maven:silent-lib-242998:3661417")
+  // runtimeOnly fg.deobf("curse.maven:scaling-health-248027:3580899")
 
   // Compability tests for armor mods
-  runtimeOnly fg.deobf("curse.maven:morevanillaarmor-350955:3574989")
+  // runtimeOnly fg.deobf("curse.maven:morevanillaarmor-350955:3574989")
 
   // Additional helpful Mods for development (dev depenedency)
-  runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
-  runtimeOnly fg.deobf("curse.maven:jei-238222:3550020")
-  runtimeOnly fg.deobf("curse.maven:spark-361579:3591172")
-  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3613287")
+  // runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
+  runtimeOnly fg.deobf("curse.maven:jei-238222:3670018")
+  // runtimeOnly fg.deobf("curse.maven:spark-361579:3591172")
+  // runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3613287")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -206,12 +205,11 @@ curseforge {
     id = "${curseforge_project_id}"
     changelog = 'Please see https://github.com/MarkusBordihn/BOs-Player-Companions ...'
     releaseType = 'beta'
-    addGameVersion("1.18.1")
+    addGameVersion("1.18.2")
     addGameVersion("Forge")
     mainArtifact(jar) {
       relations {
         optionalDependency 'jade'
-        optionalDependency 'neat'
       }
     }
   }

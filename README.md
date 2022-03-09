@@ -5,6 +5,8 @@
 
 Player Companions adds additional creatures which will follow, protect or help you.
 
+![logo][logo]
+
 **BETA Status: It could be that the release version will not be compatible with the BETA version and you will lose existing player companions!**
 
 ## Features
@@ -109,11 +111,13 @@ The MIT [LICENSE.md](LICENSE.md) applies only to the code in this repository. Im
 
 Please only download the mod from the official CurseForge page or with the official CurseForge launcher like:
 
-🚀 https://www.curseforge.com/minecraft/mc-mods/player-companions
+🚀 [Curse Forge Download Link][mod]
 
 If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
 
+[mod]: https://www.curseforge.com/minecraft/mc-mods/player-companions
 [guard-villagers]: https://www.curseforge.com/minecraft/mc-mods/guard-villagers
 [human_companions]: https://www.curseforge.com/minecraft/mc-mods/human-companions
 [morevanillaarmor]: https://www.curseforge.com/minecraft/mc-mods/morevanillaarmor
 [scaling-health]: https://www.curseforge.com/minecraft/mc-mods/scaling-health
+[logo]: examples/player_companions.gif

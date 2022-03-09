@@ -30,26 +30,29 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.TamableAnimal;
 
-public class RoosterModel<T extends Entity> extends AgeableListModel<T> implements PlayerCompanionModel {
+public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
+    implements PlayerCompanionModel {
 
   private final ModelPart body;
   private final ModelPart head;
-  private final ModelPart rightLeg;
   private final ModelPart leftLeg;
-  private final ModelPart rightWing;
   private final ModelPart leftWing;
   private final ModelPart rightHand;
+  private final ModelPart rightLeg;
+  private final ModelPart rightWing;
+  private final ModelPart tail;
 
   public RoosterModel(ModelPart modelPart) {
     this.body = modelPart.getChild("body");
     this.head = modelPart.getChild("head");
-    this.rightLeg = modelPart.getChild("right_leg");
     this.leftLeg = modelPart.getChild("left_leg");
-    this.rightWing = modelPart.getChild("right_wing");
     this.leftWing = modelPart.getChild("left_wing");
     this.rightHand = modelPart.getChild("right_hand");
+    this.rightLeg = modelPart.getChild("right_leg");
+    this.rightWing = modelPart.getChild("right_wing");
+    this.tail = this.body.getChild("tail");
   }
 
   public static LayerDefinition createBodyLayer() {
@@ -138,10 +141,6 @@ public class RoosterModel<T extends Entity> extends AgeableListModel<T> implemen
     return List.of(this.body, this.rightLeg, this.leftLeg, this.rightWing, this.leftWing);
   }
 
-  public ModelPart rightHand() {
-    return this.rightHand;
-  }
-
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
     this.head.xRot = headPitch * ((float) Math.PI / 180F);
@@ -151,4 +150,33 @@ public class RoosterModel<T extends Entity> extends AgeableListModel<T> implemen
     this.rightWing.zRot = ageInTicks;
     this.leftWing.zRot = -ageInTicks;
   }
+
+  @Override
+  public ModelPart rightHand() {
+    return this.rightHand;
+  }
+
+  @Override
+  public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
+    if (entity.isInSittingPose()) {
+      this.body.setPos(0.0F, 20.0F, 0.0F);
+      this.head.setPos(0.0F, 18.0F, -4.0F);
+      this.leftWing.setPos(3.0F, 17.0F, 0.0F);
+      this.rightWing.setPos(-3.0F, 17.0F, 0.0F);
+      this.tail.setPos(0.0F, 5.0F, -4.0F);
+      this.tail.xRot = -0.45F;
+      this.rightLeg.visible = false;
+      this.leftLeg.visible = false;
+    } else {
+      this.body.setPos(0.0F, 16.0F, 0.0F);
+      this.head.setPos(0.0F, 14.0F, -4.0F);
+      this.leftWing.setPos(3.0F, 13.0F, 0.0F);
+      this.rightWing.setPos(-3.0F, 13.0F, 0.0F);
+      this.tail.setPos(0.0F, 8.0F, 0.0F);
+      this.tail.xRot = 0.0F;
+      this.rightLeg.visible = true;
+      this.leftLeg.visible = true;
+    }
+  }
+
 }

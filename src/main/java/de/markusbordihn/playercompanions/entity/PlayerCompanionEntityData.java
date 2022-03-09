@@ -81,23 +81,23 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   // Synced Entity Data
   private static final EntityDataAccessor<Boolean> DATA_ACTIVE =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.BOOLEAN);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.BOOLEAN);
   private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.BOOLEAN);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.BOOLEAN);
   private static final EntityDataAccessor<Integer> DATA_COLOR =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_EXPERIENCE =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_EXPERIENCE_LEVEL =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   protected static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.INT);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<String> DATA_CUSTOM_COMPANION_NAME =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.STRING);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =
-      SynchedEntityData.defineId(PlayerCompanionEntity.class, EntityDataSerializers.STRING);
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
 
   // Stored Entity Data Tags
   private static final String DATA_ACTIVE_TAG = "Active";
@@ -217,7 +217,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public void setDataSyncNeeded() {
-    if (!this.level.isClientSide) {
+    if (!this.level.isClientSide && hasOwner()) {
       this.isDataSyncNeeded = true;
     }
   }

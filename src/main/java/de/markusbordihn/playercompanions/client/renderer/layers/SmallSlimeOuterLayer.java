@@ -30,7 +30,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,7 +39,7 @@ import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 
 @OnlyIn(Dist.CLIENT)
-public class SmallSlimeOuterLayer<T extends LivingEntity>
+public class SmallSlimeOuterLayer<T extends TamableAnimal>
     extends RenderLayer<T, SmallSlimeModel<T>> {
 
   private final EntityModel<T> model;

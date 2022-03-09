@@ -141,10 +141,10 @@ public class PlayerCompanionsClientData {
       // Update or create Player Companion Data
       PlayerCompanionData playerCompanionData = playerCompanionsMap.get(companionUUID);
       if (playerCompanionData != null) {
-        log.debug("Update player companion data for {} with {}", companionUUID, compoundTag);
+        log.debug("Update client player companion data for {} with {}", companionUUID, compoundTag);
         playerCompanionData.load(compoundTag);
       } else {
-        log.info("Register player companion data for {} with {}", companionUUID, compoundTag);
+        log.info("Register client player companion data for {} with {}", companionUUID, compoundTag);
         PlayerCompanionData playerCompanion = new PlayerCompanionData(compoundTag);
         loadPlayerCompanionData(playerCompanion);
       }

@@ -60,13 +60,15 @@ public class Pig extends CollectorEntityWalking {
   // General Information
   public static final String ID = "pig";
   public static final String NAME = "Pig";
+  public static final Ingredient FOOD_ITEMS =
+      Ingredient.of(Items.CARROT, Items.POTATO, Items.BEETROOT);
 
   public Pig(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.2F)
+    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
         .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 1.0D);
   }
 
@@ -93,7 +95,7 @@ public class Pig extends CollectorEntityWalking {
 
   @Override
   public Ingredient getFoodItems() {
-    return Ingredient.of(Items.CARROT, Items.POTATO, Items.BEETROOT);
+    return FOOD_ITEMS;
   }
 
   @Override

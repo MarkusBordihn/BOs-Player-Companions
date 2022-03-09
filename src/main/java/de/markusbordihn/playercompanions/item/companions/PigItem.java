@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.item.companions;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
@@ -35,6 +36,11 @@ public class PigItem extends CapturedCompanion {
 
   public PigItem(Properties properties) {
     super(properties);
+  }
+
+  @Override
+  public Ingredient getEntityFood() {
+    return Pig.FOOD_ITEMS;
   }
 
   @Override

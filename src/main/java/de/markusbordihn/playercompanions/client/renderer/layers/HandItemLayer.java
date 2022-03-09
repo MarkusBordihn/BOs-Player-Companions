@@ -60,9 +60,11 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
       rightHand = playerCompanionModel.rightHand();
     }
 
-    this.renderRightHandItem(entity, itemStackMainHand,
-        ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HumanoidArm.RIGHT, poseStack, buffer,
-        lightLevel);
+    if (rightHand != null) {
+      this.renderRightHandItem(entity, itemStackMainHand,
+          ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HumanoidArm.RIGHT, poseStack,
+          buffer, lightLevel);
+    }
   }
 
   protected void renderRightHandItem(LivingEntity livingEntity, ItemStack itemStack,

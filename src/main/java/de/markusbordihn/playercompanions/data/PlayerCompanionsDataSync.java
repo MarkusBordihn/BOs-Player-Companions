@@ -23,6 +23,13 @@ public interface PlayerCompanionsDataSync {
     }
   }
 
+  public default void registerData() {
+    if (hasSyncReference()) {
+      registerData(getSyncReference());
+      setDataSyncNeeded(false);
+    }
+  }
+
   public default boolean syncDataIfNeeded() {
     if (getDataSyncNeeded()) {
       syncData();
@@ -35,6 +42,13 @@ public interface PlayerCompanionsDataSync {
     PlayerCompanionsServerData serverData = getServerData();
     if (serverData != null) {
       serverData.updateOrRegisterCompanion(playerCompanionEntity);
+    }
+  }
+
+  public default void registerData(PlayerCompanionEntity playerCompanionEntity) {
+    PlayerCompanionsServerData serverData = getServerData();
+    if (serverData != null) {
+      serverData.registerCompanion(playerCompanionEntity);
     }
   }
 

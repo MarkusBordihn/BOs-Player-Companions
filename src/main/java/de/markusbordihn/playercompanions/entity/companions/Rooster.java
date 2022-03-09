@@ -61,6 +61,7 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   // General information
   public static final String ID = "rooster";
   public static final String NAME = "Rooster";
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS);
   public static final EntityDimensions entityDimensions = new EntityDimensions(0.6f, 1.1f, false);
 
   public Rooster(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
@@ -168,7 +169,7 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
 
   @Override
   public Ingredient getFoodItems() {
-    return Ingredient.of(Items.WHEAT_SEEDS);
+    return FOOD_ITEMS;
   }
 
   @Override

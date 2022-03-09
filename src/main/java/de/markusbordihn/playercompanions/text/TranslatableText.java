@@ -26,7 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.network.chat.TranslatableComponent;
-
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -61,6 +61,10 @@ public class TranslatableText {
       }
       return new TranslatableComponent("");
     });
+  }
+
+  public static TranslatableComponent getItemName(ItemStack itemStack) {
+    return getItemName(itemStack.getDescriptionId());
   }
 
   public static TranslatableComponent getItemName(String itemName) {

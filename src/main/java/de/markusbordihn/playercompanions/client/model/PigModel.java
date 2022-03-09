@@ -30,15 +30,13 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.TamableAnimal;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-
 @OnlyIn(Dist.CLIENT)
-public class PigModel<T extends Entity> extends QuadrupedModel<T> {
+public class PigModel<T extends TamableAnimal> extends QuadrupedModel<T> {
 
   private final ModelPart bags;
 
@@ -90,7 +88,8 @@ public class PigModel<T extends Entity> extends QuadrupedModel<T> {
         PartPose.offset(-3.0F, 18.0F, -5.0F));
     partDefinition.addOrReplaceChild("left_front_leg",
         CubeListBuilder.create().texOffs(0, 16).mirror()
-            .addBox(-0.998F, -1.0F, -2.0F, 3.0F, 7.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false),
+            .addBox(-0.998F, -1.0F, -2.0F, 3.0F, 7.0F, 4.0F, new CubeDeformation(0.0F))
+            .mirror(false),
         PartPose.offset(3.0F, 18.0F, -5.0F));
     partDefinition.addOrReplaceChild("right_hind_leg", CubeListBuilder.create().texOffs(0, 17)
         .addBox(-2.0F, 0.0F, -2.0F, 3.0F, 6.0F, 4.0F, new CubeDeformation(0.0F)),
@@ -108,39 +107,40 @@ public class PigModel<T extends Entity> extends QuadrupedModel<T> {
   }
 
   @Override
-  public void prepareMobModel(T entity, float p_102665_, float p_102666_, float p_102667_) {
-    if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-      if (playerCompanionEntity.isInSittingPose()) {
-        this.body.setPos(0.0F, 14.5F, 4.0F);
-        this.body.xRot = ((float) Math.PI / -6F);
-        this.bags.setPos(0.0F, 24.0F, -4.0F);
-        this.bags.xRot = this.body.xRot;
-        this.head.setPos(0.0F, 9.0F, -3.0F);
-        this.head.xRot = 0.0F;
-        this.head.yRot = 0.0F;
-        if (this.young) {
-          this.head.setPos(-1.0F, 13.0F, -3.75F);
-        }
-        this.rightHindLeg.setPos(-2.9F, 18.0F, 3.5F);
-        this.leftHindLeg.setPos(2.9F, 18.0F, 3.5F);
-        this.rightFrontLeg.setPos(-3.0F, 18.0F, -5.0F);
-        this.leftFrontLeg.setPos(3.0F, 18.0F, -5.0F);
+  public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
+    if (entity.isInSittingPose()) {
+      this.body.setPos(0.0F, 14.5F, 4.0F);
+      this.body.xRot = ((float) Math.PI / -6F);
+      this.bags.setPos(0.0F, 24.0F, -4.0F);
+      this.bags.xRot = this.body.xRot;
+      if (this.young) {
+        this.head.setPos(-1.0F, 13.0F, -3.75F);
       } else {
-        this.body.setPos(0.0F, 11.0F, 2.0F);
-        this.body.zRot = 0.0F;
-        this.body.xRot = 0;
-        this.bags.setPos(0.0F, 24.0F, 0.0F);
-        this.bags.xRot = 0;
-        this.rightHindLeg.xRot = Mth.cos(p_102665_ * 1.6662F) * 0.2F * p_102666_;
-        this.rightHindLeg.setPos(-3.0F, 18.0F, 6.0F);
-        this.leftHindLeg.xRot = Mth.cos(p_102665_ * 1.6662F + (float) Math.PI) * 0.2F * p_102666_;
-        this.leftHindLeg.setPos(3.0F, 18.0F, 4.0F);
-        this.rightFrontLeg.xRot = Mth.cos(p_102665_ * 1.6662F + (float) Math.PI) * 0.2F * p_102666_;
-        this.rightFrontLeg.setPos(-3.0F, 18.0F, -5.0F);
-        this.leftFrontLeg.xRot = Mth.cos(p_102665_ * 1.6662F) * 0.2F * p_102666_;
-        this.leftFrontLeg.setPos(3.0F, 18.0F, -5.0F);
-        this.head.setPos(0.0F, 12.0F, -6.0F);
+        this.head.setPos(0.0F, 9.0F, -3.0F);
       }
+      this.head.xRot = 0.0F;
+      this.head.yRot = 0.0F;
+      this.rightHindLeg.setPos(-2.9F, 18.0F, 3.5F);
+      this.leftHindLeg.setPos(2.9F, 18.0F, 3.5F);
+      this.rightFrontLeg.setPos(-3.0F, 18.0F, -5.0F);
+      this.leftFrontLeg.setPos(3.0F, 18.0F, -5.0F);
+    } else {
+      this.body.setPos(0.0F, 11.0F, 2.0F);
+      this.body.zRot = 0.0F;
+      this.body.xRot = 0;
+      this.bags.setPos(0.0F, 24.0F, 0.0F);
+      this.bags.xRot = 0;
+      this.rightHindLeg.xRot = Mth.cos(limbSwing * 1.6662F) * 0.2F * limbSwingAmount;
+      this.rightHindLeg.setPos(-3.0F, 18.0F, 6.0F);
+      this.leftHindLeg.xRot =
+          Mth.cos(limbSwing * 1.6662F + (float) Math.PI) * 0.2F * limbSwingAmount;
+      this.leftHindLeg.setPos(3.0F, 18.0F, 4.0F);
+      this.rightFrontLeg.xRot =
+          Mth.cos(limbSwing * 1.6662F + (float) Math.PI) * 0.2F * limbSwingAmount;
+      this.rightFrontLeg.setPos(-3.0F, 18.0F, -5.0F);
+      this.leftFrontLeg.xRot = Mth.cos(limbSwing * 1.6662F) * 0.2F * limbSwingAmount;
+      this.leftFrontLeg.setPos(3.0F, 18.0F, -5.0F);
+      this.head.setPos(0.0F, 12.0F, -6.0F);
     }
   }
 

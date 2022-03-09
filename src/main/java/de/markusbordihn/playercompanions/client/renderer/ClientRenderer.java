@@ -63,7 +63,7 @@ public class ClientRenderer {
   public static final ModelLayerLocation SMALL_SLIME =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "small_slime"), "main");
   public static final ModelLayerLocation SMALL_SLIME_OUTER = new ModelLayerLocation(
-      new ResourceLocation(Constants.MOD_ID, "small_slime"), "small_slime_outer");
+      new ResourceLocation(Constants.MOD_ID, "small_slime"), "outer");
   public static final ModelLayerLocation SNAIL =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "snail"), "main");
   public static final ModelLayerLocation WELSH_CORGI =

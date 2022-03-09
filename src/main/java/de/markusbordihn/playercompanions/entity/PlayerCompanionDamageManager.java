@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.entity;
 
 import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

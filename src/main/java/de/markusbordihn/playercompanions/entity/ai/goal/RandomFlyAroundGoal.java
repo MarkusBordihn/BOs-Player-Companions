@@ -50,7 +50,6 @@ public class RandomFlyAroundGoal extends PlayerCompanionGoal {
 
   @Override
   public void tick() {
-
     BlockPos blockPos = this.playerCompanionEntity.ownerBlockPosition();
     for (int i = 0; i < 3; ++i) {
       BlockPos randomBlockPos = blockPos.offset(this.random.nextInt(15) - 7,

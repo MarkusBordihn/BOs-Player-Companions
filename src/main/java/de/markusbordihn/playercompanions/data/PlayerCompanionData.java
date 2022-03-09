@@ -360,7 +360,8 @@ public class PlayerCompanionData {
     // Handle hand items.
     setHandItems((NonNullList<ItemStack>) companion.getHandSlots());
 
-    log.trace("Loaded PlayerCompanion {} data over entity with {}", this.name, this);
+    log.debug("Loaded PlayerCompanion {} data over entity with {} and data {}", this.name, this,
+        this.entityData);
   }
 
   public void load(CompoundTag compoundTag) {

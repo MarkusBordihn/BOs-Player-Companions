@@ -116,7 +116,7 @@ public class NetworkHandler {
   }
 
   /**
-   * Send full companion data to the owner.
+   * Send full companion data to the owner, if data has changed.
    */
   public static void updatePlayerCompanionsData(UUID ownerUUID, String companionsData) {
     if (ownerUUID != null && companionsData != null && !companionsData.isBlank()
@@ -133,7 +133,7 @@ public class NetworkHandler {
   }
 
   /**
-   * Send specific player companion data to the owner.
+   * Send specific player companion data to the owner, if data has changed.
    */
   public static void updatePlayerCompanionData(UUID playerCompanionUUID, UUID ownerUUID,
       String companionData) {

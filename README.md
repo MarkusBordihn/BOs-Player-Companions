@@ -79,21 +79,31 @@ With the corresponding item, you can spawn / respawn your companion at any time 
 
 With the corresponding item, you can de-spawn your companion at any time. Just click with the right item on the spawned companion.
 
-## Compatible NPC / companion Mods
+## Compatible Mods
 
-Most of the NPC / companion mods should be supported out of the box, but this is a list of mods which I personally tested to make sure there are compatible:
+Most of the should be supported out of the box, but this is a list of mods which I personally tested and working fine with this mod:
 
+- ✅ [Guard Villagers][guard-villagers]
 - ✅ [Human Companions][human_companions]
+- ✅ [MoreVanillaArmor][morevanillaarmor]
+- ✅ [Scaling Health][scaling-health]
+
+Note: If the mod is not listed here, you need to test it on your own, if it works as expected.
+I'm not able to test all different kind of mod combinations or mod packs.
 
 ## Version Status Overview 🛠️
 
-| Version        | Status                  |
-| -------------- | ----------------------- |
-| Fabric Version | ❌ Not planned          |
-| Forge 1.16.5   | ❌ Not planned          |
-| Forge 1.17.1   | ❌ Not planned          |
-| Forge 1.18.1   | ✔️ Active development   |
-| Forge 1.18.2   | ✔️ Planned after 1.18.1 |
+| Version        | Status                |
+| -------------- | --------------------- |
+| Fabric Version | ❌ Not planned        |
+| Forge 1.16.5   | ❌ Not planned        |
+| Forge 1.17.1   | ❌ Not planned        |
+| Forge 1.18.1   | ⚠️ Maintenance only   |
+| Forge 1.18.2   | ✔️ Active development |
+
+## License
+
+The MIT [LICENSE.md](LICENSE.md) applies only to the code in this repository. Images, models and other assets are explicitly excluded.
 
 ## Note
 
@@ -103,4 +113,7 @@ Please only download the mod from the official CurseForge page or with the offic
 
 If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
 
+[guard-villagers]: https://www.curseforge.com/minecraft/mc-mods/guard-villagers
 [human_companions]: https://www.curseforge.com/minecraft/mc-mods/human-companions
+[morevanillaarmor]: https://www.curseforge.com/minecraft/mc-mods/morevanillaarmor
+[scaling-health]: https://www.curseforge.com/minecraft/mc-mods/scaling-health

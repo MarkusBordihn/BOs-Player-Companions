@@ -112,10 +112,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     // Set Reference to this object for easier sync and other tasks.
     this.setSyncReference(this);
 
-    // Distribute Ticks along several entities
+    // Distribute Ticks along several entities.
     this.ticker = (short) this.random.nextInt(0, 50);
 
-    // Sync data
     setDataSyncNeeded();
   }
 
@@ -404,7 +403,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void tame(Player player) {
     super.tame(player);
     if (player instanceof ServerPlayer) {
-      this.syncData();
+      this.registerData();
     }
   }
 

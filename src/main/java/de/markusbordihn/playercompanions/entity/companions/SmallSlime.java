@@ -73,6 +73,7 @@ public class SmallSlime extends FollowerEntityJumping {
   // General Information
   public static final String ID = "small_slime";
   public static final String NAME = "Small Slime";
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
 
   // Entity texture by color
   private static final Map<DyeColor, ResourceLocation> TEXTURE_BY_COLOR =
@@ -183,7 +184,7 @@ public class SmallSlime extends FollowerEntityJumping {
 
   @Override
   public Ingredient getFoodItems() {
-    return Ingredient.of(Items.APPLE);
+    return FOOD_ITEMS;
   }
 
   @Override

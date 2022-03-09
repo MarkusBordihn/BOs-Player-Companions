@@ -28,11 +28,9 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.TamableAnimal;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-
-public class WelshCorgiModel<T extends Entity> extends AgeableListModel<T> {
+public class WelshCorgiModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
   public final ModelPart head;
   private final ModelPart body;
@@ -144,53 +142,53 @@ public class WelshCorgiModel<T extends Entity> extends AgeableListModel<T> {
   }
 
   @Override
-  public void prepareMobModel(T entity, float p_102665_, float p_102666_, float p_102667_) {
-    if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-      if (playerCompanionEntity.isInSittingPose()) {
-        this.body.xRot = ((float) Math.PI / -5F);
-        this.tail.xRot = ((float) Math.PI / 4F);
-        if (this.young) {
-          this.head.setPos(0.0F, 13.0F, -4.5F);
-        } else {
-          this.head.setPos(0.0F, 10.0F, -1.5F);
-        }
-        this.head.xRot = 0.0F;
-        this.head.yRot = 0.0F;
-        this.rightHindLeg.xRot = 80.0F;
-        this.rightHindLeg.setPos(0.0F, 16.5F, 0.5F);
-        this.leftHindLeg.xRot = 80.0F;
-        this.leftHindLeg.setPos(0.0F, 16.5F, 0.5F);
-        this.rightFrontLeg.xRot = -0.2617994F;
-        this.rightFrontLeg.setPos(0.0F, 24.0F, -2.0F);
-        this.leftFrontLeg.xRot = -0.2617994F;
-        this.leftFrontLeg.setPos(0.0F, 24.0F, -2.0F);
-        this.tongue.visible = true;
+  public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
+    if (entity.isInSittingPose()) {
+      this.body.xRot = ((float) Math.PI / -5F);
+      this.tail.xRot = ((float) Math.PI / 4F);
+      if (this.young) {
+        this.head.setPos(0.0F, 13.0F, -4.5F);
       } else {
-        this.body.setPos(0.0F, 16.0F, 0.0F);
-        this.body.zRot = 0.0F;
-        this.body.xRot = 0;
-        this.rightHindLeg.xRot = Mth.cos(p_102665_ * 1.6662F) * 0.2F * p_102666_;
-        this.rightHindLeg.setPos(0.0F, 24.0F, -1.0F);
-        this.leftHindLeg.xRot = Mth.cos(p_102665_ * 1.6662F + (float) Math.PI) * 0.2F * p_102666_;
-        this.leftHindLeg.setPos(0.0F, 24.0F, -1.0F);
-        this.rightFrontLeg.xRot = Mth.cos(p_102665_ * 1.6662F + (float) Math.PI) * 0.2F * p_102666_;
-        this.rightFrontLeg.setPos(0.0F, 24.0F, -1.0F);
-        this.leftFrontLeg.xRot = Mth.cos(p_102665_ * 1.6662F) * 0.2F * p_102666_;
-        this.leftFrontLeg.setPos(0.0F, 24.0F, -1.0F);
-        this.head.setPos(0.0F, 11.0F, -1.0F);
-        if (this.young) {
-          this.head.setPos(0.0F, 14.0F, -4.0F);
-        } else {
-          this.head.setPos(0.0F, 11.0F, -1.0F);
-        }
-        this.tail.setPos(0.0F, 1.5F, 7.5F);
-        this.tail.xRot = 0.0F;
-        this.rightHindLeg.visible = true;
-        this.leftHindLeg.visible = true;
-        this.rightFrontLeg.visible = true;
-        this.leftFrontLeg.visible = true;
-        this.tongue.visible = false;
+        this.head.setPos(0.0F, 10.0F, -1.5F);
       }
+      this.head.xRot = 0.0F;
+      this.head.yRot = 0.0F;
+      this.rightHindLeg.xRot = 80.0F;
+      this.rightHindLeg.setPos(0.0F, 16.5F, 0.5F);
+      this.leftHindLeg.xRot = 80.0F;
+      this.leftHindLeg.setPos(0.0F, 16.5F, 0.5F);
+      this.rightFrontLeg.xRot = -0.2617994F;
+      this.rightFrontLeg.setPos(0.0F, 24.0F, -2.0F);
+      this.leftFrontLeg.xRot = -0.2617994F;
+      this.leftFrontLeg.setPos(0.0F, 24.0F, -2.0F);
+      this.tongue.visible = true;
+    } else {
+      this.body.setPos(0.0F, 16.0F, 0.0F);
+      this.body.zRot = 0.0F;
+      this.body.xRot = 0;
+      this.rightHindLeg.xRot = Mth.cos(limbSwing * 1.6662F) * 0.3F * limbSwingAmount;
+      this.rightHindLeg.setPos(0.0F, 24.0F, -1.0F);
+      this.leftHindLeg.xRot =
+          Mth.cos(limbSwing * 1.6662F + (float) Math.PI) * 0.3F * limbSwingAmount;
+      this.leftHindLeg.setPos(0.0F, 24.0F, -1.0F);
+      this.rightFrontLeg.xRot =
+          Mth.cos(limbSwing * 1.6662F + (float) Math.PI) * 0.3F * limbSwingAmount;
+      this.rightFrontLeg.setPos(0.0F, 24.0F, -1.0F);
+      this.leftFrontLeg.xRot = Mth.cos(limbSwing * 1.6662F) * 0.3F * limbSwingAmount;
+      this.leftFrontLeg.setPos(0.0F, 24.0F, -1.0F);
+      this.head.setPos(0.0F, 11.0F, -1.0F);
+      if (this.young) {
+        this.head.setPos(0.0F, 14.0F, -4.0F);
+      } else {
+        this.head.setPos(0.0F, 11.0F, -1.0F);
+      }
+      this.tail.setPos(0.0F, 1.5F, 7.5F);
+      this.tail.xRot = 0.0F;
+      this.rightHindLeg.visible = true;
+      this.leftHindLeg.visible = true;
+      this.rightFrontLeg.visible = true;
+      this.leftFrontLeg.visible = true;
+      this.tongue.visible = false;
     }
   }
 

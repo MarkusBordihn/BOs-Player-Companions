@@ -56,13 +56,14 @@ public class WelshCorgi extends SupporterWalking {
   // General Information
   public static final String ID = "welsh_corgi";
   public static final String NAME = "welsh_corgi";
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
 
   public WelshCorgi(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.2F)
+    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
         .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 1.0D);
   }
 
@@ -88,7 +89,7 @@ public class WelshCorgi extends SupporterWalking {
 
   @Override
   public Ingredient getFoodItems() {
-    return Ingredient.of(Items.BONE);
+    return FOOD_ITEMS;
   }
 
   @Override

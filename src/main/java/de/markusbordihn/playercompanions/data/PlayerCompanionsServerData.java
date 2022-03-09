@@ -218,21 +218,33 @@ public class PlayerCompanionsServerData extends SavedData {
   }
 
   public PlayerCompanionData registerCompanion(PlayerCompanionEntity companionEntity) {
+    return registerCompanion(companionEntity, true);
+  }
+
+  public PlayerCompanionData registerCompanion(PlayerCompanionEntity companionEntity,
+      boolean requiredOwner) {
     if (playerCompanionsMap.get(companionEntity.getUUID()) != null) {
       log.warn("Companion {} is already registered!", companionEntity);
       return playerCompanionsMap.get(companionEntity.getUUID());
     }
-    if (!companionEntity.hasOwner()) {
-      log.debug("Skipping companion {} for registration because it has no owner, yet!", companionEntity);
+    if (requiredOwner && !companionEntity.hasOwner()) {
+      log.warn("Skipping companion {} for registration because it has no owner, yet!",
+          companionEntity);
       return null;
     }
-    log.info("Register companion {} for {} ...", companionEntity, companionEntity.getOwner());
+    if (companionEntity.hasOwner()) {
+      log.info("Register companion {} for {} ...", companionEntity, companionEntity.getOwner());
+    } else {
+      log.info("Pre-register companion {} ...");
+    }
     PlayerCompanionData playerCompanion = new PlayerCompanionData(companionEntity);
     addPlayerCompanion(playerCompanion);
     this.setDirty();
 
     // Sync data (server -> client-side) with player companion owner, if any.
-    syncPlayerCompanionData(playerCompanion);
+    if (playerCompanion.hasOwner()) {
+      syncPlayerCompanionData(playerCompanion);
+    }
 
     return playerCompanion;
   }

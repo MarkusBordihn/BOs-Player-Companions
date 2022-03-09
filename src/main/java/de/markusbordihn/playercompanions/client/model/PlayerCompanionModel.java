@@ -30,7 +30,12 @@ public interface PlayerCompanionModel {
 
   static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public ModelPart rightHand();
+  public default ModelPart rightHand() {
+    return null;
+  }
 
+  public default ModelPart leftHand() {
+    return null;
+  }
 
 }

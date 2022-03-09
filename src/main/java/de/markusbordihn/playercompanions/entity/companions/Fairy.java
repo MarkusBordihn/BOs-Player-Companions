@@ -80,6 +80,7 @@ public class Fairy extends HealerEntityFlyingAround {
   // General Information
   public static final String ID = "fairy";
   public static final String NAME = "Fairy";
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.CAKE, Items.COOKIE);
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
@@ -106,8 +107,8 @@ public class Fairy extends HealerEntityFlyingAround {
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.5F)
-        .add(Attributes.FLYING_SPEED, 0.5F).add(Attributes.MAX_HEALTH, 10.0D)
+    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.4F)
+        .add(Attributes.FLYING_SPEED, 0.4F).add(Attributes.MAX_HEALTH, 10.0D)
         .add(Attributes.ATTACK_DAMAGE, 1.0D);
   }
 
@@ -124,8 +125,8 @@ public class Fairy extends HealerEntityFlyingAround {
     this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 8.0F));
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));
+    this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
     this.goalSelector.addGoal(2, new AvoidCreeperGoal(this));
-    this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
     this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 8.0F, 1.0F, true));
     this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     this.goalSelector.addGoal(4, new RandomFlyAroundGoal(this));
@@ -175,7 +176,7 @@ public class Fairy extends HealerEntityFlyingAround {
 
   @Override
   public Ingredient getFoodItems() {
-    return Ingredient.of(Items.CAKE, Items.COOKIE);
+    return FOOD_ITEMS;
   }
 
   @Override

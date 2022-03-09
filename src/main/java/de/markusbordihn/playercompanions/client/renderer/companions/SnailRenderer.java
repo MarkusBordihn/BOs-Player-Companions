@@ -32,13 +32,13 @@ import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
 
 @OnlyIn(Dist.CLIENT)
-public class SnailRenderer extends MobRenderer<Snail, SnailModel> {
+public class SnailRenderer extends MobRenderer<Snail, SnailModel<Snail>> {
 
   private static final ResourceLocation TEXTURE_LOCATION =
       new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail.png");
 
   public SnailRenderer(EntityRendererProvider.Context context) {
-    super(context, new SnailModel(context.bakeLayer(ClientRenderer.SNAIL)), 0.45F);
+    super(context, new SnailModel<>(context.bakeLayer(ClientRenderer.SNAIL)), 0.45F);
   }
 
   public ResourceLocation getTextureLocation(Snail entity) {

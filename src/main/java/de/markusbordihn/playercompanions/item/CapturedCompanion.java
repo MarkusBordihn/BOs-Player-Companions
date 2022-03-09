@@ -50,6 +50,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,6 +63,7 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
+import de.markusbordihn.playercompanions.text.TranslatableText;
 
 public class CapturedCompanion extends Item {
 
@@ -282,6 +284,10 @@ public class CapturedCompanion extends Item {
     return null;
   }
 
+  public Ingredient getEntityFood() {
+    return null;
+  }
+
   @Override
   public Component getName(ItemStack itemStack) {
     PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
@@ -442,7 +448,16 @@ public class CapturedCompanion extends Item {
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_dimension",
           playerCompanion.getDimensionName()).withStyle(ChatFormatting.GRAY));
 
-      tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_food"));
+      if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion && capturedCompanion.getEntityFood() != null) {
+        TranslatableComponent foodOverview = (TranslatableComponent) new TranslatableComponent("")
+            .withStyle(ChatFormatting.DARK_GREEN);
+        for (ItemStack foodItemStack : capturedCompanion.getEntityFood().getItems()) {
+           foodOverview.append(TranslatableText.getItemName(foodItemStack)).append(", ");
+        }
+        foodOverview.append("...");
+        tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_food")
+            .withStyle(ChatFormatting.GREEN).append(foodOverview));
+      }
     }
   }
 

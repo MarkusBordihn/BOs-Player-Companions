@@ -33,7 +33,7 @@ import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 
 @OnlyIn(Dist.CLIENT)
-public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel> {
+public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<SmallGhast>> {
 
   private static final ResourceLocation GHAST_LOCATION =
       new ResourceLocation("textures/entity/ghast/ghast.png");
@@ -41,7 +41,7 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel>
       new ResourceLocation("textures/entity/ghast/ghast_shooting.png");
 
   public SmallGhastRenderer(EntityRendererProvider.Context context) {
-    super(context, new SmallGhastModel(context.bakeLayer(ClientRenderer.SMALL_GHAST)), 0.4F);
+    super(context, new SmallGhastModel<>(context.bakeLayer(ClientRenderer.SMALL_GHAST)), 0.4F);
   }
 
   @Override

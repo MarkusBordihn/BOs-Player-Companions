@@ -19,7 +19,9 @@
 
 package de.markusbordihn.playercompanions.client.model;
 
-import net.minecraft.client.model.HierarchicalModel;
+import java.util.List;
+
+import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -27,27 +29,39 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.TamableAnimal;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SmallSlimeModel<T extends Entity> extends HierarchicalModel<T> {
+public class SmallSlimeModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
-  private final ModelPart root;
+  private final ModelPart body;
+  private final ModelPart mouth;
+  private final ModelPart rightEye;
+  private final ModelPart leftEye;
+
   private static final PartPose partPoseOffset = PartPose.offset(0.1F, 19.9F, -1.6F);
 
   public SmallSlimeModel(ModelPart modelPart) {
-    this.root = modelPart;
+    this.body = modelPart.getChild("body");
+    this.leftEye = modelPart.getChild("left_eye");
+    this.mouth = modelPart.getChild("mouth");
+    this.rightEye = modelPart.getChild("right_eye");
   }
 
   public static LayerDefinition createOuterBodyLayer() {
     MeshDefinition meshDefinition = new MeshDefinition();
     PartDefinition partDefinition = meshDefinition.getRoot();
-    partDefinition.addOrReplaceChild("shell",
+    partDefinition.addOrReplaceChild("body",
         CubeListBuilder.create().texOffs(0, 0).addBox(-4.1F, -3.9F, -2.4F, 8.0F, 8.0F, 8.0F),
         partPoseOffset);
+    partDefinition.addOrReplaceChild("mouth", CubeListBuilder.create(), PartPose.offset(0.0F,0.0F,0.0F));
+    partDefinition.addOrReplaceChild("right_eye", CubeListBuilder.create(),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
+        partDefinition.addOrReplaceChild("left_eye", CubeListBuilder.create(),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
     return LayerDefinition.create(meshDefinition, 32, 32);
   }
 
@@ -70,10 +84,30 @@ public class SmallSlimeModel<T extends Entity> extends HierarchicalModel<T> {
 
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
-      }
+    // Not in use
+  }
 
-  public ModelPart root() {
-    return this.root;
+  @Override
+  protected Iterable<ModelPart> headParts() {
+    return List.of(this.mouth, this.leftEye, this.rightEye);
+  }
+
+  @Override
+  protected Iterable<ModelPart> bodyParts() {
+    return List.of(this.body);
+  }
+
+  @Override
+  public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
+    if (this.young) {
+      this.leftEye.setPos(1.0F, 16.8F, -2.2F);
+      this.mouth.setPos(0.1F, 16.5F, -2.2F);
+      this.rightEye.setPos(-1.0F, 16.8F, -2.2F);
+    } else {
+      this.leftEye.setPos(0.1F, 19.9F, -1.6F);
+      this.mouth.setPos(0.1F, 19.9F, -1.6F);
+      this.rightEye.setPos(0.1F, 19.9F, -1.6F);
+    }
   }
 
 }

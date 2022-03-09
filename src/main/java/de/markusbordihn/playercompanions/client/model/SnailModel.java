@@ -20,8 +20,8 @@
 package de.markusbordihn.playercompanions.client.model;
 
 import java.util.List;
-import de.markusbordihn.playercompanions.entity.companions.Snail;
-import net.minecraft.client.model.HierarchicalModel;
+
+import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -29,12 +29,13 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.world.entity.TamableAnimal;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SnailModel extends HierarchicalModel<Snail> {
+public class SnailModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
   private final ModelPart root;
   private final ModelPart body;
@@ -93,7 +94,7 @@ public class SnailModel extends HierarchicalModel<Snail> {
     return List.of(this.body, this.house);
   }
 
-  public void setupAnim(Snail entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
     // No setup animation yet.
   }
@@ -102,4 +103,23 @@ public class SnailModel extends HierarchicalModel<Snail> {
     return this.root;
   }
 
+  @Override
+  public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
+    if (entity.isInSittingPose()) {
+      this.body.setPos(0.0F, 25.1F, 0.5F);
+      this.leftEye.setPos(-0.001F, 17.75F, -4.5F);
+      this.rightEye.setPos(0.001F, 17.75F, -4.5F);
+      this.house.xRot = 0.0927F;
+    } else {
+      this.body.setPos(0.0F, 24.0F, 0.0F);
+      if (this.young) {
+        this.leftEye.setPos(0.0F, 14.25F, -4.5F);
+        this.rightEye.setPos(0.0F, 14.25F, -4.5F);
+      } else {
+        this.leftEye.setPos(0.0F, 15.75F, -4.5F);
+        this.rightEye.setPos(0.0F, 15.75F, -4.5F);
+      }
+      this.house.xRot = -0.3927F;
+    }
+  }
 }

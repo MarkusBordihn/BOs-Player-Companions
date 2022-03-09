@@ -58,13 +58,14 @@ public class Snail extends CollectorEntityFloating {
   // General Information
   public static final String ID = "snail";
   public static final String NAME = "Snail";
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.SEAGRASS);
 
   public Snail(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.2F)
+    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
         .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 0.5D);
   }
 
@@ -90,7 +91,7 @@ public class Snail extends CollectorEntityFloating {
 
   @Override
   public Ingredient getFoodItems() {
-    return Ingredient.of(Items.SEAGRASS);
+    return FOOD_ITEMS;
   }
 
   @Override

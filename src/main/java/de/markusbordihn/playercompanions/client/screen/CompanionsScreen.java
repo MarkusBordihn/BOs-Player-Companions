@@ -98,7 +98,7 @@ public class CompanionsScreen extends AbstractContainerScreen<CompanionsMenu> {
     poseStack.popPose();
   }
 
-  public void renderEntity(int x, int y, float yRot, float xRot,
+  private void renderEntity(int x, int y, float yRot, float xRot,
       PlayerCompanionEntity playerCompanionEntity) {
     float f = (float) Math.atan(yRot / 40.0F);
     float f1 = (float) Math.atan(xRot / 40.0F);

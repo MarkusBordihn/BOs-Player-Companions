@@ -65,8 +65,9 @@ public class CompanionTameItem extends Item {
 
   public void convertEntityToItem(Item companionItem, Player player, LivingEntity livingEntity,
       Level level) {
+
     // Capture mob inside item.
-    log.debug("Capturing mob {} ...", livingEntity.getName());
+    log.debug("Capturing mob {} ...", livingEntity);
     ItemStack itemStack = new ItemStack(companionItem);
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     compoundTag.putUUID(CapturedCompanion.COMPANION_UUID_TAG, livingEntity.getUUID());

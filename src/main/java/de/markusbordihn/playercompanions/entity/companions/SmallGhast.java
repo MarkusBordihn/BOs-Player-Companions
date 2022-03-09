@@ -86,6 +86,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   // General Information
   public static final String ID = "small_ghast";
   public static final String NAME = "Small Ghast";
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
   public static final EntityDimensions entityDimensions = new EntityDimensions(0.75f, 1.70f, false);
 
   // Config settings
@@ -219,7 +220,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   @Override
   public Ingredient getFoodItems() {
-    return Ingredient.of(Items.BONE);
+    return FOOD_ITEMS;
   }
 
   @Override

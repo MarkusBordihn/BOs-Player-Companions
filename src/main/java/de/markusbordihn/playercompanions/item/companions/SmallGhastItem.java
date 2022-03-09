@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.item.companions;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
@@ -35,6 +36,11 @@ public class SmallGhastItem extends CapturedCompanion {
 
   public SmallGhastItem(Properties properties) {
     super(properties);
+  }
+
+  @Override
+  public Ingredient getEntityFood() {
+    return SmallGhast.FOOD_ITEMS;
   }
 
   @Override

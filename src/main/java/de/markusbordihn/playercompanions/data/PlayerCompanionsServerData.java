@@ -155,10 +155,12 @@ public class PlayerCompanionsServerData extends SavedData {
   public Set<Entity> getCompanionsEntity(UUID ownerUUID, ServerLevel serverLevel) {
     Set<Entity> result = new HashSet<>();
     Set<PlayerCompanionData> playerCompanionsData = getCompanions(ownerUUID);
-    for (PlayerCompanionData playerCompanionData : playerCompanionsData) {
-      Entity entity = getCompanionEntity(playerCompanionData.getUUID(), serverLevel);
-      if (entity != null) {
-        result.add(entity);
+    if (playerCompanionsData != null) {
+      for (PlayerCompanionData playerCompanionData : playerCompanionsData) {
+        Entity entity = getCompanionEntity(playerCompanionData.getUUID(), serverLevel);
+        if (entity != null) {
+          result.add(entity);
+        }
       }
     }
     return result;

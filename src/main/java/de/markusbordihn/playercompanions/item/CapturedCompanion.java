@@ -155,8 +155,7 @@ public class CapturedCompanion extends Item {
         }
       } else {
         BlockState blockState = level.getBlockState(blockPos);
-        if (blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
-            || blockState.is(Blocks.SEAGRASS)) {
+        if (isValidSpawnPlace(blockState)) {
           playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5,
               blockPos.getZ() + 0.5);
           log.debug("Teleport companion {} to position ...", playerCompanion, blockPos);
@@ -175,15 +174,13 @@ public class CapturedCompanion extends Item {
     if (entity != null) {
       // Make sure we have an empty Block to spawn the entity, otherwise try above block.
       BlockState blockState = level.getBlockState(blockPos);
-      if (!blockState.isAir() && !blockState.is(Blocks.WATER) && !blockState.is(Blocks.GRASS)
-          && !blockState.is(Blocks.SEAGRASS)) {
+      if (!isValidSpawnPlace(blockState)) {
         blockPos = blockPos.above();
         blockState = level.getBlockState(blockPos);
       }
 
       // Only spawn on empty blocks like air,water, grass, sea grass.
-      if (blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
-          || blockState.is(Blocks.SEAGRASS)) {
+      if (isValidSpawnPlace(blockState)) {
         // Adjust entity position to spawn position.
         entity.setPosRaw(blockPos.getX() + 0.5, blockPos.getY() + 0.1, blockPos.getZ() + 0.5);
 
@@ -288,6 +285,12 @@ public class CapturedCompanion extends Item {
     return null;
   }
 
+  private boolean isValidSpawnPlace(BlockState blockState) {
+    return blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
+        || blockState.is(Blocks.SEAGRASS) || blockState.is(Blocks.SNOW)
+        || blockState.is(Blocks.FERN);
+  }
+
   @Override
   public Component getName(ItemStack itemStack) {
     PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
@@ -343,15 +346,14 @@ public class CapturedCompanion extends Item {
     }
 
     // Place directly on grass or similar blocks.
-    if ((blockState.is(Blocks.GRASS) || blockState.is(Blocks.SEAGRASS))
-        && spawnCompanion(itemStack, blockPos, player, level)) {
+    if (isValidSpawnPlace(blockState) && spawnCompanion(itemStack, blockPos, player, level)) {
       return InteractionResult.CONSUME;
     }
 
     // Check if we can release the captured mob above.
     BlockPos blockPosAbove = blockPos.above();
     BlockState blockStateBlockAbove = level.getBlockState(blockPosAbove);
-    if ((blockStateBlockAbove.isAir() || blockStateBlockAbove.is(Blocks.WATER))
+    if (isValidSpawnPlace(blockStateBlockAbove)
         && spawnCompanion(itemStack, blockPosAbove, player, level)) {
       return InteractionResult.CONSUME;
     }
@@ -448,11 +450,12 @@ public class CapturedCompanion extends Item {
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_dimension",
           playerCompanion.getDimensionName()).withStyle(ChatFormatting.GRAY));
 
-      if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion && capturedCompanion.getEntityFood() != null) {
+      if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion
+          && capturedCompanion.getEntityFood() != null) {
         TranslatableComponent foodOverview = (TranslatableComponent) new TranslatableComponent("")
             .withStyle(ChatFormatting.DARK_GREEN);
         for (ItemStack foodItemStack : capturedCompanion.getEntityFood().getItems()) {
-           foodOverview.append(TranslatableText.getItemName(foodItemStack)).append(", ");
+          foodOverview.append(TranslatableText.getItemName(foodItemStack)).append(", ");
         }
         foodOverview.append("...");
         tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_food")

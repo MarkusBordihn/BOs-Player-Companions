@@ -142,7 +142,7 @@ dependencies {
   minecraft 'net.minecraftforge:forge:1.18.1-39.1.2'
 
   // Jade Integration
-  implementation fg.deobf("curse.maven:jade-324717:3614180")
+  implementation fg.deobf("curse.maven:jade-324717:3681458")
 
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
@@ -161,7 +161,7 @@ dependencies {
 
   // Additional helpful Mods for development (dev depenedency)
   runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
-  runtimeOnly fg.deobf("curse.maven:jei-238222:3550020")
+  runtimeOnly fg.deobf("curse.maven:jei-238222:3599262")
   runtimeOnly fg.deobf("curse.maven:spark-361579:3591172")
   runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3613287")
 }

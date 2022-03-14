@@ -37,6 +37,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -67,23 +68,36 @@ public class CompanionTameItem extends Item {
       Level level) {
 
     // Capture mob inside item.
-    log.debug("Capturing mob {} ...", livingEntity);
+    log.debug("Capturing mob {} for {} with {}", livingEntity, player, companionItem);
     ItemStack itemStack = new ItemStack(companionItem);
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     compoundTag.putUUID(CapturedCompanion.COMPANION_UUID_TAG, livingEntity.getUUID());
     itemStack.save(compoundTag);
 
+    // Confirm that we have a valid item before discard the entity from the world.
+    if (itemStack.isEmpty() || !(itemStack.getItem() instanceof CapturedCompanion)) {
+      log.error("Unable to create captured companion item, got {} instead!", itemStack);
+      return;
+    }
+
     // Discarded Entity from the world
     livingEntity.setRemoved(RemovalReason.DISCARDED);
 
-    // Try to give Player new item or drop item.
-    if (!player.getInventory().add(itemStack)) {
+    // Try to give Player new item in inventory or drop item.
+    Inventory playerInventory = player.getInventory();
+    if (playerInventory == null || playerInventory.getFreeSlot() == -1
+        || !playerInventory.add(itemStack)) {
       BlockPos blockPos = livingEntity.blockPosition();
       if (!level.addFreshEntity(
           new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack))) {
         log.error("Unable to give item {} to player {} or to drop it to the world {}!", itemStack,
             player, level);
+      } else {
+        log.warn("Dropped captured companion item for {} with {}, because inventory is full!",
+            player, itemStack);
       }
+    } else {
+      log.info("Gave Player {} captured companion item with {}.", player, companionItem);
     }
   }
 

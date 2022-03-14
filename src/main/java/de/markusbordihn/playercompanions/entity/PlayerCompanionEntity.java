@@ -402,6 +402,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void tame(Player player) {
     super.tame(player);
+    log.info("Player {} tamed player companion {} ...", player, this);
     if (player instanceof ServerPlayer) {
       this.registerData();
     }

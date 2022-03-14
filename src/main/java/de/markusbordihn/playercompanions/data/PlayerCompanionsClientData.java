@@ -37,14 +37,10 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
-@OnlyIn(Dist.CLIENT)
 public class PlayerCompanionsClientData {
 
   public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
@@ -144,7 +140,7 @@ public class PlayerCompanionsClientData {
         log.debug("Update client player companion data for {} with {}", companionUUID, compoundTag);
         playerCompanionData.load(compoundTag);
       } else {
-        log.info("Register client player companion data for {} with {}", companionUUID, compoundTag);
+        log.debug("Register client player companion data for {} with {}", companionUUID, compoundTag);
         PlayerCompanionData playerCompanion = new PlayerCompanionData(compoundTag);
         loadPlayerCompanionData(playerCompanion);
       }

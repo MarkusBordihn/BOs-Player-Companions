@@ -128,6 +128,10 @@ public class PlayerCompanionsServerData extends SavedData {
     return null;
   }
 
+  public boolean hasCompanion(ItemStack itemStack) {
+    return getCompanion(itemStack) != null;
+  }
+
   public PlayerCompanionData getCompanion(PlayerCompanionEntity playerCompanionEntity) {
     return getCompanion(playerCompanionEntity.getUUID());
   }

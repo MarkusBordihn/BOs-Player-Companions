@@ -100,6 +100,10 @@ public class CapturedCompanion extends Item {
     return getCompanionUUID(itemStack) != null;
   }
 
+  public boolean hasValidCompanion(ItemStack itemStack) {
+    return PlayerCompanionsServerData.get().hasCompanion(itemStack);
+  }
+
   public UUID getCompanionUUID(ItemStack itemStack) {
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     if (compoundTag.hasUUID(COMPANION_UUID_TAG)) {
@@ -170,7 +174,7 @@ public class CapturedCompanion extends Item {
     }
 
     // Prepare spawn of companion based on the existing data.
-    Entity entity = getCompanionEntity(itemStack, level);
+    Entity entity = createCompanionEntity(itemStack, level);
     if (entity != null) {
       // Make sure we have an empty Block to spawn the entity, otherwise try above block.
       BlockState blockState = level.getBlockState(blockPos);
@@ -232,7 +236,7 @@ public class CapturedCompanion extends Item {
     }
   }
 
-  public boolean createCompanion(ItemStack itemStack, Player player, Level level) {
+  public boolean createTamedCompanion(ItemStack itemStack, Player player, Level level) {
     EntityType<?> entityType = this.getEntityType();
     if (entityType != null) {
       Entity entity = entityType.create(level);
@@ -253,8 +257,13 @@ public class CapturedCompanion extends Item {
     return false;
   }
 
-  public Entity getCompanionEntity(ItemStack itemStack, Level level) {
+  public Entity createCompanionEntity(ItemStack itemStack, Level level) {
     PlayerCompanionData playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
+    if (playerCompanion == null) {
+      log.error("Unable to find player companion with UUID {} for item {}",
+          getCompanionUUID(itemStack), itemStack);
+      return null;
+    }
     EntityType<?> entityType = playerCompanion.getEntityType();
     CompoundTag entityData = playerCompanion.getEntityData();
     Entity entity = entityType.create(level);
@@ -334,7 +343,14 @@ public class CapturedCompanion extends Item {
     Player player = context.getPlayer();
 
     // Check if we have any captured companion, if not try to create one.
-    if (!hasCompanion(itemStack) && !createCompanion(itemStack, player, level)) {
+    if (!hasCompanion(itemStack) && !createTamedCompanion(itemStack, player, level)) {
+      return InteractionResult.FAIL;
+    }
+
+    // Check if there is a valid companion.
+    if (!PlayerCompanionsServerData.get().hasCompanion(itemStack)) {
+      log.error("Unable to find player companion with UUID {} for item {}",
+          getCompanionUUID(itemStack), itemStack);
       return InteractionResult.FAIL;
     }
 

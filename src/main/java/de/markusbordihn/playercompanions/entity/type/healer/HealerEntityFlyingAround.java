@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityFlying;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
@@ -36,9 +37,16 @@ public class HealerEntityFlyingAround extends PlayerCompanionEntityFlying {
     super(entityType, level);
     this.setCompanionType(PlayerCompanionType.HEALER);
     this.setCompanionTypeIcon(new ItemStack(Items.POTION));
+    this.setAggressionLevel(AggressionLevel.PASSIVE);
 
     // Shared Healer Features
     this.healerFeatures = new HealerFeatures(this, level);
+  }
+
+  @Override
+  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
+    return aggressionLevel == AggressionLevel.PASSIVE_FLEE
+        || aggressionLevel == AggressionLevel.PASSIVE;
   }
 
   @Override

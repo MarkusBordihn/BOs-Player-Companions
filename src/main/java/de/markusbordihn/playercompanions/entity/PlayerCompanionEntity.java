@@ -284,6 +284,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           sit();
         }
         break;
+      case AGGRESSION_LEVEL_TOGGLE:
+        this.toggleAggressionLevel();
+        break;
       case OPEN_MENU:
         openMenu();
         break;
@@ -441,13 +444,24 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
       if (isOwner) {
 
-        // Handler Commands with CTRL Key pressed
-        boolean ctrlKeyPressed = ModKeyMapping.KEY_COMMAND.isDown();
-        if (ctrlKeyPressed) {
-          // Order to sit is hand is empty or has an weapon in hand (during compat)
+        // Handle Commands with CTRL Key pressed
+        boolean commandKeyPressed = ModKeyMapping.COMMAND_KEY.isDown();
+        if (commandKeyPressed) {
+          // Order to sit is hand is empty or has an weapon in hand (during compat).
           if (itemStack.isEmpty() || isWeapon(itemStack)) {
             NetworkHandler.commandPlayerCompanion(getStringUUID(),
                 PlayerCompanionCommand.SIT_FOLLOW_TOGGLE);
+            return InteractionResult.SUCCESS;
+          }
+        }
+
+        // Handle Aggression level with ALT Key pressed
+        boolean aggressionKeyPressed = ModKeyMapping.AGGRESSION_KEY.isDown();
+        if (aggressionKeyPressed) {
+          // Cycle between possible aggression levels.
+          if (itemStack.isEmpty() || isWeapon(itemStack)) {
+            NetworkHandler.commandPlayerCompanion(getStringUUID(),
+                PlayerCompanionCommand.AGGRESSION_LEVEL_TOGGLE);
             return InteractionResult.SUCCESS;
           }
         }

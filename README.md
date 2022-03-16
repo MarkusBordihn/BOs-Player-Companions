@@ -64,6 +64,7 @@ Each player companion prefer a specific tame item, in most cases you need severa
 Most of the companions could be controlled with the following controls:
 
 - **CTRL + Right Click** (on Player Companion with empty Hand or Weapon) Order to sit / Un-order to sit
+- **ALT + Right Click** (on Player Companion with empty Hand or Weapon) Change Aggressive status like passive, neutral, aggressive
 - **Right Click** (on Collector with empty hand or normal Block) Open Inventory
 - **SHIFT + Right Click** (with empty hand) Pet Companion
 
@@ -98,8 +99,8 @@ I'm not able to test all different kind of mod combinations or mod packs.
 | Fabric Version | ❌ Not planned        |
 | Forge 1.16.5   | ❌ Not planned        |
 | Forge 1.17.1   | ❌ Not planned        |
-| Forge 1.18.1   | ⚠️ Maintenance only   |
-| Forge 1.18.2   | ✔️ Active development |
+| Forge 1.18.1   | ✔️ Active development |
+| Forge 1.18.2   | ⚠️ Testing only       |
 
 ## License
 

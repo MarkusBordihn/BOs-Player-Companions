@@ -121,6 +121,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   // Temporary stats
   private BlockPos orderedToPosition = null;
+  private AggressionLevel aggressionLevel = AggressionLevel.UNKNOWN;
   private ItemStack companionTypeIcon = new ItemStack(Items.BONE);
   private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
   private String dimensionName = "";
@@ -415,6 +416,32 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public BlockPos getOrderedToPosition() {
     return this.orderedToPosition;
+  }
+
+  public void setAggressionLevel(AggressionLevel aggressionLevel) {
+    this.aggressionLevel = aggressionLevel;
+    this.setDataSyncNeeded();
+  }
+
+  public AggressionLevel getAggressionLevel() {
+    return this.aggressionLevel;
+  }
+
+  public void toggleAggressionLevel() {
+    AggressionLevel nextAggressionLevel = this.aggressionLevel.getNext();
+    int loopProtection = 0;
+    int maxLoopSize = AggressionLevel.values().length;
+    while (!isSupportedAggressionLevel(nextAggressionLevel) && loopProtection++ < maxLoopSize) {
+      nextAggressionLevel = nextAggressionLevel.getNext();
+    }
+    if (nextAggressionLevel != this.aggressionLevel
+        && isSupportedAggressionLevel(aggressionLevel)) {
+      setAggressionLevel(nextAggressionLevel);
+    }
+  }
+
+  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
+    return aggressionLevel != null;
   }
 
   public float getHeadRollAngle(float p_30449_) {

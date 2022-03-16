@@ -38,7 +38,9 @@
 
   "key.player_companions.category": "Player Companions Keys",
   "key.player_companions.player_companions": "Open Player Companions Screen",
-  "key.player_companions.control": "Command Key",
+  "key.player_companions.control": "Command player companion",
+  "key.player_companions.aggression": "Set aggression level for player companion",
+  "key.player_companions.open_menu": "Open player companions menu",
 
   "text.player_companions.companion_is_near_you": "Companion %1$s is already spawned within 16 blocks from your position!",
 

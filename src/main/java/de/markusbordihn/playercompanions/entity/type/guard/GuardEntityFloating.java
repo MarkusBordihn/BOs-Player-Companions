@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityFloating;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
@@ -36,9 +37,21 @@ public class GuardEntityFloating extends PlayerCompanionEntityFloating {
     super(entityType, level);
     this.setCompanionType(PlayerCompanionType.GUARD);
     this.setCompanionTypeIcon(new ItemStack(Items.NETHERITE_SWORD));
+    this.setAggressionLevel(AggressionLevel.NEUTRAL);
 
     // Shared Guard Features
     this.guardFeatures = new GuardFeatures(this, level);
+  }
+
+  @Override
+  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
+    return aggressionLevel == AggressionLevel.PASSIVE_FLEE
+        || aggressionLevel == AggressionLevel.PASSIVE
+        || aggressionLevel == AggressionLevel.NEUTRAL
+        || aggressionLevel == AggressionLevel.AGGRESSIVE
+        || aggressionLevel == AggressionLevel.AGGRESSIVE_MONSTER
+        || aggressionLevel == AggressionLevel.AGGRESSIVE_ANIMALS
+        || aggressionLevel == AggressionLevel.AGGRESSIVE_PLAYERS;
   }
 
   @Override

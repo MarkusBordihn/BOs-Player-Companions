@@ -47,6 +47,7 @@ import net.minecraft.world.phys.Vec3;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityFloating;
 import de.markusbordihn.playercompanions.item.ModItems;
@@ -74,6 +75,7 @@ public class Snail extends CollectorEntityFloating {
     super.registerGoals();
 
     this.goalSelector.addGoal(1, new FloatGoal(this));
+    this.goalSelector.addGoal(1, new FleeGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));
     this.goalSelector.addGoal(2, new AvoidCreeperGoal(this));

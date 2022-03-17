@@ -33,6 +33,7 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
+import de.markusbordihn.playercompanions.entity.companions.Samurai;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
@@ -50,11 +51,11 @@ public class ModEntityType {
 
   // Collector Entity
   public static final RegistryObject<EntityType<Pig>> PIG = ENTITIES.register(Pig.ID,
-      () -> EntityType.Builder.<Pig>of(Pig::new, PlayerCompanionEntity.CATEGORY).sized(0.9F, 1.2F)
+      () -> EntityType.Builder.<Pig>of(Pig::new, PlayerCompanionEntity.CATEGORY).sized(1.0F, 1.1F)
           .clientTrackingRange(8).build(Pig.ID));
   public static final RegistryObject<EntityType<Snail>> SNAIL = ENTITIES.register(Snail.ID,
       () -> EntityType.Builder.<Snail>of(Snail::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.9F, 1.2F).clientTrackingRange(8).build(Snail.ID));
+          .sized(0.8F, 0.9F).clientTrackingRange(8).build(Snail.ID));
 
   // Follower Entity
   public static final RegistryObject<EntityType<SmallSlime>> SMALL_SLIME =
@@ -63,25 +64,27 @@ public class ModEntityType {
               .sized(0.5F, 0.5F).clientTrackingRange(8).build(SmallSlime.ID));
 
   // Guard Entity
+  public static final RegistryObject<EntityType<Samurai>> SAMURAI = ENTITIES.register(Samurai.ID,
+      () -> EntityType.Builder.<Samurai>of(Samurai::new, PlayerCompanionEntity.CATEGORY)
+          .sized(0.5F, 1.4F).clientTrackingRange(16).build(Samurai.ID));
   public static final RegistryObject<EntityType<Rooster>> ROOSTER = ENTITIES.register(Rooster.ID,
       () -> EntityType.Builder.<Rooster>of(Rooster::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.9F, 1.2F).clientTrackingRange(16).build(Rooster.ID));
+          .sized(0.6F, 1.1F).clientTrackingRange(16).build(Rooster.ID));
   public static final RegistryObject<EntityType<SmallGhast>> SMALL_GHAST =
       ENTITIES.register(SmallGhast.ID,
           () -> EntityType.Builder.<SmallGhast>of(SmallGhast::new, PlayerCompanionEntity.CATEGORY)
-              .sized(0.9F, 1.2F).clientTrackingRange(16).build(SmallGhast.ID));
+              .sized(1.0F, 2.13F).clientTrackingRange(16).build(SmallGhast.ID));
 
   // Healer Entity
   public static final RegistryObject<EntityType<Fairy>> FAIRY = ENTITIES.register(Fairy.ID,
       () -> EntityType.Builder.<Fairy>of(Fairy::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.9F, 1.2F).clientTrackingRange(16).build(Fairy.ID));
+          .sized(0.8F, 2.0F).clientTrackingRange(16).build(Fairy.ID));
 
   // Supporter Entity
   public static final RegistryObject<EntityType<WelshCorgi>> WELSH_CORGI =
       ENTITIES.register(WelshCorgi.ID,
-          () -> EntityType.Builder
-              .<WelshCorgi>of(WelshCorgi::new, PlayerCompanionEntity.CATEGORY)
-              .sized(0.6F, 1.0F).clientTrackingRange(16).build(WelshCorgi.ID));
+          () -> EntityType.Builder.<WelshCorgi>of(WelshCorgi::new, PlayerCompanionEntity.CATEGORY)
+              .sized(0.65F, 1.0F).clientTrackingRange(16).build(WelshCorgi.ID));
 
   @SubscribeEvent
   public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
@@ -89,6 +92,7 @@ public class ModEntityType {
     event.put(FAIRY.get(), Fairy.createAttributes().build());
     event.put(PIG.get(), Pig.createAttributes().build());
     event.put(ROOSTER.get(), Rooster.createAttributes().build());
+    event.put(SAMURAI.get(), Samurai.createAttributes().build());
     event.put(SMALL_GHAST.get(), SmallGhast.createAttributes().build());
     event.put(SMALL_SLIME.get(), SmallSlime.createAttributes().build());
     event.put(SNAIL.get(), Snail.createAttributes().build());

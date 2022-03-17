@@ -88,7 +88,6 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   public static final String ID = "small_ghast";
   public static final String NAME = "Small Ghast";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
-  public static final EntityDimensions entityDimensions = new EntityDimensions(0.75f, 1.70f, false);
 
   // Config settings
   private static int explosionPower = COMMON.smallGhastExplosionPower.get();
@@ -263,17 +262,12 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   @Override
   public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-    return 1.45F;
+    return 1.35F;
   }
 
   @Override
   public float getScale() {
     return 0.75F;
-  }
-
-  @Override
-  public EntityDimensions getDimensions(Pose pose) {
-    return entityDimensions;
   }
 
   @Override

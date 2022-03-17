@@ -1,5 +1,5 @@
 {
-  "parent": "player_companions:item/fairy",
+  "parent": "player_companions:item/template/fairy",
   "textures": {
     "texture": "player_companions:entity/fairy/fairy_red_hair"
   }

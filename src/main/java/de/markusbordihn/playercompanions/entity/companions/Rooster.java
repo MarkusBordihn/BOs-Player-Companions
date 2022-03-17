@@ -23,11 +23,9 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -63,7 +61,6 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   public static final String ID = "rooster";
   public static final String NAME = "Rooster";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS);
-  public static final EntityDimensions entityDimensions = new EntityDimensions(0.6f, 1.1f, false);
 
   public Rooster(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level);
@@ -177,11 +174,6 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   @Override
   public Item getCompanionItem() {
     return ModItems.ROOSTER.get();
-  }
-
-  @Override
-  public EntityDimensions getDimensions(Pose pose) {
-    return entityDimensions;
   }
 
   @Override

@@ -33,6 +33,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.Samurai;
 import de.markusbordihn.playercompanions.item.companions.*;
 import de.markusbordihn.playercompanions.item.tameitems.*;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
@@ -55,6 +56,10 @@ public class ModItems {
       ITEMS.register(FairyItem.ID + "_default", () -> new FairyItem(Fairy.DEFAULT_VARIANT));
   public static final RegistryObject<Item> FAIRY_RED_HAIR =
       ITEMS.register(FairyItem.ID + "_red_hair", () -> new FairyItem(Fairy.RED_HAIR_VARIANT));
+
+  // Samurai
+  public static final RegistryObject<Item> SAMURAI_DEFAULT =
+      ITEMS.register(SamuraiItem.ID + "_default", () -> new SamuraiItem(Samurai.DEFAULT_VARIANT));
 
   // Pigs
   public static final RegistryObject<Item> PIG = ITEMS.register(PigItem.ID, PigItem::new);
@@ -137,9 +142,9 @@ public class ModItems {
       () -> new ForgeSpawnEggItem(ModEntityType.ROOSTER::get, MaterialColor.GOLD.col,
           MaterialColor.COLOR_RED.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
-  public static final RegistryObject<Item> SNAIL_SPAWN_EGG = ITEMS.register("snail_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.GOLD.col,
-          MaterialColor.COLOR_BLUE.col,
+  public static final RegistryObject<Item> SAMURAI_SPAWN_EGG = ITEMS.register("samurai_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.SAMURAI::get, MaterialColor.GOLD.col,
+          MaterialColor.COLOR_RED.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SMALL_GHAST_SPAWN_EGG =
       ITEMS.register("small_ghast_spawn_egg",
@@ -151,6 +156,10 @@ public class ModItems {
           () -> new ForgeSpawnEggItem(ModEntityType.SMALL_SLIME::get, MaterialColor.GOLD.col,
               MaterialColor.COLOR_GREEN.col,
               new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+  public static final RegistryObject<Item> SNAIL_SPAWN_EGG = ITEMS.register("snail_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.GOLD.col,
+          MaterialColor.COLOR_BLUE.col,
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> WELSH_CORGI_SPAWN_EGG =
       ITEMS.register("welsh_corgi_spawn_egg",
           () -> new ForgeSpawnEggItem(ModEntityType.WELSH_CORGI::get, MaterialColor.GOLD.col,

@@ -136,11 +136,6 @@ public class Pig extends CollectorEntityWalking {
   }
 
   @Override
-  public EntityDimensions getDimensions(Pose pose) {
-    return new EntityDimensions(0.8f, 1.0f, false);
-  }
-
-  @Override
   public int getEntityGuiScaling() {
     return 35;
   }

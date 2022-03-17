@@ -102,6 +102,7 @@ public class PlayerCompanionEntityWalkControl extends MoveControl {
           waitSoundDelay = 0;
         }
       }
+      this.mob.setZza(0.0F);
     }
 
     else if (this.operation == MoveControl.Operation.WAIT) {

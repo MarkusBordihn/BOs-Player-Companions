@@ -40,18 +40,14 @@ import de.markusbordihn.playercompanions.Constants;
 @OnlyIn(Dist.CLIENT)
 public class FairyModel<T extends TamableAnimal> extends HumanoidModel<T> {
 
-  private final ModelPart leftArmSmall;
   private final ModelPart leftWing;
-  private final ModelPart rightArmSmall;
   private final ModelPart rightWing;
 
   public FairyModel(ModelPart modelPart) {
     super(modelPart);
     this.leftLeg.visible = false;
     this.hat.visible = false;
-    this.leftArmSmall = modelPart.getChild("left_arm");
     this.leftWing = modelPart.getChild("left_wing");
-    this.rightArmSmall = modelPart.getChild("right_arm");
     this.rightWing = modelPart.getChild("right_wing");
   }
 
@@ -60,37 +56,51 @@ public class FairyModel<T extends TamableAnimal> extends HumanoidModel<T> {
     MeshDefinition meshDefinition = HumanoidModel.createMesh(CubeDeformation.NONE, offsetY);
     PartDefinition partDefinition = meshDefinition.getRoot();
 
-    // Use smaller arms
-    partDefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(40, 16)
-        .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, CubeDeformation.NONE),
-        PartPose.offset(-5.0F, 2.0F + offsetY, 0.0F));
-    partDefinition
-        .addOrReplaceChild(
-            "left_arm", CubeListBuilder.create().texOffs(40, 16).mirror().addBox(-1.0F, -2.0F,
-                -2.0F, 3.0F, 12.0F, 4.0F, CubeDeformation.NONE),
-            PartPose.offset(5.0F, 2.0F + offsetY, 0.0F));
+    // Head
+    partDefinition.addOrReplaceChild("head",
+        CubeListBuilder.create().texOffs(34, 17)
+            .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)).texOffs(0, 25)
+            .addBox(-4.5F, -8.5F, -4.5F, 9.0F, 9.0F, 9.0F, new CubeDeformation(0.0F)),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
+
+    // Body
+    partDefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(42, 0)
+        .addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(36, 33)
+        .addBox(-4.0F, 0.0F, -2.5F, 8.0F, 15.0F, 5.0F, new CubeDeformation(0.5F)),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
+
+    // Smaller arms
+    partDefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(60, 61)
+        .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(60, 48)
+        .addBox(-3.0F, -2.5F, -2.5F, 4.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)),
+        PartPose.offset(-5.0F, 2.0F, 0.0F));
+    partDefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(60, 61).mirror()
+        .addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false)
+        .texOffs(0, 58).addBox(-1.0F, -2.5F, -2.5F, 4.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)),
+        PartPose.offset(5.0F, 2.0F, 0.0F));
 
     // Combined legs like Vex
-    partDefinition.addOrReplaceChild("right_leg",
-        CubeListBuilder.create().texOffs(32, 2).addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F),
-        PartPose.offset(-1.9F, 12.0F + offsetY, 0.0F));
+    partDefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(44, 53)
+        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(24, 53)
+        .addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 43)
+        .addBox(-1.5F, -0.95F, -2.5F, 7.0F, 10.0F, 5.0F, new CubeDeformation(0.0F)),
+        PartPose.offset(-1.9F, 12.0F, 0.0F));
 
     // Adding Wings
-    partDefinition.addOrReplaceChild("right_wing",
-        CubeListBuilder.create().texOffs(0, 32).addBox(-20.0F, 0.0F, 0.0F, 20.0F, 12.0F, 1.0F),
-        PartPose.offsetAndRotation(0.0F, offsetY, 0.0F, 0.0F, 0.0F, 0.0F));
-    partDefinition
-        .addOrReplaceChild(
-            "left_wing", CubeListBuilder.create().texOffs(0, 32).mirror().addBox(0.0F, 0.0F, 0.0F,
-                20.0F, 12.0F, 1.0F),
-            PartPose.offsetAndRotation(0.0F, offsetY, 0.0F, 0.0F, 0.0F, 0.0F));
-    return LayerDefinition.create(meshDefinition, 64, 64);
+    partDefinition.addOrReplaceChild("left_wing",
+        CubeListBuilder.create().texOffs(0, 0).mirror()
+            .addBox(0.0F, -8.0F, 0.0F, 20.0F, 24.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
+    partDefinition.addOrReplaceChild("right_wing", CubeListBuilder.create().texOffs(0, 0)
+        .addBox(-20.0F, -8.0F, 0.0F, 20.0F, 24.0F, 1.0F, new CubeDeformation(0.0F)),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
+
+    return LayerDefinition.create(meshDefinition, 128, 128);
   }
 
   @Override
   protected Iterable<ModelPart> bodyParts() {
-    return Iterables.concat(super.bodyParts(),
-        java.util.List.of(this.leftArmSmall, this.leftWing, this.rightArmSmall, this.rightWing));
+    return Iterables.concat(super.bodyParts(), java.util.List.of(this.leftWing, this.rightWing));
   }
 
   @Override

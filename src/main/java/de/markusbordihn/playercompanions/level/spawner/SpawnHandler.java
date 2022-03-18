@@ -48,6 +48,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
+import de.markusbordihn.playercompanions.entity.companions.Samurai;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
@@ -70,6 +71,8 @@ public class SpawnHandler {
         COMMON.pigMinGroup.get(), COMMON.pigMaxGroup.get());
     logSpawn(Rooster.NAME, COMMON.roosterSpawnEnable.get(), COMMON.roosterWeight.get(),
         COMMON.roosterMinGroup.get(), COMMON.roosterMaxGroup.get());
+    logSpawn(Samurai.NAME, COMMON.samuraiSpawnEnable.get(), COMMON.samuraiWeight.get(),
+        COMMON.samuraiMinGroup.get(), COMMON.samuraiMaxGroup.get());
     logSpawn(SmallGhast.NAME, COMMON.smallGhastSpawnEnable.get(), COMMON.smallGhastWeight.get(),
         COMMON.smallGhastMinGroup.get(), COMMON.smallGhastMaxGroup.get());
     logSpawn(SmallSlime.NAME, COMMON.smallSlimeSpawnEnable.get(), COMMON.smallSlimeWeight.get(),
@@ -101,6 +104,9 @@ public class SpawnHandler {
     boolean isSwamp =
         biomeCategory == BiomeCategory.SWAMP || BiomeDictionary.hasType(biomeKey, Type.SWAMP);
     boolean isTaiga = biomeCategory == BiomeCategory.TAIGA;
+    boolean isMountain =
+        biomeCategory == BiomeCategory.MOUNTAIN || BiomeDictionary.hasType(biomeKey, Type.MOUNTAIN);
+
 
     // Fairy Spawn
     if (Boolean.TRUE.equals(COMMON.fairySpawnEnable.get()) && isFlowerForest) {
@@ -122,6 +128,14 @@ public class SpawnHandler {
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.ROOSTER.get(),
               COMMON.roosterWeight.get(), COMMON.roosterMinGroup.get(),
               COMMON.roosterMaxGroup.get()));
+    }
+
+    // Samurai Spawn
+    if (Boolean.TRUE.equals(COMMON.samuraiSpawnEnable.get()) && isMountain) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.SAMURAI.get(),
+              COMMON.samuraiWeight.get(), COMMON.samuraiMinGroup.get(),
+              COMMON.samuraiMaxGroup.get()));
     }
 
     // Small Ghast Spawn
@@ -164,6 +178,8 @@ public class SpawnHandler {
       SpawnPlacements.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.ROOSTER.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.SAMURAI.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.SMALL_GHAST.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SmallGhast::checkGhastSpawnRules);

@@ -30,7 +30,10 @@ import com.google.common.collect.Maps;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
@@ -43,7 +46,6 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -65,6 +67,7 @@ import net.minecraft.world.phys.Vec3;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MeleeAttackGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
 import de.markusbordihn.playercompanions.item.ModItems;
@@ -222,13 +225,38 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   }
 
   @Override
+  public SoundEvent getPetSound() {
+    return SoundEvents.VILLAGER_YES;
+  }
+
+  @Override
+  protected SoundEvent getAmbientSound() {
+    return SoundEvents.VILLAGER_AMBIENT;
+  }
+
+  @Override
+  protected SoundEvent getHurtSound(DamageSource damageSource) {
+    return SoundEvents.VILLAGER_HURT;
+  }
+
+  @Override
+  protected SoundEvent getDeathSound() {
+    return SoundEvents.VILLAGER_DEATH;
+  }
+
+  @Override
+  public float getSoundVolume() {
+    return 0.4F;
+  }
+
+  @Override
   public int getEntityGuiScaling() {
-    return 55;
+    return 50;
   }
 
   @Override
   public int getEntityGuiTop() {
-    return 18;
+    return 29;
   }
 
 }

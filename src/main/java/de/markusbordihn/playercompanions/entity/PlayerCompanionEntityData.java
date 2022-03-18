@@ -35,7 +35,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.AgeableMob;
@@ -128,12 +127,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private String dimensionName = "";
   private boolean isDataSyncNeeded = false;
   private boolean sitOnShoulder = false;
+  private boolean shouldAttack = false;
   protected UUID persistentAngerTarget;
   protected int rideCooldownCounter;
-
-  // Animation stats
-  private float interestedAngle;
-  private float interestedAngleO;
 
   // Internal references
   private PlayerCompanionEntity playerCompanionEntity;
@@ -421,6 +417,12 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void setAggressionLevel(AggressionLevel aggressionLevel) {
     this.aggressionLevel = aggressionLevel;
+    this.shouldAttack = this.aggressionLevel == AggressionLevel.NEUTRAL
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE_ANIMALS
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE_MONSTER
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE_PLAYERS
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE_ALL;
     this.setDataSyncNeeded();
   }
 
@@ -445,9 +447,16 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return aggressionLevel != null;
   }
 
-  public float getHeadRollAngle(float p_30449_) {
-    return Mth.lerp(p_30449_, this.interestedAngleO, this.interestedAngle) * 0.15F
-        * (float) Math.PI;
+  public boolean shouldAttack() {
+    return this.shouldAttack;
+  }
+
+  public boolean canAttack() {
+    LivingEntity livingEntity = this.playerCompanionEntity.getTarget();
+    if (livingEntity instanceof Player player && (player.isSpectator() || player.isCreative())) {
+      return false;
+    }
+    return livingEntity != null && livingEntity.isAlive() && isAlive();
   }
 
   public BlockPos ownerBlockPosition() {
@@ -625,15 +634,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
     // Automatically Sync Data, if needed
     if (this.dataSyncTicker++ >= DATA_SYNC_TICK && syncDataIfNeeded()) {
       this.dataSyncTicker = 0;
-    }
-
-    if (this.isAlive()) {
-      this.interestedAngleO = this.interestedAngle;
-      // if (this.isInterested()) {
-      // this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
-      // } else {
-      this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
-      // }
     }
   }
 

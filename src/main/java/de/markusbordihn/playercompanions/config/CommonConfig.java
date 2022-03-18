@@ -102,6 +102,11 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue roosterMaxGroup;
     public final ForgeConfigSpec.IntValue roosterWeight;
 
+    public final ForgeConfigSpec.BooleanValue samuraiSpawnEnable;
+    public final ForgeConfigSpec.IntValue samuraiMinGroup;
+    public final ForgeConfigSpec.IntValue samuraiMaxGroup;
+    public final ForgeConfigSpec.IntValue samuraiWeight;
+
     public final ForgeConfigSpec.BooleanValue smallGhastSpawnEnable;
     public final ForgeConfigSpec.IntValue smallGhastMinGroup;
     public final ForgeConfigSpec.IntValue smallGhastMaxGroup;
@@ -217,6 +222,16 @@ public class CommonConfig {
       roosterMaxGroup =
           builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("roosterMaxGroup", 2, 0, 64);
       roosterWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("roosterWeight", 6, 0, 100);
+      builder.pop();
+
+      builder.push("Samurai");
+      samuraiSpawnEnable =
+          builder.comment("Enable/Disable the samurai spawn.").define("samuraiSpawnEnable", true);
+      samuraiMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("samuraiMinGroup", 1, 0, 64);
+      samuraiMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("samuraiMaxGroup", 1, 0, 64);
+      samuraiWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("samuraiWeight", 6, 0, 100);
       builder.pop();
 
       builder.push("Small Slime");

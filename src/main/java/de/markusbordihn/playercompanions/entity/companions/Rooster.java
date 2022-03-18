@@ -32,7 +32,6 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -51,6 +50,7 @@ import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MeleeAttackGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
 import de.markusbordihn.playercompanions.item.ModItems;

@@ -53,6 +53,8 @@ public class PlayerCompanionData {
   private static final String ENTITY_AGGRESSION_LEVEL = "EntityAggressionLevel";
   private static final String ENTITY_DATA_TAG = "EntityData";
   private static final String ENTITY_DIMENSION = "EntityDimension";
+  private static final String ENTITY_EXPERIENCE_LEVEL_TAG = "EntityExperienceLevel";
+  private static final String ENTITY_EXPERIENCE_TAG = "EntityExperience";
   private static final String ENTITY_HEALTH_MAX_TAG = "EntityHealthMax";
   private static final String ENTITY_HEALTH_TAG = "EntityHealth";
   private static final String ENTITY_ID_TAG = "EntityId";
@@ -62,8 +64,6 @@ public class PlayerCompanionData {
   private static final String ENTITY_SITTING_TAG = "EntitySitting";
   private static final String ENTITY_TARGET_TAG = "EntityTarget";
   private static final String ENTITY_TYPE_TAG = "EntityType";
-  private static final String ENTITY_EXPERIENCE_TAG = "EntityExperience";
-  private static final String ENTITY_EXPERIENCE_LEVEL_TAG = "EntityExperienceLevel";
   private static final String LEVEL_TAG = "Level";
   private static final String NAME_TAG = "Name";
   private static final String OWNER_NAME_TAG = "OwnerName";
@@ -71,9 +71,11 @@ public class PlayerCompanionData {
   private static final String POSITION_TAG = "Position";
   private static final String REMOVED_TAG = "Removed";
   private static final String TYPE_TAG = "Type";
-  static final String UUID_TAG = "UUID";
+  public static final String UUID_TAG = "UUID";
 
+  private AggressionLevel entityAggressionLevel;
   private BlockPos blockPos;
+  private ClientLevel clientLevel;
   private CompoundTag entityData;
   private EntityType<?> entityType;
   private NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
@@ -82,9 +84,7 @@ public class PlayerCompanionData {
   private PlayerCompanionEntity companionEntity;
   private PlayerCompanionType type = PlayerCompanionType.UNKNOWN;
   private ResourceKey<Level> level;
-  private ClientLevel clientLevel;
   private ServerLevel serverLevel;
-  private AggressionLevel entityAggressionLevel;
   private String entityDimension = "";
   private String entityTarget = "";
   private String levelName = "";
@@ -303,20 +303,33 @@ public class PlayerCompanionData {
 
   public boolean storeInventoryItem(ItemStack itemStack) {
     // Iterate trough item stacks to find a matching or empty item stack to store the item.
-    Item item = itemStack.getItem();
-    int numberOfItems = itemStack.getCount();
+
+    // 1. Try to add stack-able items to existing stacks in the inventory.
+    // Note: Items will loose their NBT Tags because they are bound to the ItemStack.
+    if (itemStack.getMaxStackSize() > 1) {
+      Item item = itemStack.getItem();
+      int numberOfItems = itemStack.getCount();
+
+      for (int index = 0; index < getInventoryItemsSize(); index++) {
+        ItemStack existingItems = getInventoryItem(index);
+        if (!existingItems.isEmpty() && existingItems.is(item)
+            && existingItems.getCount() + numberOfItems < existingItems.getMaxStackSize()) {
+          existingItems.grow(numberOfItems);
+          return true;
+        }
+      }
+    }
+
+    // 2. Try to store items into any empty place.
+    // Note: We are storing the ItemStack directly to avoid loosing any NBT Tags.
     for (int index = 0; index < getInventoryItemsSize(); index++) {
       ItemStack existingItems = getInventoryItem(index);
-      if (!existingItems.isEmpty() && existingItems.is(item)
-          && existingItems.getCount() + numberOfItems < existingItems.getMaxStackSize()) {
-        existingItems.grow(numberOfItems);
-        return true;
-      }
       if (existingItems.isEmpty()) {
-        setInventoryItem(index, new ItemStack(item));
+        setInventoryItem(index, itemStack);
         return true;
       }
     }
+
     return false;
   }
 

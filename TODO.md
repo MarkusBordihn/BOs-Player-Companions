@@ -5,14 +5,14 @@ Todo list from testing or feedback.
 ## Player Companions Entity
 
 - [ ] Particle effects for actions
-- [ ] Show consumable food and taming item
-- [ ] Different Dimension transfer
-- [ ] Show accepted food
+- [x] Show consumable food and taming item
+- [x] Different Dimension transfer
+- [x] Show accepted food
 - [x] Name get overwritten issue
 
 ## Tame Items
 
-- [ ] Show possible tamable companions
+- [x] Show possible tamable companions
 
 ## Optifine + Shader
 
@@ -20,8 +20,8 @@ Todo list from testing or feedback.
 
 ## Network
 
-- [ ] Optimize Network Packet
-- [ ] Auto throttling
+- [x] Optimize Network Packet
+- [x] Auto throttling
 - [x] Duplication check
 
 ## Models

@@ -477,6 +477,11 @@ public class CapturedCompanion extends Item {
         tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_food")
             .withStyle(ChatFormatting.GREEN).append(foodOverview));
       }
+    } else {
+      UUID uuid = getCompanionUUID(itemStack);
+      if (uuid != null) {
+        tooltipList.add(new TextComponent("UUID: " + uuid).withStyle(ChatFormatting.GRAY));
+      }
     }
   }
 

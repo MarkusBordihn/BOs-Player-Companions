@@ -82,6 +82,9 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   // Variants
   public static final String DEFAULT_VARIANT = "default";
 
+  // Cache
+  private ResourceLocation textureCache = null;
+
   // Entity texture by color
   private static final Map<String, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
@@ -126,8 +129,11 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   }
 
   public ResourceLocation getResourceLocation() {
-    return TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
-        TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT));
+    if (this.textureCache == null) {
+      this.textureCache = TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
+          TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT));
+    }
+    return this.textureCache;
   }
 
   @Override

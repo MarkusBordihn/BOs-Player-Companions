@@ -132,7 +132,7 @@ public class Pig extends CollectorEntityWalking {
 
   @Override
   public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-    return 0.81F;
+    return 0.82F;
   }
 
   @Override

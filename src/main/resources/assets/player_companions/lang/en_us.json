@@ -3,6 +3,7 @@
 
   "entity.placeholder.text": "Template placeholder do not remove!",
 
+  "entity.player_companions.dobutsu": "Dobutsu",
   "entity.player_companions.fairy": "Fairy",
   "entity.player_companions.pig": "Pig",
   "entity.player_companions.rooster": "Rooster",
@@ -47,6 +48,7 @@
 
   "item.placeholder.text": "Template placeholder do not remove!",
 
+  "item.player_companions.dobutsu_spawn_egg": "Dobutsu Spawn Egg",
   "item.player_companions.fairy_spawn_egg": "Fairy Spawn Egg",
   "item.player_companions.pig_spawn_egg": "Pig Spawn Egg",
   "item.player_companions.rooster_spawn_egg": "Rooster Spawn Egg",
@@ -56,6 +58,7 @@
   "item.player_companions.snail_spawn_egg": "Snail Spawn Egg",
   "item.player_companions.welsh_corgi_spawn_egg": "Welsh Corgi Spawn Egg",
 
+  "item.player_companions.dobutsu_default": "Dobutsu (default)",
   "item.player_companions.fairy_default": "Fairy (default)",
   "item.player_companions.fairy_red_hair": "Fairy (red hair)",
   "item.player_companions.pig": "Pig",

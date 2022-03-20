@@ -58,32 +58,33 @@ public class FairyModel<T extends TamableAnimal> extends HumanoidModel<T> {
 
     // Head
     partDefinition.addOrReplaceChild("head",
-        CubeListBuilder.create().texOffs(34, 17)
+        CubeListBuilder.create().texOffs(32, 25)
             .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)).texOffs(0, 25)
-            .addBox(-4.5F, -8.5F, -4.5F, 9.0F, 9.0F, 9.0F, new CubeDeformation(0.0F)),
+            .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.5F)),
         PartPose.offset(0.0F, 0.0F, 0.0F));
 
     // Body
-    partDefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(42, 0)
-        .addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(36, 33)
-        .addBox(-4.0F, 0.0F, -2.5F, 8.0F, 15.0F, 5.0F, new CubeDeformation(0.5F)),
+    partDefinition.addOrReplaceChild("body",
+        CubeListBuilder.create().texOffs(24, 41)
+            .addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 41)
+            .addBox(-4.0F, 0.0F, -2.0F, 8.0F, 15.0F, 4.0F, new CubeDeformation(0.5F)),
         PartPose.offset(0.0F, 0.0F, 0.0F));
 
     // Smaller arms
-    partDefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(60, 61)
-        .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(60, 48)
-        .addBox(-3.0F, -2.5F, -2.5F, 4.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)),
+    partDefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(56, 14)
+        .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 60)
+        .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 8.0F, 4.0F, new CubeDeformation(0.5F)),
         PartPose.offset(-5.0F, 2.0F, 0.0F));
-    partDefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(60, 61).mirror()
+    partDefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(56, 14).mirror()
         .addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false)
-        .texOffs(0, 58).addBox(-1.0F, -2.5F, -2.5F, 4.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)),
+        .texOffs(20, 57).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 8.0F, 4.0F, new CubeDeformation(0.5F)),
         PartPose.offset(5.0F, 2.0F, 0.0F));
 
     // Combined legs like Vex
-    partDefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(44, 53)
-        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(24, 53)
-        .addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 43)
-        .addBox(-1.5F, -0.95F, -2.5F, 7.0F, 10.0F, 5.0F, new CubeDeformation(0.0F)),
+    partDefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(44, 55)
+        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(48, 41)
+        .addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(42, 0)
+        .addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F, new CubeDeformation(0.5F)),
         PartPose.offset(-1.9F, 12.0F, 0.0F));
 
     // Adding Wings

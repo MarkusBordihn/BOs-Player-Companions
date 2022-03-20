@@ -30,6 +30,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
@@ -51,13 +52,17 @@ public class ModEntityType {
 
   // Collector Entity
   public static final RegistryObject<EntityType<Pig>> PIG = ENTITIES.register(Pig.ID,
-      () -> EntityType.Builder.<Pig>of(Pig::new, PlayerCompanionEntity.CATEGORY).sized(1.0F, 1.1F)
+      () -> EntityType.Builder.<Pig>of(Pig::new, PlayerCompanionEntity.CATEGORY).sized(1.0F, 1.2F)
           .clientTrackingRange(8).build(Pig.ID));
   public static final RegistryObject<EntityType<Snail>> SNAIL = ENTITIES.register(Snail.ID,
       () -> EntityType.Builder.<Snail>of(Snail::new, PlayerCompanionEntity.CATEGORY)
           .sized(0.8F, 0.9F).clientTrackingRange(8).build(Snail.ID));
 
   // Follower Entity
+  public static final RegistryObject<EntityType<Dobutsu>> DOBUTSU =
+      ENTITIES.register(Dobutsu.ID,
+          () -> EntityType.Builder.<Dobutsu>of(Dobutsu::new, PlayerCompanionEntity.CATEGORY)
+              .sized(0.5F, 0.9F).clientTrackingRange(8).build(Dobutsu.ID));
   public static final RegistryObject<EntityType<SmallSlime>> SMALL_SLIME =
       ENTITIES.register(SmallSlime.ID,
           () -> EntityType.Builder.<SmallSlime>of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)
@@ -89,6 +94,7 @@ public class ModEntityType {
   @SubscribeEvent
   public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
     // Create Attributes for Entities
+    event.put(DOBUTSU.get(), Dobutsu.createAttributes().build());
     event.put(FAIRY.get(), Fairy.createAttributes().build());
     event.put(PIG.get(), Pig.createAttributes().build());
     event.put(ROOSTER.get(), Rooster.createAttributes().build());

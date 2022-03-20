@@ -195,8 +195,10 @@ public class WelshCorgiModel<T extends TamableAnimal> extends AgeableListModel<T
   @Override
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
-    this.head.xRot = headPitch * ((float) Math.PI / 220F);
-    this.head.yRot = netHeadYaw * ((float) Math.PI / 220F);
+    if (!entity.isInSittingPose()) {
+      this.head.xRot = headPitch * ((float) Math.PI / 220F);
+      this.head.yRot = netHeadYaw * ((float) Math.PI / 220F);
+    }
   }
 
 }

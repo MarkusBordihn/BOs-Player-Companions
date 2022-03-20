@@ -1,0 +1,6 @@
+{
+  "name": "Control",
+  "description": "Learn how to control your Player Companion. Most of these commands are performed with additional keyboard keys like the CTRL, ALT or SHIFT key which could be adjusted over the config menu.",
+  "icon": "minecraft:wooden_sword",
+  "sortnum": -100
+}

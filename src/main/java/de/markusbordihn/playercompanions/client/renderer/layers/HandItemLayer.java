@@ -45,6 +45,7 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   ModelPart rightHand;
+  ModelPart leftHand;
 
   public HandItemLayer(RenderLayerParent<T, M> parent) {
     super(parent);
@@ -57,6 +58,7 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
     ItemStack itemStackMainHand = entity.getMainHandItem();
 
     if (this.getParentModel() instanceof PlayerCompanionModel playerCompanionModel) {
+      leftHand = playerCompanionModel.leftHand();
       rightHand = playerCompanionModel.rightHand();
     }
 

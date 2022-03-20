@@ -143,12 +143,14 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
 
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
-    this.head.xRot = headPitch * ((float) Math.PI / 180F);
-    this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
-    this.rightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-    this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
-    this.rightWing.zRot = ageInTicks;
-    this.leftWing.zRot = -ageInTicks;
+    if (!entity.isInSittingPose()) {
+      this.head.xRot = headPitch * ((float) Math.PI / 180F);
+      this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
+      this.rightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+      this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+      this.rightWing.zRot = ageInTicks;
+      this.leftWing.zRot = -ageInTicks;
+    }
   }
 
   @Override

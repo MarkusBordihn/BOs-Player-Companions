@@ -1,0 +1,11 @@
+{
+  "name": "Orders",
+  "icon": "minecraft:writable_book",
+  "category": "player_companions:control",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "You can give your companion different kind of orders by pressing the Command Key or by using the companion specific item."
+    }
+  ]
+}

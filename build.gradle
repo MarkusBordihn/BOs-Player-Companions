@@ -71,6 +71,10 @@ minecraft {
           source sourceSets.main
         }
       }
+
+      // Patchouli Mixin Support
+      property 'mixin.env.remapRefMap', 'true'
+      property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
     }
 
     server {
@@ -142,7 +146,12 @@ dependencies {
   minecraft 'net.minecraftforge:forge:1.18.1-39.1.2'
 
   // Jade Integration
-  implementation fg.deobf("curse.maven:jade-324717:3681458")
+  compileOnly fg.deobf("curse.maven:jade-324717:3681458")
+  runtimeOnly fg.deobf("curse.maven:jade-324717:3681458")
+
+  // Patchouli Integration
+  compileOnly fg.deobf("curse.maven:patchouli-306770:3630725")
+  runtimeOnly fg.deobf("curse.maven:patchouli-306770:3630725")
 
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
@@ -210,6 +219,7 @@ curseforge {
     addGameVersion("Forge")
     mainArtifact(jar) {
       relations {
+        requiredDependency 'patchouli'
         optionalDependency 'jade'
         optionalDependency 'neat'
       }

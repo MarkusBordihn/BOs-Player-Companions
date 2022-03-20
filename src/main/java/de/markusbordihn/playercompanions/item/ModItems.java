@@ -32,6 +32,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
+import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
 import de.markusbordihn.playercompanions.entity.companions.Samurai;
 import de.markusbordihn.playercompanions.item.companions.*;
@@ -50,6 +51,10 @@ public class ModItems {
       DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MOD_ID);
 
   @TemplateEntryPoint("Register Items")
+
+  // Dobutsu
+  public static final RegistryObject<Item> DOBUTSU_DEFAULT =
+      ITEMS.register(DobutsuItem.ID + "_default", () -> new DobutsuItem(Dobutsu.DEFAULT_VARIANT));
 
   // Fairies
   public static final RegistryObject<Item> FAIRY_DEFAULT =
@@ -129,7 +134,10 @@ public class ModItems {
       () -> new BlockItem(ModBlocks.COMPANION_GHOST.get(), new Item.Properties()));
 
   @TemplateEntryPoint("Register Spawn Eggs")
-
+  public static final RegistryObject<Item> DOBUTSU_SPAWN_EGG = ITEMS.register("dobutsu_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.DOBUTSU::get, MaterialColor.GOLD.col,
+          MaterialColor.COLOR_PURPLE.col,
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> FAIRY_SPAWN_EGG = ITEMS.register("fairy_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.FAIRY::get, MaterialColor.GOLD.col,
           MaterialColor.COLOR_PURPLE.col,

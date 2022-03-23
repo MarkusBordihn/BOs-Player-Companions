@@ -102,18 +102,6 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
   }
 
   @Override
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
-    if (!entity.isInSittingPose()) {
-      float limbSwingAmountFraction = 1.4F * limbSwingAmount * 0.30F;
-      this.head.xRot = headPitch * ((float) Math.PI / 225F);
-      this.head.yRot = netHeadYaw * ((float) Math.PI / 270F);
-      this.rightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * limbSwingAmountFraction;
-      this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmountFraction;
-    }
-  }
-
-  @Override
   public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
     if (entity.isInSittingPose()) {
       if (this.young) {
@@ -141,6 +129,18 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
       this.leftLeg.xRot = 0.0F;
       this.rightLeg.xRot = 0.0F;
       this.rightLeg.yRot = 0.0F;
+    }
+  }
+
+  @Override
+  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+      float netHeadYaw, float headPitch) {
+    if (!entity.isInSittingPose()) {
+      float limbSwingAmountFraction = 1.4F * limbSwingAmount * 0.30F;
+      this.head.xRot = headPitch * ((float) Math.PI / 225F);
+      this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
+      this.rightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * limbSwingAmountFraction;
+      this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmountFraction;
     }
   }
 

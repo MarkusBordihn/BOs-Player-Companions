@@ -59,12 +59,16 @@ public class ModItems {
   // Fairies
   public static final RegistryObject<Item> FAIRY_DEFAULT =
       ITEMS.register(FairyItem.ID + "_default", () -> new FairyItem(Fairy.DEFAULT_VARIANT));
+  public static final RegistryObject<Item> FAIRY_BLUE =
+      ITEMS.register(FairyItem.ID + "_blue", () -> new FairyItem(Fairy.BLUE_VARIANT));
   public static final RegistryObject<Item> FAIRY_RED_HAIR =
       ITEMS.register(FairyItem.ID + "_red_hair", () -> new FairyItem(Fairy.RED_HAIR_VARIANT));
 
   // Samurai
   public static final RegistryObject<Item> SAMURAI_DEFAULT =
       ITEMS.register(SamuraiItem.ID + "_default", () -> new SamuraiItem(Samurai.DEFAULT_VARIANT));
+  public static final RegistryObject<Item> SAMURAI_BLUE =
+      ITEMS.register(SamuraiItem.ID + "_blue", () -> new SamuraiItem(Samurai.BLUE_VARIANT));
 
   // Pigs
   public static final RegistryObject<Item> PIG = ITEMS.register(PigItem.ID, PigItem::new);
@@ -125,6 +129,8 @@ public class ModItems {
       ITEMS.register("tame_carrot", TameCarrot::new);
   public static final RegistryObject<Item> TAME_SEAGRASS =
       ITEMS.register("tame_seagrass", TameSeagrass::new);
+  public static final RegistryObject<Item> TAME_SWEET_BERRIES =
+      ITEMS.register("tame_sweet_berries", TameSweetBerries::new);
   public static final RegistryObject<Item> TAME_WHEAT_SEEDS =
       ITEMS.register("tame_wheat_seeds", TameWheatSeeds::new);
 

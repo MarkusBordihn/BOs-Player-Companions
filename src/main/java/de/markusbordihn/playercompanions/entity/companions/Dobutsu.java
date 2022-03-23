@@ -64,7 +64,7 @@ public class Dobutsu extends FollowerEntityWalking {
   // General Information
   public static final String ID = "dobutsu";
   public static final String NAME = "dobutsu";
-  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE, Items.SWEET_BERRIES);
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
@@ -135,7 +135,7 @@ public class Dobutsu extends FollowerEntityWalking {
 
   @Override
   public Item getTameItem() {
-    return ModItems.TAME_APPLE.get();
+    return ModItems.TAME_SWEET_BERRIES.get();
   }
 
   @Override

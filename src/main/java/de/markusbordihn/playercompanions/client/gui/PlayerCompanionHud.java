@@ -21,7 +21,6 @@ package de.markusbordihn.playercompanions.client.gui;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 
@@ -115,6 +114,11 @@ public class PlayerCompanionHud {
       return;
     }
 
+    ClientLevel client = minecraft.level;
+    if (!minecraft.level.isClientSide) {
+      return;
+    }
+
     Minecraft.getInstance().getProfiler().push("Player Companions: Hud");
 
     Camera camera = this.minecraft.gameRenderer.getMainCamera();
@@ -125,11 +129,6 @@ public class PlayerCompanionHud {
     Vec3 cameraPos = camera.getPosition();
     final Frustum frustum = new Frustum(poseStack.last().pose(), event.getProjectionMatrix());
     frustum.prepare(cameraPos.x(), cameraPos.y(), cameraPos.z());
-
-    ClientLevel client = minecraft.level;
-    if (!minecraft.level.isClientSide) {
-      return;
-    }
 
     // Render hud for all relevant entities inside display radius.
     for (Entity entity : client.entitiesForRendering()) {
@@ -155,17 +154,14 @@ public class PlayerCompanionHud {
     double x = entity.xo + (entity.getX() - entity.xo) * partialTicks;
     double y = entity.yo + (entity.getY() - entity.yo) * partialTicks;
     double z = entity.zo + (entity.getZ() - entity.zo) * partialTicks;
+    Vec3 renderPos = this.entityRenderDispatcher.camera.getPosition();
 
-    EntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-    Vec3 renderPos = renderDispatcher.camera.getPosition();
-
-    MultiBufferSource.BufferSource buffer = this.minecraft.renderBuffers().bufferSource();
     final int light = LightTexture.pack(15, 15);
     float entityHeight = entity.getBbHeight() + 0.5F;
-
     poseStack.pushPose();
     poseStack.translate((float) (x - renderPos.x()), (float) (y - renderPos.y()),
         (float) (z - renderPos.z()));
+    MultiBufferSource.BufferSource buffer = this.minecraft.renderBuffers().bufferSource();
 
     // Render name tag, mostly used for debugging
     if (hudNameTagEnabled) {
@@ -181,6 +177,8 @@ public class PlayerCompanionHud {
     if (hudStatusEnabled && data != null) {
       renderStatus(entity, data, poseStack, buffer, light, entityHeight);
     }
+
+    poseStack.translate(0.0D, 0.0D, 0.0D);
     poseStack.popPose();
   }
 

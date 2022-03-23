@@ -83,6 +83,7 @@ public class Fairy extends HealerEntityFlyingAround {
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
+  public static final String BLUE_VARIANT = "blue";
   public static final String RED_HAIR_VARIANT = "red_hair";
 
   // Cache
@@ -93,6 +94,8 @@ public class Fairy extends HealerEntityFlyingAround {
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_default.png"));
+        hashMap.put(BLUE_VARIANT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_blue.png"));
         hashMap.put(RED_HAIR_VARIANT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_red_hair.png"));
       });
@@ -101,6 +104,7 @@ public class Fairy extends HealerEntityFlyingAround {
   private static final Map<String, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT, ModItems.FAIRY_DEFAULT.get());
+        hashMap.put(BLUE_VARIANT, ModItems.FAIRY_BLUE.get());
         hashMap.put(RED_HAIR_VARIANT, ModItems.FAIRY_RED_HAIR.get());
       });
 

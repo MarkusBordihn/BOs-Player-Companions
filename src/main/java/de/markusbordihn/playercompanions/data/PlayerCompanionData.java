@@ -232,7 +232,7 @@ public class PlayerCompanionData {
   }
 
   public boolean hasEntityTarget() {
-    return !this.entityTarget.isBlank();
+    return this.entityTarget != null && !this.entityTarget.isBlank();
   }
 
   public NonNullList<ItemStack> getArmorItems() {
@@ -470,7 +470,6 @@ public class PlayerCompanionData {
     compoundTag.putInt(ENTITY_ID_TAG, this.entityId);
     compoundTag.putString(ENTITY_TYPE_TAG, this.entityType.getRegistryName().toString());
     compoundTag.putInt(ENTITY_RESPAWN_TIMER_TAG, this.entityRespawnTimer);
-    compoundTag.putString(ENTITY_TARGET_TAG, this.entityTarget);
 
     // Try to get current Player Companion if not exists.
     PlayerCompanionEntity playerCompanionEntity = this.getPlayerCompanionEntity();
@@ -501,17 +500,16 @@ public class PlayerCompanionData {
       compoundTag.putString(ENTITY_AGGRESSION_LEVEL,
           playerCompanionEntity.getAggressionLevel().name());
 
-      // Set Owner if any.
+      // Set Owner, if any.
       if (playerCompanionEntity.getOwner() != null) {
         compoundTag.putUUID(OWNER_TAG, playerCompanionEntity.getOwner().getUUID());
         compoundTag.putString(OWNER_NAME_TAG,
             playerCompanionEntity.getOwner().getName().getString());
       }
-      if (playerCompanionEntity.getTarget() == null) {
-        compoundTag.putString(ENTITY_TARGET_TAG, "");
-      } else {
-        compoundTag.putString(ENTITY_TARGET_TAG, playerCompanionEntity.getTarget().getEncodeId());
-      }
+
+      // Set target, if any
+      compoundTag.putString(ENTITY_TARGET_TAG, playerCompanionEntity.getTarget() == null ? ""
+          : playerCompanionEntity.getTarget().getEncodeId());
 
       // Get current armor items from entity to be in sync.
       setArmorItems((NonNullList<ItemStack>) playerCompanionEntity.getArmorSlots());
@@ -519,6 +517,7 @@ public class PlayerCompanionData {
       // Get current hand items from entity to be in sync.
       setHandItems((NonNullList<ItemStack>) playerCompanionEntity.getHandSlots());
     } else {
+      // Alternative: Use cached values instead.
       compoundTag.putString(ENTITY_DIMENSION, this.entityDimension);
       compoundTag.putBoolean(ENTITY_SITTING_TAG, this.entitySitting);
       compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG, this.entitySitOnShoulder);
@@ -529,11 +528,14 @@ public class PlayerCompanionData {
       compoundTag.putInt(ENTITY_EXPERIENCE_TAG, this.entityExperience);
       compoundTag.putString(ENTITY_AGGRESSION_LEVEL, this.entityAggressionLevel.name());
 
-      // Set Owner if any.
+      // Set Owner, if any.
       if (this.ownerUUID != null) {
         compoundTag.putUUID(OWNER_TAG, this.ownerUUID);
         compoundTag.putString(OWNER_NAME_TAG, this.ownerName);
       }
+
+      // Set target, if any
+      compoundTag.putString(ENTITY_TARGET_TAG, this.entityTarget == null ? "" : this.entityTarget);
     }
 
     // Store amor items.

@@ -365,9 +365,9 @@ public class PlayerCompanionData {
     this.entityOrderedToPosition = companion.isOrderedToPosition();
     this.entitySitOnShoulder = companion.isSitOnShoulder();
     this.entityData = companion.serializeNBT();
-
-    LivingEntity targetEntity = companion.getTarget();
-    this.entityTarget = targetEntity == null ? "" : targetEntity.getEncodeId();
+    this.entityTarget =
+        companion.getTarget() == null || companion.getTarget().getEncodeId() == null ? ""
+            : companion.getTarget().getEncodeId();
 
     // Handle level references (client and server)
     Level companionLevel = companion.getLevel();
@@ -508,8 +508,10 @@ public class PlayerCompanionData {
       }
 
       // Set target, if any
-      compoundTag.putString(ENTITY_TARGET_TAG, playerCompanionEntity.getTarget() == null ? ""
-          : playerCompanionEntity.getTarget().getEncodeId());
+      compoundTag.putString(ENTITY_TARGET_TAG,
+          playerCompanionEntity.getTarget() == null
+              || playerCompanionEntity.getTarget().getEncodeId() == null ? ""
+                  : playerCompanionEntity.getTarget().getEncodeId());
 
       // Get current armor items from entity to be in sync.
       setArmorItems((NonNullList<ItemStack>) playerCompanionEntity.getArmorSlots());

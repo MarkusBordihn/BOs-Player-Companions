@@ -18,33 +18,28 @@ license="MIT"
 
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
-    modId="player_companions"
-    version="${file.jarVersion}"
-    displayName="Bo's Player Companions"
-    # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
-    #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
-    displayURL="https://www.curseforge.com/minecraft/mc-mods/player-companions"
-    logoFile="logo.png"
-    credits=""
-    authors="Markus Bordihn"
-    description='''Player Companions adds additional creatures which will follow, protect or help you...'''
+  modId="player_companions"
+  version="${file.jarVersion}"
+  displayName="Bo's Player Companions"
+  # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
+  #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
+  displayURL="https://www.curseforge.com/minecraft/mc-mods/player-companions"
+  logoFile="logo.png"
+  credits=""
+  authors="Markus Bordihn"
+  description='''Player Companions adds additional creatures which will follow, protect or help you...'''
 
-    [[dependencies.player_companions]] #optional
-        # the modid of the dependency
-        modId="forge" #mandatory
-        # Does this dependency have to exist - if not, ordering below must be specified
-        mandatory=true #mandatory
-        # The version range of the dependency
-        versionRange="[39,)" #mandatory
-        # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-        ordering="NONE"
-        # Side this dependency is applied on - BOTH, CLIENT or SERVER
-        side="BOTH"
+[[dependencies.player_companions]]
+  modId="forge"
+  mandatory=true
+  versionRange="[39.1.0,)"
+  ordering="NONE"
+  side="BOTH"
 
-    [[dependencies.player_companions]]
-        modId="minecraft"
-        mandatory=true
-        # This version range declares a minimum of the current minecraft version up to but not including the next major version
-        versionRange="[1.18.1,1.19)"
-        ordering="NONE"
-        side="BOTH"
+[[dependencies.player_companions]]
+  modId="minecraft"
+  mandatory=true
+  # This version range declares a minimum of the current minecraft version up to but not including the next major version
+  versionRange="[1.18.1,1.19)"
+  ordering="NONE"
+  side="BOTH"

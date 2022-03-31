@@ -73,7 +73,7 @@ public class PlayerCompanionData {
   private static final String TYPE_TAG = "Type";
   public static final String UUID_TAG = "UUID";
 
-  private AggressionLevel entityAggressionLevel;
+  private AggressionLevel entityAggressionLevel = AggressionLevel.UNKNOWN;
   private BlockPos blockPos;
   private ClientLevel clientLevel;
   private CompoundTag entityData;
@@ -443,8 +443,10 @@ public class PlayerCompanionData {
     PlayerCompanionDataHelper.loadInventoryItems(compoundTag, this.inventoryItems);
 
     // Aggression Level
-    this.entityAggressionLevel =
-        AggressionLevel.valueOf(compoundTag.getString(ENTITY_AGGRESSION_LEVEL));
+    if (compoundTag.contains(ENTITY_AGGRESSION_LEVEL)) {
+      this.entityAggressionLevel =
+          AggressionLevel.get(compoundTag.getString(ENTITY_AGGRESSION_LEVEL));
+    }
 
     log.trace("Loaded PlayerCompanion {} data over compoundTag with {}", this.name, this);
   }

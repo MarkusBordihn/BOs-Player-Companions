@@ -78,6 +78,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   // Config values
   protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static int maxHealth = COMMON.maxHealth.get();
+  private static int maxAttackDamage = COMMON.maxAttackDamage.get();
 
   // Synced Entity Data
   private static final EntityDataAccessor<Boolean> DATA_ACTIVE =
@@ -151,9 +152,16 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     maxHealth = COMMON.maxHealth.get();
     if (maxHealth > 0) {
-      log.info("The max health for player companions is set to {}.", maxHealth);
+      log.info("The max base health for player companions is set to {}.", maxHealth);
     } else {
-      log.warn("The max health for player companions will not be adjusted!");
+      log.warn("The max base health for player companions will not be adjusted!");
+    }
+
+    maxAttackDamage = COMMON.maxAttackDamage.get();
+    if (maxAttackDamage > 0) {
+      log.info("The max base attack damage for player companions is set to {}.", maxAttackDamage);
+    } else {
+      log.warn("The max base attack damage for player companions will not be adjusted!");
     }
   }
 
@@ -295,12 +303,14 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public void onLevelUp(int level) {
     log.debug("Level up for {} to {} ...", this, level);
     adjustMaxHealthPerLevel(level);
+    adjustAttackDamagePerLevel(level);
     this.syncData();
   }
 
   public void onLevelDown(int level) {
     log.debug("Level down for {} to {} ...", this, level);
     adjustMaxHealthPerLevel(level);
+    adjustAttackDamagePerLevel(level);
     this.syncData();
   }
 
@@ -407,6 +417,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public void setOrderedToPosition(BlockPos blockPos) {
+    if (this.orderedToPosition == blockPos) {
+      return;
+    }
     this.orderedToPosition = blockPos;
     this.setDataSyncNeeded();
   }
@@ -416,6 +429,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public void setAggressionLevel(AggressionLevel aggressionLevel) {
+    if (this.aggressionLevel == aggressionLevel) {
+      return;
+    }
     this.aggressionLevel = aggressionLevel;
     this.shouldAttack = this.aggressionLevel == AggressionLevel.NEUTRAL
         || this.aggressionLevel == AggressionLevel.AGGRESSIVE
@@ -526,6 +542,35 @@ public class PlayerCompanionEntityData extends TamableAnimal
     }
   }
 
+  public void adjustAttackDamagePerLevel(int level) {
+    int attackDamageAdjustment = getAttackDamageAdjustmentFromExperienceLevel(level, maxAttackDamage,
+        (int) getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+    increaseAttackDamage(attackDamageAdjustment);
+  }
+
+  public void increaseAttackDamage(int attackDamage) {
+    if (attackDamage > 0) {
+      // Remove previous attribute modifier, if needed.
+      Set<AttributeModifier> attributeModifiers =
+          getAttribute(Attributes.ATTACK_DAMAGE).getModifiers();
+      if (!attributeModifiers.isEmpty()) {
+        Iterator<AttributeModifier> attributeModifierIterator = attributeModifiers.iterator();
+        while (attributeModifierIterator.hasNext()) {
+          AttributeModifier attributeModifier = attributeModifierIterator.next();
+          if (attributeModifier != null
+              && attributeModifier.getName().equals(ATTRIBUTE_ATTACK_DAMAGE)) {
+            getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(attributeModifier);
+          }
+        }
+      }
+
+      // Add new attackDamage modifier
+      AttributeModifier increaseAttackDamageModifier =
+          new AttributeModifier(ATTRIBUTE_ATTACK_DAMAGE, attackDamage, AttributeModifier.Operation.ADDITION);
+      getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(increaseAttackDamageModifier);
+    }
+  }
+
   public int getAttackDamage() {
     // Calculate the possible attack damage
     double baseAttackDamage = getAttribute(Attributes.ATTACK_DAMAGE).getValue();
@@ -608,6 +653,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     int experienceLevel = this.getExperienceLevel();
     if (experienceLevel > getMinExperienceLevel()) {
       adjustMaxHealthPerLevel(experienceLevel);
+      adjustAttackDamagePerLevel(experienceLevel);
     }
 
     // Handle respawn ticker

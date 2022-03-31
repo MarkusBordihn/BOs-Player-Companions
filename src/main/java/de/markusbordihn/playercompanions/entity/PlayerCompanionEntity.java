@@ -322,7 +322,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     if (level > 1) {
       addParticle(ParticleTypes.ENCHANT);
-      sendOwnerMessage(new TranslatableComponent(Util.makeDescriptionId("entity", LEVEL_UP_MESSAGE),
+      sendOwnerMessage(new TranslatableComponent(
+          Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, LEVEL_UP_MESSAGE),
           this.getCustomCompanionName(), level));
     }
   }
@@ -347,7 +348,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void stopRespawnTimer() {
     super.stopRespawnTimer();
-    sendOwnerMessage(new TranslatableComponent(Util.makeDescriptionId("entity", RESPAWN_MESSAGE),
+    sendOwnerMessage(new TranslatableComponent(
+        Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, RESPAWN_MESSAGE),
         this.getCustomCompanionName()));
     setDataSyncNeeded();
   }
@@ -446,28 +448,22 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
         // Handle Commands with CTRL Key pressed
         boolean commandKeyPressed = ModKeyMapping.COMMAND_KEY.isDown();
-        if (commandKeyPressed) {
-          // Order to sit is hand is empty or has an weapon in hand (during compat).
-          if (itemStack.isEmpty() || isWeapon(itemStack)) {
-            NetworkHandler.commandPlayerCompanion(getStringUUID(),
-                PlayerCompanionCommand.SIT_FOLLOW_TOGGLE);
-            return InteractionResult.SUCCESS;
-          }
+        if (commandKeyPressed && (itemStack.isEmpty() || isWeapon(itemStack))) {
+          NetworkHandler.commandPlayerCompanion(getStringUUID(),
+              PlayerCompanionCommand.SIT_FOLLOW_TOGGLE);
+          return InteractionResult.SUCCESS;
         }
 
         // Handle Aggression level with ALT Key pressed
         boolean aggressionKeyPressed = ModKeyMapping.AGGRESSION_KEY.isDown();
-        if (aggressionKeyPressed) {
-          // Cycle between possible aggression levels.
-          if (itemStack.isEmpty() || isWeapon(itemStack)) {
-            NetworkHandler.commandPlayerCompanion(getStringUUID(),
-                PlayerCompanionCommand.AGGRESSION_LEVEL_TOGGLE);
-            return InteractionResult.SUCCESS;
-          }
+        if (aggressionKeyPressed && (itemStack.isEmpty() || isWeapon(itemStack))) {
+          NetworkHandler.commandPlayerCompanion(getStringUUID(),
+              PlayerCompanionCommand.AGGRESSION_LEVEL_TOGGLE);
+          return InteractionResult.SUCCESS;
         }
 
         // Pet Player Companion
-        else if (player.isCrouching() && itemStack.isEmpty()) {
+        if (player.isCrouching() && itemStack.isEmpty()) {
           this.addParticle(ParticleTypes.HEART);
           if (this.getPetSound() != null) {
             this.playSound(player, this.getPetSound());
@@ -579,12 +575,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         if (respawnDelay > 1) {
           setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
         }
-        sendOwnerMessage(
-            new TranslatableComponent(Util.makeDescriptionId("entity", WILL_RESPAWN_MESSAGE),
-                getCustomCompanionName(), respawnDelay));
+        sendOwnerMessage(new TranslatableComponent(
+            Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_RESPAWN_MESSAGE),
+            getCustomCompanionName(), respawnDelay));
       } else {
         sendOwnerMessage(new TranslatableComponent(
-            Util.makeDescriptionId("entity", WILL_NOT_RESPAWN_MESSAGE), getCustomCompanionName()));
+            Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_NOT_RESPAWN_MESSAGE),
+            getCustomCompanionName()));
         setActive(false);
       }
     }

@@ -64,7 +64,9 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue respawnDelay;
     public final ForgeConfigSpec.BooleanValue enableCompanionGhost;
     public final ForgeConfigSpec.BooleanValue friendlyFire;
+
     public final ForgeConfigSpec.IntValue maxHealth;
+    public final ForgeConfigSpec.IntValue maxAttackDamage;
 
     public final ForgeConfigSpec.EnumValue<GuiPosition> guiPosition;
     public final ForgeConfigSpec.IntValue guiOffsetX;
@@ -141,8 +143,14 @@ public class CommonConfig {
           .define("friendlyFire", false);
       enableCompanionGhost = builder.comment("Enable / Disable ghosts for died player companions.")
           .define("enableCompanionGhost", true);
-      maxHealth = builder.comment("The max health a companion can get with level 60.")
+      builder.pop();
+
+      builder.push("Level scaling");
+      maxHealth = builder.comment("The max base health a companion can get with level 60.")
           .defineInRange("maxHealth", 20, 0, 200);
+      maxAttackDamage =
+          builder.comment("The max base attack damage a companion can get with level 60.")
+              .defineInRange("maxAttackDamage", 5, 0, 200);
       builder.pop();
 
       builder.push("Gui");

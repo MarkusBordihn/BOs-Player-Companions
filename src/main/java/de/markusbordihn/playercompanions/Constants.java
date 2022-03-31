@@ -39,6 +39,7 @@ public final class Constants {
   public static final String MOD_NAME = "Bo's Player Companions";
 
   // Prefixes
+  public static final String ENTITY_TEXT_PREFIX = "entity";
   public static final String TEXT_PREFIX = "text.player_companions.";
   public static final String KEY_PREFIX = "key.player_companions.";
 

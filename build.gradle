@@ -213,15 +213,14 @@ curseforge {
   apiKey = "${credentials.curseforge_api_token}"
   project {
     id = "${curseforge_project_id}"
-    changelog = 'Please see https://github.com/MarkusBordihn/BOs-Player-Companions ...'
+    changelog = 'Please see https://github.com/MarkusBordihn/BOs-Player-Companions/commits/1.18.1 ...'
     releaseType = 'beta'
     addGameVersion("1.18.1")
     addGameVersion("Forge")
     mainArtifact(jar) {
       relations {
-        requiredDependency 'patchouli'
+        optionalDependency 'patchouli'
         optionalDependency 'jade'
-        optionalDependency 'neat'
       }
     }
   }

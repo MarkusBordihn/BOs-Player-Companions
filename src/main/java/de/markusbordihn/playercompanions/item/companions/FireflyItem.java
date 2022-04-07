@@ -21,29 +21,33 @@ package de.markusbordihn.playercompanions.item.companions;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
+import de.markusbordihn.playercompanions.entity.companions.Firefly;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
-import de.markusbordihn.playercompanions.entity.companions.Rooster;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
-public class RoosterItem extends CapturedCompanion {
+public class FireflyItem extends CapturedCompanion {
 
-  public static final String ID = "rooster";
+  public static final String ID = "firefly";
 
-  public RoosterItem() {
+  public FireflyItem() {
     super();
   }
 
-  public RoosterItem(Properties properties) {
+  public FireflyItem(String variant) {
+    super(variant);
+  }
+
+  public FireflyItem(Properties properties) {
     super(properties);
   }
 
   @Override
   public Ingredient getEntityFood() {
-    return Rooster.FOOD_ITEMS;
+    return Firefly.FOOD_ITEMS;
   }
 
   @Override
-  public EntityType<Rooster> getEntityType() {
-    return ModEntityType.ROOSTER.get();
+  public EntityType<Firefly> getEntityType() {
+    return ModEntityType.FIREFLY.get();
   }
 }

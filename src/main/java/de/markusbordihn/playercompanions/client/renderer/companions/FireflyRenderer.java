@@ -17,33 +17,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.item.companions;
+package de.markusbordihn.playercompanions.client.renderer.companions;
 
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.crafting.Ingredient;
-import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
-import de.markusbordihn.playercompanions.entity.companions.Rooster;
-import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-public class RoosterItem extends CapturedCompanion {
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 
-  public static final String ID = "rooster";
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-  public RoosterItem() {
-    super();
-  }
+import de.markusbordihn.playercompanions.client.model.FireflyModel;
+import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.entity.companions.Firefly;
 
-  public RoosterItem(Properties properties) {
-    super(properties);
-  }
+@OnlyIn(Dist.CLIENT)
+public class FireflyRenderer extends MobRenderer<Firefly, FireflyModel<Firefly>> {
 
-  @Override
-  public Ingredient getEntityFood() {
-    return Rooster.FOOD_ITEMS;
+  public FireflyRenderer(EntityRendererProvider.Context context) {
+    super(context, new FireflyModel<>(context.bakeLayer(ClientRenderer.FIREFLY)), 0.2F);
   }
 
   @Override
-  public EntityType<Rooster> getEntityType() {
-    return ModEntityType.ROOSTER.get();
+  protected void scale(Firefly entity, PoseStack poseStack, float unused) {
+    poseStack.scale(0.25F, 0.25F, 0.25F);
   }
+
+  @Override
+  public ResourceLocation getTextureLocation(Firefly entity) {
+    return entity.getResourceLocation();
+  }
+
 }

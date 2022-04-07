@@ -5,6 +5,7 @@
 
   "entity.player_companions.dobutsu": "Dobutsu",
   "entity.player_companions.fairy": "Fairy",
+  "entity.player_companions.firefly": "Firefly",
   "entity.player_companions.pig": "Pig",
   "entity.player_companions.rooster": "Rooster",
   "entity.player_companions.samurai": "Samurai",
@@ -50,6 +51,7 @@
 
   "item.player_companions.dobutsu_spawn_egg": "Dobutsu Spawn Egg",
   "item.player_companions.fairy_spawn_egg": "Fairy Spawn Egg",
+  "item.player_companions.firefly_spawn_egg": "Firefly Spawn Egg",
   "item.player_companions.pig_spawn_egg": "Pig Spawn Egg",
   "item.player_companions.rooster_spawn_egg": "Rooster Spawn Egg",
   "item.player_companions.samurai_spawn_egg": "Samurai Spawn Egg",
@@ -62,6 +64,7 @@
   "item.player_companions.fairy_default": "Fairy (default)",
   "item.player_companions.fairy_red_hair": "Fairy (red hair)",
   "item.player_companions.fairy_blue": "Fairy (blue)",
+  "item.player_companions.firefly_default": "Firefly (default)",
   "item.player_companions.pig": "Pig",
   "item.player_companions.rooster": "Rooster",
   "item.player_companions.samurai_default": "Samurai (default)",

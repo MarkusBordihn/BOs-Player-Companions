@@ -51,7 +51,7 @@ import de.markusbordihn.playercompanions.item.CapturedCompanion;
 @EventBusSubscriber
 public class PlayerCompanionsServerData extends SavedData {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final String COMPANIONS_TAG = "Companions";
   public static final String LAST_UPDATE_TAG = "LastUpdate";
@@ -270,6 +270,10 @@ public class PlayerCompanionsServerData extends SavedData {
   }
 
   public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
+    // First create a backup before we doing anything!
+    PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
+
+    // Creating new data instance and set last update field.
     PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
     log.info("{} loading data ...", Constants.LOG_ICON_NAME);
     playerCompanionsData.lastUpdate = compoundTag.getLong(LAST_UPDATE_TAG);

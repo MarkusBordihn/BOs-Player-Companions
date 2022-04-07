@@ -33,7 +33,7 @@ import de.markusbordihn.playercompanions.Constants;
 public abstract class CustomCommand implements Command<CommandSourceStack> {
   protected CustomCommand() {}
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();

@@ -89,8 +89,8 @@ public class SamuraiModel<T extends TamableAnimal> extends HumanoidModel<T> {
   }
 
   @Override
-  public void setupAnim(T entity, float p_102867_, float p_102868_, float p_102869_,
-      float p_102870_, float p_102871_) {
+  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+      float netHeadYaw, float headPitch) {
     if (entity.isInSittingPose()) {
       this.head.setPos(0.0F, 8.0F, 0.0F);
       this.body.setPos(0.0F, 8.0F, 0.0F);
@@ -103,7 +103,7 @@ public class SamuraiModel<T extends TamableAnimal> extends HumanoidModel<T> {
       this.rightLeg.xRot = -1.6F;
       this.rightLeg.yRot = -0.1F;
     } else {
-      super.setupAnim(entity, p_102867_, p_102868_, p_102869_, p_102870_, p_102871_);
+      super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
     }
   }
 

@@ -37,7 +37,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 public class PlayerCompanionEntityJumpControl extends MoveControl {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private int jumpDelay;
   private int jumpMoveDelay;

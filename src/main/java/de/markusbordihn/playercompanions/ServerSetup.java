@@ -28,7 +28,7 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 
 public class ServerSetup {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected ServerSetup() {}
 

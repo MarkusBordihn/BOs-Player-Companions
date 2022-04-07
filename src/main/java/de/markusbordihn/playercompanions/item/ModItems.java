@@ -31,10 +31,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.ModEntityType;
-import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
-import de.markusbordihn.playercompanions.entity.companions.Fairy;
-import de.markusbordihn.playercompanions.entity.companions.Samurai;
+import de.markusbordihn.playercompanions.entity.companions.*;
 import de.markusbordihn.playercompanions.item.companions.*;
 import de.markusbordihn.playercompanions.item.tameitems.*;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
@@ -63,6 +60,10 @@ public class ModItems {
       ITEMS.register(FairyItem.ID + "_blue", () -> new FairyItem(Fairy.BLUE_VARIANT));
   public static final RegistryObject<Item> FAIRY_RED_HAIR =
       ITEMS.register(FairyItem.ID + "_red_hair", () -> new FairyItem(Fairy.RED_HAIR_VARIANT));
+
+  // Firefly
+  public static final RegistryObject<Item> FIREFLY_DEFAULT =
+      ITEMS.register(FireflyItem.ID + "_default", () -> new FireflyItem(Firefly.DEFAULT_VARIANT));
 
   // Samurai
   public static final RegistryObject<Item> SAMURAI_DEFAULT =
@@ -147,6 +148,10 @@ public class ModItems {
   public static final RegistryObject<Item> FAIRY_SPAWN_EGG = ITEMS.register("fairy_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.FAIRY::get, MaterialColor.GOLD.col,
           MaterialColor.COLOR_PURPLE.col,
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+  public static final RegistryObject<Item> FIREFLY_SPAWN_EGG = ITEMS.register("firefly_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.FIREFLY::get, MaterialColor.GOLD.col,
+          MaterialColor.COLOR_ORANGE.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> PIG_SPAWN_EGG = ITEMS.register("pig_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.GOLD.col,

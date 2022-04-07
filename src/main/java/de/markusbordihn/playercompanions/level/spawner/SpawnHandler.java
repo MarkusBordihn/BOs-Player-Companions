@@ -43,9 +43,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
 import de.markusbordihn.playercompanions.entity.companions.Samurai;
@@ -57,7 +57,7 @@ import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
 @Mod.EventBusSubscriber()
 public class SpawnHandler {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 

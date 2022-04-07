@@ -52,7 +52,7 @@ import de.markusbordihn.playercompanions.text.TranslatableText;
 
 public class CompanionTameItem extends Item {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final Set<String> TAMEABLE_MOB_TYPES = Collections.emptySet();
 

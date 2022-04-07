@@ -1,0 +1,6 @@
+{
+  "parent": "player_companions:item/template/firefly",
+  "textures": {
+    "texture": "player_companions:entity/firefly/firefly"
+  }
+}

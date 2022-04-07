@@ -17,7 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.entity;
+package de.markusbordihn.playercompanions.entity.companions;
 
 import net.minecraft.world.entity.EntityType;
 
@@ -30,15 +30,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
-import de.markusbordihn.playercompanions.entity.companions.Fairy;
-import de.markusbordihn.playercompanions.entity.companions.Pig;
-import de.markusbordihn.playercompanions.entity.companions.Rooster;
-import de.markusbordihn.playercompanions.entity.companions.Samurai;
-import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
-import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
-import de.markusbordihn.playercompanions.entity.companions.Snail;
-import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 @EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntityType {
@@ -85,6 +77,11 @@ public class ModEntityType {
       () -> EntityType.Builder.<Fairy>of(Fairy::new, PlayerCompanionEntity.CATEGORY)
           .sized(0.8F, 2.0F).clientTrackingRange(16).build(Fairy.ID));
 
+  // Lighting Entity
+  public static final RegistryObject<EntityType<Firefly>> FIREFLY = ENTITIES.register(Firefly.ID,
+      () -> EntityType.Builder.<Firefly>of(Firefly::new, PlayerCompanionEntity.CATEGORY)
+          .sized(0.25F, 0.25F).clientTrackingRange(16).build(Firefly.ID));
+
   // Supporter Entity
   public static final RegistryObject<EntityType<WelshCorgi>> WELSH_CORGI =
       ENTITIES.register(WelshCorgi.ID,
@@ -96,6 +93,7 @@ public class ModEntityType {
     // Create Attributes for Entities
     event.put(DOBUTSU.get(), Dobutsu.createAttributes().build());
     event.put(FAIRY.get(), Fairy.createAttributes().build());
+    event.put(FIREFLY.get(), Firefly.createAttributes().build());
     event.put(PIG.get(), Pig.createAttributes().build());
     event.put(ROOSTER.get(), Rooster.createAttributes().build());
     event.put(SAMURAI.get(), Samurai.createAttributes().build());

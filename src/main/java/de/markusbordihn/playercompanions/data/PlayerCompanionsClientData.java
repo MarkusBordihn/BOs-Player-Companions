@@ -43,7 +43,7 @@ import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
 public class PlayerCompanionsClientData {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static long lastUpdate;
   private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =

@@ -19,20 +19,36 @@
 
 package de.markusbordihn.playercompanions.entity.ai.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 
-public class PlayerCompanionEntityFlyControl extends PlayerCompanionEntityFloatingControl {
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
-  private final int maxTurn;
+public class PlayerCompanionEntityFlyControl extends MoveControl {
+
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
   private final boolean hoversInPlace;
+  private final int maxTurn;
+  private int waitDelay;
+  private int waitSoundDelay;
+  protected PlayerCompanionEntity companionEntity;
 
   public PlayerCompanionEntityFlyControl(Mob mob, int maxTurn, boolean hovers) {
     super(mob);
     this.maxTurn = maxTurn;
     this.hoversInPlace = hovers;
+    if (this.mob instanceof PlayerCompanionEntity playerCompanionEntity) {
+      this.companionEntity = playerCompanionEntity;
+    } else {
+      log.error("Error, no Player Companions compatible entity: {}!", mob);
+    }
   }
 
   @Override
@@ -66,7 +82,29 @@ public class PlayerCompanionEntityFlyControl extends PlayerCompanionEntityFloati
         this.mob.setXRot(this.rotlerp(this.mob.getXRot(), f2, this.maxTurn));
         this.mob.setYya(d1 > 0.0D ? f1 : -f1);
       }
-    } else {
+
+    }
+
+    // Wait on place if ordered to sit.
+    else if (this.operation == MoveControl.Operation.WAIT && companionEntity.isOrderedToSit()) {
+      if (this.waitDelay-- <= 0) {
+        this.waitDelay = companionEntity.getWaitDelay();
+
+        // Play wait sound in specific intervals.
+        if (waitSoundDelay++ >= companionEntity.getAmbientSoundInterval()) {
+          this.mob.playSound(companionEntity.getWaitSound(), companionEntity.getSoundVolume(),
+              companionEntity.getSoundPitch());
+          waitSoundDelay = 0;
+        }
+      }
+      if (this.hoversInPlace) {
+        this.mob.setNoGravity(false);
+      }
+      this.mob.setYya(0.0F);
+      this.mob.setZza(0.0F);
+    }
+
+    else {
       if (!this.hoversInPlace || !this.mob.isAlive()) {
         this.mob.setNoGravity(false);
       }

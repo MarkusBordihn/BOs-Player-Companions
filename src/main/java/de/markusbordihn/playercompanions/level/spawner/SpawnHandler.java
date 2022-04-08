@@ -45,6 +45,7 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.Firefly;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
@@ -67,6 +68,8 @@ public class SpawnHandler {
   public static void onWorldLoad(ServerAboutToStartEvent event) {
     logSpawn(Fairy.NAME, COMMON.fairySpawnEnable.get(), COMMON.fairyWeight.get(),
         COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get());
+    logSpawn(Firefly.NAME, COMMON.fireflySpawnEnable.get(), COMMON.fireflyWeight.get(),
+        COMMON.fireflyMinGroup.get(), COMMON.fireflyMaxGroup.get());
     logSpawn(Pig.NAME, COMMON.pigSpawnEnable.get(), COMMON.pigWeight.get(),
         COMMON.pigMinGroup.get(), COMMON.pigMaxGroup.get());
     logSpawn(Rooster.NAME, COMMON.roosterSpawnEnable.get(), COMMON.roosterWeight.get(),
@@ -113,6 +116,13 @@ public class SpawnHandler {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.FAIRY.get(), COMMON.fairyWeight.get(),
               COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get()));
+    }
+
+    // Firefly Spawn
+    if (Boolean.TRUE.equals(COMMON.fireflySpawnEnable.get()) && (isPlains || isSwamp)) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.FAIRY.get(), COMMON.fireflyWeight.get(),
+              COMMON.fireflyMinGroup.get(), COMMON.fireflyMaxGroup.get()));
     }
 
     // Pig Spawn
@@ -174,6 +184,8 @@ public class SpawnHandler {
     log.info("{} Spawn Placements ...", Constants.LOG_REGISTER_PREFIX);
     event.enqueueWork(() -> {
       SpawnPlacements.register(ModEntityType.FAIRY.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.FIREFLY.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);

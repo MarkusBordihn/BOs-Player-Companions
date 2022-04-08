@@ -249,6 +249,11 @@ public class Fairy extends HealerEntityFlyingAround {
   }
 
   @Override
+  public void onMainHandItemSlotChange(ItemStack itemStack) {
+    this.setGlowInTheDark(itemStack.is(Items.TORCH));
+  }
+
+  @Override
   public void tick() {
     super.tick();
     this.increaseRideCooldownCounter();

@@ -68,7 +68,7 @@ public class PlayerCompanionsServerData extends SavedData {
   private static final String PLAYER_COMPANIONS_FILE_ID = Constants.MOD_ID;
 
   private long lastUpdate;
-
+  private int nextDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
@@ -94,6 +94,11 @@ public class PlayerCompanionsServerData extends SavedData {
     PlayerCompanionsServerData.data = server.getLevel(Level.OVERWORLD).getDataStorage()
         .computeIfAbsent(PlayerCompanionsServerData::load, PlayerCompanionsServerData::new,
             PlayerCompanionsServerData.getFileId());
+  }
+
+  public static void setData(PlayerCompanionsServerData data) {
+    PlayerCompanionsServerData.data = data;
+    PlayerCompanionsServerData.data.setDirty();
   }
 
   public static boolean available() {
@@ -269,11 +274,23 @@ public class PlayerCompanionsServerData extends SavedData {
     addPlayerCompanion(new PlayerCompanionData(compoundTag));
   }
 
+  public void syncPlayerCompanionsData(UUID ownerUUID) {
+    if (ownerUUID == null) {
+      return;
+    }
+    Set<PlayerCompanionData> playerCompanionsData = getCompanions(ownerUUID);
+    PlayerCompanionsServerDataClientSync.syncPlayerCompanionData(ownerUUID, playerCompanionsData);
+  }
+
+  public void syncPlayerCompanionData(PlayerCompanionData playerCompanionData) {
+    PlayerCompanionsServerDataClientSync.syncPlayerCompanionData(playerCompanionData);
+  }
+
   public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
-    // First create a backup before we doing anything!
+    // Create a backup before we loading anything!
     PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
 
-    // Creating new data instance and set last update field.
+    // Create a new data instance and set last update field.
     PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
     log.info("{} loading data ...", Constants.LOG_ICON_NAME);
     playerCompanionsData.lastUpdate = compoundTag.getLong(LAST_UPDATE_TAG);
@@ -287,18 +304,6 @@ public class PlayerCompanionsServerData extends SavedData {
     }
 
     return playerCompanionsData;
-  }
-
-  public void syncPlayerCompanionsData(UUID ownerUUID) {
-    if (ownerUUID == null) {
-      return;
-    }
-    Set<PlayerCompanionData> playerCompanionsData = getCompanions(ownerUUID);
-    PlayerCompanionsServerDataClientSync.syncPlayerCompanionData(ownerUUID, playerCompanionsData);
-  }
-
-  public void syncPlayerCompanionData(PlayerCompanionData playerCompanionData) {
-    PlayerCompanionsServerDataClientSync.syncPlayerCompanionData(playerCompanionData);
   }
 
   @Override
@@ -319,9 +324,15 @@ public class PlayerCompanionsServerData extends SavedData {
     }
     compoundTag.put(COMPANIONS_TAG, companionListTag);
 
-    // Iterate all NPC (wip).
+    // Iterate all NPC.
     ListTag npcListTag = new ListTag();
     compoundTag.put(NPC_TAG, npcListTag);
+
+    // Create a backup at least every 24 hours.
+    if (nextDailyBackup >= java.time.Instant.now().getEpochSecond()) {
+      PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
+      nextDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
+    }
 
     return compoundTag;
   }

@@ -94,6 +94,11 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue fairyMaxGroup;
     public final ForgeConfigSpec.IntValue fairyWeight;
 
+    public final ForgeConfigSpec.BooleanValue fireflySpawnEnable;
+    public final ForgeConfigSpec.IntValue fireflyMinGroup;
+    public final ForgeConfigSpec.IntValue fireflyMaxGroup;
+    public final ForgeConfigSpec.IntValue fireflyWeight;
+
     public final ForgeConfigSpec.BooleanValue pigSpawnEnable;
     public final ForgeConfigSpec.IntValue pigMinGroup;
     public final ForgeConfigSpec.IntValue pigMaxGroup;
@@ -212,6 +217,16 @@ public class CommonConfig {
       fairyMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fairyMinGroup", 1, 0, 64);
       fairyMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fairyMaxGroup", 2, 0, 64);
       fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 6, 0, 100);
+      builder.pop();
+
+      builder.push("Firefly");
+      fireflySpawnEnable =
+          builder.comment("Enable/Disable the firefly spawn.").define("fireflySpawnEnable", true);
+      fireflyMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fireflyMinGroup", 1, 0, 64);
+      fireflyMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fireflyMaxGroup", 1, 0, 64);
+      fireflyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fireflyWeight", 6, 0, 100);
       builder.pop();
 
       builder.push("Pig");

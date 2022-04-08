@@ -11,10 +11,11 @@ Player Companions adds additional creatures which will follow, protect or help y
 
 - Persistent Player companions with dedicated item to easy spawn and despawn.
 - Different player companion types like collector, follower, guard, healer and supporter.
-- Different sub-types and colors.
-- Friendly fire (for all of your tamed companions).
+- Different sub-types, styles and colors.
+- Friendly fire option (for all of your tamed companions).
 - Advanced control and experience level system.
-- Jade / Hwyla plugin integration
+- Jade / Hwyla plugin integration.
+- Automatic data backup.
 
 ## Player Companion Types
 
@@ -47,8 +48,6 @@ Additional healer will stack up the effect, so if you are traveling with your fr
 
 The supporter companions gives buffs to any player and your own companions in a specific radius.
 Additional supporter will not stack up, but they will be able to buff the whole group.
-
-### Trader (wip)
 
 ## Spawn
 

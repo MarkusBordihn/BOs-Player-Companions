@@ -269,4 +269,9 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
     return 29;
   }
 
+  @Override
+  public void onMainHandItemSlotChange(ItemStack itemStack) {
+    this.setGlowInTheDark(itemStack.is(Items.TORCH));
+  }
+
 }

@@ -42,6 +42,7 @@ public class ClientSetup {
     event.enqueueWork(() -> {
       ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMPANION_GHOST.get(),
           RenderType.translucent());
+      ItemBlockRenderTypes.setRenderLayer(ModBlocks.LIGHT_BLOCK.get(), RenderType.cutoutMipped());
     });
   }
 }

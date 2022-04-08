@@ -129,6 +129,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private boolean isDataSyncNeeded = false;
   private boolean sitOnShoulder = false;
   private boolean shouldAttack = false;
+  private boolean shouldGlowInTheDark = false;
   protected UUID persistentAngerTarget;
   protected int rideCooldownCounter;
 
@@ -256,6 +257,14 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void setVariant(String variant) {
     this.entityData.set(DATA_VARIANT, variant);
+  }
+
+  public void setGlowInTheDark(boolean glowInTheDark) {
+    this.shouldGlowInTheDark = glowInTheDark;
+  }
+
+  public boolean shouldGlowInTheDark() {
+    return this.shouldGlowInTheDark;
   }
 
   public String getCustomCompanionName() {
@@ -600,6 +609,12 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return ENTITY_GUI_TOP;
   }
 
+  public void onMainHandItemSlotChange(ItemStack itemStack) {
+  }
+
+  public void onOffHandItemSlotChange(ItemStack itemStack) {
+  }
+
   @Override
   public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
     super.setItemSlot(equipmentSlot, itemStack);
@@ -607,6 +622,11 @@ public class PlayerCompanionEntityData extends TamableAnimal
     if (data != null) {
       if (equipmentSlot.getType() == Type.HAND) {
         data.setHandItem(equipmentSlot.getIndex(), itemStack);
+        if (equipmentSlot == EquipmentSlot.MAINHAND) {
+          onMainHandItemSlotChange(itemStack);
+        } else if (equipmentSlot == EquipmentSlot.OFFHAND) {
+          onOffHandItemSlotChange(itemStack);
+        }
       } else if (equipmentSlot.getType() == Type.ARMOR) {
         data.setArmorItem(equipmentSlot.getIndex(), itemStack);
       }

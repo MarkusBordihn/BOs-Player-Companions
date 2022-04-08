@@ -87,6 +87,7 @@ public class Firefly extends FollowerEntityFlying {
 
   public Firefly(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level);
+    setGlowInTheDark(true);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
@@ -161,12 +162,12 @@ public class Firefly extends FollowerEntityFlying {
 
   @Override
   public int getEntityGuiScaling() {
-    return 65;
+    return 85;
   }
 
   @Override
   public int getEntityGuiTop() {
-    return 20;
+    return 0;
   }
 
 }

@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +46,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
@@ -61,6 +63,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -69,6 +72,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.network.NetworkHooks;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.block.LightBlock;
+import de.markusbordihn.playercompanions.block.ModBlocks;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.container.CompanionsMenu;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
@@ -100,7 +105,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
+  private static final int GLOW_TICK = 20;
   private int ticker = 0;
+  private int glowTicker = 0;
 
   // Temporary states
   private boolean wasOnGround;
@@ -113,7 +120,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     this.setSyncReference(this);
 
     // Distribute Ticks along several entities.
-    this.ticker = (short) this.random.nextInt(0, 50);
+    this.ticker = this.random.nextInt(0, INACTIVE_TICK / 2);
+    this.glowTicker = this.random.nextInt(0, GLOW_TICK / 2);
 
     setDataSyncNeeded();
   }
@@ -307,6 +315,16 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     if (respawnTimer > 0 && respawnTimer < java.time.Instant.now().getEpochSecond()) {
       this.stopRespawnTimer();
     }
+
+    // Trigger Hand change events, if needed.
+    ItemStack mainHandItemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+    if (mainHandItemStack != null) {
+      onMainHandItemSlotChange(mainHandItemStack);
+    }
+    ItemStack offHandItemStack = this.getItemBySlot(EquipmentSlot.OFFHAND);
+    if (offHandItemStack != null) {
+      onOffHandItemSlotChange(offHandItemStack);
+    }
   }
 
   public void sendOwnerMessage(Component component) {
@@ -335,7 +353,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   public float getSoundVolume() {
-    // Is needed to delegate protection for access from move controller.
+    // This is needed to delegate protection for access from move controller.
     return 1.0F;
   }
 
@@ -535,6 +553,12 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       } else {
         return;
       }
+    }
+
+    // Place light block, if companion should glow in the dark.
+    if (this.shouldGlowInTheDark() && !this.level.isClientSide && this.glowTicker++ >= GLOW_TICK) {
+      LightBlock.place(level, this.getOnPos());
+      this.glowTicker = 0;
     }
 
     // Shows particle and play sound after jump or fall.

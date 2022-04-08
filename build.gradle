@@ -72,7 +72,7 @@ minecraft {
         }
       }
 
-      // Patchouli Mixin Support
+      // Required: Patchouli Mixin Support
       property 'mixin.env.remapRefMap', 'true'
       property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
     }
@@ -95,6 +95,10 @@ minecraft {
           source sourceSets.main
         }
       }
+
+      // Required: Patchouli Mixin Support
+      property 'mixin.env.remapRefMap', 'true'
+      property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
     }
 
     data {

@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
@@ -80,7 +79,6 @@ public class PlayerCompanionsServerDataClientSync {
 
     // Create client data
     CompoundTag compoundTag = new CompoundTag();
-    compoundTag.putLong(PlayerCompanionsServerData.LAST_UPDATE_TAG, new Date().getTime());
     ListTag companionListTag = new ListTag();
 
     // Iterate over all known player companions for the owner and get their meta data.

@@ -45,7 +45,6 @@ public class PlayerCompanionsClientData {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private static long lastUpdate;
   private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
       new ConcurrentHashMap<>();
 
@@ -80,18 +79,11 @@ public class PlayerCompanionsClientData {
     return new HashSet<>(playerCompanionsMap.values());
   }
 
-  public static long getLastUpdate() {
-    return lastUpdate;
-  }
-
   public static void load(String playerCompanionUUID, String data) {
-    log.debug("{} loading client data for {}: {}", Constants.LOG_ICON_NAME, playerCompanionUUID,
-        data);
     loadPlayerCompanionData(data);
   }
 
   public static void load(String data) {
-    log.debug("{} loading client data: {}", Constants.LOG_ICON_NAME, data);
     CompoundTag compoundTag;
     try {
       compoundTag = TagParser.parseTag(data);
@@ -104,9 +96,6 @@ public class PlayerCompanionsClientData {
   }
 
   public static void load(CompoundTag compoundTag) {
-    log.debug("{} loading client data from compound Tag: {}", Constants.LOG_ICON_NAME, compoundTag);
-    lastUpdate = compoundTag.getLong(PlayerCompanionsServerData.LAST_UPDATE_TAG);
-
     // Restoring companions data
     if (compoundTag.contains(PlayerCompanionsServerData.COMPANIONS_TAG)) {
       ListTag companionListTag = compoundTag.getList(PlayerCompanionsServerData.COMPANIONS_TAG, 10);

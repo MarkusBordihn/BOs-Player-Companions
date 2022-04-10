@@ -552,8 +552,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public void adjustAttackDamagePerLevel(int level) {
-    int attackDamageAdjustment = getAttackDamageAdjustmentFromExperienceLevel(level, maxAttackDamage,
-        (int) getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+    int attackDamageAdjustment = getAttackDamageAdjustmentFromExperienceLevel(level,
+        maxAttackDamage, (int) getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
     increaseAttackDamage(attackDamageAdjustment);
   }
 
@@ -574,8 +574,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
       }
 
       // Add new attackDamage modifier
-      AttributeModifier increaseAttackDamageModifier =
-          new AttributeModifier(ATTRIBUTE_ATTACK_DAMAGE, attackDamage, AttributeModifier.Operation.ADDITION);
+      AttributeModifier increaseAttackDamageModifier = new AttributeModifier(
+          ATTRIBUTE_ATTACK_DAMAGE, attackDamage, AttributeModifier.Operation.ADDITION);
       getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(increaseAttackDamageModifier);
     }
   }
@@ -609,11 +609,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return ENTITY_GUI_TOP;
   }
 
-  public void onMainHandItemSlotChange(ItemStack itemStack) {
-  }
+  public void onMainHandItemSlotChange(ItemStack itemStack) {}
 
-  public void onOffHandItemSlotChange(ItemStack itemStack) {
-  }
+  public void onOffHandItemSlotChange(ItemStack itemStack) {}
 
   @Override
   public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
@@ -676,13 +674,21 @@ public class PlayerCompanionEntityData extends TamableAnimal
       adjustAttackDamagePerLevel(experienceLevel);
     }
 
-    // Handle respawn ticker
+    // Handle respawn ticker.
     if (compoundTag.contains(DATA_RESPAWN_TIMER_TAG)) {
       this.setRespawnTimer(compoundTag.getInt(DATA_RESPAWN_TIMER_TAG));
     }
 
+    // Handle custom name.
     if (compoundTag.contains(DATA_CUSTOM_COMPANION_NAME_TAG)) {
       this.setCustomCompanionName(compoundTag.getString(DATA_CUSTOM_COMPANION_NAME_TAG));
+    }
+
+    // Handle hand items for additional effects like light effects.
+    ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+    if (itemStack != null && !itemStack.isEmpty() && itemStack.is(Items.TORCH)
+        && !shouldGlowInTheDark) {
+      shouldGlowInTheDark = true;
     }
 
     this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));

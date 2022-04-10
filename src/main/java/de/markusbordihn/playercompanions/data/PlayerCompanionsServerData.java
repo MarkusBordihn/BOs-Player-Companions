@@ -54,7 +54,6 @@ public class PlayerCompanionsServerData extends SavedData {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final String COMPANIONS_TAG = "Companions";
-  public static final String LAST_UPDATE_TAG = "LastUpdate";
   public static final String NPC_TAG = "NPCs";
 
   private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
@@ -67,7 +66,6 @@ public class PlayerCompanionsServerData extends SavedData {
 
   private static final String PLAYER_COMPANIONS_FILE_ID = Constants.MOD_ID;
 
-  private long lastUpdate;
   private int nextDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
 
   @SubscribeEvent
@@ -115,10 +113,6 @@ public class PlayerCompanionsServerData extends SavedData {
 
   public static String getFileId() {
     return PLAYER_COMPANIONS_FILE_ID;
-  }
-
-  public long getLastUpdate() {
-    return lastUpdate;
   }
 
   public PlayerCompanionData getCompanion(ItemStack itemStack) {
@@ -293,7 +287,6 @@ public class PlayerCompanionsServerData extends SavedData {
     // Create a new data instance and set last update field.
     PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
     log.info("{} loading data ...", Constants.LOG_ICON_NAME);
-    playerCompanionsData.lastUpdate = compoundTag.getLong(LAST_UPDATE_TAG);
 
     // Restoring companions data
     if (compoundTag.contains(COMPANIONS_TAG)) {
@@ -309,7 +302,6 @@ public class PlayerCompanionsServerData extends SavedData {
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
     log.info("{} saving data ... {}", Constants.LOG_ICON_NAME, this);
-    compoundTag.putLong(LAST_UPDATE_TAG, new Date().getTime());
 
     // Iterate throw all companions and store their full data (meta + entity data).
     ListTag companionListTag = new ListTag();

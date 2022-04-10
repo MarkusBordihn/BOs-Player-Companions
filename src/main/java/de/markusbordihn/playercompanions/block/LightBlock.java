@@ -33,6 +33,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -40,20 +43,23 @@ import de.markusbordihn.playercompanions.Constants;
 
 public class LightBlock extends Block {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
+  public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED;
 
   protected static final VoxelShape SHAPE_AABB = Block.box(7.5D, 7.5D, 7.5D, 8.5D, 8.5D, 8.5D);
-  private static final int TICK_TTL = 30;
 
-  private boolean skipScheduleTick = false;
+  private static final int TICK_TTL = 40;
 
   public LightBlock(Properties properties) {
     super(properties);
+    this.registerDefaultState(this.stateDefinition.any().setValue(EXTENDED, false));
   }
 
-  public void rescheduleTick(Level level, BlockPos blockPos) {
-    if (level.getBlockTicks().hasScheduledTick(blockPos, this) && !skipScheduleTick) {
-      skipScheduleTick = true;
+  public void rescheduleTick(Level level, BlockState blockState, BlockPos blockPos) {
+    if (level.getBlockTicks().hasScheduledTick(blockPos, this)
+        && Boolean.FALSE.equals(blockState.getValue(EXTENDED))) {
+      level.setBlockAndUpdate(blockPos, blockState.setValue(EXTENDED, true));
     }
   }
 
@@ -77,36 +83,46 @@ public class LightBlock extends Block {
 
     // Check alternative position, if needed.
     if (!blockState.isAir() && !(blockState.getBlock() instanceof LightBlock)) {
-      BlockState blockStateAbove = level.getBlockState(blockPos.above());
-      if (blockStateAbove.isAir() || blockStateAbove.getBlock() instanceof LightBlock) {
+      if (canPlace(level, blockPos.above())) {
         blockPos = blockPos.above();
-      } else if (level.getBlockState(blockPos.north()).isAir()) {
+      } else if (canPlace(level, blockPos.north())) {
         blockPos = blockPos.north();
-      } else if (level.getBlockState(blockPos.east()).isAir()) {
+      } else if (canPlace(level, blockPos.east())) {
         blockPos = blockPos.east();
-      } else if (level.getBlockState(blockPos.south()).isAir()) {
+      } else if (canPlace(level, blockPos.south())) {
         blockPos = blockPos.south();
-      } else if (level.getBlockState(blockPos.west()).isAir()) {
+      } else if (canPlace(level, blockPos.west())) {
         blockPos = blockPos.west();
       }
     }
 
     // Final check, before we give up.
-    if (level.getBlockState(blockPos).isAir()) {
+    blockState = level.getBlockState(blockPos);
+    if (blockState.isAir()) {
       level.setBlockAndUpdate(blockPos, ModBlocks.LIGHT_BLOCK.get().defaultBlockState());
       if (level.getBlockState(blockPos).getBlock() instanceof LightBlock lightBlock) {
         lightBlock.scheduleTick(level, blockPos);
       }
-    } else if (level.getBlockState(blockPos).getBlock() instanceof LightBlock lightBlock) {
+    } else if (blockState.getBlock() instanceof LightBlock lightBlock) {
       // Avoid replacing existing block and just extend the removal tick instead.
-      lightBlock.rescheduleTick(level, blockPos);
+      lightBlock.rescheduleTick(level, blockState, blockPos);
     }
+  }
+
+  private static boolean canPlace(Level level, BlockPos blockPos) {
+    BlockState blockState = level.getBlockState(blockPos);
+    return blockState.isAir() || blockState.getBlock() instanceof LightBlock;
   }
 
   @Override
   public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos,
       CollisionContext collisionContext) {
     return SHAPE_AABB;
+  }
+
+  @Override
+  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> blockState) {
+    blockState.add(EXTENDED);
   }
 
   @Override
@@ -117,13 +133,17 @@ public class LightBlock extends Block {
 
   @Override
   public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, Random random) {
-    if (skipScheduleTick) {
-      skipScheduleTick = false;
-      scheduleTick(level, blockPos);
+    if (level.isClientSide) {
       return;
     }
     Block block = blockState.getBlock();
-    if (!level.isClientSide && block instanceof LightBlock) {
+    if (!(block instanceof LightBlock)) {
+      return;
+    }
+    if (Boolean.TRUE.equals(blockState.getValue(EXTENDED))) {
+      scheduleTick(level, blockPos);
+      level.setBlockAndUpdate(blockPos, blockState.setValue(EXTENDED, false));
+    } else {
       level.removeBlock(blockPos, true);
     }
   }

@@ -63,7 +63,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -73,7 +72,6 @@ import net.minecraftforge.network.NetworkHooks;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.block.LightBlock;
-import de.markusbordihn.playercompanions.block.ModBlocks;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.container.CompanionsMenu;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
@@ -105,7 +103,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
-  private static final int GLOW_TICK = 20;
+  private static final int GLOW_TICK = 30;
   private int ticker = 0;
   private int glowTicker = 0;
 

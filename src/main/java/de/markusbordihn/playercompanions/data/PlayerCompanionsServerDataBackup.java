@@ -111,7 +111,7 @@ public class PlayerCompanionsServerDataBackup {
       }
       return compoundTag;
     } catch (final IOException exception) {
-      log.error("{} Failed load backup with exception: {}", Constants.LOG_ICON_NAME, exception);
+      log.error("{} failed load backup with exception: {}", Constants.LOG_ICON_NAME, exception);
     }
     return null;
   }

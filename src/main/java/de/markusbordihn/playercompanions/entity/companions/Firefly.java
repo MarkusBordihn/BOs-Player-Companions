@@ -162,7 +162,7 @@ public class Firefly extends FollowerEntityFlying {
 
   @Override
   public int getEntityGuiScaling() {
-    return 85;
+    return 90;
   }
 
   @Override

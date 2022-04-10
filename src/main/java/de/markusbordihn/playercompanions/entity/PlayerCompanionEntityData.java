@@ -21,14 +21,17 @@ package de.markusbordihn.playercompanions.entity;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-
+import javax.annotation.Nullable;
+import com.mojang.authlib.GameProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -68,6 +71,7 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsDataSync;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import de.markusbordihn.playercompanions.utils.Names;
+import de.markusbordihn.playercompanions.utils.Players;
 
 @EventBusSubscriber
 public class PlayerCompanionEntityData extends TamableAnimal
@@ -97,6 +101,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<String> DATA_CUSTOM_COMPANION_NAME =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
+  private static final EntityDataAccessor<String> DATA_USER_TEXTURE =
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
 
@@ -107,6 +113,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
   private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
   private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
+  private static final String DATA_USER_TEXTURE_TAG = "UserTexture";
   private static final String DATA_VARIANT_TAG = "Variant";
 
   // Attribute Names
@@ -277,6 +284,14 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void setCustomCompanionName(String name) {
     this.entityData.set(DATA_CUSTOM_COMPANION_NAME, name);
+  }
+
+  public String getUserTexture() {
+    return this.entityData.get(DATA_USER_TEXTURE);
+  }
+
+  public void setUserTexture(String name) {
+    this.entityData.set(DATA_USER_TEXTURE, name);
   }
 
   public int getExperience() {
@@ -614,6 +629,24 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public void onOffHandItemSlotChange(ItemStack itemStack) {}
 
   @Override
+  public void setCustomName(@Nullable Component component) {
+    if (!level.isClientSide && component != null) {
+      String name = component.getString();
+      if (name.startsWith("##")) {
+        String username = name.replace("##", "");
+        Optional<GameProfile> gameProfile = Players.getGameProfile(level.getServer(), username);
+        if (gameProfile.isPresent() && gameProfile.get() != null) {
+          setUserTexture(gameProfile.get().getId().toString());
+          log.info("Got game profile for username {}: {}", name, gameProfile);
+        }
+      } else if (!getUserTexture().isEmpty()) {
+        setUserTexture("");
+      }
+    }
+    super.setCustomName(component);
+  }
+
+  @Override
   public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
     super.setItemSlot(equipmentSlot, itemStack);
     PlayerCompanionData data = this.getData();
@@ -642,6 +675,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 1);
     this.entityData.define(DATA_IS_CHARGING, false);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
+    this.entityData.define(DATA_USER_TEXTURE, "");
     this.entityData.define(DATA_VARIANT, "default");
   }
 
@@ -654,6 +688,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
     compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
+    compoundTag.putString(DATA_USER_TEXTURE_TAG, this.getUserTexture());
     compoundTag.putString(DATA_VARIANT_TAG, this.getVariant());
   }
 
@@ -689,6 +724,11 @@ public class PlayerCompanionEntityData extends TamableAnimal
     if (itemStack != null && !itemStack.isEmpty() && itemStack.is(Items.TORCH)
         && !shouldGlowInTheDark) {
       shouldGlowInTheDark = true;
+    }
+
+    // Handle User texture.
+    if (compoundTag.contains(DATA_USER_TEXTURE_TAG)) {
+      this.setUserTexture(compoundTag.getString(DATA_USER_TEXTURE_TAG));
     }
 
     this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));

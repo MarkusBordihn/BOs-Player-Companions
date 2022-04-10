@@ -128,6 +128,8 @@ public class ModItems {
   public static final RegistryObject<Item> TAME_CAKE = ITEMS.register("tame_cake", TameCake::new);
   public static final RegistryObject<Item> TAME_CARROT =
       ITEMS.register("tame_carrot", TameCarrot::new);
+  public static final RegistryObject<Item> TAME_HONEYCOMP =
+      ITEMS.register("tame_honeycomb", TameHoneycomp::new);
   public static final RegistryObject<Item> TAME_SEAGRASS =
       ITEMS.register("tame_seagrass", TameSeagrass::new);
   public static final RegistryObject<Item> TAME_SWEET_BERRIES =

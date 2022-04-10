@@ -19,6 +19,9 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -28,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.DobutsuModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.renderer.layers.HandItemLayer;
@@ -35,6 +39,8 @@ import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 
 @OnlyIn(Dist.CLIENT)
 public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>> {
+
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public DobutsuRenderer(EntityRendererProvider.Context context) {
     super(context, new DobutsuModel<>(context.bakeLayer(ClientRenderer.DOBUTSU)), 0.3F);

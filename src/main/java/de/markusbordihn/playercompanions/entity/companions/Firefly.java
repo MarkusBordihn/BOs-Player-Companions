@@ -64,7 +64,7 @@ public class Firefly extends FollowerEntityFlying {
   // General Information
   public static final String ID = "firefly";
   public static final String NAME = "firefly";
-  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE, Items.SWEET_BERRIES);
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.HONEYCOMB);
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
@@ -137,7 +137,7 @@ public class Firefly extends FollowerEntityFlying {
 
   @Override
   public Item getTameItem() {
-    return ModItems.TAME_SWEET_BERRIES.get();
+    return ModItems.TAME_HONEYCOMP.get();
   }
 
   @Override

@@ -1,0 +1,18 @@
+{
+  "name": "Fairy",
+  "icon": "player_companions:fairy_default",
+  "category": "player_companions:companions",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The fairy is magical create and has different kind of abilities.$(br)They will heal you and your group along your journey but will also learn new abilities from time to time."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "player_companions:fairy",
+      "scale": 1.95,
+      "offset": -0.5,
+      "text": "They live in the flower forest and like eating cakes and cookies."
+    }
+  ]
+}

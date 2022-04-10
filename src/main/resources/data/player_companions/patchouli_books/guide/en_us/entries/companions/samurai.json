@@ -1,0 +1,18 @@
+{
+  "name": "Samurai",
+  "icon": "player_companions:samurai_default",
+  "category": "player_companions:companions",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Samurai is a loyal player companion and will protect you from any harm by others.$(br)They could carry different types of weapons and armor and will get stronger over the time."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "player_companions:samurai",
+      "scale": 1.1,
+      "offset": 0,
+      "text": "They live in the mountains and like eating healthy apples."
+    }
+  ]
+}

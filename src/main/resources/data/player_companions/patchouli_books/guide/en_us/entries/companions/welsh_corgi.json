@@ -1,0 +1,18 @@
+{
+  "name": "Welsh Corgi",
+  "icon": "player_companions:welsh_corgi",
+  "category": "player_companions:companions",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Welsh Corgi are will support you and other companions and players with their present and additional effects.$(br)Depending on the level they will give different kind of effects to the player."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "player_companions:welsh_corgi",
+      "scale": 0.9,
+      "offset": 0.1,
+      "text": "They live in the taiga and like eating bones like any other dogs."
+    }
+  ]
+}

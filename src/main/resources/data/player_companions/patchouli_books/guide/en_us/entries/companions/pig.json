@@ -1,0 +1,18 @@
+{
+  "name": "Pig",
+  "icon": "player_companions:pig",
+  "category": "player_companions:companions",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Pig is a great companion and will help you by carrying your stuff in their bags.$(br)They will also collect dropped items to make sure you are not missing any loot during your journey."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "player_companions:pig",
+      "scale": 0.75,
+      "offset": 0,
+      "text": "They live in the plains and like eating carrots, potato and beetroot."
+    }
+  ]
+}

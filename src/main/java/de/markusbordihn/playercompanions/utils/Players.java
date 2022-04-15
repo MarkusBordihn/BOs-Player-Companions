@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Markus Bordihn
+ * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,12 +22,18 @@ package de.markusbordihn.playercompanions.utils;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.commons.io.IOUtils;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 import com.mojang.authlib.GameProfile;
 
@@ -35,7 +41,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.GameProfileCache;
 
+import de.markusbordihn.playercompanions.Constants;
+
 public class Players {
+
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected Players() {}
 
@@ -59,10 +69,50 @@ public class Players {
       if (data == null || data.isEmpty()) {
         return null;
       }
+      getUserTextureFromSessionResponse(data);
       return data;
     } catch (IOException | org.apache.http.ParseException iOException) {
       return null;
     }
+  }
+
+  public static String getUserTextureFromSessionResponse(String data) {
+    if (data == null || data.isEmpty()) {
+      return "";
+    }
+    JsonElement jsonElement;
+    try {
+      jsonElement = JsonParser.parseString(data);
+    } catch (JsonParseException jsonParseException) {
+      log.error("ERROR: Unable to parse json data: {}", data);
+      return "";
+    }
+    if (jsonElement != null && jsonElement.isJsonObject()) {
+      JsonObject jsonObject = jsonElement.getAsJsonObject();
+      if (jsonObject.has("properties")) {
+        JsonArray properties = jsonObject.getAsJsonArray("properties");
+        log.info("getUserTextureFromSessionRequest: {}", properties);
+        for (JsonElement property : properties) {
+          JsonObject propertyObject = property.getAsJsonObject();
+          log.info(propertyObject);
+          if (propertyObject.has("name")
+              && "textures".equals(propertyObject.get("name").getAsString())
+              && propertyObject.has("value")) {
+            String textureData =
+                new String(Base64.getDecoder().decode(propertyObject.get("value").getAsString()));
+            log.info(textureData);
+          }
+        }
+      }
+    }
+    return "";
+  }
+
+  public static String getUserTextureFromTextureData(String data) {
+    if (data == null || data.isEmpty()) {
+      return "";
+    }
+    return "";
   }
 
 }

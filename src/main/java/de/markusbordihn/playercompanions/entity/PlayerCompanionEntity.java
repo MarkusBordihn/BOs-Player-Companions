@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -553,8 +554,12 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
 
     // Place light block, if companion should glow in the dark.
-    if (this.shouldGlowInTheDark() && !this.level.isClientSide && this.glowTicker++ >= GLOW_TICK) {
-      LightBlock.place(level, this.getOnPos());
+    if (!this.level.isClientSide && this.shouldGlowInTheDark() && this.glowTicker++ >= GLOW_TICK) {
+      BlockPos lightBlockPos = this.getOnPos();
+      if (this.level.isNight() || this.level.isRaining() || this.level.isThundering()
+          || !this.level.canSeeSky(lightBlockPos)) {
+        LightBlock.place(level, lightBlockPos);
+      }
       this.glowTicker = 0;
     }
 

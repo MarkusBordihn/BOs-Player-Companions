@@ -25,9 +25,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import javax.annotation.Nullable;
-import com.mojang.authlib.GameProfile;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.mojang.authlib.GameProfile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -632,7 +634,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public void setCustomName(@Nullable Component component) {
     if (!level.isClientSide && component != null) {
       String name = component.getString();
-      if (name.startsWith("##")) {
+      if (name.startsWith("##") && false) {
         String username = name.replace("##", "");
         Optional<GameProfile> gameProfile = Players.getGameProfile(level.getServer(), username);
         if (gameProfile.isPresent() && gameProfile.get() != null) {

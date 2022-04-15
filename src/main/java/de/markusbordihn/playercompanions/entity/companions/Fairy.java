@@ -195,7 +195,7 @@ public class Fairy extends HealerEntityFlyingAround {
 
   @Override
   protected String getRandomName() {
-    return Names.getRandomFemaleAndMiscMobName();
+    return Names.getRandomFemaleMobName();
   }
 
   @Override

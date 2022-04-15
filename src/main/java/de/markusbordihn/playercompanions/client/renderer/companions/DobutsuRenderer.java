@@ -35,6 +35,7 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.DobutsuModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.renderer.layers.HandItemLayer;
+import de.markusbordihn.playercompanions.client.textures.TextureManager;
 import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 
 @OnlyIn(Dist.CLIENT)
@@ -45,6 +46,7 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
   public DobutsuRenderer(EntityRendererProvider.Context context) {
     super(context, new DobutsuModel<>(context.bakeLayer(ClientRenderer.DOBUTSU)), 0.3F);
     this.addLayer(new HandItemLayer<>(this));
+    // TextureManager.addTexture("test", "");
   }
 
   @Override
@@ -54,6 +56,7 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
 
   @Override
   public ResourceLocation getTextureLocation(Dobutsu entity) {
+    // log.info(TextureManager.getTexture("test"));
     return entity.getResourceLocation();
   }
 

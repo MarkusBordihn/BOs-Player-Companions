@@ -80,25 +80,25 @@ public class CompanionTameItem extends Item {
       return;
     }
 
-    // Discarded Entity from the world
-    livingEntity.setRemoved(RemovalReason.DISCARDED);
-
     // Try to give Player new item in inventory or drop item.
     Inventory playerInventory = player.getInventory();
-    if (playerInventory == null || playerInventory.getFreeSlot() == -1
-        || !playerInventory.add(itemStack)) {
+    if (!playerInventory.add(itemStack)) {
       BlockPos blockPos = livingEntity.blockPosition();
       if (!level.addFreshEntity(
           new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack))) {
         log.error("Unable to give item {} to player {} or to drop it to the world {}!", itemStack,
             player, level);
+        return;
       } else {
         log.warn("Dropped captured companion item for {} with {}, because inventory is full!",
             player, itemStack);
       }
     } else {
-      log.info("Gave Player {} captured companion item with {}.", player, companionItem);
+      log.info("Gave player {} captured companion item with {}.", player, companionItem);
     }
+
+    // Discarded Entity from the world, if we are able to give or drop the item to the player.
+    livingEntity.setRemoved(RemovalReason.DISCARDED);
   }
 
   public boolean canTameCompanion(LivingEntity livingEntity) {

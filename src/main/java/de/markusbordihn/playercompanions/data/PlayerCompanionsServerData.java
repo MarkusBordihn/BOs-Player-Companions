@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -228,14 +227,12 @@ public class PlayerCompanionsServerData extends SavedData {
       return playerCompanionsMap.get(companionEntity.getUUID());
     }
     if (requiredOwner && !companionEntity.hasOwner()) {
-      log.warn("Skipping companion {} for registration because it has no owner, yet!",
+      log.debug("Skipping companion {} for registration because it has no owner, yet!",
           companionEntity);
       return null;
     }
     if (companionEntity.hasOwner()) {
       log.info("Register companion {} for {} ...", companionEntity, companionEntity.getOwner());
-    } else {
-      log.info("Pre-register companion {} ...");
     }
     PlayerCompanionData playerCompanion = new PlayerCompanionData(companionEntity);
     addPlayerCompanion(playerCompanion);
@@ -322,8 +319,11 @@ public class PlayerCompanionsServerData extends SavedData {
 
     // Create a backup at least every 24 hours.
     if (nextDailyBackup >= java.time.Instant.now().getEpochSecond()) {
+      int nextPlanedDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
+      log.info("{} Storing daily backup at {}, next planned backup is scheduled for {}.",
+          Constants.LOG_ICON_NAME, nextDailyBackup, nextPlanedDailyBackup);
       PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
-      nextDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
+      nextDailyBackup = nextPlanedDailyBackup;
     }
 
     return compoundTag;

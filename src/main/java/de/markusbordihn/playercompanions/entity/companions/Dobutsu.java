@@ -22,10 +22,10 @@ package de.markusbordihn.playercompanions.entity.companions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.annotation.Nullable;
+
 import com.google.common.collect.Maps;
-import com.mojang.authlib.GameProfile;
+
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

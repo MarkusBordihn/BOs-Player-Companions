@@ -84,33 +84,55 @@ public class Names {
     "Alice",
     "Alina",
     "Amy",
+    "Ayame",
     "Beauty",
     "Bella",
     "Bonnie",
+    "Carla",
+    "Carmen",
     "Celina",
+    "Chiyo",
     "Chloe",
     "Conny",
     "Dina",
+    "Emi",
     "Emma",
     "Fluffy",
+    "Fuyumi",
     "Gina",
+    "Haruhi",
     "Hope",
     "Iivy",
+    "Isabell",
+    "Itsumi",
     "Jessie",
     "Kacy",
+    "Karin",
+    "Kasumi",
     "Keira",
     "Lina",
     "Lucy",
     "Luna",
+    "Mai",
     "Marina",
+    "Megumi",
     "Melody",
+    "Mia",
+    "Mimi",
+    "Mizue",
+    "Nami",
     "Nicky",
     "Princess",
     "Rainy",
+    "Reiko",
+    "Sakura",
     "Sandy",
+    "Takeko",
     "Trixie",
+    "Umi",
     "Vivi",
     "Yona",
+    "Yukari",
     "Zoe"
   // @formatter:on
   ));
@@ -124,27 +146,45 @@ public class Names {
     "Charlie",
     "Coco",
     "Derek",
+    "Eric",
     "Felix",
     "Frankie",
+    "Gustav",
+    "Haruo",
+    "Hector",
     "Henry",
     "Hunter",
+    "Ikuo",
+    "Jin",
     "Kasimir",
+    "Kazuma",
     "Larry",
+    "Leo",
+    "Leonardo",
+    "Loki",
     "Marin",
+    "Masato",
     "Max",
+    "Norio",
+    "Osamu",
     "Oskar",
     "Prince",
     "Roker",
     "Rufus",
+    "Ryu",
     "Shadow",
+    "Shin",
     "Simba",
     "Snickers",
     "Sparky",
     "Spike",
+    "Taizo",
     "Tiger",
     "Timmy",
     "Turbo",
     "Yoshi",
+    "Yuma",
+    "Zenjiro",
     "Zottel"
   // @formatter:on
   ));
@@ -154,11 +194,38 @@ public class Names {
     "Alex",
     "Angel",
     "Buddy",
+    "Cato",
     "Charlie",
+    "Cheddar",
     "Creamy",
+    "Curly",
+    "Dakota",
+    "Elisa",
+    "Foxy",
+    "Frana",
+    "Inky",
+    "Isa",
+    "Jesse",
+    "Jona",
+    "Joyce",
     "Jule",
+    "Kaya",
+    "Luka",
+    "Mika",
+    "Morgan",
+    "Patches",
+    "Phantom",
+    "Riley",
+    "Robin",
+    "Sam",
+    "Sanja",
+    "Sascha",
     "Sasha",
-    "Smokie"
+    "Skye",
+    "Smokey",
+    "Smokie",
+    "Toni",
+    "Yannie"
   // @formatter:on
   ));
 
@@ -191,6 +258,14 @@ public class Names {
     return MOB_FEMALE_NAMES.get(rand.nextInt(0, MOB_FEMALE_NAMES.size()));
   }
 
+  public static String getRandomMaleMobName() {
+    return MOB_MALE_NAMES.get(rand.nextInt(0, MOB_MALE_NAMES.size()));
+  }
+
+  public static String getRandomMiscMobName() {
+    return MOB_MISC_NAMES.get(rand.nextInt(0, MOB_MISC_NAMES.size()));
+  }
+
   public static String getRandomFemaleAndMiscMobName() {
     int pool = rand.nextInt(0, 2);
     if (pool == 0) {
@@ -199,11 +274,12 @@ public class Names {
     return getRandomFemaleMobName();
   }
 
-  public static String getRandomMaleMobName() {
-    return MOB_MALE_NAMES.get(rand.nextInt(0, MOB_MALE_NAMES.size()));
+  public static String getRandomMaleAndMiscMobName() {
+    int pool = rand.nextInt(0, 2);
+    if (pool == 0) {
+      return getRandomMiscMobName();
+    }
+    return getRandomMaleMobName();
   }
 
-  public static String getRandomMiscMobName() {
-    return MOB_MISC_NAMES.get(rand.nextInt(0, MOB_MISC_NAMES.size()));
-  }
 }

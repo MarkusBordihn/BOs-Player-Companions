@@ -36,7 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.CompanionsMenu;
+import de.markusbordihn.playercompanions.container.CompanionMenu;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
@@ -54,9 +54,9 @@ public class HandSlot extends Slot {
       new EquipmentSlot[] {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
 
   final EquipmentSlot equipmentSlot;
-  final CompanionsMenu menu;
+  final CompanionMenu menu;
 
-  public HandSlot(CompanionsMenu menu, Container container, int index, int x, int y) {
+  public HandSlot(CompanionMenu menu, Container container, int index, int x, int y) {
     super(container, index, x, y);
     this.menu = menu;
     this.equipmentSlot = SLOT_IDS[index];

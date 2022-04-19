@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.entity;
 
 import java.util.Locale;
-import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.mojang.datafixers.util.Pair;
@@ -41,7 +40,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AgeableMob;
@@ -55,9 +53,7 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -68,13 +64,10 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.network.NetworkHooks;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.block.LightBlock;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
-import de.markusbordihn.playercompanions.container.CompanionsMenu;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
@@ -198,31 +191,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
-  public void openMenu() {
-    LivingEntity owner = getOwner();
-    if (owner != null && PlayerCompanionsServerData.available()) {
-      ServerPlayer player = this.level.getServer().getPlayerList().getPlayer(owner.getUUID());
-      if (player instanceof ServerPlayer) {
-        UUID playerCompanionUUID = this.getUUID();
-        Component playerCompanionName = this.getCustomName();
-        MenuProvider provider = new MenuProvider() {
-          @Override
-          public Component getDisplayName() {
-            return playerCompanionName;
-          }
-
-          @Nullable
-          @Override
-          public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-              Player player) {
-            return new CompanionsMenu(windowId, inventory, playerCompanionUUID);
-          }
-        };
-        NetworkHooks.openGui(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
-      }
-    }
-  }
-
   protected void pet() {
     // Heal pet by 0.1 points.
     if (this.getHealth() < this.getMaxHealth()) {
@@ -294,7 +262,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         this.toggleAggressionLevel();
         break;
       case OPEN_MENU:
-        openMenu();
+        PlayerCompanionMenu.openMenu(this);
         break;
       case PET:
         pet();

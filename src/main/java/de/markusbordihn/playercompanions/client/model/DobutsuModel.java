@@ -56,7 +56,7 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
     // Head and Body
     partDefinition.addOrReplaceChild("head",
         CubeListBuilder.create().texOffs(0, 0)
-            .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)).texOffs(32, 0)
+            .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.25F)).texOffs(32, 0)
             .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.5F)),
         PartPose.offset(0.0F, 15.0F, 0.0F));
 

@@ -19,6 +19,9 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -41,29 +44,37 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.CompanionsMenu;
+import de.markusbordihn.playercompanions.container.CompanionMenu;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 @OnlyIn(Dist.CLIENT)
-public class CompanionsScreen extends AbstractContainerScreen<CompanionsMenu> {
+public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerScreen<T> {
 
-  private static final ResourceLocation TEXTURE =
-      new ResourceLocation(Constants.MOD_ID, "textures/container/player_companions.png");
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final float STATES_SCALE = 0.8f;
 
   private final Entity entity;
+  private ResourceLocation texture =
+      new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion.png");
   private float xMouse;
   private float yMouse;
 
-  public CompanionsScreen(CompanionsMenu menu, Inventory inventory, Component component) {
+  public CompanionScreen(T menu, Inventory inventory, Component component,
+      ResourceLocation texture) {
+    super(menu, inventory, component);
+    this.texture = texture;
+    this.entity = menu.getPlayerCompanionEntity();
+  }
+
+  public CompanionScreen(T menu, Inventory inventory, Component component) {
     super(menu, inventory, component);
     this.entity = menu.getPlayerCompanionEntity();
   }
 
   private void renderEntityStats(PlayerCompanionEntity playerCompanionEntity, PoseStack poseStack,
       int x, int y) {
-    RenderSystem.setShaderTexture(0, TEXTURE);
+    RenderSystem.setShaderTexture(0, this.texture);
 
     // Background
     fill(poseStack, x + 24, y + 17, x + 50, y + 105, 1325400064);
@@ -177,7 +188,7 @@ public class CompanionsScreen extends AbstractContainerScreen<CompanionsMenu> {
   protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    RenderSystem.setShaderTexture(0, TEXTURE);
+    RenderSystem.setShaderTexture(0, this.texture);
 
     // Main screen
     this.blit(poseStack, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);

@@ -32,6 +32,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -72,6 +74,8 @@ public class CapturedCompanion extends Item {
   private static final String FALL_DISTANCE_TAG = "FallDistance";
   private static final String FIRE_TAG = "Fire";
   private static final String HEALTH_TAG = "Health";
+  private static final String MOTION_TAG = "Motion";
+  private static final String ON_GROUND_TAG = "OnGround";
 
   public static final String COMPANION_UUID_TAG = "CompanionUUID";
 
@@ -186,7 +190,7 @@ public class CapturedCompanion extends Item {
       // Only spawn on empty blocks like air,water, grass, sea grass.
       if (isValidSpawnPlace(blockState)) {
         // Adjust entity position to spawn position.
-        entity.setPosRaw(blockPos.getX() + 0.5, blockPos.getY() + 0.1, blockPos.getZ() + 0.5);
+        entity.setPos(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
 
         // Add entity to the world.
         log.debug("Spawn companion {} ...", entity);
@@ -281,6 +285,13 @@ public class CapturedCompanion extends Item {
       if (entityData.contains(FALL_DISTANCE_TAG) && entityData.getFloat(FALL_DISTANCE_TAG) > 0) {
         entityData.putFloat(FALL_DISTANCE_TAG, 0);
       }
+      if (entityData.contains(MOTION_TAG)) {
+        entityData.put(MOTION_TAG, this.newDoubleList(0, 0, 0));
+      }
+      if (entityData.contains(ON_GROUND_TAG) && !entityData.getBoolean(ON_GROUND_TAG)) {
+        entityData.putBoolean(ON_GROUND_TAG, true);
+      }
+
       entity.load(entityData);
     }
     return entity;
@@ -375,6 +386,14 @@ public class CapturedCompanion extends Item {
     }
 
     return InteractionResult.sidedSuccess(level.isClientSide);
+  }
+
+  protected ListTag newDoubleList(double... values) {
+    ListTag listTag = new ListTag();
+    for (double value : values) {
+      listTag.add(DoubleTag.valueOf(value));
+    }
+    return listTag;
   }
 
   @Override

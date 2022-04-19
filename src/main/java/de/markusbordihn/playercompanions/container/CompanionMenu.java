@@ -33,6 +33,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -41,56 +42,57 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.slots.ArmorSlot;
 import de.markusbordihn.playercompanions.container.slots.DummySlot;
 import de.markusbordihn.playercompanions.container.slots.HandSlot;
-import de.markusbordihn.playercompanions.container.slots.InventorySlot;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
-public class CompanionsMenu extends AbstractContainerMenu {
+public class CompanionMenu extends AbstractContainerMenu {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // Defining basic layout options
-  private static int armorContainerSize = 4;
-  private static int equipmentContainerSize = 8;
-  private static int handContainerSize = 2;
-  private static int inventoryContainerSize = 16;
-  private static int slotSize = 18;
+  protected static int armorContainerSize = 4;
+  protected static int equipmentContainerSize = 8;
+  protected static int handContainerSize = 2;
+  protected static int inventoryContainerSize = 16;
+  protected static int slotSize = 18;
 
   // Define containers
-  private final Container armorContainer;
-  private final Container equipmentContainer;
-  private final Container handContainer;
-  private final Container inventoryContainer;
+  protected final Container armorContainer;
+  protected final Container equipmentContainer;
+  protected final Container handContainer;
+  protected final Container inventoryContainer;
 
   // Define others
-  private PlayerCompanionEntity playerCompanionEntity;
-  private final Level level;
-  private final Player player;
-  private final PlayerCompanionData playerCompanionData;
-  private final UUID playerCompanionUUID;
+  protected PlayerCompanionEntity playerCompanionEntity;
+  protected final Level level;
+  protected final Player player;
+  protected final PlayerCompanionData playerCompanionData;
+  protected final UUID playerCompanionUUID;
 
   // Define states
   private boolean dataLoaded = false;
 
-  public CompanionsMenu(int windowId, Inventory inventory, UUID playerCompanionUUID) {
-    this(windowId, inventory, new SimpleContainer(armorContainerSize),
+  public CompanionMenu(final MenuType<?> menuType, int windowId, Inventory inventory,
+      UUID playerCompanionUUID) {
+    this(menuType, windowId, inventory, new SimpleContainer(armorContainerSize),
         new SimpleContainer(equipmentContainerSize), new SimpleContainer(handContainerSize),
         new SimpleContainer(inventoryContainerSize), playerCompanionUUID);
   }
 
-  public CompanionsMenu(int windowId, Inventory playerInventory, FriendlyByteBuf data) {
-    this(windowId, playerInventory, new SimpleContainer(armorContainerSize),
+  public CompanionMenu(final MenuType<?> menuType, int windowId, Inventory playerInventory,
+      FriendlyByteBuf data) {
+    this(menuType, windowId, playerInventory, new SimpleContainer(armorContainerSize),
         new SimpleContainer(equipmentContainerSize), new SimpleContainer(handContainerSize),
         new SimpleContainer(inventoryContainerSize), data.readUUID());
   }
 
-  public CompanionsMenu(final int windowId, final Inventory playerInventory,
-      final Container armorContainer, final Container equipmentContainer,
-      final Container handContainer, final Container inventoryContainer, UUID playerCompanionUUID) {
-    super(ModContainer.COMPANIONS_MENU.get(), windowId);
+  public CompanionMenu(final MenuType<?> menuType, final int windowId,
+      final Inventory playerInventory, final Container armorContainer,
+      final Container equipmentContainer, final Container handContainer,
+      final Container inventoryContainer, UUID playerCompanionUUID) {
+    super(menuType, windowId);
 
     // Make sure the passed container matched the expected sizes
     checkContainerSize(armorContainer, armorContainerSize);
@@ -131,10 +133,9 @@ public class CompanionsMenu extends AbstractContainerMenu {
     if (!this.level.isClientSide) {
       loadArmor();
       loadHand();
-      loadInventory();
+      loadAdditionalContainer();
     }
 
-    PlayerCompanionType companionType = this.playerCompanionData.getType();
     log.debug("CompanionsMenu client:{} companion:{} data:{} entity:{}", this.level.isClientSide,
         this.playerCompanionUUID, this.playerCompanionData, this.playerCompanionEntity);
 
@@ -168,19 +169,8 @@ public class CompanionsMenu extends AbstractContainerMenu {
     this.addSlot(new HandSlot(this, this.handContainer, EquipmentSlot.OFFHAND.getIndex(),
         playerCompanionOffHandStartPositionX, playerCompanionOffHandStartPositionY));
 
-    // Player Companion Inventory Slots
-    if (companionType == PlayerCompanionType.COLLECTOR) {
-      int playerCompanionInventoryStartPositionY = 17;
-      int playerCompanionInventoryStartPositionX = 119;
-      for (int inventoryRow = 0; inventoryRow < 4; ++inventoryRow) {
-        for (int inventoryColumn = 0; inventoryColumn < 4; ++inventoryColumn) {
-          this.addSlot(
-              new InventorySlot(this, this.inventoryContainer, inventoryRow + inventoryColumn * 4,
-                  playerCompanionInventoryStartPositionX + inventoryColumn * slotSize,
-                  playerCompanionInventoryStartPositionY + inventoryRow * slotSize));
-        }
-      }
-    }
+    // Additional slots, like inventory or any other kinds of type specific slots.
+    addAdditionalSlots();
 
     // Player Inventory Slots
     int playerInventoryStartPositionY = 151;
@@ -204,6 +194,14 @@ public class CompanionsMenu extends AbstractContainerMenu {
     if (!this.level.isClientSide) {
       this.dataLoaded = true;
     }
+  }
+
+  public void loadAdditionalContainer() {
+    // Placeholder
+  }
+
+  public void addAdditionalSlots() {
+    // Placeholder
   }
 
   public void loadArmor() {

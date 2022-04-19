@@ -28,7 +28,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.CompanionsMenu;
+import de.markusbordihn.playercompanions.container.CompanionMenu;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
@@ -36,9 +36,9 @@ public class InventorySlot extends Slot {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private CompanionsMenu menu;
+  private CompanionMenu menu;
 
-  public InventorySlot(CompanionsMenu menu, Container container, int index, int x, int y) {
+  public InventorySlot(CompanionMenu menu, Container container, int index, int x, int y) {
     super(container, index, x, y);
     this.menu = menu;
   }

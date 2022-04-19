@@ -19,38 +19,25 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
-import net.minecraft.client.gui.screens.MenuScreens;
-
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.ModContainer;
+import de.markusbordihn.playercompanions.container.SupporterCompanionMenu;
 
 @OnlyIn(Dist.CLIENT)
-public class ClientScreens {
+public class SupporterCompanionScreen extends CompanionScreen<SupporterCompanionMenu> {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final ResourceLocation TEXTURE =
+      new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion_supporter.png");
 
-  protected ClientScreens() {}
-
-  public static void registerScreens(final FMLClientSetupEvent event) {
-    log.info("{} Client Screens ...", Constants.LOG_REGISTER_PREFIX);
-
-    event.enqueueWork(() -> {
-      MenuScreens.register(ModContainer.DEFAULT_COMPANION_MENU.get(), DefaultCompanionScreen::new);
-      MenuScreens.register(ModContainer.COLLECTOR_COMPANION_MENU.get(),
-          CollectorCompanionScreen::new);
-      MenuScreens.register(ModContainer.FOLLOWER_COMPANION_MENU.get(),
-          FollowerCompanionScreen::new);
-      MenuScreens.register(ModContainer.GUARD_COMPANION_MENU.get(), GuardCompanionScreen::new);
-      MenuScreens.register(ModContainer.HEALER_COMPANION_MENU.get(), HealerCompanionScreen::new);
-      MenuScreens.register(ModContainer.SUPPORTER_COMPANION_MENU.get(),
-          SupporterCompanionScreen::new);
-    });
+  public SupporterCompanionScreen(SupporterCompanionMenu menu, Inventory inventory,
+      Component component) {
+    super(menu, inventory, component, TEXTURE);
   }
+
 }

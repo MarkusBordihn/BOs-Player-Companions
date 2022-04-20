@@ -97,8 +97,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
   private static final int GLOW_TICK = 30;
+  private static final int TEXTURE_CACHE_TICK = 100;
   private int ticker = 0;
   private int glowTicker = 0;
+  private int textureCacheTicker = 0;
 
   // Temporary states
   private boolean wasOnGround;
@@ -529,6 +531,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         LightBlock.place(level, lightBlockPos);
       }
       this.glowTicker = 0;
+    }
+
+    // Re-validated Texture cache every 5 secs.
+    if (this.level.isClientSide && this.hasTextureCache()
+        && textureCacheTicker++ >= TEXTURE_CACHE_TICK) {
+      setTextureCache(null);
+      textureCacheTicker = 0;
     }
 
     // Shows particle and play sound after jump or fall.

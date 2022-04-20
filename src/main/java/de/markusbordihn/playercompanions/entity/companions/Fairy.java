@@ -70,7 +70,7 @@ import de.markusbordihn.playercompanions.entity.ai.goal.RandomFlyAroundGoal;
 import de.markusbordihn.playercompanions.entity.type.healer.HealerEntityFlyingAround;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
-import de.markusbordihn.playercompanions.utils.Names;
+import de.markusbordihn.playercompanions.utils.NamesUtils;
 
 public class Fairy extends HealerEntityFlyingAround {
 
@@ -85,9 +85,6 @@ public class Fairy extends HealerEntityFlyingAround {
   public static final String DEFAULT_VARIANT = "default";
   public static final String BLUE_VARIANT = "blue";
   public static final String RED_HAIR_VARIANT = "red_hair";
-
-  // Cache
-  private ResourceLocation textureCache = null;
 
   // Entity texture by color
   private static final Map<String, ResourceLocation> TEXTURE_BY_VARIANT =
@@ -119,11 +116,11 @@ public class Fairy extends HealerEntityFlyingAround {
   }
 
   public ResourceLocation getResourceLocation() {
-    if (this.textureCache == null) {
-      this.textureCache = TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
-          TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT));
+    if (!this.hasTextureCache()) {
+      this.setTextureCache(TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
+          TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT)));
     }
-    return this.textureCache;
+    return this.getTextureCache();
   }
 
   @Override
@@ -195,7 +192,7 @@ public class Fairy extends HealerEntityFlyingAround {
 
   @Override
   protected String getRandomName() {
-    return Names.getRandomFemaleMobName();
+    return NamesUtils.getRandomFemaleMobName();
   }
 
   @Override

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Random;
 import com.google.common.collect.Sets;
 
-public class Names {
+public class NamesUtils {
 
   private static Random rand = new Random();
 
@@ -229,7 +229,7 @@ public class Names {
   // @formatter:on
   ));
 
-  protected Names() {}
+  protected NamesUtils() {}
 
   public static String getRandomFemaleNpcName() {
     return NPC_FEMALE_NAMES.get(rand.nextInt(0, NPC_FEMALE_NAMES.size()));

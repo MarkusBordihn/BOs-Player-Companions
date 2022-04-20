@@ -21,23 +21,19 @@ package de.markusbordihn.playercompanions.entity;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.authlib.GameProfile;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.TimeUtil;
@@ -72,8 +68,8 @@ import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsDataSync;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
-import de.markusbordihn.playercompanions.utils.Names;
-import de.markusbordihn.playercompanions.utils.Players;
+import de.markusbordihn.playercompanions.utils.NamesUtils;
+import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
 @EventBusSubscriber
 public class PlayerCompanionEntityData extends TamableAnimal
@@ -128,6 +124,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private static final int ENTITY_GUI_TOP = 20;
   private static final int JUMP_MOVE_DELAY = 10;
   protected static final int RIDE_COOLDOWN = 600;
+
+  // Cache
+  private ResourceLocation textureCache = null;
 
   // Temporary stats
   private BlockPos orderedToPosition = null;
@@ -288,12 +287,34 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.entityData.set(DATA_CUSTOM_COMPANION_NAME, name);
   }
 
+  public void setTextureCache(ResourceLocation resourceLocation) {
+    this.textureCache = resourceLocation;
+  }
+
+  public ResourceLocation getTextureCache() {
+    return this.textureCache;
+  }
+
+  public boolean hasTextureCache() {
+    return this.textureCache != null;
+  }
+
   public String getUserTexture() {
     return this.entityData.get(DATA_USER_TEXTURE);
   }
 
-  public void setUserTexture(String name) {
-    this.entityData.set(DATA_USER_TEXTURE, name);
+  public void setUserTexture(String data) {
+    String textureSkinLocation = "";
+    if (PlayersUtils.isValidPlayerName(data)) {
+      log.debug("Getting user texture for {}", data);
+      textureSkinLocation = PlayersUtils.getUserTexture(level.getServer(), data);
+    } else if (PlayersUtils.isValidUrl(data)) {
+      log.debug("Setting remote user texture for {}", data);
+      textureSkinLocation = data;
+    }
+    if (!textureSkinLocation.equals(getUserTexture())) {
+      this.entityData.set(DATA_USER_TEXTURE, textureSkinLocation);
+    }
   }
 
   public int getExperience() {
@@ -361,7 +382,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   protected String getRandomName() {
-    return Names.getRandomMobName();
+    return NamesUtils.getRandomMobName();
   }
 
   public int getJumpDelay() {
@@ -626,26 +647,12 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return ENTITY_GUI_TOP;
   }
 
-  public void onMainHandItemSlotChange(ItemStack itemStack) {}
+  public void onMainHandItemSlotChange(ItemStack itemStack) {
+    // Placeholder
+  }
 
-  public void onOffHandItemSlotChange(ItemStack itemStack) {}
-
-  @Override
-  public void setCustomName(@Nullable Component component) {
-    if (!level.isClientSide && component != null) {
-      String name = component.getString();
-      if (name.startsWith("##") && false) {
-        String username = name.replace("##", "");
-        Optional<GameProfile> gameProfile = Players.getGameProfile(level.getServer(), username);
-        if (gameProfile.isPresent() && gameProfile.get() != null) {
-          setUserTexture(gameProfile.get().getId().toString());
-          log.info("Got game profile for username {}: {}", name, gameProfile);
-        }
-      } else if (!getUserTexture().isEmpty()) {
-        setUserTexture("");
-      }
-    }
-    super.setCustomName(component);
+  public void onOffHandItemSlotChange(ItemStack itemStack) {
+    // Placeholder
   }
 
   @Override

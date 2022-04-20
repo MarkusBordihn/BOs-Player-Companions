@@ -20,6 +20,8 @@
 package de.markusbordihn.playercompanions.utils;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -43,11 +45,13 @@ import net.minecraft.server.players.GameProfileCache;
 
 import de.markusbordihn.playercompanions.Constants;
 
-public class Players {
+public class PlayersUtils {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected Players() {}
+  private static final String USER_REGEX = "\\w.*";
+
+  protected PlayersUtils() {}
 
   public static Optional<GameProfile> getGameProfile(MinecraftServer server, Component component) {
     return getGameProfile(server, component.getString());
@@ -61,16 +65,24 @@ public class Players {
     return gameProfileCache.get(username);
   }
 
-  public static String getUserTexture(String user) {
+  public static String getUserTexture(MinecraftServer server, String username) {
+    Optional<GameProfile> gameProfile = PlayersUtils.getGameProfile(server, username);
+    if (gameProfile.isPresent() && gameProfile.get() != null && gameProfile.get().getId() != null) {
+      String userUUID = gameProfile.get().getId().toString();
+      return getUserTexture(userUUID);
+    }
+    return "";
+  }
+
+  public static String getUserTexture(String userUUID) {
     String sessionURL =
-        String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s", user);
+        String.format("https://sessionserver.mojang.com/session/minecraft/profile/%s", userUUID);
     try {
       String data = IOUtils.toString(new URL(sessionURL), StandardCharsets.UTF_8);
       if (data == null || data.isEmpty()) {
         return null;
       }
-      getUserTextureFromSessionResponse(data);
-      return data;
+      return getUserTextureFromSessionResponse(data);
     } catch (IOException | org.apache.http.ParseException iOException) {
       return null;
     }
@@ -91,16 +103,15 @@ public class Players {
       JsonObject jsonObject = jsonElement.getAsJsonObject();
       if (jsonObject.has("properties")) {
         JsonArray properties = jsonObject.getAsJsonArray("properties");
-        log.info("getUserTextureFromSessionRequest: {}", properties);
+        log.debug("getUserTextureFromSessionRequest: {}", properties);
         for (JsonElement property : properties) {
           JsonObject propertyObject = property.getAsJsonObject();
-          log.info(propertyObject);
           if (propertyObject.has("name")
               && "textures".equals(propertyObject.get("name").getAsString())
               && propertyObject.has("value")) {
             String textureData =
                 new String(Base64.getDecoder().decode(propertyObject.get("value").getAsString()));
-            log.info(textureData);
+            return getUserTextureFromTextureData(textureData);
           }
         }
       }
@@ -112,7 +123,45 @@ public class Players {
     if (data == null || data.isEmpty()) {
       return "";
     }
+    JsonElement jsonElement;
+    try {
+      jsonElement = JsonParser.parseString(data);
+    } catch (JsonParseException jsonParseException) {
+      log.error("ERROR: Unable to parse json data: {}", data);
+      return "";
+    }
+    if (jsonElement != null && jsonElement.isJsonObject()) {
+      JsonObject jsonObject = jsonElement.getAsJsonObject();
+      log.debug("getUserTextureFromTextureData: {}", jsonObject);
+      if (jsonObject.has("textures")) {
+        JsonObject textureObject = jsonObject.getAsJsonObject("textures");
+        if (textureObject.has("SKIN")) {
+          JsonObject skinObject = textureObject.getAsJsonObject("SKIN");
+          if (skinObject.has("url")) {
+            return skinObject.get("url").getAsString();
+          }
+        }
+      }
+    }
     return "";
+  }
+
+  public static boolean isValidPlayerName(String name) {
+    return name != null && !name.isEmpty() && !name.startsWith("http") && !name.equals("htt")
+        && name.length() >= 3 && name.length() <= 16 && name.matches(USER_REGEX);
+  }
+
+  public static boolean isValidUrl(String url) {
+    if (url == null || url.isEmpty()
+        || (!url.startsWith("http://") && !url.startsWith("https://"))) {
+      return false;
+    }
+    try {
+      new URL(url).toURI();
+    } catch (MalformedURLException | URISyntaxException e) {
+      return false;
+    }
+    return true;
   }
 
 }

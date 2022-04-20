@@ -69,9 +69,6 @@ public class Firefly extends FollowerEntityFlying {
   // Variants
   public static final String DEFAULT_VARIANT = "default";
 
-  // Cache
-  private ResourceLocation textureCache = null;
-
   // Entity texture by color
   private static final Map<String, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
@@ -97,11 +94,11 @@ public class Firefly extends FollowerEntityFlying {
   }
 
   public ResourceLocation getResourceLocation() {
-    if (this.textureCache == null) {
-      this.textureCache = TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
-          TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT));
+    if (!this.hasTextureCache()) {
+      this.setTextureCache(TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
+          TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT)));
     }
-    return this.textureCache;
+    return this.getTextureCache();
   }
 
   @Override

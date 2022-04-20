@@ -35,7 +35,6 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.DobutsuModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.renderer.layers.HandItemLayer;
-import de.markusbordihn.playercompanions.client.textures.ModTextureManager;
 import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 
 @OnlyIn(Dist.CLIENT)
@@ -46,7 +45,6 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
   public DobutsuRenderer(EntityRendererProvider.Context context) {
     super(context, new DobutsuModel<>(context.bakeLayer(ClientRenderer.DOBUTSU)), 0.3F);
     this.addLayer(new HandItemLayer<>(this));
-    // ModTextureManager.addTexture("test", "https://www.minecraftskins.com/uploads/skins/2022/04/16/spiderman-classic-original-suit-20200308.png?v452");
   }
 
   @Override
@@ -56,8 +54,7 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
 
   @Override
   public ResourceLocation getTextureLocation(Dobutsu entity) {
-    // return ModTextureManager.getTexture("test");
-     return entity.getResourceLocation();
+    return entity.getResourceLocation();
   }
 
 }

@@ -75,9 +75,6 @@ public class SmallSlime extends FollowerEntityJumping {
   public static final String NAME = "Small Slime";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
 
-  // Cache
-  private ResourceLocation textureCache = null;
-
   // Entity texture by color
   private static final Map<DyeColor, ResourceLocation> TEXTURE_BY_COLOR =
       Util.make(Maps.newHashMap(), hashMap -> {
@@ -141,11 +138,11 @@ public class SmallSlime extends FollowerEntityJumping {
   }
 
   public ResourceLocation getResourceLocation() {
-    if (this.textureCache == null) {
-      this.textureCache =
-          TEXTURE_BY_COLOR.getOrDefault(this.getColor(), TEXTURE_BY_COLOR.get(DyeColor.GREEN));
+    if (!this.hasTextureCache()) {
+      this.setTextureCache(
+          TEXTURE_BY_COLOR.getOrDefault(this.getColor(), TEXTURE_BY_COLOR.get(DyeColor.GREEN)));
     }
-    return textureCache;
+    return this.getTextureCache();
   }
 
   public static AttributeSupplier.Builder createAttributes() {

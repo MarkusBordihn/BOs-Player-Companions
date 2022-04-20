@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -43,6 +44,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
 import de.markusbordihn.playercompanions.network.message.MessageCommandPlayerCompanion;
 import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionData;
 import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionsData;
+import de.markusbordihn.playercompanions.network.message.MessageSkinChangePlayerCompanion;
 
 @EventBusSubscriber
 public class NetworkHandler {
@@ -81,12 +83,20 @@ public class NetworkHandler {
         INSTANCE, PROTOCOL_VERSION);
 
     event.enqueueWork(() -> {
+
       // Send Player Companion Command: Client -> Server
       INSTANCE.registerMessage(id++, MessageCommandPlayerCompanion.class, (message, buffer) -> {
         buffer.writeUtf(message.getPlayerCompanionUUID());
         buffer.writeUtf(message.getCommand());
       }, buffer -> new MessageCommandPlayerCompanion(buffer.readUtf(), buffer.readUtf()),
           MessageCommandPlayerCompanion::handle);
+
+      // Send Player Companion Skin Change: Client -> Server
+      INSTANCE.registerMessage(id++, MessageSkinChangePlayerCompanion.class, (message, buffer) -> {
+        buffer.writeUtf(message.getPlayerCompanionUUID());
+        buffer.writeUtf(message.getSkin());
+      }, buffer -> new MessageSkinChangePlayerCompanion(buffer.readUtf(), buffer.readUtf()),
+          MessageSkinChangePlayerCompanion::handle);
 
       // Sync full Player Companion Data: Server -> Client
       INSTANCE.registerMessage(id++, MessagePlayerCompanionsData.class,
@@ -112,6 +122,16 @@ public class NetworkHandler {
       log.debug("commandPlayerCompanion {} {}", playerCompanionUUID, command);
       INSTANCE
           .sendToServer(new MessageCommandPlayerCompanion(playerCompanionUUID, command.toString()));
+    }
+  }
+
+  /**
+   * Send player companion skin change.
+   */
+  public static void skinChangePlayerCompanion(String playerCompanionUUID, String skin) {
+    if (playerCompanionUUID != null && skin != null) {
+      log.debug("skinChangePlayerCompanion {} {}", playerCompanionUUID, skin);
+      INSTANCE.sendToServer(new MessageSkinChangePlayerCompanion(playerCompanionUUID, skin));
     }
   }
 

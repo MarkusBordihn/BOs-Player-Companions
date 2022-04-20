@@ -32,37 +32,36 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
-public class MessageCommandPlayerCompanion {
+public class MessageSkinChangePlayerCompanion {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected final String playerCompanionUUID;
-  protected final String command;
+  protected final String skin;
 
-  public MessageCommandPlayerCompanion(String playerCompanionUUID, String command) {
+  public MessageSkinChangePlayerCompanion(String playerCompanionUUID, String skin) {
     this.playerCompanionUUID = playerCompanionUUID;
-    this.command = command;
+    this.skin = skin;
   }
 
-  public String getCommand() {
-    return this.command;
+  public String getSkin() {
+    return this.skin;
   }
 
   public String getPlayerCompanionUUID() {
     return this.playerCompanionUUID;
   }
 
-  public static void handle(MessageCommandPlayerCompanion message,
+  public static void handle(MessageSkinChangePlayerCompanion message,
       Supplier<NetworkEvent.Context> contextSupplier) {
     NetworkEvent.Context context = contextSupplier.get();
     context.enqueueWork(() -> handlePacket(message, context));
     context.setPacketHandled(true);
   }
 
-  public static void handlePacket(MessageCommandPlayerCompanion message,
+  public static void handlePacket(MessageSkinChangePlayerCompanion message,
       NetworkEvent.Context context) {
     ServerPlayer serverPlayer = context.getSender();
     ServerLevel serverLevel = serverPlayer.getLevel();
@@ -71,14 +70,14 @@ public class MessageCommandPlayerCompanion {
 
     // Only accepts commands from owner, log attempts.
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-      PlayerCompanionCommand command = PlayerCompanionCommand.valueOf(message.getCommand());
+      String skin = message.getSkin();
       if (serverPlayer.getUUID().equals(playerCompanionEntity.getOwnerUUID())) {
-        log.debug("Player Companion command {} ({}) for {} from {}", command, message.getCommand(),
+        log.debug("Player Companion change skin {} ({}) for {} from {}", skin, message.getSkin(),
             playerCompanionEntity, serverPlayer);
-        playerCompanionEntity.handleCommand(command);
+        playerCompanionEntity.setUserTexture(skin);
       } else {
-        log.error("Player {} tried to execute command {} ({}) for unowned {}", serverPlayer, command,
-            message.getCommand(), playerCompanionEntity);
+        log.error("Player {} tried to change skin {} ({}) for unowned {}", serverPlayer, skin,
+            message.getSkin(), playerCompanionEntity);
       }
     }
   }

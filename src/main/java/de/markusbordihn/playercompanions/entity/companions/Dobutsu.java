@@ -54,12 +54,12 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.client.textures.ModTextureManager;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityWalking;
 import de.markusbordihn.playercompanions.item.ModItems;
-import de.markusbordihn.playercompanions.utils.Players;
 
 public class Dobutsu extends FollowerEntityWalking {
 
@@ -70,9 +70,6 @@ public class Dobutsu extends FollowerEntityWalking {
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
-
-  // Cache
-  private ResourceLocation textureCache = null;
 
   // Entity texture by color
   private static final Map<String, ResourceLocation> TEXTURE_BY_VARIANT =
@@ -97,16 +94,16 @@ public class Dobutsu extends FollowerEntityWalking {
   }
 
   public ResourceLocation getResourceLocation() {
-    if (this.textureCache == null) {
-      this.textureCache = TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
-          TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT));
-      if (level.isClientSide) {
-        log.info("Fetch User Texture for {} ...", this.getUserTexture());
-        String data = Players.getUserTexture(this.getUserTexture());
-        log.info("Data: {}", data);
+    if (!this.hasTextureCache() && level.isClientSide) {
+      if (this.getUserTexture() != null && !this.getUserTexture().isEmpty()) {
+        this.setTextureCache(ModTextureManager.addTexture(this.getUserTexture()));
+      }
+      if (!this.hasTextureCache()) {
+        this.setTextureCache(TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
+            TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT)));
       }
     }
-    return this.textureCache;
+    return this.getTextureCache();
   }
 
   @Override

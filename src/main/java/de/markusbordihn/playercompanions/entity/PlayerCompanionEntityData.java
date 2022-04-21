@@ -93,25 +93,25 @@ public class PlayerCompanionEntityData extends TamableAnimal
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_EXPERIENCE_LEVEL =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
-  protected static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
-      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<String> DATA_CUSTOM_COMPANION_NAME =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
-  private static final EntityDataAccessor<String> DATA_USER_TEXTURE =
+  private static final EntityDataAccessor<String> DATA_CUSTOM_TEXTURE_SKIN =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
+  protected static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
 
   // Stored Entity Data Tags
   private static final String DATA_ACTIVE_TAG = "Active";
   private static final String DATA_COLOR_TAG = "Color";
   private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
+  private static final String DATA_CUSTOM_TEXTURE_SKIN_TAG = "CustomTextureSkin";
   private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
   private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
   private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
-  private static final String DATA_USER_TEXTURE_TAG = "UserTexture";
   private static final String DATA_VARIANT_TAG = "Variant";
 
   // Attribute Names
@@ -127,6 +127,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   // Cache
   private ResourceLocation textureCache = null;
+  private String lastCustomTextureSkin = null;
 
   // Temporary stats
   private BlockPos orderedToPosition = null;
@@ -138,6 +139,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private boolean sitOnShoulder = false;
   private boolean shouldAttack = false;
   private boolean shouldGlowInTheDark = false;
+  private boolean enableCustomTextureSkin = false;
   protected UUID persistentAngerTarget;
   protected int rideCooldownCounter;
 
@@ -172,6 +174,14 @@ public class PlayerCompanionEntityData extends TamableAnimal
     } else {
       log.warn("The max base attack damage for player companions will not be adjusted!");
     }
+  }
+
+  public void enableCustomTextureSkin(boolean enable) {
+    this.enableCustomTextureSkin = enable;
+  }
+
+  public boolean enableCustomTextureSkin() {
+    return this.enableCustomTextureSkin;
   }
 
   public void setSyncReference(PlayerCompanionEntity playerCompanionEntity) {
@@ -299,11 +309,28 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return this.textureCache != null;
   }
 
-  public String getUserTexture() {
-    return this.entityData.get(DATA_USER_TEXTURE);
+  public boolean hasCustomTextureSkin() {
+    return getCustomTextureSkin() != null && !getCustomTextureSkin().isEmpty();
   }
 
-  public void setUserTexture(String data) {
+  public String getCustomTextureSkin() {
+    return this.entityData.get(DATA_CUSTOM_TEXTURE_SKIN);
+  }
+
+  public boolean hasChangedCustomTextureSkin() {
+    return (this.lastCustomTextureSkin == null && hasCustomTextureSkin())
+        || (this.lastCustomTextureSkin != null
+            && !this.lastCustomTextureSkin.equals(getCustomTextureSkin()));
+  }
+
+  public void setCustomTextureSkin(String textureSkinLocation) {
+    if (!textureSkinLocation.equals(getCustomTextureSkin())) {
+      this.entityData.set(DATA_CUSTOM_TEXTURE_SKIN, textureSkinLocation);
+    }
+    this.lastCustomTextureSkin = textureSkinLocation;
+  }
+
+  public void processCustomTextureSkin(String data) {
     String textureSkinLocation = "";
     if (PlayersUtils.isValidPlayerName(data)) {
       log.debug("Getting user texture for {}", data);
@@ -312,8 +339,10 @@ public class PlayerCompanionEntityData extends TamableAnimal
       log.debug("Setting remote user texture for {}", data);
       textureSkinLocation = data;
     }
-    if (!textureSkinLocation.equals(getUserTexture())) {
-      this.entityData.set(DATA_USER_TEXTURE, textureSkinLocation);
+    if (textureSkinLocation != null) {
+      setCustomTextureSkin(textureSkinLocation);
+    } else {
+      log.error("Unable to process custom texture skin for with {}!", data);
     }
   }
 
@@ -684,7 +713,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 1);
     this.entityData.define(DATA_IS_CHARGING, false);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
-    this.entityData.define(DATA_USER_TEXTURE, "");
+    this.entityData.define(DATA_CUSTOM_TEXTURE_SKIN, "");
     this.entityData.define(DATA_VARIANT, "default");
   }
 
@@ -697,7 +726,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
     compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
-    compoundTag.putString(DATA_USER_TEXTURE_TAG, this.getUserTexture());
+    compoundTag.putString(DATA_CUSTOM_TEXTURE_SKIN_TAG, this.getCustomTextureSkin());
     compoundTag.putString(DATA_VARIANT_TAG, this.getVariant());
   }
 
@@ -736,8 +765,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
     }
 
     // Handle User texture.
-    if (compoundTag.contains(DATA_USER_TEXTURE_TAG)) {
-      this.setUserTexture(compoundTag.getString(DATA_USER_TEXTURE_TAG));
+    if (compoundTag.contains(DATA_CUSTOM_TEXTURE_SKIN_TAG)) {
+      this.setCustomTextureSkin(compoundTag.getString(DATA_CUSTOM_TEXTURE_SKIN_TAG));
     }
 
     this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));

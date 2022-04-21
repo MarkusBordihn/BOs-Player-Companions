@@ -97,7 +97,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
   private static final int GLOW_TICK = 30;
-  private static final int TEXTURE_CACHE_TICK = 100;
+  private static final int TEXTURE_CACHE_TICK = 50;
   private int ticker = 0;
   private int glowTicker = 0;
   private int textureCacheTicker = 0;
@@ -523,7 +523,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       }
     }
 
-    // Place light block, if companion should glow in the dark.
+    // ServerSide: Place light block, if companion should glow in the dark.
     if (!this.level.isClientSide && this.shouldGlowInTheDark() && this.glowTicker++ >= GLOW_TICK) {
       BlockPos lightBlockPos = this.getOnPos();
       if (this.level.isNight() || this.level.isRaining() || this.level.isThundering()
@@ -533,9 +533,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       this.glowTicker = 0;
     }
 
-    // Re-validated Texture cache every 5 secs.
-    if (this.level.isClientSide && this.hasTextureCache()
+    // ClientSide: Re-validated Texture cache if needed.
+    if (this.level.isClientSide && this.hasTextureCache() && this.hasChangedCustomTextureSkin()
         && textureCacheTicker++ >= TEXTURE_CACHE_TICK) {
+      log.debug("Re-validated texture cache for {}", this);
+      setCustomTextureSkin(this.getCustomTextureSkin());
       setTextureCache(null);
       textureCacheTicker = 0;
     }

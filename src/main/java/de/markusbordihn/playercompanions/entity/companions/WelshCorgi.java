@@ -56,7 +56,7 @@ public class WelshCorgi extends SupporterWalking {
 
   // General Information
   public static final String ID = "welsh_corgi";
-  public static final String NAME = "welsh_corgi";
+  public static final String NAME = "Welsh Corgi";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
 
   public WelshCorgi(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {

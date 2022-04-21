@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -35,15 +35,15 @@ public class MessagePlayerCompanionData {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected final String data;
+  protected final CompoundTag data;
   protected final String playerCompanionUUID;
 
-  public MessagePlayerCompanionData(String playerCompanionUUID, String data) {
+  public MessagePlayerCompanionData(String playerCompanionUUID, CompoundTag data) {
     this.playerCompanionUUID = playerCompanionUUID;
     this.data = data;
   }
 
-  public String getData() {
+  public CompoundTag getData() {
     return this.data;
   }
 
@@ -60,7 +60,7 @@ public class MessagePlayerCompanionData {
   }
 
   public static void handlePacket(MessagePlayerCompanionData message) {
-    PlayerCompanionsClientData.load(message.getPlayerCompanionUUID(), message.getData());
+    PlayerCompanionsClientData.load(message.getData());
   }
 
 }

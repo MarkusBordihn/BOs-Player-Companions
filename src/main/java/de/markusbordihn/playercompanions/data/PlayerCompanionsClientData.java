@@ -79,10 +79,6 @@ public class PlayerCompanionsClientData {
     return new HashSet<>(playerCompanionsMap.values());
   }
 
-  public static void load(String playerCompanionUUID, String data) {
-    loadPlayerCompanionData(data);
-  }
-
   public static void load(String data) {
     CompoundTag compoundTag;
     try {
@@ -96,12 +92,15 @@ public class PlayerCompanionsClientData {
   }
 
   public static void load(CompoundTag compoundTag) {
-    // Restoring companions data
     if (compoundTag.contains(PlayerCompanionsServerData.COMPANIONS_TAG)) {
       ListTag companionListTag = compoundTag.getList(PlayerCompanionsServerData.COMPANIONS_TAG, 10);
       for (int i = 0; i < companionListTag.size(); ++i) {
         loadPlayerCompanionData(companionListTag.getCompound(i));
       }
+    } else if (compoundTag.contains(PlayerCompanionData.UUID_TAG)) {
+      loadPlayerCompanionData(compoundTag);
+    } else {
+      log.error("Unable to load Player Companion data from {}!", compoundTag);
     }
   }
 
@@ -110,7 +109,7 @@ public class PlayerCompanionsClientData {
     try {
       compoundTag = TagParser.parseTag(data);
     } catch (CommandSyntaxException commandSyntaxException) {
-      throw new JsonSyntaxException("Invalid nbt tag: " + commandSyntaxException.getMessage());
+      throw new JsonSyntaxException("Invalid NBT tag: " + commandSyntaxException.getMessage());
     }
     loadPlayerCompanionData(compoundTag);
   }

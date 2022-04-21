@@ -52,6 +52,8 @@ public class ModItems {
   // Dobutsu
   public static final RegistryObject<Item> DOBUTSU_DEFAULT =
       ITEMS.register(DobutsuItem.ID + "_default", () -> new DobutsuItem(Dobutsu.DEFAULT_VARIANT));
+  public static final RegistryObject<Item> DOBUTSU_CREEPER =
+      ITEMS.register(DobutsuItem.ID + "_creeper", () -> new DobutsuItem(Dobutsu.CREEPER_VARIANT));
 
   // Fairies
   public static final RegistryObject<Item> FAIRY_DEFAULT =

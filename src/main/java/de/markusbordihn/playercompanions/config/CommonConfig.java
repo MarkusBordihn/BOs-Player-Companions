@@ -89,6 +89,11 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue supporterTypeDamageResistanceDuration;
     public final ForgeConfigSpec.IntValue supporterTypeFireResistanceDuration;
 
+    public final ForgeConfigSpec.BooleanValue dobutsuSpawnEnable;
+    public final ForgeConfigSpec.IntValue dobutsuMinGroup;
+    public final ForgeConfigSpec.IntValue dobutsuMaxGroup;
+    public final ForgeConfigSpec.IntValue dobutsuWeight;
+
     public final ForgeConfigSpec.BooleanValue fairySpawnEnable;
     public final ForgeConfigSpec.IntValue fairyMinGroup;
     public final ForgeConfigSpec.IntValue fairyMaxGroup;
@@ -209,6 +214,14 @@ public class CommonConfig {
           .comment(
               "Defines the amount of ticks how long the fire resistance protection is enabled.")
           .defineInRange("supporterTypeFireResistanceDuration", 1200, 20, 6000);
+      builder.pop();
+
+      builder.push("Dobutsu");
+      dobutsuSpawnEnable =
+          builder.comment("Enable/Disable the dobutsu spawn.").define("dobutsuSpawnEnable", true);
+      dobutsuMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("dobutsuMinGroup", 1, 0, 64);
+      dobutsuMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("dobutsuMaxGroup", 2, 0, 64);
+      dobutsuWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("dobutsuWeight", 6, 0, 100);
       builder.pop();
 
       builder.push("Fairy");

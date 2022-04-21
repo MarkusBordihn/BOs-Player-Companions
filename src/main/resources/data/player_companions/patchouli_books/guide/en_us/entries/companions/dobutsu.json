@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "The Dobutsu is quick-change artist and can mimic the appearance of other players, even if their form will remain the same.$(br)Just rename a captured Dobutsu to the player name starting with a $(bold)#$() like #Kaworru and the Dobutsu will try to mimic the player."
+      "text": "The Dobutsu is a quick-change artist and can mimic the appearance of other players, even if their form will remain the same.$(br)Open the menu of a captured Dobutsu and click on $(bold)Texture Settings$() to adjust the skin and the Dobutsu will try to mimic the player."
     },
     {
       "type": "patchouli:entity",

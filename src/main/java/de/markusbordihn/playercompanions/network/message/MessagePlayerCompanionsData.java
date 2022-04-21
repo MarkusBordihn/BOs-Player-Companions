@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -35,13 +36,13 @@ public class MessagePlayerCompanionsData {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected final String data;
+  protected final CompoundTag data;
 
-  public MessagePlayerCompanionsData(String data) {
+  public MessagePlayerCompanionsData(CompoundTag data) {
     this.data = data;
   }
 
-  public String getData() {
+  public CompoundTag getData() {
     return this.data;
   }
 

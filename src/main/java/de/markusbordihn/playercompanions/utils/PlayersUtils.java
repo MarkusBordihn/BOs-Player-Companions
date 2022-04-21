@@ -69,8 +69,12 @@ public class PlayersUtils {
     Optional<GameProfile> gameProfile = PlayersUtils.getGameProfile(server, username);
     if (gameProfile.isPresent() && gameProfile.get() != null && gameProfile.get().getId() != null) {
       String userUUID = gameProfile.get().getId().toString();
-      return getUserTexture(userUUID);
+      if (userUUID != null && !userUUID.isEmpty()) {
+        return getUserTexture(userUUID);
+      }
     }
+
+    log.error("Unable to get userUUID for user {} to load user texture!");
     return "";
   }
 
@@ -80,6 +84,7 @@ public class PlayersUtils {
     try {
       String data = IOUtils.toString(new URL(sessionURL), StandardCharsets.UTF_8);
       if (data == null || data.isEmpty()) {
+        log.error("Unable to get user texture with {}", sessionURL);
         return null;
       }
       return getUserTextureFromSessionResponse(data);

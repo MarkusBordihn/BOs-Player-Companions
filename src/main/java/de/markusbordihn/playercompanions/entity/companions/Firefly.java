@@ -63,7 +63,7 @@ public class Firefly extends FollowerEntityFlying {
 
   // General Information
   public static final String ID = "firefly";
-  public static final String NAME = "firefly";
+  public static final String NAME = "Firefly";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.HONEYCOMB);
 
   // Variants

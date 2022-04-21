@@ -74,7 +74,7 @@ public class MessageSkinChangePlayerCompanion {
       if (serverPlayer.getUUID().equals(playerCompanionEntity.getOwnerUUID())) {
         log.debug("Player Companion change skin {} ({}) for {} from {}", skin, message.getSkin(),
             playerCompanionEntity, serverPlayer);
-        playerCompanionEntity.setUserTexture(skin);
+        playerCompanionEntity.processCustomTextureSkin(skin);
       } else {
         log.error("Player {} tried to change skin {} ({}) for unowned {}", serverPlayer, skin,
             message.getSkin(), playerCompanionEntity);

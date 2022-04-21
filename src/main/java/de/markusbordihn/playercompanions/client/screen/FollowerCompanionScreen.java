@@ -30,6 +30,7 @@ import net.minecraftforge.api.distmarker.Dist;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.FollowerCompanionMenu;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMenu> {
@@ -45,11 +46,15 @@ public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMe
   @Override
   public void init() {
     super.init();
-    this.addRenderableWidget(new Button(this.leftPos + 5, this.topPos + 107, 108, 20,
-        new TranslatableComponent("Texture Settings"), event -> {
-          this.showTextureSettings(true);
-          this.setFocused(null);
-        }));
+
+    if (entity instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.enableCustomTextureSkin()) {
+      this.addRenderableWidget(new Button(this.leftPos + 5, this.topPos + 107, 108, 20,
+          new TranslatableComponent("Texture Settings"), event -> {
+            this.showTextureSettings(true);
+            this.setFocused(null);
+          }));
+    }
   }
 
 }

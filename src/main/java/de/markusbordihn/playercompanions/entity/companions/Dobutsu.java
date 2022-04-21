@@ -65,27 +65,32 @@ public class Dobutsu extends FollowerEntityWalking {
 
   // General Information
   public static final String ID = "dobutsu";
-  public static final String NAME = "dobutsu";
+  public static final String NAME = "Dobutsu";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE, Items.SWEET_BERRIES);
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
+  public static final String CREEPER_VARIANT = "creeper";
 
   // Entity texture by color
   private static final Map<String, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
+        hashMap.put(CREEPER_VARIANT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
       });
 
   // Companion Item by variant
   private static final Map<String, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT, ModItems.DOBUTSU_DEFAULT.get());
+        hashMap.put(CREEPER_VARIANT, ModItems.DOBUTSU_CREEPER.get());
       });
 
   public Dobutsu(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level);
+    this.enableCustomTextureSkin(true);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
@@ -95,8 +100,8 @@ public class Dobutsu extends FollowerEntityWalking {
 
   public ResourceLocation getResourceLocation() {
     if (!this.hasTextureCache() && level.isClientSide) {
-      if (this.getUserTexture() != null && !this.getUserTexture().isEmpty()) {
-        this.setTextureCache(ModTextureManager.addTexture(this.getUserTexture()));
+      if (this.hasCustomTextureSkin()) {
+        this.setTextureCache(ModTextureManager.addTexture(this.getCustomTextureSkin()));
       }
       if (!this.hasTextureCache()) {
         this.setTextureCache(TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
@@ -114,7 +119,7 @@ public class Dobutsu extends FollowerEntityWalking {
     spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
         spawnGroupData, compoundTag);
     // Use random different variants for spawn and randomly select one.
-    if (this.random.nextInt(2) == 0) {
+    if (!this.hasCustomTextureSkin() && this.random.nextInt(2) == 0) {
       List<String> variants = new ArrayList<>(TEXTURE_BY_VARIANT.keySet());
       setVariant(variants.get(this.random.nextInt(variants.size())));
     }

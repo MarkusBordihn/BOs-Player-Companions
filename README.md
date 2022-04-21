@@ -15,6 +15,7 @@ Player Companions adds additional creatures which will follow, protect or help y
 - Friendly fire option (for all of your tamed companions).
 - Advanced control and experience level system.
 - Jade / Hwyla plugin integration.
+- Custom skins for specific player companions.
 - Automatic data backup.
 
 ## Player Companion Types

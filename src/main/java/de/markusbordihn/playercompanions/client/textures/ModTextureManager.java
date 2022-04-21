@@ -25,11 +25,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import java.util.HashMap;
+
 import javax.imageio.ImageIO;
 
 import org.apache.logging.log4j.LogManager;
@@ -40,11 +39,11 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.resources.ResourceLocation;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FileUtils;
 
 import de.markusbordihn.playercompanions.Constants;
@@ -52,12 +51,6 @@ import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
 @OnlyIn(Dist.CLIENT)
 public class ModTextureManager {
-
-  /**
-   * The texture manager is taking care of the following use cases: 1. Texture as resource directly
-   * inside the mod back 2. Texture as resource from Minecraft profile 3. Texture as resource from
-   * 3rd party webpage like SKIndex, NovaSkin, Planet Minecraft
-   */
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
@@ -68,43 +61,51 @@ public class ModTextureManager {
 
   protected ModTextureManager() {}
 
-  public static ResourceLocation addTexture(String name, File file) {
-    String textureId = getId(name);
+  private static ResourceLocation addTexture(String name, File file) {
+    if (hasTexture(name)) {
+      log.warn("Texture with name {} already exists! Unable to add texture for file: {}", name,
+          file);
+      return getTexture(name);
+    }
     Minecraft client = Minecraft.getInstance();
     TextureManager textureManager = client.getTextureManager();
+
+    // Creative native image from file.
     NativeImage nativeImage = getNativeImage(file);
     if (nativeImage == null) {
       log.error("Unable to create native image for file {}.", file);
       return null;
     }
+
+    // Creative dynamic texture from native image.
     DynamicTexture dynamicTexture = new DynamicTexture(nativeImage);
+
+    // Register dynamic texture under resource location.
+    String textureId = getId(name);
     ResourceLocation resourceLocation = textureManager.register(textureId, dynamicTexture);
-    log.debug("Registered image {} as texture {} as {} to texture Manager.", nativeImage,
+    log.debug("Registered image {} as texture {} with {} to texture Manager.", nativeImage,
         dynamicTexture, resourceLocation);
+
+    // Store resource location by id into cache.
     textureCache.put(textureId, resourceLocation);
     return resourceLocation;
   }
 
   public static ResourceLocation addTexture(String remoteUrl) {
-    return addTexture(remoteUrl, remoteUrl);
-  }
-
-  public static ResourceLocation addTexture(String name, String remoteUrl) {
-    if (hasTexture(name)) {
-      log.error("Texture with name {} already exists!", name);
-      return getTexture(name);
-    }
     if (!PlayersUtils.isValidUrl(remoteUrl)) {
-      log.error("Texture URL for name {} is invalid: {}", name, remoteUrl);
+      log.error("Texture URL {} is invalid!", remoteUrl);
       return null;
     }
+    if (hasTexture(remoteUrl)) {
+      log.debug("Texture with {} already exists, will used cached version instead!", remoteUrl);
+      return getTexture(remoteUrl);
+    }
 
-    String fileName = getFileName(name);
-    Path cacheDirectory = getTextureCacheDirectory();
-    File file = new File(cacheDirectory.toString(), fileName);
+    String fileName = getFileName(remoteUrl);
+    File file = new File(getTextureCacheDirectoryString(), fileName);
     if (file.exists()) {
-      log.debug("Found downloaded file in cache, will re-used file {} for {}", file, name);
-      return addTexture(name, file);
+      log.debug("Found downloaded file in cache, will re-used file {} for {}", file, remoteUrl);
+      return addTexture(remoteUrl, file);
     }
 
     // Download URL to memory
@@ -112,7 +113,7 @@ public class ModTextureManager {
     try {
       image = ImageIO.read(new URL(remoteUrl));
     } catch (IllegalArgumentException | IOException exception) {
-      log.error("Unable to load texture {} from {} because of:", name, remoteUrl, exception);
+      log.error("Unable to load texture from {} because of:", remoteUrl, exception);
       return null;
     }
 
@@ -120,8 +121,8 @@ public class ModTextureManager {
     if (image == null) {
       log.error("Unable to get any valid texture from {}!", remoteUrl);
       return null;
-    } else if (image.getWidth() < 32 || image.getHeight() < 32
-        || image.getWidth() != image.getHeight()) {
+    } else if (image.getWidth() < 32 || image.getHeight() < 32 || image.getWidth() % 32 != 0
+        || image.getHeight() % 32 != 0) {
       log.error("Unable to get any valid texture from {}, got {}x{}!", remoteUrl, image.getWidth(),
           image.getHeight());
       return null;
@@ -131,13 +132,12 @@ public class ModTextureManager {
     try {
       ImageIO.write(image, "png", file);
     } catch (IllegalArgumentException | IOException exception) {
-      log.error("Unable to store texture {} from {} to {} because of:", name, file, remoteUrl,
-          exception);
+      log.error("Unable to store texture from {} to {} because of:", remoteUrl, file, exception);
       return null;
     }
 
     // Adding file to texture manager.
-    return addTexture(name, file);
+    return addTexture(remoteUrl, file);
   }
 
   public static String getId(String name) {
@@ -145,17 +145,19 @@ public class ModTextureManager {
   }
 
   public static String getFileName(String name) {
-    return String.format("%s.png", name.hashCode());
+    return String.format("%s.png", getId(name)).replace("-","0");
   }
 
   public static boolean hasTexture(String name) {
-    String textureId = getId(name);
-    return textureCache.containsKey(textureId);
+    return textureCache.containsKey(getId(name));
   }
 
   public static ResourceLocation getTexture(String name) {
-    String textureId = getId(name);
-    return textureCache.get(textureId);
+    return textureCache.get(getId(name));
+  }
+
+  public static String getTextureCacheDirectoryString() {
+    return getTextureCacheDirectory().toString();
   }
 
   public static Path getTextureCacheDirectory() {
@@ -172,15 +174,42 @@ public class ModTextureManager {
   }
 
   public static NativeImage getNativeImage(File file) {
+    NativeImage nativeImage;
     try {
       InputStream inputStream = new FileInputStream(file);
-      NativeImage nativeImage = NativeImage.read(inputStream);
+      nativeImage = NativeImage.read(inputStream);
       inputStream.close();
-      return nativeImage;
     } catch (Exception exception) {
       log.error("Unable to get native image for file {} because of:", file, exception);
       return null;
     }
+
+    if (nativeImage.getWidth() == 64 && nativeImage.getHeight() == 32) {
+      log.info("Processing legacy image {} from 64x32 to 64x64 ...", nativeImage);
+      nativeImage = getNativeImageFromLegacyImage(nativeImage);
+    }
+
+    return nativeImage;
+  }
+
+  public static NativeImage getNativeImageFromLegacyImage(NativeImage legacyNativeImage) {
+    NativeImage nativeImage = new NativeImage(64, 64, true);
+    nativeImage.copyFrom(legacyNativeImage);
+    legacyNativeImage.close();
+    nativeImage.fillRect(0, 32, 64, 32, 0);
+    nativeImage.copyRect(4, 16, 16, 32, 4, 4, true, false);
+    nativeImage.copyRect(8, 16, 16, 32, 4, 4, true, false);
+    nativeImage.copyRect(0, 20, 24, 32, 4, 12, true, false);
+    nativeImage.copyRect(4, 20, 16, 32, 4, 12, true, false);
+    nativeImage.copyRect(8, 20, 8, 32, 4, 12, true, false);
+    nativeImage.copyRect(12, 20, 16, 32, 4, 12, true, false);
+    nativeImage.copyRect(44, 16, -8, 32, 4, 4, true, false);
+    nativeImage.copyRect(48, 16, -8, 32, 4, 4, true, false);
+    nativeImage.copyRect(40, 20, 0, 32, 4, 12, true, false);
+    nativeImage.copyRect(44, 20, -8, 32, 4, 12, true, false);
+    nativeImage.copyRect(48, 20, -16, 32, 4, 12, true, false);
+    nativeImage.copyRect(52, 20, -8, 32, 4, 12, true, false);
+    return nativeImage;
   }
 
 }

@@ -44,6 +44,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
 import de.markusbordihn.playercompanions.entity.companions.Firefly;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
@@ -66,6 +67,8 @@ public class SpawnHandler {
 
   @SubscribeEvent
   public static void onWorldLoad(ServerAboutToStartEvent event) {
+    logSpawn(Dobutsu.NAME, COMMON.dobutsuSpawnEnable.get(), COMMON.dobutsuWeight.get(),
+        COMMON.dobutsuMinGroup.get(), COMMON.dobutsuMaxGroup.get());
     logSpawn(Fairy.NAME, COMMON.fairySpawnEnable.get(), COMMON.fairyWeight.get(),
         COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get());
     logSpawn(Firefly.NAME, COMMON.fireflySpawnEnable.get(), COMMON.fireflyWeight.get(),
@@ -96,6 +99,7 @@ public class SpawnHandler {
     ResourceKey<Biome> biomeKey = ResourceKey.create(Registry.BIOME_REGISTRY, biomeRegistry);
     boolean isBeach =
         biomeCategory == BiomeCategory.BEACH || BiomeDictionary.hasType(biomeKey, Type.BEACH);
+    boolean isDarkForest = biomeKey == Biomes.DARK_FOREST;
     boolean isFlowerForest = biomeKey == Biomes.FLOWER_FOREST;
     boolean isJungle =
         biomeCategory == BiomeCategory.JUNGLE || BiomeDictionary.hasType(biomeKey, Type.JUNGLE);
@@ -111,6 +115,14 @@ public class SpawnHandler {
         biomeCategory == BiomeCategory.MOUNTAIN || BiomeDictionary.hasType(biomeKey, Type.MOUNTAIN);
 
 
+    // Dobutsu Spawn
+    if (Boolean.TRUE.equals(COMMON.dobutsuSpawnEnable.get()) && isDarkForest) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.DOBUTSU.get(),
+              COMMON.dobutsuWeight.get(), COMMON.dobutsuMinGroup.get(),
+              COMMON.dobutsuMaxGroup.get()));
+    }
+
     // Fairy Spawn
     if (Boolean.TRUE.equals(COMMON.fairySpawnEnable.get()) && isFlowerForest) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
@@ -121,8 +133,9 @@ public class SpawnHandler {
     // Firefly Spawn
     if (Boolean.TRUE.equals(COMMON.fireflySpawnEnable.get()) && (isPlains || isSwamp)) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
-          .add(new MobSpawnSettings.SpawnerData(ModEntityType.FAIRY.get(), COMMON.fireflyWeight.get(),
-              COMMON.fireflyMinGroup.get(), COMMON.fireflyMaxGroup.get()));
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.FAIRY.get(),
+              COMMON.fireflyWeight.get(), COMMON.fireflyMinGroup.get(),
+              COMMON.fireflyMaxGroup.get()));
     }
 
     // Pig Spawn
@@ -183,10 +196,12 @@ public class SpawnHandler {
   public static void registerSpawnPlacements(final FMLCommonSetupEvent event) {
     log.info("{} Spawn Placements ...", Constants.LOG_REGISTER_PREFIX);
     event.enqueueWork(() -> {
+      SpawnPlacements.register(ModEntityType.DOBUTSU.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dobutsu::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.FAIRY.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.FIREFLY.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules);
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Firefly::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.ROOSTER.get(), SpawnPlacements.Type.ON_GROUND,

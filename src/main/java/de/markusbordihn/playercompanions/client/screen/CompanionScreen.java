@@ -64,8 +64,9 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   private ResourceLocation backgroundTexture =
       new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion.png");
 
-  private final Entity entity;
+  protected final Entity entity;
 
+  private Button clearTextureSettingsButton = null;
   private Button closeTextureSettingsButton = null;
   private Button saveTextureSettingsButton = null;
   private EditBox textureSkinLocationBox;
@@ -189,6 +190,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
         topPosDialog + 25F, 4210752);
 
     this.textureSkinLocationBox.render(poseStack, x, y, partialTicks);
+    this.clearTextureSettingsButton.render(poseStack, x, y, partialTicks);
     this.saveTextureSettingsButton.render(poseStack, x, y, partialTicks);
     this.closeTextureSettingsButton.render(poseStack, x, y, partialTicks);
     poseStack.popPose();
@@ -204,13 +206,20 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
   protected void showTextureSettings(boolean visible) {
     this.showTextureSettings = visible;
+    this.clearTextureSettingsButton.visible = visible;
     this.saveTextureSettingsButton.visible = visible;
     this.closeTextureSettingsButton.visible = visible;
     this.textureSkinLocationBox.visible = visible;
     this.minecraft.keyboardHandler.setSendRepeatsToGui(visible);
     if (visible && entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-      this.formerTextureSkinLocation = playerCompanionEntity.getUserTexture();
+      this.formerTextureSkinLocation = playerCompanionEntity.getCustomTextureSkin();
       this.textureSkinLocationBox.setValue(formerTextureSkinLocation);
+    }
+  }
+
+  private void clearTextureSkinLocation() {
+    if (!this.textureSkinLocationBox.getValue().isEmpty()) {
+      this.textureSkinLocationBox.setValue("");
     }
   }
 
@@ -234,6 +243,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
         && (textureSkinLocationValue.isEmpty()
             || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
             || PlayersUtils.isValidUrl(textureSkinLocationValue));
+    this.clearTextureSettingsButton.active =
+        textureSkinLocationValue != null && !textureSkinLocationValue.isEmpty();
   }
 
   @Override
@@ -250,15 +261,15 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     // Position for the dialog
     this.leftPosDialog = this.leftPos - 18;
-    this.topPosDialog = this.topPos + 90;
+    this.topPosDialog = this.topPos + 85;
 
     // Player Companions settings
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-      this.formerTextureSkinLocation = playerCompanionEntity.getUserTexture();
+      this.formerTextureSkinLocation = playerCompanionEntity.getCustomTextureSkin();
     }
 
     // Texture Settings
-    this.textureSkinLocationBox = new EditBox(this.font, leftPosDialog + 10, topPosDialog + 42, 210,
+    this.textureSkinLocationBox = new EditBox(this.font, leftPosDialog + 10, topPosDialog + 42, 190,
         20, new TranslatableComponent("Texture URL"));
     this.textureSkinLocationBox.setMaxLength(256);
     this.textureSkinLocationBox.setValue(this.formerTextureSkinLocation);
@@ -267,8 +278,13 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.textureSkinLocationBox.visible = false;
 
     // Texture Settings Buttons
-    this.saveTextureSettingsButton = this.addRenderableWidget(new Button(this.leftPosDialog + 20,
-        this.topPosDialog + 70, 80, 20, new TranslatableComponent("Save"), onPress -> {
+    this.clearTextureSettingsButton =
+        this.addRenderableWidget(new Button(this.leftPosDialog + 205, this.topPosDialog + 42, 20,
+            20, new TextComponent("X"), onPress -> this.clearTextureSkinLocation()));
+    this.clearTextureSettingsButton.visible = false;
+
+    this.saveTextureSettingsButton = this.addRenderableWidget(new Button(this.leftPosDialog + 10,
+        this.topPosDialog + 68, 80, 20, new TranslatableComponent("Save"), onPress -> {
           this.saveTextureSkinLocation();
           this.showTextureSettings(false);
         }));
@@ -276,8 +292,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.saveTextureSettingsButton.visible = false;
 
     this.closeTextureSettingsButton =
-        this.addRenderableWidget(new Button(this.leftPosDialog + 130, this.topPosDialog + 70, 80,
-            20, new TranslatableComponent("Close"), onPress -> this.showTextureSettings(false)));
+        this.addRenderableWidget(new Button(this.leftPosDialog + 145, this.topPosDialog + 68, 80,
+            20, new TranslatableComponent("Cancel"), onPress -> this.showTextureSettings(false)));
     this.closeTextureSettingsButton.active = true;
     this.closeTextureSettingsButton.visible = false;
   }
@@ -326,8 +342,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       this.showTextureSettings(false);
       return true;
     } else if (keyCode == 257 || keyCode == 335) {
-      this.showTextureSettings(false);
       this.saveTextureSkinLocation();
+      this.showTextureSettings(false);
       return true;
     } else {
       return true;

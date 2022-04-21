@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import com.google.common.collect.Sets;
 
 public class NamesUtils {

@@ -39,7 +39,7 @@ public class PlayerCompanionEntityFlyingAround extends PlayerCompanionEntity {
     super(entityType, level);
     this.moveControl = new PlayerCompanionEntityFlyAroundControl(this);
     this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
-    this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
+    this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
   }
 
   @Override

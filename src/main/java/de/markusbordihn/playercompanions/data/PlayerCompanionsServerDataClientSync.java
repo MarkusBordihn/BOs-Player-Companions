@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
@@ -39,7 +38,7 @@ public class PlayerCompanionsServerDataClientSync {
       return;
     }
 
-    String data = exportPlayerCompanionData(playerCompanionData);
+    CompoundTag data = exportPlayerCompanionData(playerCompanionData);
     UUID playerCompanionUUID = playerCompanionData.getUUID();
     UUID ownerUUID = playerCompanionData.getOwnerUUID();
 
@@ -52,16 +51,21 @@ public class PlayerCompanionsServerDataClientSync {
     if (ownerUUID == null || playerCompanionsData == null || playerCompanionsData.isEmpty()) {
       return;
     }
-    String data = exportPlayerCompanionsData(playerCompanionsData);
+    CompoundTag data = exportPlayerCompanionsData(playerCompanionsData);
     NetworkHandler.updatePlayerCompanionsData(ownerUUID, data);
   }
 
-  public static String exportPlayerCompanionData(PlayerCompanionData playerCompanionData) {
+  public static String exportPlayerCompanionDataString(PlayerCompanionData playerCompanionData) {
+    CompoundTag compoundTag = exportPlayerCompanionData(playerCompanionData);
+    return compoundTag != null && !compoundTag.isEmpty() ? compoundTag.getAsString() : "";
+  }
+
+  public static CompoundTag exportPlayerCompanionData(PlayerCompanionData playerCompanionData) {
 
     // Pre-checks to avoid errors or edge conditions like server start.
     if (playerCompanionData == null || playerCompanionData.getUUID() == null
         || playerCompanionData.getOwnerUUID() == null) {
-      return "";
+      return null;
     }
 
     // Create client data
@@ -69,18 +73,22 @@ public class PlayerCompanionsServerDataClientSync {
     playerCompanionData.saveMetaData(compoundTag);
 
     // Return data as string.
-    return compoundTag.isEmpty() ? "" : compoundTag.getAsString();
+    return compoundTag;
   }
 
-  public static String exportPlayerCompanionsData(Set<PlayerCompanionData> playerCompanionsData) {
+  public static String exportPlayerCompanionsDataString(Set<PlayerCompanionData> playerCompanionsData) {
+    CompoundTag compoundTag = exportPlayerCompanionsData(playerCompanionsData);
+    return compoundTag != null && !compoundTag.isEmpty() ? compoundTag.getAsString() : "";
+  }
+
+  public static CompoundTag exportPlayerCompanionsData(Set<PlayerCompanionData> playerCompanionsData) {
     // Pre-checks to avoid errors or edge conditions like server start.
     if (playerCompanionsData == null || playerCompanionsData.isEmpty()) {
-      return "";
+      return null;
     }
 
     // Create client data
     CompoundTag compoundTag = new CompoundTag();
-    compoundTag.putLong(PlayerCompanionsServerData.LAST_UPDATE_TAG, new Date().getTime());
     ListTag companionListTag = new ListTag();
 
     // Iterate over all known player companions for the owner and get their meta data.
@@ -95,7 +103,7 @@ public class PlayerCompanionsServerDataClientSync {
     }
     compoundTag.put(PlayerCompanionsServerData.COMPANIONS_TAG, companionListTag);
 
-    return compoundTag.getAsString();
+    return compoundTag;
   }
 
 }

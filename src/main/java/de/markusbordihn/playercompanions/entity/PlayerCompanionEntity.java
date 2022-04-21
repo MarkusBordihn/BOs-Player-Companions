@@ -20,12 +20,12 @@
 package de.markusbordihn.playercompanions.entity;
 
 import java.util.Locale;
-import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -40,11 +40,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
@@ -53,9 +53,8 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -66,12 +65,10 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.network.NetworkHooks;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.block.LightBlock;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
-import de.markusbordihn.playercompanions.container.CompanionsMenu;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
@@ -100,7 +97,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
+  private static final int GLOW_TICK = 30;
+  private static final int TEXTURE_CACHE_TICK = 50;
   private int ticker = 0;
+  private int glowTicker = 0;
+  private int textureCacheTicker = 0;
 
   // Temporary states
   private boolean wasOnGround;
@@ -113,7 +114,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     this.setSyncReference(this);
 
     // Distribute Ticks along several entities.
-    this.ticker = (short) this.random.nextInt(0, 50);
+    this.ticker = this.random.nextInt(0, INACTIVE_TICK / 2);
+    this.glowTicker = this.random.nextInt(0, GLOW_TICK / 2);
+    this.textureCacheTicker = this.random.nextInt(0, TEXTURE_CACHE_TICK / 2);
 
     setDataSyncNeeded();
   }
@@ -192,31 +195,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
-  public void openMenu() {
-    LivingEntity owner = getOwner();
-    if (owner != null && PlayerCompanionsServerData.available()) {
-      ServerPlayer player = this.level.getServer().getPlayerList().getPlayer(owner.getUUID());
-      if (player instanceof ServerPlayer) {
-        UUID playerCompanionUUID = this.getUUID();
-        Component playerCompanionName = this.getCustomName();
-        MenuProvider provider = new MenuProvider() {
-          @Override
-          public Component getDisplayName() {
-            return playerCompanionName;
-          }
-
-          @Nullable
-          @Override
-          public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-              Player player) {
-            return new CompanionsMenu(windowId, inventory, playerCompanionUUID);
-          }
-        };
-        NetworkHooks.openGui(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
-      }
-    }
-  }
-
   protected void pet() {
     // Heal pet by 0.1 points.
     if (this.getHealth() < this.getMaxHealth()) {
@@ -239,9 +217,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       playSound(eatingSound, this.getSoundVolume(), this.getSoundPitch());
     }
     Item item = itemStack.getItem();
-    this.heal(item.getFoodProperties() != null ? item.getFoodProperties().getNutrition() : 0.5F);
-    if (item.getFoodProperties() != null) {
-      for (Pair<MobEffectInstance, Float> pair : item.getFoodProperties().getEffects()) {
+    FoodProperties foodProperties = item.getFoodProperties(itemStack, this);
+    this.heal(foodProperties != null ? foodProperties.getNutrition() : 0.5F);
+    if (foodProperties != null) {
+      for (Pair<MobEffectInstance, Float> pair : foodProperties.getEffects()) {
         if (!this.level.isClientSide && pair.getFirst() != null
             && this.level.random.nextFloat() < pair.getSecond()) {
           this.addEffect(new MobEffectInstance(pair.getFirst()));
@@ -284,8 +263,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           sit();
         }
         break;
+      case AGGRESSION_LEVEL_TOGGLE:
+        this.toggleAggressionLevel();
+        break;
       case OPEN_MENU:
-        openMenu();
+        PlayerCompanionMenu.openMenu(this);
         break;
       case PET:
         pet();
@@ -304,6 +286,16 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     if (respawnTimer > 0 && respawnTimer < java.time.Instant.now().getEpochSecond()) {
       this.stopRespawnTimer();
     }
+
+    // Trigger Hand change events, if needed.
+    ItemStack mainHandItemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+    if (mainHandItemStack != null) {
+      onMainHandItemSlotChange(mainHandItemStack);
+    }
+    ItemStack offHandItemStack = this.getItemBySlot(EquipmentSlot.OFFHAND);
+    if (offHandItemStack != null) {
+      onOffHandItemSlotChange(offHandItemStack);
+    }
   }
 
   public void sendOwnerMessage(Component component) {
@@ -319,7 +311,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     if (level > 1) {
       addParticle(ParticleTypes.ENCHANT);
-      sendOwnerMessage(new TranslatableComponent(Util.makeDescriptionId("entity", LEVEL_UP_MESSAGE),
+      sendOwnerMessage(new TranslatableComponent(
+          Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, LEVEL_UP_MESSAGE),
           this.getCustomCompanionName(), level));
     }
   }
@@ -331,7 +324,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   public float getSoundVolume() {
-    // Is needed to delegate protection for access from move controller.
+    // This is needed to delegate protection for access from move controller.
     return 1.0F;
   }
 
@@ -344,7 +337,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void stopRespawnTimer() {
     super.stopRespawnTimer();
-    sendOwnerMessage(new TranslatableComponent(Util.makeDescriptionId("entity", RESPAWN_MESSAGE),
+    sendOwnerMessage(new TranslatableComponent(
+        Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, RESPAWN_MESSAGE),
         this.getCustomCompanionName()));
     setDataSyncNeeded();
   }
@@ -402,6 +396,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void tame(Player player) {
     super.tame(player);
+    log.info("Player {} tamed player companion {} ...", player, this);
     if (player instanceof ServerPlayer) {
       this.registerData();
     }
@@ -440,19 +435,24 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
       if (isOwner) {
 
-        // Handler Commands with CTRL Key pressed
-        boolean ctrlKeyPressed = ModKeyMapping.KEY_COMMAND.isDown();
-        if (ctrlKeyPressed) {
-          // Order to sit is hand is empty or has an weapon in hand (during compat)
-          if (itemStack.isEmpty() || isWeapon(itemStack)) {
-            NetworkHandler.commandPlayerCompanion(getStringUUID(),
-                PlayerCompanionCommand.SIT_FOLLOW_TOGGLE);
-            return InteractionResult.SUCCESS;
-          }
+        // Handle Commands with CTRL Key pressed
+        boolean commandKeyPressed = ModKeyMapping.COMMAND_KEY.isDown();
+        if (commandKeyPressed && (itemStack.isEmpty() || isWeapon(itemStack))) {
+          NetworkHandler.commandPlayerCompanion(getStringUUID(),
+              PlayerCompanionCommand.SIT_FOLLOW_TOGGLE);
+          return InteractionResult.SUCCESS;
+        }
+
+        // Handle Aggression level with ALT Key pressed
+        boolean aggressionKeyPressed = ModKeyMapping.AGGRESSION_KEY.isDown();
+        if (aggressionKeyPressed && (itemStack.isEmpty() || isWeapon(itemStack))) {
+          NetworkHandler.commandPlayerCompanion(getStringUUID(),
+              PlayerCompanionCommand.AGGRESSION_LEVEL_TOGGLE);
+          return InteractionResult.SUCCESS;
         }
 
         // Pet Player Companion
-        else if (player.isCrouching() && itemStack.isEmpty()) {
+        if (player.isCrouching() && itemStack.isEmpty()) {
           this.addParticle(ParticleTypes.HEART);
           if (this.getPetSound() != null) {
             this.playSound(player, this.getPetSound());
@@ -526,6 +526,25 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       }
     }
 
+    // ServerSide: Place light block, if companion should glow in the dark.
+    if (!this.level.isClientSide && this.shouldGlowInTheDark() && this.glowTicker++ >= GLOW_TICK) {
+      BlockPos lightBlockPos = this.getOnPos();
+      if (this.level.isNight() || this.level.isRaining() || this.level.isThundering()
+          || !this.level.canSeeSky(lightBlockPos)) {
+        LightBlock.place(level, lightBlockPos);
+      }
+      this.glowTicker = 0;
+    }
+
+    // ClientSide: Re-validated Texture cache if needed.
+    if (this.level.isClientSide && this.hasTextureCache() && this.hasChangedCustomTextureSkin()
+        && textureCacheTicker++ >= TEXTURE_CACHE_TICK) {
+      log.debug("Re-validated texture cache for {}", this);
+      setCustomTextureSkin(this.getCustomTextureSkin());
+      setTextureCache(null);
+      textureCacheTicker = 0;
+    }
+
     // Shows particle and play sound after jump or fall.
     if (this.onGround && !this.wasOnGround) {
       if (this.getParticleType() != null) {
@@ -564,12 +583,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         if (respawnDelay > 1) {
           setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
         }
-        sendOwnerMessage(
-            new TranslatableComponent(Util.makeDescriptionId("entity", WILL_RESPAWN_MESSAGE),
-                getCustomCompanionName(), respawnDelay));
+        sendOwnerMessage(new TranslatableComponent(
+            Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_RESPAWN_MESSAGE),
+            getCustomCompanionName(), respawnDelay));
       } else {
         sendOwnerMessage(new TranslatableComponent(
-            Util.makeDescriptionId("entity", WILL_NOT_RESPAWN_MESSAGE), getCustomCompanionName()));
+            Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_NOT_RESPAWN_MESSAGE),
+            getCustomCompanionName()));
         setActive(false);
       }
     }

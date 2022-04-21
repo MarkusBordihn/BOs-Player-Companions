@@ -39,7 +39,7 @@ public class PlayerCompanionEntityFlying extends PlayerCompanionEntity {
     super(entityType, level);
     this.moveControl = new PlayerCompanionEntityFlyControl(this, 10, true);
     this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
-    this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
+    this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
   }
 
   @Override

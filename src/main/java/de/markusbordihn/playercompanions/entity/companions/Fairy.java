@@ -36,12 +36,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -66,12 +64,13 @@ import net.minecraft.world.phys.Vec3;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.RandomFlyAroundGoal;
 import de.markusbordihn.playercompanions.entity.type.healer.HealerEntityFlyingAround;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
-import de.markusbordihn.playercompanions.utils.Names;
+import de.markusbordihn.playercompanions.utils.NamesUtils;
 
 public class Fairy extends HealerEntityFlyingAround {
 
@@ -84,6 +83,7 @@ public class Fairy extends HealerEntityFlyingAround {
 
   // Variants
   public static final String DEFAULT_VARIANT = "default";
+  public static final String BLUE_VARIANT = "blue";
   public static final String RED_HAIR_VARIANT = "red_hair";
 
   // Entity texture by color
@@ -91,6 +91,8 @@ public class Fairy extends HealerEntityFlyingAround {
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_default.png"));
+        hashMap.put(BLUE_VARIANT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_blue.png"));
         hashMap.put(RED_HAIR_VARIANT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_red_hair.png"));
       });
@@ -99,6 +101,7 @@ public class Fairy extends HealerEntityFlyingAround {
   private static final Map<String, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(DEFAULT_VARIANT, ModItems.FAIRY_DEFAULT.get());
+        hashMap.put(BLUE_VARIANT, ModItems.FAIRY_BLUE.get());
         hashMap.put(RED_HAIR_VARIANT, ModItems.FAIRY_RED_HAIR.get());
       });
 
@@ -113,8 +116,11 @@ public class Fairy extends HealerEntityFlyingAround {
   }
 
   public ResourceLocation getResourceLocation() {
-    return TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
-        TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT));
+    if (!this.hasTextureCache()) {
+      this.setTextureCache(TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
+          TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT)));
+    }
+    return this.getTextureCache();
   }
 
   @Override
@@ -122,6 +128,7 @@ public class Fairy extends HealerEntityFlyingAround {
     super.registerGoals();
 
     this.goalSelector.addGoal(0, new FloatGoal(this));
+    this.goalSelector.addGoal(1, new FleeGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 8.0F));
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));
@@ -149,9 +156,8 @@ public class Fairy extends HealerEntityFlyingAround {
       @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
     spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
         spawnGroupData, compoundTag);
-    // Use random different variants for spawn
+    // Use random different variants for spawn and randomly select one.
     if (this.random.nextInt(2) == 0) {
-      // Select one of the variants.
       List<String> variants = new ArrayList<>(TEXTURE_BY_VARIANT.keySet());
       setVariant(variants.get(this.random.nextInt(variants.size())));
     }
@@ -186,7 +192,7 @@ public class Fairy extends HealerEntityFlyingAround {
 
   @Override
   protected String getRandomName() {
-    return Names.getRandomFemaleAndMiscMobName();
+    return NamesUtils.getRandomFemaleMobName();
   }
 
   @Override
@@ -230,11 +236,6 @@ public class Fairy extends HealerEntityFlyingAround {
   }
 
   @Override
-  public EntityDimensions getDimensions(Pose pose) {
-    return new EntityDimensions(0.4f, 0.8f, false);
-  }
-
-  @Override
   public boolean canSitOnShoulder() {
     return this.hasRideCooldown();
   }
@@ -242,6 +243,11 @@ public class Fairy extends HealerEntityFlyingAround {
   @Override
   public int getEntityGuiScaling() {
     return 65;
+  }
+
+  @Override
+  public void onMainHandItemSlotChange(ItemStack itemStack) {
+    this.setGlowInTheDark(itemStack.is(Items.TORCH));
   }
 
   @Override

@@ -29,6 +29,7 @@ public class TameApple extends CompanionTameItem {
 
   private static final Set<String> tameableMobTypes = new HashSet<>(Arrays.asList(
   // @formatter:off
+    "player_companions:samurai",
     "player_companions:small_slime"
   // @formatter:on
   ));

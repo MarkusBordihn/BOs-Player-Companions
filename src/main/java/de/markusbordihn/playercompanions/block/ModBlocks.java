@@ -41,6 +41,10 @@ public class ModBlocks {
 
   @TemplateEntryPoint("Register Blocks")
 
+  public static final RegistryObject<Block> LIGHT_BLOCK =
+      BLOCKS.register("light_block", () -> new LightBlock(
+          BlockBehaviour.Properties.of(Material.AIR).noCollission().lightLevel(blockState -> 15)));
+
   public static final RegistryObject<Block> COMPANION_GHOST = BLOCKS.register("companion_ghost",
       () -> new CompanionGhostBlock(BlockBehaviour.Properties.of(Material.AIR)));
 }

@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.entity;
 
 public enum PlayerCompanionCommand {
+  AGGRESSION_LEVEL_TOGGLE,
   FOLLOW,
   OPEN_MENU,
   PET,

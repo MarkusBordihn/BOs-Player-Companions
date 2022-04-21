@@ -49,6 +49,7 @@ import net.minecraft.world.phys.Vec3;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityWalking;
 import de.markusbordihn.playercompanions.item.ModItems;
@@ -77,6 +78,7 @@ public class Pig extends CollectorEntityWalking {
     super.registerGoals();
 
     this.goalSelector.addGoal(1, new FloatGoal(this));
+    this.goalSelector.addGoal(1, new FleeGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 0.5D, 0.5F));
     this.goalSelector.addGoal(2, new AvoidCreeperGoal(this));
@@ -130,12 +132,7 @@ public class Pig extends CollectorEntityWalking {
 
   @Override
   public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-    return 0.81F;
-  }
-
-  @Override
-  public EntityDimensions getDimensions(Pose pose) {
-    return new EntityDimensions(0.8f, 1.0f, false);
+    return 0.82F;
   }
 
   @Override

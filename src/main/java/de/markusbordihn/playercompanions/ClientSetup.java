@@ -34,7 +34,7 @@ import de.markusbordihn.playercompanions.block.ModBlocks;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public ClientSetup(final FMLClientSetupEvent event) {
     log.info("{} Client setup ...", Constants.LOG_REGISTER_PREFIX);
@@ -42,6 +42,7 @@ public class ClientSetup {
     event.enqueueWork(() -> {
       ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMPANION_GHOST.get(),
           RenderType.translucent());
+      ItemBlockRenderTypes.setRenderLayer(ModBlocks.LIGHT_BLOCK.get(), RenderType.cutoutMipped());
     });
   }
 }

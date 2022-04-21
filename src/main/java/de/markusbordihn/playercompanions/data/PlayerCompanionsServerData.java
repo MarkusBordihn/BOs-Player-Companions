@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -51,10 +50,9 @@ import de.markusbordihn.playercompanions.item.CapturedCompanion;
 @EventBusSubscriber
 public class PlayerCompanionsServerData extends SavedData {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final String COMPANIONS_TAG = "Companions";
-  public static final String LAST_UPDATE_TAG = "LastUpdate";
   public static final String NPC_TAG = "NPCs";
 
   private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
@@ -67,8 +65,7 @@ public class PlayerCompanionsServerData extends SavedData {
 
   private static final String PLAYER_COMPANIONS_FILE_ID = Constants.MOD_ID;
 
-  private long lastUpdate;
-
+  private int nextDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
@@ -96,6 +93,11 @@ public class PlayerCompanionsServerData extends SavedData {
             PlayerCompanionsServerData.getFileId());
   }
 
+  public static void setData(PlayerCompanionsServerData data) {
+    PlayerCompanionsServerData.data = data;
+    PlayerCompanionsServerData.data.setDirty();
+  }
+
   public static boolean available() {
     PlayerCompanionsServerData.get();
     return PlayerCompanionsServerData.data != null;
@@ -112,10 +114,6 @@ public class PlayerCompanionsServerData extends SavedData {
     return PLAYER_COMPANIONS_FILE_ID;
   }
 
-  public long getLastUpdate() {
-    return lastUpdate;
-  }
-
   public PlayerCompanionData getCompanion(ItemStack itemStack) {
     UUID companionUUID = null;
     CompoundTag compoundTag = itemStack.getOrCreateTag();
@@ -126,6 +124,10 @@ public class PlayerCompanionsServerData extends SavedData {
       return getCompanion(companionUUID);
     }
     return null;
+  }
+
+  public boolean hasCompanion(ItemStack itemStack) {
+    return getCompanion(itemStack) != null;
   }
 
   public PlayerCompanionData getCompanion(PlayerCompanionEntity playerCompanionEntity) {
@@ -225,14 +227,12 @@ public class PlayerCompanionsServerData extends SavedData {
       return playerCompanionsMap.get(companionEntity.getUUID());
     }
     if (requiredOwner && !companionEntity.hasOwner()) {
-      log.warn("Skipping companion {} for registration because it has no owner, yet!",
+      log.debug("Skipping companion {} for registration because it has no owner, yet!",
           companionEntity);
       return null;
     }
     if (companionEntity.hasOwner()) {
       log.info("Register companion {} for {} ...", companionEntity, companionEntity.getOwner());
-    } else {
-      log.info("Pre-register companion {} ...");
     }
     PlayerCompanionData playerCompanion = new PlayerCompanionData(companionEntity);
     addPlayerCompanion(playerCompanion);
@@ -265,22 +265,6 @@ public class PlayerCompanionsServerData extends SavedData {
     addPlayerCompanion(new PlayerCompanionData(compoundTag));
   }
 
-  public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
-    PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
-    log.info("{} loading data ...", Constants.LOG_ICON_NAME);
-    playerCompanionsData.lastUpdate = compoundTag.getLong(LAST_UPDATE_TAG);
-
-    // Restoring companions data
-    if (compoundTag.contains(COMPANIONS_TAG)) {
-      ListTag companionListTag = compoundTag.getList(COMPANIONS_TAG, 10);
-      for (int i = 0; i < companionListTag.size(); ++i) {
-        addPlayerCompanion(companionListTag.getCompound(i));
-      }
-    }
-
-    return playerCompanionsData;
-  }
-
   public void syncPlayerCompanionsData(UUID ownerUUID) {
     if (ownerUUID == null) {
       return;
@@ -293,10 +277,28 @@ public class PlayerCompanionsServerData extends SavedData {
     PlayerCompanionsServerDataClientSync.syncPlayerCompanionData(playerCompanionData);
   }
 
+  public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
+    // Create a backup before we loading anything!
+    PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
+
+    // Create a new data instance and set last update field.
+    PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
+    log.info("{} loading data ...", Constants.LOG_ICON_NAME);
+
+    // Restoring companions data
+    if (compoundTag.contains(COMPANIONS_TAG)) {
+      ListTag companionListTag = compoundTag.getList(COMPANIONS_TAG, 10);
+      for (int i = 0; i < companionListTag.size(); ++i) {
+        addPlayerCompanion(companionListTag.getCompound(i));
+      }
+    }
+
+    return playerCompanionsData;
+  }
+
   @Override
   public CompoundTag save(CompoundTag compoundTag) {
     log.info("{} saving data ... {}", Constants.LOG_ICON_NAME, this);
-    compoundTag.putLong(LAST_UPDATE_TAG, new Date().getTime());
 
     // Iterate throw all companions and store their full data (meta + entity data).
     ListTag companionListTag = new ListTag();
@@ -311,9 +313,18 @@ public class PlayerCompanionsServerData extends SavedData {
     }
     compoundTag.put(COMPANIONS_TAG, companionListTag);
 
-    // Iterate all NPC (wip).
+    // Iterate all NPC.
     ListTag npcListTag = new ListTag();
     compoundTag.put(NPC_TAG, npcListTag);
+
+    // Create a backup at least every 24 hours.
+    if (nextDailyBackup >= java.time.Instant.now().getEpochSecond()) {
+      int nextPlanedDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
+      log.info("{} Storing daily backup at {}, next planned backup is scheduled for {}.",
+          Constants.LOG_ICON_NAME, nextDailyBackup, nextPlanedDailyBackup);
+      PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
+      nextDailyBackup = nextPlanedDailyBackup;
+    }
 
     return compoundTag;
   }

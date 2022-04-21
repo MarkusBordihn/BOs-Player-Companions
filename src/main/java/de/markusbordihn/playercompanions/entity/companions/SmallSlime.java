@@ -138,7 +138,11 @@ public class SmallSlime extends FollowerEntityJumping {
   }
 
   public ResourceLocation getResourceLocation() {
-    return TEXTURE_BY_COLOR.getOrDefault(this.getColor(), TEXTURE_BY_COLOR.get(DyeColor.GREEN));
+    if (!this.hasTextureCache()) {
+      this.setTextureCache(
+          TEXTURE_BY_COLOR.getOrDefault(this.getColor(), TEXTURE_BY_COLOR.get(DyeColor.GREEN)));
+    }
+    return this.getTextureCache();
   }
 
   public static AttributeSupplier.Builder createAttributes() {

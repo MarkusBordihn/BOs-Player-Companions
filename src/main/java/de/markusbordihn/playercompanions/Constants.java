@@ -34,11 +34,12 @@ public final class Constants {
   public static final String LOG_REGISTER_PREFIX = LOG_ICON + " Register Player Companions";
   public static final String LOG_SPAWN_PREFIX = LOG_ICON + " Enable spawn for";
   public static final String LOG_PLAYER_COMPANION_DATA_PREFIX = "";
-  public static final String MOD_COMMAND = "companions";
+  public static final String MOD_COMMAND = "player_companions";
   public static final String MOD_ID = "player_companions";
   public static final String MOD_NAME = "Bo's Player Companions";
 
   // Prefixes
+  public static final String ENTITY_TEXT_PREFIX = "entity";
   public static final String TEXT_PREFIX = "text.player_companions.";
   public static final String KEY_PREFIX = "key.player_companions.";
 

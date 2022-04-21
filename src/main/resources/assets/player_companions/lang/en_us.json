@@ -3,12 +3,15 @@
 
   "entity.placeholder.text": "Template placeholder do not remove!",
 
+  "entity.player_companions.dobutsu": "Dobutsu",
   "entity.player_companions.fairy": "Fairy",
+  "entity.player_companions.firefly": "Firefly",
   "entity.player_companions.pig": "Pig",
+  "entity.player_companions.rooster": "Rooster",
+  "entity.player_companions.samurai": "Samurai",
   "entity.player_companions.small_ghast": "Small Ghast",
   "entity.player_companions.small_slime": "Small Slime",
   "entity.player_companions.snail": "Snail",
-  "entity.player_companions.rooster": "Rooster",
   "entity.player_companions.welsh_corgi": "Welsh Corgi",
 
   "entity.player_companions.companion_level_up_message": "Congratulation. Your companion %1$s has reached level %2$s!",
@@ -38,24 +41,35 @@
 
   "key.player_companions.category": "Player Companions Keys",
   "key.player_companions.player_companions": "Open Player Companions Screen",
-  "key.player_companions.control": "Command Key",
+  "key.player_companions.control": "Command player companion",
+  "key.player_companions.aggression": "Set aggression level for player companion",
+  "key.player_companions.open_menu": "Open player companions menu",
 
   "text.player_companions.companion_is_near_you": "Companion %1$s is already spawned within 16 blocks from your position!",
 
   "item.placeholder.text": "Template placeholder do not remove!",
 
+  "item.player_companions.dobutsu_spawn_egg": "Dobutsu Spawn Egg",
   "item.player_companions.fairy_spawn_egg": "Fairy Spawn Egg",
+  "item.player_companions.firefly_spawn_egg": "Firefly Spawn Egg",
   "item.player_companions.pig_spawn_egg": "Pig Spawn Egg",
   "item.player_companions.rooster_spawn_egg": "Rooster Spawn Egg",
+  "item.player_companions.samurai_spawn_egg": "Samurai Spawn Egg",
   "item.player_companions.small_ghast_spawn_egg": "Small Ghast Spawn Egg",
   "item.player_companions.small_slime_spawn_egg": "Small Slime Spawn Egg",
   "item.player_companions.snail_spawn_egg": "Snail Spawn Egg",
   "item.player_companions.welsh_corgi_spawn_egg": "Welsh Corgi Spawn Egg",
 
+  "item.player_companions.dobutsu_default": "Dobutsu (default)",
+  "item.player_companions.dobutsu_creeper": "Dobutsu (Creeper)",
   "item.player_companions.fairy_default": "Fairy (default)",
   "item.player_companions.fairy_red_hair": "Fairy (red hair)",
+  "item.player_companions.fairy_blue": "Fairy (blue)",
+  "item.player_companions.firefly_default": "Firefly (default)",
   "item.player_companions.pig": "Pig",
   "item.player_companions.rooster": "Rooster",
+  "item.player_companions.samurai_default": "Samurai (default)",
+  "item.player_companions.samurai_blue": "Samurai (blue)",
   "item.player_companions.small_ghast": "Small Ghast",
   "item.player_companions.small_slime": "Small Slime",
   "item.player_companions.small_slime_black": "Small Slime (black)",
@@ -81,7 +95,9 @@
   "item.player_companions.tame_bone": "Bone (Taming Item)",
   "item.player_companions.tame_cake": "Cake (Taming Item)",
   "item.player_companions.tame_carrot": "Carrot (Taming Item)",
+  "item.player_companions.tame_honeycomb": "Honeycomb (Taming Item)",
   "item.player_companions.tame_seagrass": "Seagrass (Taming Item)",
+  "item.player_companions.tame_sweet_berries": "Sweet Berries (Taming Item)",
   "item.player_companions.tame_wheat_seeds": "Wheat seeds (Taming Item)",
 
   "itemGroup.player_companions": "Player Companions",

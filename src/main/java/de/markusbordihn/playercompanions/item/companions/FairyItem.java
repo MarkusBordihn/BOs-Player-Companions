@@ -22,8 +22,8 @@ package de.markusbordihn.playercompanions.item.companions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
 public class FairyItem extends CapturedCompanion {

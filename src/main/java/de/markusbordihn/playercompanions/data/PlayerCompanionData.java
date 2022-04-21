@@ -41,6 +41,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
@@ -49,8 +50,11 @@ public class PlayerCompanionData {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String ACTIVE_TAG = "Active";
+  private static final String ENTITY_AGGRESSION_LEVEL = "EntityAggressionLevel";
   private static final String ENTITY_DATA_TAG = "EntityData";
   private static final String ENTITY_DIMENSION = "EntityDimension";
+  private static final String ENTITY_EXPERIENCE_LEVEL_TAG = "EntityExperienceLevel";
+  private static final String ENTITY_EXPERIENCE_TAG = "EntityExperience";
   private static final String ENTITY_HEALTH_MAX_TAG = "EntityHealthMax";
   private static final String ENTITY_HEALTH_TAG = "EntityHealth";
   private static final String ENTITY_ID_TAG = "EntityId";
@@ -60,8 +64,6 @@ public class PlayerCompanionData {
   private static final String ENTITY_SITTING_TAG = "EntitySitting";
   private static final String ENTITY_TARGET_TAG = "EntityTarget";
   private static final String ENTITY_TYPE_TAG = "EntityType";
-  private static final String ENTITY_EXPERIENCE_TAG = "EntityExperience";
-  private static final String ENTITY_EXPERIENCE_LEVEL_TAG = "EntityExperienceLevel";
   private static final String LEVEL_TAG = "Level";
   private static final String NAME_TAG = "Name";
   private static final String OWNER_NAME_TAG = "OwnerName";
@@ -69,9 +71,11 @@ public class PlayerCompanionData {
   private static final String POSITION_TAG = "Position";
   private static final String REMOVED_TAG = "Removed";
   private static final String TYPE_TAG = "Type";
-  static final String UUID_TAG = "UUID";
+  public static final String UUID_TAG = "UUID";
 
+  private AggressionLevel entityAggressionLevel = AggressionLevel.UNKNOWN;
   private BlockPos blockPos;
+  private ClientLevel clientLevel;
   private CompoundTag entityData;
   private EntityType<?> entityType;
   private NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
@@ -80,7 +84,6 @@ public class PlayerCompanionData {
   private PlayerCompanionEntity companionEntity;
   private PlayerCompanionType type = PlayerCompanionType.UNKNOWN;
   private ResourceKey<Level> level;
-  private ClientLevel clientLevel;
   private ServerLevel serverLevel;
   private String entityDimension = "";
   private String entityTarget = "";
@@ -174,6 +177,14 @@ public class PlayerCompanionData {
     return this.entityExperienceLevel;
   }
 
+  public AggressionLevel getEntityAggressionLevel() {
+    return this.entityAggressionLevel;
+  }
+
+  public void setEntityAggressionLevel(AggressionLevel aggressionLevel) {
+    this.entityAggressionLevel = aggressionLevel;
+  }
+
   public PlayerCompanionEntity getPlayerCompanionEntity() {
     if (this.companionEntity == null) {
       Entity entity = null;
@@ -221,7 +232,7 @@ public class PlayerCompanionData {
   }
 
   public boolean hasEntityTarget() {
-    return !this.entityTarget.isBlank();
+    return this.entityTarget != null && !this.entityTarget.isBlank();
   }
 
   public NonNullList<ItemStack> getArmorItems() {
@@ -292,20 +303,33 @@ public class PlayerCompanionData {
 
   public boolean storeInventoryItem(ItemStack itemStack) {
     // Iterate trough item stacks to find a matching or empty item stack to store the item.
-    Item item = itemStack.getItem();
-    int numberOfItems = itemStack.getCount();
+
+    // 1. Try to add stack-able items to existing stacks in the inventory.
+    // Note: Items will loose their NBT Tags because they are bound to the ItemStack.
+    if (itemStack.getMaxStackSize() > 1) {
+      Item item = itemStack.getItem();
+      int numberOfItems = itemStack.getCount();
+
+      for (int index = 0; index < getInventoryItemsSize(); index++) {
+        ItemStack existingItems = getInventoryItem(index);
+        if (!existingItems.isEmpty() && existingItems.is(item)
+            && existingItems.getCount() + numberOfItems < existingItems.getMaxStackSize()) {
+          existingItems.grow(numberOfItems);
+          return true;
+        }
+      }
+    }
+
+    // 2. Try to store items into any empty place.
+    // Note: We are storing the ItemStack directly to avoid loosing any NBT Tags.
     for (int index = 0; index < getInventoryItemsSize(); index++) {
       ItemStack existingItems = getInventoryItem(index);
-      if (!existingItems.isEmpty() && existingItems.is(item)
-          && existingItems.getCount() + numberOfItems < existingItems.getMaxStackSize()) {
-        existingItems.grow(numberOfItems);
-        return true;
-      }
       if (existingItems.isEmpty()) {
-        setInventoryItem(index, new ItemStack(item));
+        setInventoryItem(index, itemStack);
         return true;
       }
     }
+
     return false;
   }
 
@@ -329,6 +353,7 @@ public class PlayerCompanionData {
     this.level = companion.getLevel().dimension();
     this.levelName = this.level.getRegistryName() + "/" + this.level.location();
     this.entityId = companion.getId();
+    this.entityAggressionLevel = companion.getAggressionLevel();
     this.entityDimension = companion.getDimensionName();
     this.entityExperience = companion.getExperience();
     this.entityExperienceLevel = companion.getExperienceLevel();
@@ -340,9 +365,9 @@ public class PlayerCompanionData {
     this.entityOrderedToPosition = companion.isOrderedToPosition();
     this.entitySitOnShoulder = companion.isSitOnShoulder();
     this.entityData = companion.serializeNBT();
-
-    LivingEntity targetEntity = companion.getTarget();
-    this.entityTarget = targetEntity == null ? "" : targetEntity.getEncodeId();
+    this.entityTarget =
+        companion.getTarget() == null || companion.getTarget().getEncodeId() == null ? ""
+            : companion.getTarget().getEncodeId();
 
     // Handle level references (client and server)
     Level companionLevel = companion.getLevel();
@@ -417,6 +442,12 @@ public class PlayerCompanionData {
     // Load inventory
     PlayerCompanionDataHelper.loadInventoryItems(compoundTag, this.inventoryItems);
 
+    // Aggression Level
+    if (compoundTag.contains(ENTITY_AGGRESSION_LEVEL)) {
+      this.entityAggressionLevel =
+          AggressionLevel.get(compoundTag.getString(ENTITY_AGGRESSION_LEVEL));
+    }
+
     log.trace("Loaded PlayerCompanion {} data over compoundTag with {}", this.name, this);
   }
 
@@ -432,10 +463,6 @@ public class PlayerCompanionData {
     compoundTag.putUUID(UUID_TAG, this.companionUUID);
     compoundTag.putString(NAME_TAG, this.name);
     compoundTag.putString(TYPE_TAG, this.type.name());
-    if (this.ownerUUID != null) {
-      compoundTag.putUUID(OWNER_TAG, this.ownerUUID);
-      compoundTag.putString(OWNER_NAME_TAG, this.ownerName);
-    }
     compoundTag.putBoolean(ACTIVE_TAG, this.active);
     compoundTag.putBoolean(REMOVED_TAG, this.isRemoved);
     compoundTag.put(POSITION_TAG, NbtUtils.writeBlockPos(this.blockPos));
@@ -443,17 +470,8 @@ public class PlayerCompanionData {
       compoundTag.putString(LEVEL_TAG, this.levelName);
     }
     compoundTag.putInt(ENTITY_ID_TAG, this.entityId);
-    compoundTag.putString(ENTITY_DIMENSION, this.entityDimension);
     compoundTag.putString(ENTITY_TYPE_TAG, this.entityType.getRegistryName().toString());
-    compoundTag.putBoolean(ENTITY_SITTING_TAG, this.entitySitting);
-    compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG, this.entitySitOnShoulder);
-    compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION, this.entityOrderedToPosition);
-    compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.entityHealthMax);
-    compoundTag.putFloat(ENTITY_HEALTH_TAG, this.entityHealth);
     compoundTag.putInt(ENTITY_RESPAWN_TIMER_TAG, this.entityRespawnTimer);
-    compoundTag.putString(ENTITY_TARGET_TAG, this.entityTarget);
-    compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, this.entityExperienceLevel);
-    compoundTag.putInt(ENTITY_EXPERIENCE_TAG, this.entityExperience);
 
     // Try to get current Player Companion if not exists.
     PlayerCompanionEntity playerCompanionEntity = this.getPlayerCompanionEntity();
@@ -469,6 +487,7 @@ public class PlayerCompanionData {
     }
 
     // Sync specific meta data from entity directly, if available.
+    // If not use stored values instead.
     if (playerCompanionEntity != null && playerCompanionEntity.isAlive()) {
       compoundTag.putString(ENTITY_DIMENSION, playerCompanionEntity.getDimensionName());
       compoundTag.putBoolean(ENTITY_SITTING_TAG, playerCompanionEntity.isOrderedToSit());
@@ -480,22 +499,47 @@ public class PlayerCompanionData {
       compoundTag.putFloat(ENTITY_HEALTH_TAG, playerCompanionEntity.getHealth());
       compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, playerCompanionEntity.getExperienceLevel());
       compoundTag.putInt(ENTITY_EXPERIENCE_TAG, playerCompanionEntity.getExperience());
+      compoundTag.putString(ENTITY_AGGRESSION_LEVEL,
+          playerCompanionEntity.getAggressionLevel().name());
 
+      // Set Owner, if any.
       if (playerCompanionEntity.getOwner() != null) {
+        compoundTag.putUUID(OWNER_TAG, playerCompanionEntity.getOwner().getUUID());
         compoundTag.putString(OWNER_NAME_TAG,
             playerCompanionEntity.getOwner().getName().getString());
       }
-      if (playerCompanionEntity.getTarget() == null) {
-        compoundTag.putString(ENTITY_TARGET_TAG, "");
-      } else {
-        compoundTag.putString(ENTITY_TARGET_TAG, playerCompanionEntity.getTarget().getEncodeId());
-      }
+
+      // Set target, if any
+      compoundTag.putString(ENTITY_TARGET_TAG,
+          playerCompanionEntity.getTarget() == null
+              || playerCompanionEntity.getTarget().getEncodeId() == null ? ""
+                  : playerCompanionEntity.getTarget().getEncodeId());
 
       // Get current armor items from entity to be in sync.
       setArmorItems((NonNullList<ItemStack>) playerCompanionEntity.getArmorSlots());
 
       // Get current hand items from entity to be in sync.
       setHandItems((NonNullList<ItemStack>) playerCompanionEntity.getHandSlots());
+    } else {
+      // Alternative: Use cached values instead.
+      compoundTag.putString(ENTITY_DIMENSION, this.entityDimension);
+      compoundTag.putBoolean(ENTITY_SITTING_TAG, this.entitySitting);
+      compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG, this.entitySitOnShoulder);
+      compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION, this.entityOrderedToPosition);
+      compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, this.entityHealthMax);
+      compoundTag.putFloat(ENTITY_HEALTH_TAG, this.entityHealth);
+      compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, this.entityExperienceLevel);
+      compoundTag.putInt(ENTITY_EXPERIENCE_TAG, this.entityExperience);
+      compoundTag.putString(ENTITY_AGGRESSION_LEVEL, this.entityAggressionLevel.name());
+
+      // Set Owner, if any.
+      if (this.ownerUUID != null) {
+        compoundTag.putUUID(OWNER_TAG, this.ownerUUID);
+        compoundTag.putString(OWNER_NAME_TAG, this.ownerName);
+      }
+
+      // Set target, if any
+      compoundTag.putString(ENTITY_TARGET_TAG, this.entityTarget == null ? "" : this.entityTarget);
     }
 
     // Store amor items.
@@ -517,8 +561,8 @@ public class PlayerCompanionData {
         + this.entityHealth + "/" + this.entityHealthMax + ", x=" + this.blockPos.getX() + ", y="
         + this.blockPos.getY() + ", z=" + this.blockPos.getZ() + ", armor=" + this.getArmorItems()
         + ", hand=" + this.getHandItems() + ", dimension=" + this.entityDimension
-        + ", respawnTimer=" + this.entityRespawnTimer + ", id=" + this.entityId + ", UUID="
-        + this.companionUUID + "]";
+        + ", aggression_level= " + this.entityAggressionLevel.name() + ", respawnTimer="
+        + this.entityRespawnTimer + ", id=" + this.entityId + ", UUID=" + this.companionUUID + "]";
   }
 
   private void setDirty() {

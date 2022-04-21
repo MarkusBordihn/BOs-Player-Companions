@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityFloating;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
@@ -36,9 +37,16 @@ public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
     super(entityType, level);
     this.setCompanionType(PlayerCompanionType.COLLECTOR);
     this.setCompanionTypeIcon(new ItemStack(Items.CHEST));
+    this.setAggressionLevel(AggressionLevel.PASSIVE_FLEE);
 
     // Shared Collector Features
     this.collectorFeatures = new CollectorFeatures(this, level);
+  }
+
+  @Override
+  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
+    return aggressionLevel == AggressionLevel.PASSIVE_FLEE
+        || aggressionLevel == AggressionLevel.PASSIVE;
   }
 
   @Override

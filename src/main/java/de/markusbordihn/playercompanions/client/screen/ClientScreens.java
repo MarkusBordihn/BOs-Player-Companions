@@ -42,7 +42,15 @@ public class ClientScreens {
     log.info("{} Client Screens ...", Constants.LOG_REGISTER_PREFIX);
 
     event.enqueueWork(() -> {
-      MenuScreens.register(ModContainer.COMPANIONS_MENU.get(), CompanionsScreen::new);
+      MenuScreens.register(ModContainer.DEFAULT_COMPANION_MENU.get(), DefaultCompanionScreen::new);
+      MenuScreens.register(ModContainer.COLLECTOR_COMPANION_MENU.get(),
+          CollectorCompanionScreen::new);
+      MenuScreens.register(ModContainer.FOLLOWER_COMPANION_MENU.get(),
+          FollowerCompanionScreen::new);
+      MenuScreens.register(ModContainer.GUARD_COMPANION_MENU.get(), GuardCompanionScreen::new);
+      MenuScreens.register(ModContainer.HEALER_COMPANION_MENU.get(), HealerCompanionScreen::new);
+      MenuScreens.register(ModContainer.SUPPORTER_COMPANION_MENU.get(),
+          SupporterCompanionScreen::new);
     });
   }
 }

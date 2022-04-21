@@ -1,0 +1,6 @@
+{
+  "name": "Companions",
+  "description": "Overview of different kind of companions.",
+  "icon": "player_companions:tame_bone",
+  "sortnum": -100
+}

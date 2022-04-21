@@ -141,16 +141,6 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
     return List.of(this.body, this.rightLeg, this.leftLeg, this.rightWing, this.leftWing);
   }
 
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
-    this.head.xRot = headPitch * ((float) Math.PI / 180F);
-    this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
-    this.rightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-    this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
-    this.rightWing.zRot = ageInTicks;
-    this.leftWing.zRot = -ageInTicks;
-  }
-
   @Override
   public ModelPart rightHand() {
     return this.rightHand;
@@ -176,6 +166,19 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
       this.tail.xRot = 0.0F;
       this.rightLeg.visible = true;
       this.leftLeg.visible = true;
+    }
+  }
+
+  @Override
+  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+      float netHeadYaw, float headPitch) {
+    if (!entity.isInSittingPose()) {
+      this.head.xRot = headPitch * ((float) Math.PI / 180F);
+      this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
+      this.rightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+      this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+      this.rightWing.zRot = ageInTicks;
+      this.leftWing.zRot = -ageInTicks;
     }
   }
 

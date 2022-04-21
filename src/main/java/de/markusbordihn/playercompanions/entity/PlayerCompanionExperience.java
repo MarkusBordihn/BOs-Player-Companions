@@ -103,6 +103,20 @@ public interface PlayerCompanionExperience {
     return 0;
   }
 
+  public default int getAttackDamageAdjustmentFromExperienceLevel(int level, int maxAttackDamage,
+      int baseAttackDamage) {
+    // Early return if we don't need to calculate anything.
+    if (level == 1 || maxAttackDamage == 0 || baseAttackDamage >= maxAttackDamage) {
+      return 0;
+    }
+    double attackDamageFactorPerLevel =
+        (double) (maxAttackDamage - baseAttackDamage) / getMaxExperienceLevel();
+    if (attackDamageFactorPerLevel > 0) {
+      return (int) Math.floor(level * attackDamageFactorPerLevel + 0.5);
+    }
+    return 0;
+  }
+
   public default int getHealingAmountFromExperienceLevel(int level, int minHealing,
       int maxHealing) {
     if (level == 1 || minHealing >= maxHealing) {

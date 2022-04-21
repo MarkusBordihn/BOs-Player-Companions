@@ -166,15 +166,9 @@ public class WelshCorgiModel<T extends TamableAnimal> extends AgeableListModel<T
       this.body.setPos(0.0F, 16.0F, 0.0F);
       this.body.zRot = 0.0F;
       this.body.xRot = 0;
-      this.rightHindLeg.xRot = Mth.cos(limbSwing * 1.6662F) * 0.3F * limbSwingAmount;
       this.rightHindLeg.setPos(0.0F, 24.0F, -1.0F);
-      this.leftHindLeg.xRot =
-          Mth.cos(limbSwing * 1.6662F + (float) Math.PI) * 0.3F * limbSwingAmount;
       this.leftHindLeg.setPos(0.0F, 24.0F, -1.0F);
-      this.rightFrontLeg.xRot =
-          Mth.cos(limbSwing * 1.6662F + (float) Math.PI) * 0.3F * limbSwingAmount;
       this.rightFrontLeg.setPos(0.0F, 24.0F, -1.0F);
-      this.leftFrontLeg.xRot = Mth.cos(limbSwing * 1.6662F) * 0.3F * limbSwingAmount;
       this.leftFrontLeg.setPos(0.0F, 24.0F, -1.0F);
       this.head.setPos(0.0F, 11.0F, -1.0F);
       if (this.young) {
@@ -195,8 +189,16 @@ public class WelshCorgiModel<T extends TamableAnimal> extends AgeableListModel<T
   @Override
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
-    this.head.xRot = headPitch * ((float) Math.PI / 220F);
-    this.head.yRot = netHeadYaw * ((float) Math.PI / 220F);
+    if (!entity.isInSittingPose()) {
+      this.head.xRot = headPitch * ((float) Math.PI / 220F);
+      this.head.yRot = netHeadYaw * ((float) Math.PI / 180F) * 0.90F;
+      this.rightHindLeg.xRot = Mth.cos(limbSwing * 1.6662F) * 0.3F * limbSwingAmount;
+      this.leftHindLeg.xRot =
+          Mth.cos(limbSwing * 1.6662F + (float) Math.PI) * 0.3F * limbSwingAmount;
+      this.leftFrontLeg.xRot = Mth.cos(limbSwing * 1.6662F) * 0.3F * limbSwingAmount;
+      this.rightFrontLeg.xRot =
+          Mth.cos(limbSwing * 1.6662F + (float) Math.PI) * 0.3F * limbSwingAmount;
+    }
   }
 
 }

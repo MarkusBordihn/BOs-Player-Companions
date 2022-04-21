@@ -1,0 +1,15 @@
+{
+  "name": "Aggression level",
+  "icon": "minecraft:writable_book",
+  "category": "player_companions:control",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "There is a variety of aggressions levels based on your companion type to control the behaviour of your companion more in detail.$(br2)$(bold)Aggressive Levels$()$(list)Passive $(list)Neutral $(list)Aggressive"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Passive$()$(br)Your companion will never attack, even if the companion was attacked.$(br2)$(bold)Neutral$()$(br)Your companion will attack your target or anything which attacks them.$(br2)$(bold)Aggressive$()$(br)Your companion will automatic attack specific targets.$(br2)"
+    }
+  ]
+}

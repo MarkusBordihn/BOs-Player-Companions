@@ -24,9 +24,11 @@ import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+
 import net.minecraftforge.network.NetworkEvent;
 
 import de.markusbordihn.playercompanions.Constants;
@@ -67,15 +69,18 @@ public class MessageCommandPlayerCompanion {
     UUID uuid = UUID.fromString(message.getPlayerCompanionUUID());
     Entity entity = serverLevel.getEntity(uuid);
 
-    // Only accepts commands from owner
-    if (entity instanceof PlayerCompanionEntity playerCompanionEntity
-        && serverPlayer.getUUID().equals(playerCompanionEntity.getOwnerUUID())) {
+    // Only accepts commands from owner, log attempts.
+    if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
       PlayerCompanionCommand command = PlayerCompanionCommand.valueOf(message.getCommand());
-      playerCompanionEntity.handleCommand(command);
-      log.debug("Player Companion command {} ({}) for {} from {}", command, message.getCommand(),
-          playerCompanionEntity, serverPlayer);
+      if (serverPlayer.getUUID().equals(playerCompanionEntity.getOwnerUUID())) {
+        log.debug("Player Companion command {} ({}) for {} from {}", command, message.getCommand(),
+            playerCompanionEntity, serverPlayer);
+        playerCompanionEntity.handleCommand(command);
+      } else {
+        log.error("Player {} tried to execute command {} ({}) for unowned {}", serverPlayer, command,
+            message.getCommand(), playerCompanionEntity);
+      }
     }
-
   }
 
 }

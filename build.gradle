@@ -70,6 +70,10 @@ minecraft {
           source sourceSets.main
         }
       }
+
+      // Required: Patchouli Mixin Support
+      property 'mixin.env.remapRefMap', 'true'
+      property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
     }
 
     server {
@@ -90,6 +94,10 @@ minecraft {
           source sourceSets.main
         }
       }
+
+      // Required: Patchouli Mixin Support
+      property 'mixin.env.remapRefMap', 'true'
+      property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
     }
 
     data {
@@ -138,17 +146,22 @@ dependencies {
   // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
   // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-  minecraft 'net.minecraftforge:forge:1.18.2-40.0.12'
+  minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
 
   // Jade Integration
-  implementation fg.deobf("curse.maven:jade-324717:3681449")
+  compileOnly fg.deobf("curse.maven:jade-324717:3761542")
+  runtimeOnly fg.deobf("curse.maven:jade-324717:3761542")
+
+  // Patchouli Integration
+  compileOnly fg.deobf("curse.maven:patchouli-306770:3729975")
+  runtimeOnly fg.deobf("curse.maven:patchouli-306770:3729975")
 
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
 
   // Compability tests for other npc / custom mods
-  // runtimeOnly fg.deobf("curse.maven:human-companions-570319:3668103")
-  // runtimeOnly fg.deobf("curse.maven:guard-villagers-360203:3548222")
+  runtimeOnly fg.deobf("curse.maven:human-companions-570319:3734505")
+  runtimeOnly fg.deobf("curse.maven:guard-villagers-360203:3694899")
   // runtimeOnly fg.deobf("curse.maven:carry-on-274259:3601938")
 
   // Compability tests for other health mods
@@ -156,13 +169,13 @@ dependencies {
   // runtimeOnly fg.deobf("curse.maven:scaling-health-248027:3580899")
 
   // Compability tests for armor mods
-  // runtimeOnly fg.deobf("curse.maven:morevanillaarmor-350955:3574989")
+  runtimeOnly fg.deobf("curse.maven:morevanillaarmor-350955:3671100")
 
   // Additional helpful Mods for development (dev depenedency)
-  // runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3574021")
-  runtimeOnly fg.deobf("curse.maven:jei-238222:3670018")
-  // runtimeOnly fg.deobf("curse.maven:spark-361579:3591172")
-  // runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3613287")
+  runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3749454")
+  runtimeOnly fg.deobf("curse.maven:jei-238222:3758750")
+  runtimeOnly fg.deobf("curse.maven:spark-361579:3670050")
+  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3756660")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -203,12 +216,13 @@ curseforge {
   apiKey = "${credentials.curseforge_api_token}"
   project {
     id = "${curseforge_project_id}"
-    changelog = 'Please see https://github.com/MarkusBordihn/BOs-Player-Companions ...'
+    changelog = file("CHANGELOG.md")
     releaseType = 'beta'
     addGameVersion("1.18.2")
     addGameVersion("Forge")
     mainArtifact(jar) {
       relations {
+        optionalDependency 'patchouli'
         optionalDependency 'jade'
       }
     }

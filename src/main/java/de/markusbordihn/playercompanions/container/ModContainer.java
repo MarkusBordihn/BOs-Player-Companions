@@ -35,6 +35,20 @@ public class ModContainer {
   public static final DeferredRegister<MenuType<?>> CONTAINERS =
       DeferredRegister.create(ForgeRegistries.CONTAINERS, Constants.MOD_ID);
 
-  public static final RegistryObject<MenuType<CompanionsMenu>> COMPANIONS_MENU =
-      CONTAINERS.register("slots_container", () -> IForgeMenuType.create(CompanionsMenu::new));
+  public static final RegistryObject<MenuType<CompanionMenu>> DEFAULT_COMPANION_MENU = CONTAINERS
+      .register("default_companion_menu", () -> IForgeMenuType.create(DefaultCompanionMenu::new));
+  public static final RegistryObject<MenuType<CollectorCompanionMenu>> COLLECTOR_COMPANION_MENU =
+      CONTAINERS.register("collector_companion_menu",
+          () -> IForgeMenuType.create(CollectorCompanionMenu::new));
+  public static final RegistryObject<MenuType<FollowerCompanionMenu>> FOLLOWER_COMPANION_MENU =
+      CONTAINERS.register("follower_companion_menu",
+          () -> IForgeMenuType.create(FollowerCompanionMenu::new));
+  public static final RegistryObject<MenuType<GuardCompanionMenu>> GUARD_COMPANION_MENU = CONTAINERS
+      .register("guard_companion_menu", () -> IForgeMenuType.create(GuardCompanionMenu::new));
+  public static final RegistryObject<MenuType<HealerCompanionMenu>> HEALER_COMPANION_MENU =
+      CONTAINERS.register("healer_companion_menu",
+          () -> IForgeMenuType.create(HealerCompanionMenu::new));
+  public static final RegistryObject<MenuType<SupporterCompanionMenu>> SUPPORTER_COMPANION_MENU =
+      CONTAINERS.register("supporter_companion_menu",
+          () -> IForgeMenuType.create(SupporterCompanionMenu::new));
 }

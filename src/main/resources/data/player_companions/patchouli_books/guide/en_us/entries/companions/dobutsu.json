@@ -1,0 +1,16 @@
+{
+  "name": "Dobutsu",
+  "icon": "player_companions:dobutsu_default",
+  "category": "player_companions:companions",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Dobutsu is a quick-change artist and can mimic the appearance of other players, even if their form will remain the same.$(br)Open the menu of a captured Dobutsu and click on $(bold)Texture Settings$() to adjust the skin and the Dobutsu will try to mimic the player."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "player_companions:dobutsu",
+      "text": "They live in the open fields and like eating sweet berries."
+    }
+  ]
+}

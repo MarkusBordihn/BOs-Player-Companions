@@ -1,0 +1,18 @@
+{
+  "name": "Firefly",
+  "icon": "player_companions:firefly_default",
+  "category": "player_companions:companions",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Firefly will light up your path even in dark places.$(br)There are easily to see during the night and will join you as long you take care of them."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "player_companions:firefly",
+      "scale": 2.3,
+      "offset": -0.45,
+      "text": "They live in the plains and swamps and like eating honycombs."
+    }
+  ]
+}

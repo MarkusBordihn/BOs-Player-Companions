@@ -32,6 +32,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -72,6 +74,8 @@ public class CapturedCompanion extends Item {
   private static final String FALL_DISTANCE_TAG = "FallDistance";
   private static final String FIRE_TAG = "Fire";
   private static final String HEALTH_TAG = "Health";
+  private static final String MOTION_TAG = "Motion";
+  private static final String ON_GROUND_TAG = "OnGround";
 
   public static final String COMPANION_UUID_TAG = "CompanionUUID";
 
@@ -98,6 +102,10 @@ public class CapturedCompanion extends Item {
 
   public boolean hasCompanion(ItemStack itemStack) {
     return getCompanionUUID(itemStack) != null;
+  }
+
+  public boolean hasValidCompanion(ItemStack itemStack) {
+    return PlayerCompanionsServerData.get().hasCompanion(itemStack);
   }
 
   public UUID getCompanionUUID(ItemStack itemStack) {
@@ -155,8 +163,7 @@ public class CapturedCompanion extends Item {
         }
       } else {
         BlockState blockState = level.getBlockState(blockPos);
-        if (blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
-            || blockState.is(Blocks.SEAGRASS)) {
+        if (isValidSpawnPlace(blockState)) {
           playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5,
               blockPos.getZ() + 0.5);
           log.debug("Teleport companion {} to position ...", playerCompanion, blockPos);
@@ -171,21 +178,19 @@ public class CapturedCompanion extends Item {
     }
 
     // Prepare spawn of companion based on the existing data.
-    Entity entity = getCompanionEntity(itemStack, level);
+    Entity entity = createCompanionEntity(itemStack, level);
     if (entity != null) {
       // Make sure we have an empty Block to spawn the entity, otherwise try above block.
       BlockState blockState = level.getBlockState(blockPos);
-      if (!blockState.isAir() && !blockState.is(Blocks.WATER) && !blockState.is(Blocks.GRASS)
-          && !blockState.is(Blocks.SEAGRASS)) {
+      if (!isValidSpawnPlace(blockState)) {
         blockPos = blockPos.above();
         blockState = level.getBlockState(blockPos);
       }
 
       // Only spawn on empty blocks like air,water, grass, sea grass.
-      if (blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
-          || blockState.is(Blocks.SEAGRASS)) {
+      if (isValidSpawnPlace(blockState)) {
         // Adjust entity position to spawn position.
-        entity.setPosRaw(blockPos.getX() + 0.5, blockPos.getY() + 0.1, blockPos.getZ() + 0.5);
+        entity.setPos(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
 
         // Add entity to the world.
         log.debug("Spawn companion {} ...", entity);
@@ -235,7 +240,7 @@ public class CapturedCompanion extends Item {
     }
   }
 
-  public boolean createCompanion(ItemStack itemStack, Player player, Level level) {
+  public boolean createTamedCompanion(ItemStack itemStack, Player player, Level level) {
     EntityType<?> entityType = this.getEntityType();
     if (entityType != null) {
       Entity entity = entityType.create(level);
@@ -256,8 +261,13 @@ public class CapturedCompanion extends Item {
     return false;
   }
 
-  public Entity getCompanionEntity(ItemStack itemStack, Level level) {
+  public Entity createCompanionEntity(ItemStack itemStack, Level level) {
     PlayerCompanionData playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
+    if (playerCompanion == null) {
+      log.error("Unable to find player companion with UUID {} for item {}",
+          getCompanionUUID(itemStack), itemStack);
+      return null;
+    }
     EntityType<?> entityType = playerCompanion.getEntityType();
     CompoundTag entityData = playerCompanion.getEntityData();
     Entity entity = entityType.create(level);
@@ -275,6 +285,13 @@ public class CapturedCompanion extends Item {
       if (entityData.contains(FALL_DISTANCE_TAG) && entityData.getFloat(FALL_DISTANCE_TAG) > 0) {
         entityData.putFloat(FALL_DISTANCE_TAG, 0);
       }
+      if (entityData.contains(MOTION_TAG)) {
+        entityData.put(MOTION_TAG, this.newDoubleList(0, 0, 0));
+      }
+      if (entityData.contains(ON_GROUND_TAG) && !entityData.getBoolean(ON_GROUND_TAG)) {
+        entityData.putBoolean(ON_GROUND_TAG, true);
+      }
+
       entity.load(entityData);
     }
     return entity;
@@ -286,6 +303,12 @@ public class CapturedCompanion extends Item {
 
   public Ingredient getEntityFood() {
     return null;
+  }
+
+  private boolean isValidSpawnPlace(BlockState blockState) {
+    return blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
+        || blockState.is(Blocks.SEAGRASS) || blockState.is(Blocks.SNOW)
+        || blockState.is(Blocks.FERN);
   }
 
   @Override
@@ -331,7 +354,14 @@ public class CapturedCompanion extends Item {
     Player player = context.getPlayer();
 
     // Check if we have any captured companion, if not try to create one.
-    if (!hasCompanion(itemStack) && !createCompanion(itemStack, player, level)) {
+    if (!hasCompanion(itemStack) && !createTamedCompanion(itemStack, player, level)) {
+      return InteractionResult.FAIL;
+    }
+
+    // Check if there is a valid companion.
+    if (!PlayerCompanionsServerData.get().hasCompanion(itemStack)) {
+      log.error("Unable to find player companion with UUID {} for item {}",
+          getCompanionUUID(itemStack), itemStack);
       return InteractionResult.FAIL;
     }
 
@@ -343,20 +373,27 @@ public class CapturedCompanion extends Item {
     }
 
     // Place directly on grass or similar blocks.
-    if ((blockState.is(Blocks.GRASS) || blockState.is(Blocks.SEAGRASS))
-        && spawnCompanion(itemStack, blockPos, player, level)) {
+    if (isValidSpawnPlace(blockState) && spawnCompanion(itemStack, blockPos, player, level)) {
       return InteractionResult.CONSUME;
     }
 
     // Check if we can release the captured mob above.
     BlockPos blockPosAbove = blockPos.above();
     BlockState blockStateBlockAbove = level.getBlockState(blockPosAbove);
-    if ((blockStateBlockAbove.isAir() || blockStateBlockAbove.is(Blocks.WATER))
+    if (isValidSpawnPlace(blockStateBlockAbove)
         && spawnCompanion(itemStack, blockPosAbove, player, level)) {
       return InteractionResult.CONSUME;
     }
 
     return InteractionResult.sidedSuccess(level.isClientSide);
+  }
+
+  protected ListTag newDoubleList(double... values) {
+    ListTag listTag = new ListTag();
+    for (double value : values) {
+      listTag.add(DoubleTag.valueOf(value));
+    }
+    return listTag;
   }
 
   @Override
@@ -448,15 +485,21 @@ public class CapturedCompanion extends Item {
       tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_dimension",
           playerCompanion.getDimensionName()).withStyle(ChatFormatting.GRAY));
 
-      if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion && capturedCompanion.getEntityFood() != null) {
+      if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion
+          && capturedCompanion.getEntityFood() != null) {
         TranslatableComponent foodOverview = (TranslatableComponent) new TranslatableComponent("")
             .withStyle(ChatFormatting.DARK_GREEN);
         for (ItemStack foodItemStack : capturedCompanion.getEntityFood().getItems()) {
-           foodOverview.append(TranslatableText.getItemName(foodItemStack)).append(", ");
+          foodOverview.append(TranslatableText.getItemName(foodItemStack)).append(", ");
         }
         foodOverview.append("...");
         tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_food")
             .withStyle(ChatFormatting.GREEN).append(foodOverview));
+      }
+    } else {
+      UUID uuid = getCompanionUUID(itemStack);
+      if (uuid != null) {
+        tooltipList.add(new TextComponent("UUID: " + uuid).withStyle(ChatFormatting.GRAY));
       }
     }
   }

@@ -64,7 +64,9 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue respawnDelay;
     public final ForgeConfigSpec.BooleanValue enableCompanionGhost;
     public final ForgeConfigSpec.BooleanValue friendlyFire;
+
     public final ForgeConfigSpec.IntValue maxHealth;
+    public final ForgeConfigSpec.IntValue maxAttackDamage;
 
     public final ForgeConfigSpec.EnumValue<GuiPosition> guiPosition;
     public final ForgeConfigSpec.IntValue guiOffsetX;
@@ -87,10 +89,20 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue supporterTypeDamageResistanceDuration;
     public final ForgeConfigSpec.IntValue supporterTypeFireResistanceDuration;
 
+    public final ForgeConfigSpec.BooleanValue dobutsuSpawnEnable;
+    public final ForgeConfigSpec.IntValue dobutsuMinGroup;
+    public final ForgeConfigSpec.IntValue dobutsuMaxGroup;
+    public final ForgeConfigSpec.IntValue dobutsuWeight;
+
     public final ForgeConfigSpec.BooleanValue fairySpawnEnable;
     public final ForgeConfigSpec.IntValue fairyMinGroup;
     public final ForgeConfigSpec.IntValue fairyMaxGroup;
     public final ForgeConfigSpec.IntValue fairyWeight;
+
+    public final ForgeConfigSpec.BooleanValue fireflySpawnEnable;
+    public final ForgeConfigSpec.IntValue fireflyMinGroup;
+    public final ForgeConfigSpec.IntValue fireflyMaxGroup;
+    public final ForgeConfigSpec.IntValue fireflyWeight;
 
     public final ForgeConfigSpec.BooleanValue pigSpawnEnable;
     public final ForgeConfigSpec.IntValue pigMinGroup;
@@ -101,6 +113,11 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue roosterMinGroup;
     public final ForgeConfigSpec.IntValue roosterMaxGroup;
     public final ForgeConfigSpec.IntValue roosterWeight;
+
+    public final ForgeConfigSpec.BooleanValue samuraiSpawnEnable;
+    public final ForgeConfigSpec.IntValue samuraiMinGroup;
+    public final ForgeConfigSpec.IntValue samuraiMaxGroup;
+    public final ForgeConfigSpec.IntValue samuraiWeight;
 
     public final ForgeConfigSpec.BooleanValue smallGhastSpawnEnable;
     public final ForgeConfigSpec.IntValue smallGhastMinGroup;
@@ -136,8 +153,14 @@ public class CommonConfig {
           .define("friendlyFire", false);
       enableCompanionGhost = builder.comment("Enable / Disable ghosts for died player companions.")
           .define("enableCompanionGhost", true);
-      maxHealth = builder.comment("The max health a companion can get with level 60.")
+      builder.pop();
+
+      builder.push("Level scaling");
+      maxHealth = builder.comment("The max base health a companion can get with level 60.")
           .defineInRange("maxHealth", 20, 0, 200);
+      maxAttackDamage =
+          builder.comment("The max base attack damage a companion can get with level 60.")
+              .defineInRange("maxAttackDamage", 5, 0, 200);
       builder.pop();
 
       builder.push("Gui");
@@ -193,12 +216,30 @@ public class CommonConfig {
           .defineInRange("supporterTypeFireResistanceDuration", 1200, 20, 6000);
       builder.pop();
 
+      builder.push("Dobutsu");
+      dobutsuSpawnEnable =
+          builder.comment("Enable/Disable the dobutsu spawn.").define("dobutsuSpawnEnable", true);
+      dobutsuMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("dobutsuMinGroup", 1, 0, 64);
+      dobutsuMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("dobutsuMaxGroup", 2, 0, 64);
+      dobutsuWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("dobutsuWeight", 6, 0, 100);
+      builder.pop();
+
       builder.push("Fairy");
       fairySpawnEnable =
           builder.comment("Enable/Disable the fairy spawn.").define("fairySpawnEnable", true);
       fairyMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fairyMinGroup", 1, 0, 64);
       fairyMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fairyMaxGroup", 2, 0, 64);
       fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 6, 0, 100);
+      builder.pop();
+
+      builder.push("Firefly");
+      fireflySpawnEnable =
+          builder.comment("Enable/Disable the firefly spawn.").define("fireflySpawnEnable", true);
+      fireflyMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fireflyMinGroup", 1, 0, 64);
+      fireflyMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fireflyMaxGroup", 1, 0, 64);
+      fireflyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fireflyWeight", 6, 0, 100);
       builder.pop();
 
       builder.push("Pig");
@@ -217,6 +258,16 @@ public class CommonConfig {
       roosterMaxGroup =
           builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("roosterMaxGroup", 2, 0, 64);
       roosterWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("roosterWeight", 6, 0, 100);
+      builder.pop();
+
+      builder.push("Samurai");
+      samuraiSpawnEnable =
+          builder.comment("Enable/Disable the samurai spawn.").define("samuraiSpawnEnable", true);
+      samuraiMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("samuraiMinGroup", 1, 0, 64);
+      samuraiMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("samuraiMaxGroup", 1, 0, 64);
+      samuraiWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("samuraiWeight", 6, 0, 100);
       builder.pop();
 
       builder.push("Small Slime");

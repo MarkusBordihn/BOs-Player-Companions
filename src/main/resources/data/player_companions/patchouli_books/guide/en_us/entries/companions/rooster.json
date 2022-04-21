@@ -1,0 +1,16 @@
+{
+  "name": "Rooster",
+  "icon": "player_companions:rooster",
+  "category": "player_companions:companions",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Rooster is not looking dangerous, but it will give his live to protect you.$(br)It could also carry a weapon like a sword to deal additional damage."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "player_companions:rooster",
+      "text": "They live in plains and like eating wheat seeds."
+    }
+  ]
+}

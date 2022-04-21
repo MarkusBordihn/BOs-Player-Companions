@@ -37,7 +37,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 public class PlayerCompanionEntityWalkControl extends MoveControl {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private int waitDelay;
   private int waitSoundDelay;
@@ -102,6 +102,7 @@ public class PlayerCompanionEntityWalkControl extends MoveControl {
           waitSoundDelay = 0;
         }
       }
+      this.mob.setZza(0.0F);
     }
 
     else if (this.operation == MoveControl.Operation.WAIT) {

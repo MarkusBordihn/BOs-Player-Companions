@@ -45,6 +45,7 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   ModelPart rightHand;
+  ModelPart leftHand;
 
   public HandItemLayer(RenderLayerParent<T, M> parent) {
     super(parent);
@@ -52,11 +53,11 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
 
   @Override
   public void render(PoseStack poseStack, MultiBufferSource buffer, int lightLevel, T entity,
-      float p_117353_, float p_117354_, float p_117355_, float p_117356_, float p_117357_,
-      float p_117358_) {
+      float unused1, float unused2, float unused3, float unused4, float unused5, float unused6) {
     ItemStack itemStackMainHand = entity.getMainHandItem();
 
     if (this.getParentModel() instanceof PlayerCompanionModel playerCompanionModel) {
+      leftHand = playerCompanionModel.leftHand();
       rightHand = playerCompanionModel.rightHand();
     }
 
@@ -68,7 +69,7 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
   }
 
   protected void renderRightHandItem(LivingEntity livingEntity, ItemStack itemStack,
-      ItemTransforms.TransformType transformType, HumanoidArm p_117188_, PoseStack poseStack,
+      ItemTransforms.TransformType transformType, HumanoidArm humanoidArm, PoseStack poseStack,
       MultiBufferSource buffer, int lightLevel) {
     if (!itemStack.isEmpty()) {
       poseStack.pushPose();
@@ -80,7 +81,7 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
         poseStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
       }
-      boolean flag = p_117188_ == HumanoidArm.LEFT;
+      boolean flag = humanoidArm == HumanoidArm.LEFT;
       poseStack.translate((flag ? -1 : 1) / 16.0F, 0.125D, -0.625D);
       Minecraft.getInstance().getItemInHandRenderer().renderItem(livingEntity, itemStack,
           transformType, flag, poseStack, buffer, lightLevel);

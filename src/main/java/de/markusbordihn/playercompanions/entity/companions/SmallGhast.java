@@ -72,6 +72,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.ShootLargeFireballGoal;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFloating;
@@ -87,7 +88,6 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   public static final String ID = "small_ghast";
   public static final String NAME = "Small Ghast";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
-  public static final EntityDimensions entityDimensions = new EntityDimensions(0.75f, 1.70f, false);
 
   // Config settings
   private static int explosionPower = COMMON.smallGhastExplosionPower.get();
@@ -167,6 +167,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
     super.registerGoals();
 
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));
+    this.goalSelector.addGoal(1, new FleeGoal(this, 1.0D));
     this.goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
     this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
     this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 8.0F, 2.0F, true));
@@ -261,7 +262,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   @Override
   public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-    return 1.45F;
+    return 1.35F;
   }
 
   @Override
@@ -270,18 +271,13 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   }
 
   @Override
-  public EntityDimensions getDimensions(Pose pose) {
-    return entityDimensions;
-  }
-
-  @Override
   public int getEntityGuiScaling() {
-    return 40;
+    return 50;
   }
 
   @Override
   public int getEntityGuiTop() {
-    return 35;
+    return 30;
   }
 
 }

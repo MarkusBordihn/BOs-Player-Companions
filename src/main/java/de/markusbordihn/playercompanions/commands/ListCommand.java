@@ -37,19 +37,21 @@ public class ListCommand extends CustomCommand {
   private static final ListCommand command = new ListCommand();
 
   public static ArgumentBuilder<CommandSourceStack, ?> register() {
-    return Commands.literal("list").requires(cs -> cs.hasPermission(0)).executes(command);
+    return Commands.literal("list").requires(cs -> cs.hasPermission(2)).executes(command);
   }
 
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-    Map<UUID, PlayerCompanionData> playerCompanionsMap = PlayerCompanionsServerData.get().getCompanions();
+    Map<UUID, PlayerCompanionData> playerCompanionsMap =
+        PlayerCompanionsServerData.get().getCompanions();
     Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanionsMap.values().iterator();
-    sendFeedback(context, "Player Companions List (please check latest.log for full output)\n===");
+    sendFeedback(context, "All Player Companions (please check latest.log for full output)\n===");
     while (playerCompanionIterator.hasNext()) {
       PlayerCompanionData playerCompanion = playerCompanionIterator.next();
       if (playerCompanion != null) {
+        sendFeedback(context, String.format("\u25CB %s : %s (%s)", playerCompanion.getOwnerName(),
+            playerCompanion.getName(), playerCompanion.getType()));
         log.info("{}", playerCompanion);
-        sendFeedback(context, String.format("%s", playerCompanion));
       }
     }
     return 0;

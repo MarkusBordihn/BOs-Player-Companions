@@ -37,23 +37,25 @@ public class OverviewCommand extends CustomCommand {
   private static final OverviewCommand command = new OverviewCommand();
 
   public static ArgumentBuilder<CommandSourceStack, ?> register() {
-    return Commands.literal("overview").executes(command);
+    return Commands.literal("overview").requires(cs -> cs.hasPermission(0)).executes(command);
   }
 
   @Override
   public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
     ServerPlayer player = context.getSource().getPlayerOrException();
-    Set<PlayerCompanionData> playerCompanionsSet = PlayerCompanionsServerData.get().getCompanions(player.getUUID());
+    Set<PlayerCompanionData> playerCompanionsSet =
+        PlayerCompanionsServerData.get().getCompanions(player.getUUID());
     if (playerCompanionsSet.isEmpty()) {
       sendFeedback(context, "Unable to find any owned companions!");
       return 0;
     }
     Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanionsSet.iterator();
-    sendFeedback(context, "Your Companions\n===");
+    sendFeedback(context, "Your owned Companions\n===");
     while (playerCompanionIterator.hasNext()) {
       PlayerCompanionData playerCompanion = playerCompanionIterator.next();
       if (playerCompanion != null) {
-        sendFeedback(context, String.format("%s", playerCompanion));
+        sendFeedback(context,
+            String.format("\u25CB %s (%s)", playerCompanion.getName(), playerCompanion.getType()));
       }
     }
     return 0;

@@ -1,0 +1,11 @@
+{
+  "name": "Pet your companion",
+  "icon": "minecraft:writable_book",
+  "category": "player_companions:control",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "To pet your companion, use your empty hand and press the Shift Key and click with the right mouse button on your placer companion."
+    }
+  ]
+}

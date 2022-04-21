@@ -24,11 +24,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityJumping;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
-public class FollowerEntityJumping  extends PlayerCompanionEntityJumping {
+public class FollowerEntityJumping extends PlayerCompanionEntityJumping {
 
   protected FollowerFeatures followerFeatures;
 
@@ -37,9 +38,16 @@ public class FollowerEntityJumping  extends PlayerCompanionEntityJumping {
     super(entityType, level);
     this.setCompanionType(PlayerCompanionType.FOLLOWER);
     this.setCompanionTypeIcon(new ItemStack(Items.CARROT_ON_A_STICK));
+    this.setAggressionLevel(AggressionLevel.PASSIVE);
 
     // Shared Follower Features
     this.followerFeatures = new FollowerFeatures(this, level);
+  }
+
+  @Override
+  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
+    return aggressionLevel == AggressionLevel.PASSIVE_FLEE
+        || aggressionLevel == AggressionLevel.PASSIVE;
   }
 
   @Override

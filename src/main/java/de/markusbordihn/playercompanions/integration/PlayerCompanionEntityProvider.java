@@ -81,6 +81,9 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
             tooltip.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_respawn",
                 respawnTimer).withStyle(ChatFormatting.RED));
           }
+
+          // Aggression Level
+          tooltip.add(new TextComponent("Aggression Level: " + data.getEntityAggressionLevel().name()));
         }
       }
     }

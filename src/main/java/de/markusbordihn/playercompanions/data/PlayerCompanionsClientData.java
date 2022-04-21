@@ -37,19 +37,14 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
-@OnlyIn(Dist.CLIENT)
 public class PlayerCompanionsClientData {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private static long lastUpdate;
   private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
       new ConcurrentHashMap<>();
 
@@ -84,18 +79,7 @@ public class PlayerCompanionsClientData {
     return new HashSet<>(playerCompanionsMap.values());
   }
 
-  public static long getLastUpdate() {
-    return lastUpdate;
-  }
-
-  public static void load(String playerCompanionUUID, String data) {
-    log.debug("{} loading client data for {}: {}", Constants.LOG_ICON_NAME, playerCompanionUUID,
-        data);
-    loadPlayerCompanionData(data);
-  }
-
   public static void load(String data) {
-    log.debug("{} loading client data: {}", Constants.LOG_ICON_NAME, data);
     CompoundTag compoundTag;
     try {
       compoundTag = TagParser.parseTag(data);
@@ -108,15 +92,15 @@ public class PlayerCompanionsClientData {
   }
 
   public static void load(CompoundTag compoundTag) {
-    log.debug("{} loading client data from compound Tag: {}", Constants.LOG_ICON_NAME, compoundTag);
-    lastUpdate = compoundTag.getLong(PlayerCompanionsServerData.LAST_UPDATE_TAG);
-
-    // Restoring companions data
     if (compoundTag.contains(PlayerCompanionsServerData.COMPANIONS_TAG)) {
       ListTag companionListTag = compoundTag.getList(PlayerCompanionsServerData.COMPANIONS_TAG, 10);
       for (int i = 0; i < companionListTag.size(); ++i) {
         loadPlayerCompanionData(companionListTag.getCompound(i));
       }
+    } else if (compoundTag.contains(PlayerCompanionData.UUID_TAG)) {
+      loadPlayerCompanionData(compoundTag);
+    } else {
+      log.error("Unable to load Player Companion data from {}!", compoundTag);
     }
   }
 
@@ -125,7 +109,7 @@ public class PlayerCompanionsClientData {
     try {
       compoundTag = TagParser.parseTag(data);
     } catch (CommandSyntaxException commandSyntaxException) {
-      throw new JsonSyntaxException("Invalid nbt tag: " + commandSyntaxException.getMessage());
+      throw new JsonSyntaxException("Invalid NBT tag: " + commandSyntaxException.getMessage());
     }
     loadPlayerCompanionData(compoundTag);
   }
@@ -144,7 +128,7 @@ public class PlayerCompanionsClientData {
         log.debug("Update client player companion data for {} with {}", companionUUID, compoundTag);
         playerCompanionData.load(compoundTag);
       } else {
-        log.info("Register client player companion data for {} with {}", companionUUID, compoundTag);
+        log.debug("Register client player companion data for {} with {}", companionUUID, compoundTag);
         PlayerCompanionData playerCompanion = new PlayerCompanionData(compoundTag);
         loadPlayerCompanionData(playerCompanion);
       }

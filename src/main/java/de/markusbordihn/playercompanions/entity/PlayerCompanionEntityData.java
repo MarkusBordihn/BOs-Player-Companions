@@ -33,9 +33,9 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.AgeableMob;
@@ -58,6 +58,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.level.Level;
+
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -67,7 +68,8 @@ import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsDataSync;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
-import de.markusbordihn.playercompanions.utils.Names;
+import de.markusbordihn.playercompanions.utils.NamesUtils;
+import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
 @EventBusSubscriber
 public class PlayerCompanionEntityData extends TamableAnimal
@@ -78,6 +80,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   // Config values
   protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static int maxHealth = COMMON.maxHealth.get();
+  private static int maxAttackDamage = COMMON.maxAttackDamage.get();
 
   // Synced Entity Data
   private static final EntityDataAccessor<Boolean> DATA_ACTIVE =
@@ -90,19 +93,22 @@ public class PlayerCompanionEntityData extends TamableAnimal
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_EXPERIENCE_LEVEL =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
-  protected static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
-      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<String> DATA_CUSTOM_COMPANION_NAME =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
+  private static final EntityDataAccessor<String> DATA_CUSTOM_TEXTURE_SKIN =
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
+  protected static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
+      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
 
   // Stored Entity Data Tags
   private static final String DATA_ACTIVE_TAG = "Active";
   private static final String DATA_COLOR_TAG = "Color";
   private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
+  private static final String DATA_CUSTOM_TEXTURE_SKIN_TAG = "CustomTextureSkin";
   private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
   private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
   private static final String DATA_RESPAWN_TIMER_TAG = "CompanionRespawnTicker";
@@ -119,19 +125,23 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private static final int JUMP_MOVE_DELAY = 10;
   protected static final int RIDE_COOLDOWN = 600;
 
+  // Cache
+  private ResourceLocation textureCache = null;
+  private String lastCustomTextureSkin = null;
+
   // Temporary stats
   private BlockPos orderedToPosition = null;
+  private AggressionLevel aggressionLevel = AggressionLevel.UNKNOWN;
   private ItemStack companionTypeIcon = new ItemStack(Items.BONE);
   private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
   private String dimensionName = "";
   private boolean isDataSyncNeeded = false;
   private boolean sitOnShoulder = false;
+  private boolean shouldAttack = false;
+  private boolean shouldGlowInTheDark = false;
+  private boolean enableCustomTextureSkin = false;
   protected UUID persistentAngerTarget;
   protected int rideCooldownCounter;
-
-  // Animation stats
-  private float interestedAngle;
-  private float interestedAngleO;
 
   // Internal references
   private PlayerCompanionEntity playerCompanionEntity;
@@ -153,10 +163,25 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     maxHealth = COMMON.maxHealth.get();
     if (maxHealth > 0) {
-      log.info("The max health for player companions is set to {}.", maxHealth);
+      log.info("The max base health for player companions is set to {}.", maxHealth);
     } else {
-      log.warn("The max health for player companions will not be adjusted!");
+      log.warn("The max base health for player companions will not be adjusted!");
     }
+
+    maxAttackDamage = COMMON.maxAttackDamage.get();
+    if (maxAttackDamage > 0) {
+      log.info("The max base attack damage for player companions is set to {}.", maxAttackDamage);
+    } else {
+      log.warn("The max base attack damage for player companions will not be adjusted!");
+    }
+  }
+
+  public void enableCustomTextureSkin(boolean enable) {
+    this.enableCustomTextureSkin = enable;
+  }
+
+  public boolean enableCustomTextureSkin() {
+    return this.enableCustomTextureSkin;
   }
 
   public void setSyncReference(PlayerCompanionEntity playerCompanionEntity) {
@@ -252,6 +277,14 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.entityData.set(DATA_VARIANT, variant);
   }
 
+  public void setGlowInTheDark(boolean glowInTheDark) {
+    this.shouldGlowInTheDark = glowInTheDark;
+  }
+
+  public boolean shouldGlowInTheDark() {
+    return this.shouldGlowInTheDark;
+  }
+
   public String getCustomCompanionName() {
     return this.entityData.get(DATA_CUSTOM_COMPANION_NAME);
   }
@@ -262,6 +295,55 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void setCustomCompanionName(String name) {
     this.entityData.set(DATA_CUSTOM_COMPANION_NAME, name);
+  }
+
+  public void setTextureCache(ResourceLocation resourceLocation) {
+    this.textureCache = resourceLocation;
+  }
+
+  public ResourceLocation getTextureCache() {
+    return this.textureCache;
+  }
+
+  public boolean hasTextureCache() {
+    return this.textureCache != null;
+  }
+
+  public boolean hasCustomTextureSkin() {
+    return getCustomTextureSkin() != null && !getCustomTextureSkin().isEmpty();
+  }
+
+  public String getCustomTextureSkin() {
+    return this.entityData.get(DATA_CUSTOM_TEXTURE_SKIN);
+  }
+
+  public boolean hasChangedCustomTextureSkin() {
+    return (this.lastCustomTextureSkin == null && hasCustomTextureSkin())
+        || (this.lastCustomTextureSkin != null
+            && !this.lastCustomTextureSkin.equals(getCustomTextureSkin()));
+  }
+
+  public void setCustomTextureSkin(String textureSkinLocation) {
+    if (!textureSkinLocation.equals(getCustomTextureSkin())) {
+      this.entityData.set(DATA_CUSTOM_TEXTURE_SKIN, textureSkinLocation);
+    }
+    this.lastCustomTextureSkin = textureSkinLocation;
+  }
+
+  public void processCustomTextureSkin(String data) {
+    String textureSkinLocation = "";
+    if (PlayersUtils.isValidPlayerName(data)) {
+      log.debug("Getting user texture for {}", data);
+      textureSkinLocation = PlayersUtils.getUserTexture(level.getServer(), data);
+    } else if (PlayersUtils.isValidUrl(data)) {
+      log.debug("Setting remote user texture for {}", data);
+      textureSkinLocation = data;
+    }
+    if (textureSkinLocation != null) {
+      setCustomTextureSkin(textureSkinLocation);
+    } else {
+      log.error("Unable to process custom texture skin for with {}!", data);
+    }
   }
 
   public int getExperience() {
@@ -297,12 +379,14 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public void onLevelUp(int level) {
     log.debug("Level up for {} to {} ...", this, level);
     adjustMaxHealthPerLevel(level);
+    adjustAttackDamagePerLevel(level);
     this.syncData();
   }
 
   public void onLevelDown(int level) {
     log.debug("Level down for {} to {} ...", this, level);
     adjustMaxHealthPerLevel(level);
+    adjustAttackDamagePerLevel(level);
     this.syncData();
   }
 
@@ -327,7 +411,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   protected String getRandomName() {
-    return Names.getRandomMobName();
+    return NamesUtils.getRandomMobName();
   }
 
   public int getJumpDelay() {
@@ -409,6 +493,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public void setOrderedToPosition(BlockPos blockPos) {
+    if (this.orderedToPosition == blockPos) {
+      return;
+    }
     this.orderedToPosition = blockPos;
     this.setDataSyncNeeded();
   }
@@ -417,9 +504,51 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return this.orderedToPosition;
   }
 
-  public float getHeadRollAngle(float p_30449_) {
-    return Mth.lerp(p_30449_, this.interestedAngleO, this.interestedAngle) * 0.15F
-        * (float) Math.PI;
+  public void setAggressionLevel(AggressionLevel aggressionLevel) {
+    if (this.aggressionLevel == aggressionLevel) {
+      return;
+    }
+    this.aggressionLevel = aggressionLevel;
+    this.shouldAttack = this.aggressionLevel == AggressionLevel.NEUTRAL
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE_ANIMALS
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE_MONSTER
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE_PLAYERS
+        || this.aggressionLevel == AggressionLevel.AGGRESSIVE_ALL;
+    this.setDataSyncNeeded();
+  }
+
+  public AggressionLevel getAggressionLevel() {
+    return this.aggressionLevel;
+  }
+
+  public void toggleAggressionLevel() {
+    AggressionLevel nextAggressionLevel = this.aggressionLevel.getNext();
+    int loopProtection = 0;
+    int maxLoopSize = AggressionLevel.values().length;
+    while (!isSupportedAggressionLevel(nextAggressionLevel) && loopProtection++ < maxLoopSize) {
+      nextAggressionLevel = nextAggressionLevel.getNext();
+    }
+    if (nextAggressionLevel != this.aggressionLevel
+        && isSupportedAggressionLevel(aggressionLevel)) {
+      setAggressionLevel(nextAggressionLevel);
+    }
+  }
+
+  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
+    return aggressionLevel != null;
+  }
+
+  public boolean shouldAttack() {
+    return this.shouldAttack;
+  }
+
+  public boolean canAttack() {
+    LivingEntity livingEntity = this.playerCompanionEntity.getTarget();
+    if (livingEntity instanceof Player player && (player.isSpectator() || player.isCreative())) {
+      return false;
+    }
+    return livingEntity != null && livingEntity.isAlive() && isAlive();
   }
 
   public BlockPos ownerBlockPosition() {
@@ -489,6 +618,35 @@ public class PlayerCompanionEntityData extends TamableAnimal
     }
   }
 
+  public void adjustAttackDamagePerLevel(int level) {
+    int attackDamageAdjustment = getAttackDamageAdjustmentFromExperienceLevel(level,
+        maxAttackDamage, (int) getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+    increaseAttackDamage(attackDamageAdjustment);
+  }
+
+  public void increaseAttackDamage(int attackDamage) {
+    if (attackDamage > 0) {
+      // Remove previous attribute modifier, if needed.
+      Set<AttributeModifier> attributeModifiers =
+          getAttribute(Attributes.ATTACK_DAMAGE).getModifiers();
+      if (!attributeModifiers.isEmpty()) {
+        Iterator<AttributeModifier> attributeModifierIterator = attributeModifiers.iterator();
+        while (attributeModifierIterator.hasNext()) {
+          AttributeModifier attributeModifier = attributeModifierIterator.next();
+          if (attributeModifier != null
+              && attributeModifier.getName().equals(ATTRIBUTE_ATTACK_DAMAGE)) {
+            getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(attributeModifier);
+          }
+        }
+      }
+
+      // Add new attackDamage modifier
+      AttributeModifier increaseAttackDamageModifier = new AttributeModifier(
+          ATTRIBUTE_ATTACK_DAMAGE, attackDamage, AttributeModifier.Operation.ADDITION);
+      getAttribute(Attributes.ATTACK_DAMAGE).addTransientModifier(increaseAttackDamageModifier);
+    }
+  }
+
   public int getAttackDamage() {
     // Calculate the possible attack damage
     double baseAttackDamage = getAttribute(Attributes.ATTACK_DAMAGE).getValue();
@@ -518,6 +676,14 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return ENTITY_GUI_TOP;
   }
 
+  public void onMainHandItemSlotChange(ItemStack itemStack) {
+    // Placeholder
+  }
+
+  public void onOffHandItemSlotChange(ItemStack itemStack) {
+    // Placeholder
+  }
+
   @Override
   public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
     super.setItemSlot(equipmentSlot, itemStack);
@@ -525,6 +691,11 @@ public class PlayerCompanionEntityData extends TamableAnimal
     if (data != null) {
       if (equipmentSlot.getType() == Type.HAND) {
         data.setHandItem(equipmentSlot.getIndex(), itemStack);
+        if (equipmentSlot == EquipmentSlot.MAINHAND) {
+          onMainHandItemSlotChange(itemStack);
+        } else if (equipmentSlot == EquipmentSlot.OFFHAND) {
+          onOffHandItemSlotChange(itemStack);
+        }
       } else if (equipmentSlot.getType() == Type.ARMOR) {
         data.setArmorItem(equipmentSlot.getIndex(), itemStack);
       }
@@ -542,6 +713,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 1);
     this.entityData.define(DATA_IS_CHARGING, false);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
+    this.entityData.define(DATA_CUSTOM_TEXTURE_SKIN, "");
     this.entityData.define(DATA_VARIANT, "default");
   }
 
@@ -554,6 +726,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
     compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
+    compoundTag.putString(DATA_CUSTOM_TEXTURE_SKIN_TAG, this.getCustomTextureSkin());
     compoundTag.putString(DATA_VARIANT_TAG, this.getVariant());
   }
 
@@ -571,15 +744,29 @@ public class PlayerCompanionEntityData extends TamableAnimal
     int experienceLevel = this.getExperienceLevel();
     if (experienceLevel > getMinExperienceLevel()) {
       adjustMaxHealthPerLevel(experienceLevel);
+      adjustAttackDamagePerLevel(experienceLevel);
     }
 
-    // Handle respawn ticker
+    // Handle respawn ticker.
     if (compoundTag.contains(DATA_RESPAWN_TIMER_TAG)) {
       this.setRespawnTimer(compoundTag.getInt(DATA_RESPAWN_TIMER_TAG));
     }
 
+    // Handle custom name.
     if (compoundTag.contains(DATA_CUSTOM_COMPANION_NAME_TAG)) {
       this.setCustomCompanionName(compoundTag.getString(DATA_CUSTOM_COMPANION_NAME_TAG));
+    }
+
+    // Handle hand items for additional effects like light effects.
+    ItemStack itemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+    if (itemStack != null && !itemStack.isEmpty() && itemStack.is(Items.TORCH)
+        && !shouldGlowInTheDark) {
+      shouldGlowInTheDark = true;
+    }
+
+    // Handle User texture.
+    if (compoundTag.contains(DATA_CUSTOM_TEXTURE_SKIN_TAG)) {
+      this.setCustomTextureSkin(compoundTag.getString(DATA_CUSTOM_TEXTURE_SKIN_TAG));
     }
 
     this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
@@ -597,15 +784,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
     // Automatically Sync Data, if needed
     if (this.dataSyncTicker++ >= DATA_SYNC_TICK && syncDataIfNeeded()) {
       this.dataSyncTicker = 0;
-    }
-
-    if (this.isAlive()) {
-      this.interestedAngleO = this.interestedAngle;
-      // if (this.isInterested()) {
-      // this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
-      // } else {
-      this.interestedAngle += (1.0F - this.interestedAngle) * 0.4F;
-      // }
     }
   }
 

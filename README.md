@@ -5,18 +5,18 @@
 
 Player Companions adds additional creatures which will follow, protect or help you.
 
-![logo][logo]
-
 **BETA Status: It could be that the release version will not be compatible with the BETA version and you will lose existing player companions!**
 
 ## Features
 
 - Persistent Player companions with dedicated item to easy spawn and despawn.
 - Different player companion types like collector, follower, guard, healer and supporter.
-- Different sub-types and colors.
-- Friendly fire (for all of your tamed companions).
+- Different sub-types, styles and colors.
+- Friendly fire option (for all of your tamed companions).
 - Advanced control and experience level system.
-- Jade / Hwyla plugin integration
+- Jade / Hwyla plugin integration.
+- Custom skins for specific player companions.
+- Automatic data backup.
 
 ## Player Companion Types
 
@@ -50,8 +50,6 @@ Additional healer will stack up the effect, so if you are traveling with your fr
 The supporter companions gives buffs to any player and your own companions in a specific radius.
 Additional supporter will not stack up, but they will be able to buff the whole group.
 
-### Trader (wip)
-
 ## Spawn
 
 The player companions are automatically spawned in specific biomes, but could be also spawned over the specific items in the creative mode.
@@ -66,6 +64,7 @@ Each player companion prefer a specific tame item, in most cases you need severa
 Most of the companions could be controlled with the following controls:
 
 - **CTRL + Right Click** (on Player Companion with empty Hand or Weapon) Order to sit / Un-order to sit
+- **ALT + Right Click** (on Player Companion with empty Hand or Weapon) Change Aggressive status like passive, neutral, aggressive
 - **Right Click** (on Collector with empty hand or normal Block) Open Inventory
 - **SHIFT + Right Click** (with empty hand) Pet Companion
 
@@ -111,13 +110,11 @@ The MIT [LICENSE.md](LICENSE.md) applies only to the code in this repository. Im
 
 Please only download the mod from the official CurseForge page or with the official CurseForge launcher like:
 
-🚀 [Curse Forge Download Link][mod]
+🚀 https://www.curseforge.com/minecraft/mc-mods/player-companions
 
 If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
 
-[mod]: https://www.curseforge.com/minecraft/mc-mods/player-companions
 [guard-villagers]: https://www.curseforge.com/minecraft/mc-mods/guard-villagers
 [human_companions]: https://www.curseforge.com/minecraft/mc-mods/human-companions
 [morevanillaarmor]: https://www.curseforge.com/minecraft/mc-mods/morevanillaarmor
 [scaling-health]: https://www.curseforge.com/minecraft/mc-mods/scaling-health
-[logo]: examples/player_companions.gif

@@ -35,7 +35,7 @@ import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.screen.ClientScreens;
 import de.markusbordihn.playercompanions.container.ModContainer;
-import de.markusbordihn.playercompanions.entity.ModEntityType;
+import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.level.spawner.SpawnHandler;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
@@ -44,7 +44,7 @@ import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
 @Mod(Constants.MOD_ID)
 public class PlayerCompanions {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public PlayerCompanions() {
     final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

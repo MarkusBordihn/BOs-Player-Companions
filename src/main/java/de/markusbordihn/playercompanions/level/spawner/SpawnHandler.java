@@ -43,11 +43,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.ModEntityType;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
+import de.markusbordihn.playercompanions.entity.companions.Firefly;
+import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
+import de.markusbordihn.playercompanions.entity.companions.Samurai;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
@@ -56,7 +59,7 @@ import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
 @Mod.EventBusSubscriber()
 public class SpawnHandler {
 
-  public static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
@@ -64,12 +67,18 @@ public class SpawnHandler {
 
   @SubscribeEvent
   public static void onWorldLoad(ServerAboutToStartEvent event) {
+    logSpawn(Dobutsu.NAME, COMMON.dobutsuSpawnEnable.get(), COMMON.dobutsuWeight.get(),
+        COMMON.dobutsuMinGroup.get(), COMMON.dobutsuMaxGroup.get());
     logSpawn(Fairy.NAME, COMMON.fairySpawnEnable.get(), COMMON.fairyWeight.get(),
         COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get());
+    logSpawn(Firefly.NAME, COMMON.fireflySpawnEnable.get(), COMMON.fireflyWeight.get(),
+        COMMON.fireflyMinGroup.get(), COMMON.fireflyMaxGroup.get());
     logSpawn(Pig.NAME, COMMON.pigSpawnEnable.get(), COMMON.pigWeight.get(),
         COMMON.pigMinGroup.get(), COMMON.pigMaxGroup.get());
     logSpawn(Rooster.NAME, COMMON.roosterSpawnEnable.get(), COMMON.roosterWeight.get(),
         COMMON.roosterMinGroup.get(), COMMON.roosterMaxGroup.get());
+    logSpawn(Samurai.NAME, COMMON.samuraiSpawnEnable.get(), COMMON.samuraiWeight.get(),
+        COMMON.samuraiMinGroup.get(), COMMON.samuraiMaxGroup.get());
     logSpawn(SmallGhast.NAME, COMMON.smallGhastSpawnEnable.get(), COMMON.smallGhastWeight.get(),
         COMMON.smallGhastMinGroup.get(), COMMON.smallGhastMaxGroup.get());
     logSpawn(SmallSlime.NAME, COMMON.smallSlimeSpawnEnable.get(), COMMON.smallSlimeWeight.get(),
@@ -90,6 +99,7 @@ public class SpawnHandler {
     ResourceKey<Biome> biomeKey = ResourceKey.create(Registry.BIOME_REGISTRY, biomeRegistry);
     boolean isBeach =
         biomeCategory == BiomeCategory.BEACH || BiomeDictionary.hasType(biomeKey, Type.BEACH);
+    boolean isDarkForest = biomeKey == Biomes.DARK_FOREST;
     boolean isFlowerForest = biomeKey == Biomes.FLOWER_FOREST;
     boolean isJungle =
         biomeCategory == BiomeCategory.JUNGLE || BiomeDictionary.hasType(biomeKey, Type.JUNGLE);
@@ -101,12 +111,31 @@ public class SpawnHandler {
     boolean isSwamp =
         biomeCategory == BiomeCategory.SWAMP || BiomeDictionary.hasType(biomeKey, Type.SWAMP);
     boolean isTaiga = biomeCategory == BiomeCategory.TAIGA;
+    boolean isMountain =
+        biomeCategory == BiomeCategory.MOUNTAIN || BiomeDictionary.hasType(biomeKey, Type.MOUNTAIN);
+
+
+    // Dobutsu Spawn
+    if (Boolean.TRUE.equals(COMMON.dobutsuSpawnEnable.get()) && isDarkForest) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.DOBUTSU.get(),
+              COMMON.dobutsuWeight.get(), COMMON.dobutsuMinGroup.get(),
+              COMMON.dobutsuMaxGroup.get()));
+    }
 
     // Fairy Spawn
     if (Boolean.TRUE.equals(COMMON.fairySpawnEnable.get()) && isFlowerForest) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.FAIRY.get(), COMMON.fairyWeight.get(),
               COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get()));
+    }
+
+    // Firefly Spawn
+    if (Boolean.TRUE.equals(COMMON.fireflySpawnEnable.get()) && (isPlains || isSwamp)) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.FIREFLY.get(),
+              COMMON.fireflyWeight.get(), COMMON.fireflyMinGroup.get(),
+              COMMON.fireflyMaxGroup.get()));
     }
 
     // Pig Spawn
@@ -122,6 +151,14 @@ public class SpawnHandler {
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.ROOSTER.get(),
               COMMON.roosterWeight.get(), COMMON.roosterMinGroup.get(),
               COMMON.roosterMaxGroup.get()));
+    }
+
+    // Samurai Spawn
+    if (Boolean.TRUE.equals(COMMON.samuraiSpawnEnable.get()) && isMountain) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.SAMURAI.get(),
+              COMMON.samuraiWeight.get(), COMMON.samuraiMinGroup.get(),
+              COMMON.samuraiMaxGroup.get()));
     }
 
     // Small Ghast Spawn
@@ -159,11 +196,17 @@ public class SpawnHandler {
   public static void registerSpawnPlacements(final FMLCommonSetupEvent event) {
     log.info("{} Spawn Placements ...", Constants.LOG_REGISTER_PREFIX);
     event.enqueueWork(() -> {
+      SpawnPlacements.register(ModEntityType.DOBUTSU.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dobutsu::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.FAIRY.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.FIREFLY.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Firefly::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.ROOSTER.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.SAMURAI.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.SMALL_GHAST.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SmallGhast::checkGhastSpawnRules);

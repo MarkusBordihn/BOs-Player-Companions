@@ -40,11 +40,11 @@ public class ModKeyMapping {
 
   protected ModKeyMapping() {}
 
-  public static final KeyMapping KEY_ALT = new KeyMapping(Constants.KEY_PREFIX + "alt",
+  public static final KeyMapping AGGRESSION_KEY = new KeyMapping(Constants.KEY_PREFIX + "aggression",
       KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_ALT),
       Constants.KEY_PREFIX + "category");
 
-  public static final KeyMapping KEY_COMMAND =
+  public static final KeyMapping COMMAND_KEY =
       new KeyMapping(Constants.KEY_PREFIX + "control", KeyConflictContext.IN_GAME,
           InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL),
           Constants.KEY_PREFIX + "category");
@@ -53,8 +53,8 @@ public class ModKeyMapping {
     log.info("{} Key Mapping ...", Constants.LOG_REGISTER_PREFIX);
 
     event.enqueueWork(() -> {
-      ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_ALT);
-      ClientRegistry.registerKeyBinding(ModKeyMapping.KEY_COMMAND);
+      ClientRegistry.registerKeyBinding(ModKeyMapping.AGGRESSION_KEY);
+      ClientRegistry.registerKeyBinding(ModKeyMapping.COMMAND_KEY);
     });
   }
 }

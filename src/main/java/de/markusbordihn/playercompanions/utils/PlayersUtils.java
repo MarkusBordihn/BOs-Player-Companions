@@ -27,9 +27,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.commons.io.IOUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -88,7 +88,8 @@ public class PlayersUtils {
         return null;
       }
       return getUserTextureFromSessionResponse(data);
-    } catch (IOException | org.apache.http.ParseException iOException) {
+    } catch (IOException ioException) {
+      log.error("Unable to get user texture with {}, because of: {}", sessionURL, ioException);
       return null;
     }
   }

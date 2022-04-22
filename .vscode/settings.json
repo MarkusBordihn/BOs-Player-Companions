@@ -78,7 +78,7 @@
     "build",
     "models",
     "run",
-    "src/main/java/de/markusbordihn/playercompanions/utils"
+    "src/main/java/de/markusbordihn/playercompanions/config"
   ],
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.format.settings.url": "./java-google-style.xml",

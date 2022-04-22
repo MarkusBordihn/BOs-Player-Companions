@@ -5,6 +5,14 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.04.22
+
+- Added idle status which improves performance by 20%-50% for unowned player companions.
+- Added config options to allow customized list of names
+- Fixed smaller issues with docker based dedicated server and fetching textures
+- Fixed issue with owner is not displayed correctly
+- Allowing changing the custom skin only every 30 secs
+
 ### 2022.04.21
 
 - Ported all changes from 1.18.1 to 1.18.2

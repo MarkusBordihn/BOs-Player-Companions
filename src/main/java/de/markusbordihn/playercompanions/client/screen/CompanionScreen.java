@@ -72,9 +72,11 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   private EditBox textureSkinLocationBox;
   private String formerTextureSkinLocation = "";
   private boolean showTextureSettings = false;
+  private boolean canTextureSkinLocationChange = true;
   private float xMouse;
   private float yMouse;
   private int leftPosDialog = this.leftPos - 18;
+  private int nextTextureSkinLocationChange = (int) java.time.Instant.now().getEpochSecond();
   private int topPosDialog = this.topPos + 90;
 
   public CompanionScreen(T menu, Inventory inventory, Component component,
@@ -193,6 +195,15 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.clearTextureSettingsButton.render(poseStack, x, y, partialTicks);
     this.saveTextureSettingsButton.render(poseStack, x, y, partialTicks);
     this.closeTextureSettingsButton.render(poseStack, x, y, partialTicks);
+
+    // Render Status Symbol, if needed.
+    if (!this.canTextureSkinLocationChange) {
+      RenderSystem.setShaderTexture(0, DIALOG_TEXTURE);
+      poseStack.translate(0, 0, 100);
+      this.blit(poseStack, this.leftPosDialog + 78, this.topPosDialog + 73, 236, 17, 7, 10);
+
+    }
+
     poseStack.popPose();
   }
 
@@ -233,16 +244,26 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
             || PlayersUtils.isValidUrl(textureSkinLocationValue))) {
       NetworkHandler.skinChangePlayerCompanion(playerCompanionEntity.getStringUUID(),
           textureSkinLocationValue);
+      this.nextTextureSkinLocationChange = (int) java.time.Instant.now().getEpochSecond() + 30;
     }
   }
 
   private void validateTextureSkinLocation() {
     String textureSkinLocationValue = this.textureSkinLocationBox.getValue();
-    this.saveTextureSettingsButton.active = textureSkinLocationValue != null
-        && !textureSkinLocationValue.equals(this.formerTextureSkinLocation)
-        && (textureSkinLocationValue.isEmpty()
-            || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
-            || PlayersUtils.isValidUrl(textureSkinLocationValue));
+    this.canTextureSkinLocationChange = java.time.Instant.now().getEpochSecond() >= this.nextTextureSkinLocationChange;
+
+    // Additional check to make sure that the server is not spammed with requests.
+    if (this.canTextureSkinLocationChange) {
+      this.saveTextureSettingsButton.active = textureSkinLocationValue != null
+          && !textureSkinLocationValue.equals(this.formerTextureSkinLocation)
+          && (textureSkinLocationValue.isEmpty()
+              || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
+              || PlayersUtils.isValidUrl(textureSkinLocationValue));
+    } else if (textureSkinLocationValue.isEmpty()) {
+      this.saveTextureSettingsButton.active = true;
+    } else {
+      this.saveTextureSettingsButton.active = false;
+    }
     this.clearTextureSettingsButton.active =
         textureSkinLocationValue != null && !textureSkinLocationValue.isEmpty();
   }

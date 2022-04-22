@@ -23,10 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
-import com.google.common.collect.Maps;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Maps;
 
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleOptions;
@@ -63,6 +64,7 @@ import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionNames;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
@@ -70,7 +72,6 @@ import de.markusbordihn.playercompanions.entity.ai.goal.RandomFlyAroundGoal;
 import de.markusbordihn.playercompanions.entity.type.healer.HealerEntityFlyingAround;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
-import de.markusbordihn.playercompanions.utils.NamesUtils;
 
 public class Fairy extends HealerEntityFlyingAround {
 
@@ -192,7 +193,7 @@ public class Fairy extends HealerEntityFlyingAround {
 
   @Override
   protected String getRandomName() {
-    return NamesUtils.getRandomFemaleMobName();
+    return PlayerCompanionNames.getRandomFemaleCompanionName();
   }
 
   @Override

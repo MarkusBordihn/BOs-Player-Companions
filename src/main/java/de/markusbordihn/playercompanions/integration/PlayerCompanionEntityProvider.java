@@ -57,6 +57,13 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
         if (!config.get(VanillaPlugin.ANIMAL_OWNER)) {
           String ownerName =
               UsernameCache.getLastKnownUsername(playerCompanionEntity.getOwnerUUID());
+          if (ownerName == null) {
+            if (playerCompanionEntity.getOwner() != null) {
+              ownerName = playerCompanionEntity.getOwner().getName().getString();
+            } else {
+              ownerName = playerCompanionEntity.getOwnerUUID().toString();
+            }
+          }
           tooltip.add(new TextComponent("Owner: " + ownerName));
         }
         tooltip.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_level",
@@ -83,7 +90,8 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
           }
 
           // Aggression Level
-          tooltip.add(new TextComponent("Aggression Level: " + data.getEntityAggressionLevel().name()));
+          tooltip.add(
+              new TextComponent("Aggression Level: " + data.getEntityAggressionLevel().name()));
         }
       }
     }

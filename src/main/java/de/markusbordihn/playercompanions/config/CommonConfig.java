@@ -19,6 +19,9 @@
 
 package de.markusbordihn.playercompanions.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import org.apache.logging.log4j.LogManager;
@@ -77,6 +80,14 @@ public class CommonConfig {
     public final ForgeConfigSpec.BooleanValue hudOwnerEnabled;
     public final ForgeConfigSpec.BooleanValue hudStatusEnabled;
     public final ForgeConfigSpec.IntValue hudDisplayRadius;
+
+    public final ForgeConfigSpec.ConfigValue<List<String>> namesNPCFemale;
+    public final ForgeConfigSpec.ConfigValue<List<String>> namesNPCMale;
+    public final ForgeConfigSpec.ConfigValue<List<String>> namesNPCMisc;
+
+    public final ForgeConfigSpec.ConfigValue<List<String>> namesCompanionFemale;
+    public final ForgeConfigSpec.ConfigValue<List<String>> namesCompanionMale;
+    public final ForgeConfigSpec.ConfigValue<List<String>> namesCompanionMisc;
 
     public final ForgeConfigSpec.IntValue collectorTypeRadius;
 
@@ -183,6 +194,47 @@ public class CommonConfig {
           .defineInRange("hudDisplayRadius", 32, 0, 256);
       builder.pop();
 
+      builder.push("NPC Names");
+      namesNPCFemale = builder.comment("List of female NPC names.").define("namesNPCFemale",
+          new ArrayList<String>(Arrays.asList("Aika", "Amy", "Asuna", "Beatrice", "Calypso",
+              "Cassandra", "Deedlit", "Elizabeth", "Enya", "Faith", "Freya", "Giselle", "Isolde",
+              "Julia", "Meredith", "Monika", "Sonya")));
+      namesNPCMale =
+          builder.comment("List of male NPC names.").define("namesNPCMale",
+              new ArrayList<String>(Arrays.asList("Adam", "Aron", "Beowulf", "Bob", "Cain", "Ethan",
+                  "Guy", "Jack", "Jason", "John", "Julian", "Kawo", "Luca", "Markus", "Miso",
+                  "Parn", "Romolo")));
+      namesNPCMisc = builder.comment("List of misc NPC names.").define("namesNPCMisc",
+          new ArrayList<String>(Arrays.asList("Alexis", "Quinn")));
+      builder.pop();
+
+      builder.push("Player Companion Names");
+      namesCompanionFemale =
+          builder.comment("List of female player companion names.").define("namesCompanionFemale",
+              new ArrayList<String>(Arrays.asList("Alice", "Alina", "Amy", "Ayame", "Beauty",
+                  "Bella", "Bonnie", "Carla", "Carmen", "Celina", "Chiyo", "Chloe", "Conny", "Dina",
+                  "Emi", "Emma", "Fluffy", "Fuyumi", "Gina", "Haruhi", "Hope", "Iivy", "Isabell",
+                  "Itsumi", "Jessie", "Kacy", "Karin", "Kasumi", "Keira", "Lina", "Lucy", "Luna",
+                  "Mai", "Marina", "Megumi", "Melody", "Mia", "Mimi", "Mizue", "Nami", "Nicky",
+                  "Princess", "Rainy", "Reiko", "Sakura", "Sandy", "Takeko", "Trixie", "Umi",
+                  "Vivi", "Yona", "Yukari", "Zoe")));
+      namesCompanionMale =
+          builder.comment("List of male player companion names.").define("namesCompanionMale",
+              new ArrayList<String>(Arrays.asList("Alex", "Andrew", "Archie", "Benny", "Charlie",
+                  "Coco", "Derek", "Eric", "Felix", "Frankie", "Gustav", "Haruo", "Hector", "Henry",
+                  "Hunter", "Ikuo", "Jin", "Kasimir", "Kazuma", "Larry", "Leo", "Leonardo", "Loki",
+                  "Marin", "Masato", "Max", "Norio", "Osamu", "Oskar", "Prince", "Roker", "Rufus",
+                  "Ryu", "Shadow", "Shin", "Simba", "Snickers", "Sparky", "Spike", "Taizo", "Tiger",
+                  "Timmy", "Turbo", "Yoshi", "Yuma", "Zenjiro", "Zottel")));
+      namesCompanionMisc =
+          builder.comment("List of misc player companion names.").define("namesCompanionMisc",
+              new ArrayList<String>(Arrays.asList("Alex", "Angel", "Buddy", "Cato", "Charlie",
+                  "Cheddar", "Creamy", "Curly", "Dakota", "Elisa", "Foxy", "Frana", "Inky", "Isa",
+                  "Jesse", "Jona", "Joyce", "Jule", "Kaya", "Luka", "Mika", "Morgan", "Patches",
+                  "Phantom", "Riley", "Robin", "Sam", "Sanja", "Sascha", "Sasha", "Skye", "Smokey",
+                  "Smokie", "Toni", "Yannie")));
+      builder.pop();
+
       builder.push("Collector Type");
       collectorTypeRadius =
           builder.comment("Defines the radius in which items are automatically collected.")
@@ -219,8 +271,10 @@ public class CommonConfig {
       builder.push("Dobutsu");
       dobutsuSpawnEnable =
           builder.comment("Enable/Disable the dobutsu spawn.").define("dobutsuSpawnEnable", true);
-      dobutsuMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("dobutsuMinGroup", 1, 0, 64);
-      dobutsuMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("dobutsuMaxGroup", 2, 0, 64);
+      dobutsuMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("dobutsuMinGroup", 1, 0, 64);
+      dobutsuMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("dobutsuMaxGroup", 2, 0, 64);
       dobutsuWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("dobutsuWeight", 6, 0, 100);
       builder.pop();
 

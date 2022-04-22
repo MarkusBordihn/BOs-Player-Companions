@@ -68,7 +68,6 @@ import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsDataSync;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
-import de.markusbordihn.playercompanions.utils.NamesUtils;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
 @EventBusSubscriber
@@ -148,7 +147,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   // Additional ticker
   private static final int DATA_SYNC_TICK = 10;
+  private static final int IDLE_TICK = 1;
   private int dataSyncTicker = 0;
+  private int idleTicker = 0;
 
   protected static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
@@ -411,7 +412,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   protected String getRandomName() {
-    return NamesUtils.getRandomMobName();
+    return PlayerCompanionNames.getRandomCompanionName();
   }
 
   public int getJumpDelay() {
@@ -779,10 +780,17 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   @Override
   public void tick() {
-    super.tick();
 
-    // Automatically Sync Data, if needed
-    if (this.dataSyncTicker++ >= DATA_SYNC_TICK && syncDataIfNeeded()) {
+    // ServerSide: Reduce ticks for unowned entities.
+    if (this.level.isClientSide || hasOwner()) {
+      super.tick();
+    } else if (this.idleTicker++ >= IDLE_TICK) {
+      super.tick();
+      this.idleTicker = 0;
+    }
+
+    // ServerSide: Automatically Sync Data, if needed.
+    if (!this.level.isClientSide && this.dataSyncTicker++ >= DATA_SYNC_TICK && syncDataIfNeeded()) {
       this.dataSyncTicker = 0;
     }
   }

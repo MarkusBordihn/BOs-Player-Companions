@@ -1,0 +1,6 @@
+{
+  "parent": "player_companions:item/template/small_ghast",
+  "textures": {
+    "texture": "minecraft:entity/ghast/ghast"
+  }
+}

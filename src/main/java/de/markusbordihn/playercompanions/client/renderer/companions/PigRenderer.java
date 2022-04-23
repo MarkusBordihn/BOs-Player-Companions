@@ -26,7 +26,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.PigModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
@@ -34,15 +33,12 @@ import de.markusbordihn.playercompanions.entity.companions.Pig;
 @OnlyIn(Dist.CLIENT)
 public class PigRenderer extends MobRenderer<Pig, PigModel<Pig>> {
 
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig.png");
-
   public PigRenderer(EntityRendererProvider.Context context) {
     super(context, new PigModel<>(context.bakeLayer(ClientRenderer.PIG)), 0.7F);
   }
 
   public ResourceLocation getTextureLocation(Pig entity) {
-    return TEXTURE_LOCATION;
+    return entity.getTextureLocation();
   }
 
 }

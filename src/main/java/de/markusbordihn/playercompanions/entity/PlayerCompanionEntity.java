@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.entity;
 
 import java.util.Locale;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.mojang.datafixers.util.Pair;
@@ -94,6 +95,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
   private static int respawnDelay = COMMON.respawnDelay.get();
   private static boolean friendlyFire = COMMON.friendlyFire.get();
+  private static final int BABY_GROW_TIME = 20 * 60 * 60 * 24; // In ticks: 1 day
 
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
@@ -107,8 +109,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   private boolean wasOnGround;
 
   public PlayerCompanionEntity(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level) {
-    super(entityType, level);
+      Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
+      Map<PlayerCompanionVariant,Item> companionItemByVariant) {
+    super(entityType, level, textureByVariant, companionItemByVariant);
 
     // Set Reference to this object for easier sync and other tasks.
     this.setSyncReference(this);
@@ -118,6 +121,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     this.glowTicker = this.random.nextInt(0, GLOW_TICK / 2);
     this.textureCacheTicker = this.random.nextInt(0, TEXTURE_CACHE_TICK / 2);
 
+    // Force data sync.
     setDataSyncNeeded();
   }
 
@@ -160,10 +164,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   public boolean doPlayJumpSound() {
     return true;
-  }
-
-  public Item getCompanionItem() {
-    return null;
   }
 
   protected SoundEvent getPetSound() {
@@ -279,6 +279,16 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     // Set random custom companion name, if not set.
     if (!this.hasCustomName()) {
       this.setCustomName(this.getCustomCompanionNameComponent());
+    }
+
+    // Set random texture variants, if available.
+    if (!hasCustomTextureSkin()) {
+      this.setVariant(this.getRandomVariant());
+    }
+
+    // Set random baby variants for more fun.
+    if (this.random.nextInt(10) == 0) {
+      this.setAge(-BABY_GROW_TIME);
     }
 
     // Reset respawn timer, if needed.

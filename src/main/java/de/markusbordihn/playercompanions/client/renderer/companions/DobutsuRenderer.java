@@ -54,7 +54,7 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
 
   @Override
   public ResourceLocation getTextureLocation(Dobutsu entity) {
-    return entity.getResourceLocation();
+    return entity.getTextureLocation();
   }
 
 }

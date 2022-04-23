@@ -23,10 +23,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.RoosterModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.renderer.layers.HandItemLayer;
@@ -35,16 +35,14 @@ import de.markusbordihn.playercompanions.entity.companions.Rooster;
 @OnlyIn(Dist.CLIENT)
 public class RoosterRenderer extends MobRenderer<Rooster, RoosterModel<Rooster>> {
 
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster.png");
-
   public RoosterRenderer(EntityRendererProvider.Context context) {
     super(context, new RoosterModel<>(context.bakeLayer(ClientRenderer.ROOSTER)), 0.35F);
     this.addLayer(new HandItemLayer<>(this));
   }
 
+  @Override
   public ResourceLocation getTextureLocation(Rooster entity) {
-    return TEXTURE_LOCATION;
+    return entity.getTextureLocation();
   }
 
   @Override

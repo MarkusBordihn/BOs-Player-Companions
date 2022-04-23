@@ -20,16 +20,21 @@
 package de.markusbordihn.playercompanions.entity.companions;
 
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Maps;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -72,6 +77,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.ShootLargeFireballGoal;
@@ -92,8 +98,23 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   // Config settings
   private static int explosionPower = COMMON.smallGhastExplosionPower.get();
 
+  // Entity texture by color
+  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation("textures/entity/ghast/ghast.png"));
+        hashMap.put(PlayerCompanionVariant.DEFAULT_ACTION,
+            new ResourceLocation("textures/entity/ghast/ghast_shooting.png"));
+      });
+
+  // Companion Item by variant
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_GHAST_DEFAULT.get());
+      });
+
   public SmallGhast(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level);
+    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
   }
 
   @SubscribeEvent
@@ -222,11 +243,6 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
-  }
-
-  @Override
-  public Item getCompanionItem() {
-    return ModItems.SMALL_GHAST.get();
   }
 
   @Override

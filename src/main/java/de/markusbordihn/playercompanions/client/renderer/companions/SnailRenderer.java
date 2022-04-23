@@ -26,7 +26,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.SnailModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
@@ -34,15 +33,12 @@ import de.markusbordihn.playercompanions.entity.companions.Snail;
 @OnlyIn(Dist.CLIENT)
 public class SnailRenderer extends MobRenderer<Snail, SnailModel<Snail>> {
 
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail.png");
-
   public SnailRenderer(EntityRendererProvider.Context context) {
     super(context, new SnailModel<>(context.bakeLayer(ClientRenderer.SNAIL)), 0.45F);
   }
 
   public ResourceLocation getTextureLocation(Snail entity) {
-    return TEXTURE_LOCATION;
+    return entity.getTextureLocation();
   }
 
 }

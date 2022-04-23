@@ -19,8 +19,6 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,14 +30,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.NeutralMob;
-import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -60,12 +55,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MeleeAttackGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
@@ -80,27 +75,28 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
 
   // Variants
-  public static final String DEFAULT_VARIANT = "default";
   public static final String BLUE_VARIANT = "blue";
 
   // Entity texture by color
-  private static final Map<String, ResourceLocation> TEXTURE_BY_VARIANT =
+  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(DEFAULT_VARIANT,
+        hashMap.put(
+            PlayerCompanionVariant.DEFAULT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_default.png"));
-        hashMap.put(BLUE_VARIANT,
+        hashMap.put(
+            PlayerCompanionVariant.BLUE,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_blue.png"));
       });
 
   // Companion Item by variant
-  private static final Map<String, Item> COMPANION_ITEM_BY_VARIANT =
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(DEFAULT_VARIANT, ModItems.SAMURAI_DEFAULT.get());
-        hashMap.put(BLUE_VARIANT, ModItems.SAMURAI_BLUE.get());
+        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SAMURAI_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.BLUE, ModItems.SAMURAI_BLUE.get());
       });
 
   public Samurai(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level);
+    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
     this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
   }
 
@@ -129,14 +125,6 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
     this.setRemainingPersistentAngerTime(PERSISTENT_ANGER_TIME.sample(this.random));
   }
 
-  public ResourceLocation getResourceLocation() {
-    if (!this.hasTextureCache()) {
-      this.setTextureCache(TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
-          TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT)));
-    }
-    return this.getTextureCache();
-  }
-
   @Override
   protected void registerGoals() {
     super.registerGoals();
@@ -159,21 +147,6 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
     this.targetSelector.addGoal(7,
         new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
     this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
-  }
-
-  @Override
-  @Nullable
-  public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor,
-      DifficultyInstance difficulty, MobSpawnType mobSpawnType,
-      @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
-    spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
-        spawnGroupData, compoundTag);
-    // Use random different variants for spawn and randomly select one.
-    if (this.random.nextInt(2) == 0) {
-      List<String> variants = new ArrayList<>(TEXTURE_BY_VARIANT.keySet());
-      setVariant(variants.get(this.random.nextInt(variants.size())));
-    }
-    return spawnGroupData;
   }
 
   @Override
@@ -224,11 +197,6 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
-  }
-
-  @Override
-  public Item getCompanionItem() {
-    return COMPANION_ITEM_BY_VARIANT.get(this.getVariant());
   }
 
   @Override

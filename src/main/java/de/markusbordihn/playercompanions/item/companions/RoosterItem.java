@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.item.companions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
@@ -32,6 +33,10 @@ public class RoosterItem extends CapturedCompanion {
 
   public RoosterItem() {
     super();
+  }
+
+  public RoosterItem(PlayerCompanionVariant variant) {
+    super(variant);
   }
 
   public RoosterItem(Properties properties) {

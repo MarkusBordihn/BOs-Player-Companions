@@ -17,39 +17,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.item.companions;
+package de.markusbordihn.playercompanions.entity;
 
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.crafting.Ingredient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
-import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
-import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import de.markusbordihn.playercompanions.Constants;
 
-public class DobutsuItem extends CapturedCompanion {
+public enum PlayerCompanionVariant {
+  BLACK,
+  BLUE,
+  BROWN,
+  CREEPER,
+  CYAN,
+  DEFAULT,
+  DEFAULT_ACTION,
+  GRAY,
+  GREEN,
+  LIGHT_BLUE,
+  LIGHT_GRAY,
+  LIME,
+  MAGENTA,
+  MIXED,
+  ORANGE,
+  PINK,
+  PURPLE,
+  RED,
+  SPOTTED,
+  WHITE,
+  YELLOW;
 
-  public static final String ID = "dobutsu";
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public DobutsuItem() {
-    super();
+  public static PlayerCompanionVariant getOrDefault(String value) {
+    if (value != null && !value.isEmpty()) {
+      try {
+        return valueOf(value);
+      } catch (IllegalArgumentException exception) {
+        log.warn("Unable to find valid variant for {}!", value);
+      }
+    }
+    return PlayerCompanionVariant.DEFAULT;
   }
 
-  public DobutsuItem(PlayerCompanionVariant variant) {
-    super(variant);
+  public String getSuffix() {
+    return "_" + this.name().toLowerCase();
   }
 
-  public DobutsuItem(Properties properties) {
-    super(properties);
-  }
-
-  @Override
-  public Ingredient getEntityFood() {
-    return Dobutsu.FOOD_ITEMS;
-  }
-
-  @Override
-  public EntityType<Dobutsu> getEntityType() {
-    return ModEntityType.DOBUTSU.get();
-  }
 }

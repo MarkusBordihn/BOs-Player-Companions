@@ -52,7 +52,7 @@ public class SamuraiRenderer extends HumanoidMobRenderer<Samurai, SamuraiModel<S
 
   @Override
   public ResourceLocation getTextureLocation(Samurai entity) {
-    return entity.getResourceLocation();
+    return entity.getTextureLocation();
   }
 
 }

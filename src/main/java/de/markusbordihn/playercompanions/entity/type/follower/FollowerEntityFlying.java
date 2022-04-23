@@ -19,7 +19,10 @@
 
 package de.markusbordihn.playercompanions.entity.type.follower;
 
+import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -27,15 +30,17 @@ import net.minecraft.world.level.Level;
 import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityFlying;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
 public class FollowerEntityFlying extends PlayerCompanionEntityFlying {
 
   protected FollowerFeatures followerFeatures;
 
-  public FollowerEntityFlying(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level) {
-    super(entityType, level);
+  public FollowerEntityFlying(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
+      Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+    super(entityType, level, textureByVariant, companionItemByVariant);
     this.setCompanionType(PlayerCompanionType.FOLLOWER);
     this.setCompanionTypeIcon(new ItemStack(Items.CARROT_ON_A_STICK));
     this.setAggressionLevel(AggressionLevel.PASSIVE);

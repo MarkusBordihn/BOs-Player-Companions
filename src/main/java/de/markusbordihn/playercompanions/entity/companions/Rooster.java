@@ -19,10 +19,15 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Maps;
+
+import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
@@ -48,7 +53,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 
+import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MeleeAttackGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
@@ -62,8 +69,21 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   public static final String NAME = "Rooster";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS);
 
+  // Entity texture by color
+  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_default.png"));
+      });
+
+  // Companion Item by variant
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.ROOSTER_DEFAULT.get());
+      });
+
   public Rooster(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level);
+    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
     this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
   }
 
@@ -169,11 +189,6 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
-  }
-
-  @Override
-  public Item getCompanionItem() {
-    return ModItems.ROOSTER.get();
   }
 
   @Override

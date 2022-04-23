@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.item.companions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
@@ -32,6 +33,10 @@ public class SnailItem extends CapturedCompanion {
 
   public SnailItem() {
     super();
+  }
+
+  public SnailItem(PlayerCompanionVariant variant) {
+    super(variant);
   }
 
   public SnailItem(Properties properties) {

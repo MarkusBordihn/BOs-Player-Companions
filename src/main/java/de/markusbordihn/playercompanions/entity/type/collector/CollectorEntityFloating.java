@@ -19,7 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity.type.collector;
 
+import java.util.Map;
+
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -27,14 +31,17 @@ import net.minecraft.world.level.Level;
 import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityFloating;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
 public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
 
   protected CollectorFeatures collectorFeatures;
 
-  public CollectorEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level);
+  public CollectorEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+    super(entityType, level, textureByVariant, companionItemByVariant);
     this.setCompanionType(PlayerCompanionType.COLLECTOR);
     this.setCompanionTypeIcon(new ItemStack(Items.CHEST));
     this.setAggressionLevel(AggressionLevel.PASSIVE_FLEE);

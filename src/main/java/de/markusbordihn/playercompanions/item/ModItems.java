@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.item;
 
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.MaterialColor;
@@ -31,6 +30,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.*;
 import de.markusbordihn.playercompanions.item.companions.*;
 import de.markusbordihn.playercompanions.item.tameitems.*;
@@ -51,77 +51,119 @@ public class ModItems {
 
   // Dobutsu
   public static final RegistryObject<Item> DOBUTSU_DEFAULT =
-      ITEMS.register(DobutsuItem.ID + "_default", () -> new DobutsuItem(Dobutsu.DEFAULT_VARIANT));
+      ITEMS.register(DobutsuItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new DobutsuItem(PlayerCompanionVariant.DEFAULT));
   public static final RegistryObject<Item> DOBUTSU_CREEPER =
-      ITEMS.register(DobutsuItem.ID + "_creeper", () -> new DobutsuItem(Dobutsu.CREEPER_VARIANT));
+      ITEMS.register(DobutsuItem.ID + PlayerCompanionVariant.CREEPER.getSuffix(),
+          () -> new DobutsuItem(PlayerCompanionVariant.CREEPER));
 
   // Fairies
   public static final RegistryObject<Item> FAIRY_DEFAULT =
-      ITEMS.register(FairyItem.ID + "_default", () -> new FairyItem(Fairy.DEFAULT_VARIANT));
+      ITEMS.register(FairyItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new FairyItem(PlayerCompanionVariant.DEFAULT));
   public static final RegistryObject<Item> FAIRY_BLUE =
-      ITEMS.register(FairyItem.ID + "_blue", () -> new FairyItem(Fairy.BLUE_VARIANT));
-  public static final RegistryObject<Item> FAIRY_RED_HAIR =
-      ITEMS.register(FairyItem.ID + "_red_hair", () -> new FairyItem(Fairy.RED_HAIR_VARIANT));
+      ITEMS.register(FairyItem.ID + PlayerCompanionVariant.BLUE.getSuffix(),
+          () -> new FairyItem(PlayerCompanionVariant.BLUE));
+  public static final RegistryObject<Item> FAIRY_RED =
+      ITEMS.register(FairyItem.ID + PlayerCompanionVariant.RED.getSuffix(),
+          () -> new FairyItem(PlayerCompanionVariant.RED));
 
   // Firefly
   public static final RegistryObject<Item> FIREFLY_DEFAULT =
-      ITEMS.register(FireflyItem.ID + "_default", () -> new FireflyItem(Firefly.DEFAULT_VARIANT));
+      ITEMS.register(FireflyItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new FireflyItem(PlayerCompanionVariant.DEFAULT));
 
   // Samurai
   public static final RegistryObject<Item> SAMURAI_DEFAULT =
-      ITEMS.register(SamuraiItem.ID + "_default", () -> new SamuraiItem(Samurai.DEFAULT_VARIANT));
+      ITEMS.register(SamuraiItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new SamuraiItem(PlayerCompanionVariant.DEFAULT));
   public static final RegistryObject<Item> SAMURAI_BLUE =
-      ITEMS.register(SamuraiItem.ID + "_blue", () -> new SamuraiItem(Samurai.BLUE_VARIANT));
+      ITEMS.register(SamuraiItem.ID + PlayerCompanionVariant.BLUE.getSuffix(),
+          () -> new SamuraiItem(PlayerCompanionVariant.BLUE));
 
   // Pigs
-  public static final RegistryObject<Item> PIG = ITEMS.register(PigItem.ID, PigItem::new);
+  public static final RegistryObject<Item> PIG_DEFAULT =
+      ITEMS.register(PigItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new PigItem(PlayerCompanionVariant.DEFAULT));
+  public static final RegistryObject<Item> PIG_SPOTTED =
+      ITEMS.register(PigItem.ID + PlayerCompanionVariant.SPOTTED.getSuffix(),
+          () -> new PigItem(PlayerCompanionVariant.SPOTTED));
 
   // Rooster
-  public static final RegistryObject<Item> ROOSTER =
-      ITEMS.register(RoosterItem.ID, RoosterItem::new);
+  public static final RegistryObject<Item> ROOSTER_DEFAULT =
+      ITEMS.register(RoosterItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new RoosterItem(PlayerCompanionVariant.DEFAULT));
 
   // Small Ghast
-  public static final RegistryObject<Item> SMALL_GHAST =
-      ITEMS.register(SmallGhastItem.ID, SmallGhastItem::new);
+  public static final RegistryObject<Item> SMALL_GHAST_DEFAULT =
+      ITEMS.register(SmallGhastItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new SmallGhastItem(PlayerCompanionVariant.DEFAULT));
 
   // Slimes
   public static final RegistryObject<Item> SMALL_SLIME_BLACK =
-      ITEMS.register(SmallSlimeItem.ID + "_black", () -> new SmallSlimeItem(DyeColor.BLACK));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.BLACK.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.BLACK));
   public static final RegistryObject<Item> SMALL_SLIME_BLUE =
-      ITEMS.register(SmallSlimeItem.ID + "_blue", () -> new SmallSlimeItem(DyeColor.BLUE));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.BLUE.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.BLUE));
   public static final RegistryObject<Item> SMALL_SLIME_BROWN =
-      ITEMS.register(SmallSlimeItem.ID + "_brown", () -> new SmallSlimeItem(DyeColor.BROWN));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.BROWN.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.BROWN));
   public static final RegistryObject<Item> SMALL_SLIME_CYAN =
-      ITEMS.register(SmallSlimeItem.ID + "_cyan", () -> new SmallSlimeItem(DyeColor.CYAN));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.CYAN.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.CYAN));
   public static final RegistryObject<Item> SMALL_SLIME_GRAY =
-      ITEMS.register(SmallSlimeItem.ID + "_gray", () -> new SmallSlimeItem(DyeColor.GRAY));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.GRAY.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.GRAY));
   public static final RegistryObject<Item> SMALL_SLIME_GREEN =
-      ITEMS.register(SmallSlimeItem.ID + "_green", () -> new SmallSlimeItem(DyeColor.GREEN));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.GREEN.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.GREEN));
   public static final RegistryObject<Item> SMALL_SLIME_LIGHT_BLUE =
-      ITEMS.register(SmallSlimeItem.ID + "_light_blue", () -> new SmallSlimeItem(DyeColor.BLUE));
-  public static final RegistryObject<Item> SMALL_SLIME_LIGHT_GRAY = ITEMS
-      .register(SmallSlimeItem.ID + "_light_gray", () -> new SmallSlimeItem(DyeColor.LIGHT_GRAY));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.LIGHT_BLUE.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.LIGHT_BLUE));
+  public static final RegistryObject<Item> SMALL_SLIME_LIGHT_GRAY =
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.LIGHT_GRAY.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.LIGHT_GRAY));
   public static final RegistryObject<Item> SMALL_SLIME_LIME =
-      ITEMS.register(SmallSlimeItem.ID + "_lime", () -> new SmallSlimeItem(DyeColor.LIME));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.LIME.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.LIME));
   public static final RegistryObject<Item> SMALL_SLIME_MAGENTA =
-      ITEMS.register(SmallSlimeItem.ID + "_magenta", () -> new SmallSlimeItem(DyeColor.MAGENTA));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.MAGENTA.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.MAGENTA));
   public static final RegistryObject<Item> SMALL_SLIME_ORANGE =
-      ITEMS.register(SmallSlimeItem.ID + "_orange", () -> new SmallSlimeItem(DyeColor.ORANGE));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.ORANGE.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.ORANGE));
   public static final RegistryObject<Item> SMALL_SLIME_PINK =
-      ITEMS.register(SmallSlimeItem.ID + "_pink", () -> new SmallSlimeItem(DyeColor.PINK));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.PINK.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.PINK));
   public static final RegistryObject<Item> SMALL_SLIME_PURPLE =
-      ITEMS.register(SmallSlimeItem.ID + "_purple", () -> new SmallSlimeItem(DyeColor.PURPLE));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.PURPLE.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.PURPLE));
   public static final RegistryObject<Item> SMALL_SLIME_RED =
-      ITEMS.register(SmallSlimeItem.ID + "_red", () -> new SmallSlimeItem(DyeColor.RED));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.RED.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.RED));
   public static final RegistryObject<Item> SMALL_SLIME_WHITE =
-      ITEMS.register(SmallSlimeItem.ID + "_white", () -> new SmallSlimeItem(DyeColor.WHITE));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.WHITE.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.WHITE));
   public static final RegistryObject<Item> SMALL_SLIME_YELLOW =
-      ITEMS.register(SmallSlimeItem.ID + "_yellow", () -> new SmallSlimeItem(DyeColor.YELLOW));
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.YELLOW.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.YELLOW));
 
-  public static final RegistryObject<Item> SNAIL = ITEMS.register(SnailItem.ID, SnailItem::new);
+  // Snail
+  public static final RegistryObject<Item> SNAIL_DEFAULT =
+      ITEMS.register(SnailItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new SnailItem(PlayerCompanionVariant.DEFAULT));
 
-  public static final RegistryObject<Item> WELSH_CORGI =
-      ITEMS.register(WelshCorgiItem.ID, WelshCorgiItem::new);
+  // Welsh Corgi
+  public static final RegistryObject<Item> WELSH_CORGI_DEFAULT =
+      ITEMS.register(WelshCorgiItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new WelshCorgiItem(PlayerCompanionVariant.DEFAULT));
+  public static final RegistryObject<Item> WELSH_CORGI_MIXED =
+      ITEMS.register(WelshCorgiItem.ID + PlayerCompanionVariant.MIXED.getSuffix(),
+          () -> new WelshCorgiItem(PlayerCompanionVariant.MIXED));
+  public static final RegistryObject<Item> WELSH_CORGI_BLACK =
+      ITEMS.register(WelshCorgiItem.ID + PlayerCompanionVariant.BLACK.getSuffix(),
+          () -> new WelshCorgiItem(PlayerCompanionVariant.BLACK));
 
   // Tame Items
   public static final RegistryObject<Item> TAME_APPLE =

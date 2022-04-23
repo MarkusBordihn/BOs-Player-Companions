@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.item.companions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.Firefly;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
@@ -34,7 +35,7 @@ public class FireflyItem extends CapturedCompanion {
     super();
   }
 
-  public FireflyItem(String variant) {
+  public FireflyItem(PlayerCompanionVariant variant) {
     super(variant);
   }
 

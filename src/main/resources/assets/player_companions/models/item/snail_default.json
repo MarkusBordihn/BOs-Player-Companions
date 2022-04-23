@@ -1,0 +1,6 @@
+{
+  "parent": "player_companions:item/template/snail",
+  "textures": {
+    "texture": "player_companions:entity/snail/snail_default"
+  }
+}

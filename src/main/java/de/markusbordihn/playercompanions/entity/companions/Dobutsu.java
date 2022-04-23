@@ -19,23 +19,16 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
 
 import net.minecraft.Util;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -50,12 +43,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.client.textures.ModTextureManager;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityWalking;
@@ -69,27 +61,26 @@ public class Dobutsu extends FollowerEntityWalking {
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE, Items.SWEET_BERRIES);
 
   // Variants
-  public static final String DEFAULT_VARIANT = "default";
   public static final String CREEPER_VARIANT = "creeper";
 
   // Entity texture by color
-  private static final Map<String, ResourceLocation> TEXTURE_BY_VARIANT =
+  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(DEFAULT_VARIANT,
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
-        hashMap.put(CREEPER_VARIANT,
+        hashMap.put(PlayerCompanionVariant.CREEPER,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
       });
 
   // Companion Item by variant
-  private static final Map<String, Item> COMPANION_ITEM_BY_VARIANT =
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(DEFAULT_VARIANT, ModItems.DOBUTSU_DEFAULT.get());
-        hashMap.put(CREEPER_VARIANT, ModItems.DOBUTSU_CREEPER.get());
+        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.DOBUTSU_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.CREEPER, ModItems.DOBUTSU_CREEPER.get());
       });
 
   public Dobutsu(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level);
+    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
     this.enableCustomTextureSkin(true);
   }
 
@@ -97,35 +88,6 @@ public class Dobutsu extends FollowerEntityWalking {
     return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
         .add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.ATTACK_DAMAGE, 0.5D);
   }
-
-  public ResourceLocation getResourceLocation() {
-    if (!this.hasTextureCache() && level.isClientSide) {
-      if (this.hasCustomTextureSkin()) {
-        this.setTextureCache(ModTextureManager.addTexture(this.getCustomTextureSkin()));
-      }
-      if (!this.hasTextureCache()) {
-        this.setTextureCache(TEXTURE_BY_VARIANT.getOrDefault(this.getVariant(),
-            TEXTURE_BY_VARIANT.get(DEFAULT_VARIANT)));
-      }
-    }
-    return this.getTextureCache();
-  }
-
-  @Override
-  @Nullable
-  public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor,
-      DifficultyInstance difficulty, MobSpawnType mobSpawnType,
-      @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
-    spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
-        spawnGroupData, compoundTag);
-    // Use random different variants for spawn and randomly select one.
-    if (!this.hasCustomTextureSkin() && this.random.nextInt(2) == 0) {
-      List<String> variants = new ArrayList<>(TEXTURE_BY_VARIANT.keySet());
-      setVariant(variants.get(this.random.nextInt(variants.size())));
-    }
-    return spawnGroupData;
-  }
-
 
   @Override
   protected void registerGoals() {
@@ -150,11 +112,6 @@ public class Dobutsu extends FollowerEntityWalking {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
-  }
-
-  @Override
-  public Item getCompanionItem() {
-    return COMPANION_ITEM_BY_VARIANT.get(this.getVariant());
   }
 
   @Override

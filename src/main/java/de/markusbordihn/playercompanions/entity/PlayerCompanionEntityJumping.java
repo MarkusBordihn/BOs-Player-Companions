@@ -19,7 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import java.util.Map;
+
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 
 import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntityJumpControl;
@@ -27,8 +31,9 @@ import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntity
 public class PlayerCompanionEntityJumping extends PlayerCompanionEntity {
 
   public PlayerCompanionEntityJumping(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level) {
-    super(entityType, level);
+      Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+    super(entityType, level, textureByVariant, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityJumpControl(this);
   }
 

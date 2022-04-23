@@ -19,9 +19,14 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.Map;
+import com.google.common.collect.Maps;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.Util;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -44,6 +49,7 @@ import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
@@ -59,8 +65,30 @@ public class WelshCorgi extends SupporterWalking {
   public static final String NAME = "Welsh Corgi";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
 
+  // Entity texture by color
+  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(
+            PlayerCompanionVariant.DEFAULT, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/welsh_corgi/welsh_corgi_default.png"));
+        hashMap.put(
+            PlayerCompanionVariant.MIXED, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/welsh_corgi/welsh_corgi_mixed.png"));
+        hashMap.put(
+            PlayerCompanionVariant.BLACK, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/welsh_corgi/welsh_corgi_black.png"));
+      });
+
+  // Companion Item by variant
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.WELSH_CORGI_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.MIXED, ModItems.WELSH_CORGI_MIXED.get());
+        hashMap.put(PlayerCompanionVariant.BLACK, ModItems.WELSH_CORGI_BLACK.get());
+      });
+
   public WelshCorgi(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level);
+    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
@@ -92,11 +120,6 @@ public class WelshCorgi extends SupporterWalking {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
-  }
-
-  @Override
-  public Item getCompanionItem() {
-    return ModItems.WELSH_CORGI.get();
   }
 
   @Override

@@ -26,7 +26,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.WelshCorgiModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
@@ -38,11 +37,8 @@ public class WelshCorgiRenderer extends MobRenderer<WelshCorgi, WelshCorgiModel<
     super(context, new WelshCorgiModel<>(context.bakeLayer(ClientRenderer.WELSH_CORGI)), 0.5F);
   }
 
-  private static final ResourceLocation TEXTURE_LOCATION =
-      new ResourceLocation(Constants.MOD_ID, "textures/entity/welsh_corgi/welsh_corgi_default.png");
-
   public ResourceLocation getTextureLocation(WelshCorgi entity) {
-    return TEXTURE_LOCATION;
+    return entity.getTextureLocation();
   }
 
 }

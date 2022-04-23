@@ -30,15 +30,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import de.markusbordihn.playercompanions.client.model.SmallGhastModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 
 @OnlyIn(Dist.CLIENT)
 public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<SmallGhast>> {
-
-  private static final ResourceLocation GHAST_LOCATION =
-      new ResourceLocation("textures/entity/ghast/ghast.png");
-  private static final ResourceLocation GHAST_SHOOTING_LOCATION =
-      new ResourceLocation("textures/entity/ghast/ghast_shooting.png");
 
   public SmallGhastRenderer(EntityRendererProvider.Context context) {
     super(context, new SmallGhastModel<>(context.bakeLayer(ClientRenderer.SMALL_GHAST)), 0.4F);
@@ -46,7 +42,8 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<
 
   @Override
   public ResourceLocation getTextureLocation(SmallGhast entity) {
-    return entity.isCharging() ? GHAST_SHOOTING_LOCATION : GHAST_LOCATION;
+    return entity.isCharging() ? entity.getTextureLocation(
+        PlayerCompanionVariant.DEFAULT_ACTION) : entity.getTextureLocation();
   }
 
   @Override

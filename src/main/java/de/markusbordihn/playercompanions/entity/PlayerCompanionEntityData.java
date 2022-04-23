@@ -19,8 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -64,6 +67,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.client.textures.ModTextureManager;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsDataSync;
@@ -124,8 +128,14 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private static final int JUMP_MOVE_DELAY = 10;
   protected static final int RIDE_COOLDOWN = 600;
 
+  // Variants
+  private Map<PlayerCompanionVariant, ResourceLocation> textureByVariant;
+  private Map<PlayerCompanionVariant, Item> companionItemByVariant;
+
   // Cache
   private ResourceLocation textureCache = null;
+  private ResourceLocation textureCustomCache = null;
+  private PlayerCompanionVariant textureCustomCacheVariant = null;
   private String lastCustomTextureSkin = null;
 
   // Temporary stats
@@ -153,11 +163,16 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   protected static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
-  protected PlayerCompanionEntityData(EntityType<? extends TamableAnimal> entityType, Level level) {
+  protected PlayerCompanionEntityData(EntityType<? extends TamableAnimal> entityType, Level level,
+      Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level);
 
     // Dimension Name reference.
     this.dimensionName = level.dimension().location().toString();
+
+    this.textureByVariant = textureByVariant;
+    this.companionItemByVariant = companionItemByVariant;
   }
 
   @SubscribeEvent
@@ -208,6 +223,10 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void setCompanionType(PlayerCompanionType type) {
     this.companionType = type;
+  }
+
+  public Item getCompanionItem() {
+    return companionItemByVariant.get(this.getVariant());
   }
 
   public ItemStack getCompanionTypeIcon() {
@@ -270,12 +289,20 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.explosionPower = explosionPower;
   }
 
-  public String getVariant() {
-    return this.entityData.get(DATA_VARIANT);
+  public PlayerCompanionVariant getVariant() {
+    return PlayerCompanionVariant.getOrDefault(this.entityData.get(DATA_VARIANT));
   }
 
-  public void setVariant(String variant) {
-    this.entityData.set(DATA_VARIANT, variant);
+  public PlayerCompanionVariant getRandomVariant() {
+    if (textureByVariant.size() > 1 && this.random.nextInt(2) == 0) {
+      List<PlayerCompanionVariant> variants = new ArrayList<>(textureByVariant.keySet());
+      return variants.get(this.random.nextInt(variants.size()));
+    }
+    return PlayerCompanionVariant.DEFAULT;
+  }
+
+  public void setVariant(PlayerCompanionVariant variant) {
+    this.entityData.set(DATA_VARIANT, variant.name());
   }
 
   public void setGlowInTheDark(boolean glowInTheDark) {
@@ -296,6 +323,18 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void setCustomCompanionName(String name) {
     this.entityData.set(DATA_CUSTOM_COMPANION_NAME, name);
+  }
+
+  public void setCustomTextureCache(ResourceLocation resourceLocation) {
+    this.textureCustomCache = resourceLocation;
+  }
+
+  public ResourceLocation getCustomTextureCache() {
+    return this.textureCustomCache;
+  }
+
+  public boolean hasCustomTextureCache() {
+    return this.textureCustomCache != null;
   }
 
   public void setTextureCache(ResourceLocation resourceLocation) {
@@ -345,6 +384,31 @@ public class PlayerCompanionEntityData extends TamableAnimal
     } else {
       log.error("Unable to process custom texture skin for with {}!", data);
     }
+  }
+
+  public ResourceLocation getTextureLocation() {
+    if (level.isClientSide && !this.hasTextureCache()) {
+      if (this.hasCustomTextureSkin()) {
+        this.setTextureCache(ModTextureManager.addTexture(this.getCustomTextureSkin()));
+      }
+      if (!this.hasTextureCache()) {
+        this.setTextureCache(textureByVariant.getOrDefault(this.getVariant(),
+            textureByVariant.get(PlayerCompanionVariant.DEFAULT)));
+      }
+      if (!this.hasTextureCache()) {
+        log.error("Unable to get any resource location for {}, looks like a bug!", this);
+      }
+    }
+    return this.getTextureCache();
+  }
+
+  public ResourceLocation getTextureLocation(PlayerCompanionVariant variant) {
+    if (level.isClientSide && !this.hasCustomTextureSkin() && textureCustomCacheVariant != variant) {
+      this.setCustomTextureCache(textureByVariant.getOrDefault(variant,
+          textureByVariant.get(PlayerCompanionVariant.DEFAULT)));
+      textureCustomCacheVariant = variant;
+    }
+    return this.getCustomTextureCache();
   }
 
   public int getExperience() {
@@ -715,7 +779,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.entityData.define(DATA_IS_CHARGING, false);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
     this.entityData.define(DATA_CUSTOM_TEXTURE_SKIN, "");
-    this.entityData.define(DATA_VARIANT, "default");
+    this.entityData.define(DATA_VARIANT, PlayerCompanionVariant.DEFAULT.name());
   }
 
   @Override
@@ -728,7 +792,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
     compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
     compoundTag.putString(DATA_CUSTOM_TEXTURE_SKIN_TAG, this.getCustomTextureSkin());
-    compoundTag.putString(DATA_VARIANT_TAG, this.getVariant());
+    compoundTag.putString(DATA_VARIANT_TAG, this.getVariant().name());
   }
 
   @Override
@@ -770,7 +834,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
       this.setCustomTextureSkin(compoundTag.getString(DATA_CUSTOM_TEXTURE_SKIN_TAG));
     }
 
-    this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
+    this.setVariant(PlayerCompanionVariant.getOrDefault(compoundTag.getString(DATA_VARIANT_TAG)));
   }
 
   @Override

@@ -44,6 +44,6 @@ public class SmallSlimeRenderer extends MobRenderer<SmallSlime, SmallSlimeModel<
   @Nullable
   @Override
   public ResourceLocation getTextureLocation(SmallSlime entity) {
-    return entity.getResourceLocation();
+    return entity.getTextureLocation();
   }
 }

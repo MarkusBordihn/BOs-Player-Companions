@@ -64,6 +64,7 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 import de.markusbordihn.playercompanions.text.TranslatableText;
 
@@ -80,7 +81,7 @@ public class CapturedCompanion extends Item {
   public static final String COMPANION_UUID_TAG = "CompanionUUID";
 
   private DyeColor color = null;
-  private String variant = null;
+  private PlayerCompanionVariant variant = PlayerCompanionVariant.DEFAULT;
 
   public CapturedCompanion() {
     this(new Item.Properties().stacksTo(1).durability(16).tab(PlayerCompanionsTab.TAB_COMPANIONS));
@@ -91,7 +92,7 @@ public class CapturedCompanion extends Item {
     this.color = color;
   }
 
-  public CapturedCompanion(String variant) {
+  public CapturedCompanion(PlayerCompanionVariant variant) {
     this();
     this.variant = variant;
   }
@@ -248,7 +249,7 @@ public class CapturedCompanion extends Item {
         if (this.color != null) {
           playerCompanionEntity.setColor(this.color);
         }
-        if (this.variant != null && !this.variant.isBlank()) {
+        if (this.variant != null && this.variant != PlayerCompanionVariant.DEFAULT) {
           playerCompanionEntity.setVariant(this.variant);
         }
         playerCompanionEntity.finalizeSpawn();

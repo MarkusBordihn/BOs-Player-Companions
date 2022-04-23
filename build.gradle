@@ -140,6 +140,7 @@ repositories {
         includeGroup "curse.maven"
     }
   }
+   maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -153,8 +154,10 @@ dependencies {
   runtimeOnly fg.deobf("curse.maven:jade-324717:3761542")
 
   // Patchouli Integration
-  compileOnly fg.deobf("curse.maven:patchouli-306770:3729975")
-  runtimeOnly fg.deobf("curse.maven:patchouli-306770:3729975")
+  compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67:api")
+  runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
+  // compileOnly fg.deobf("curse.maven:patchouli-306770:3729975")
+  // runtimeOnly fg.deobf("curse.maven:patchouli-306770:3729975")
 
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")

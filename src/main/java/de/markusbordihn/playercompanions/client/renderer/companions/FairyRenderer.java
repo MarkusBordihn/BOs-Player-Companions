@@ -52,7 +52,7 @@ public class FairyRenderer extends HumanoidMobRenderer<Fairy, FairyModel<Fairy>>
 
   @Override
   public ResourceLocation getTextureLocation(Fairy entity) {
-    return entity.getResourceLocation();
+    return entity.getTextureLocation();
   }
 
 }

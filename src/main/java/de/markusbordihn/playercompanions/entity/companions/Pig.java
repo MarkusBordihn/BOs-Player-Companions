@@ -19,9 +19,15 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.Util;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -48,6 +54,7 @@ import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
@@ -64,8 +71,29 @@ public class Pig extends CollectorEntityWalking {
   public static final Ingredient FOOD_ITEMS =
       Ingredient.of(Items.CARROT, Items.POTATO, Items.BEETROOT);
 
+  // Variants
+  public static final String SPOTTED_VARIANT = "spotted";
+
+  // Entity texture by color
+  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(
+            PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig_default.png"));
+        hashMap.put(
+            PlayerCompanionVariant.SPOTTED,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig_spotted.png"));
+      });
+
+  // Companion Item by variant
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
+      Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.PIG_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.SPOTTED, ModItems.PIG_SPOTTED.get());
+      });
+
   public Pig(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level);
+    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
@@ -98,11 +126,6 @@ public class Pig extends CollectorEntityWalking {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
-  }
-
-  @Override
-  public Item getCompanionItem() {
-    return ModItems.PIG.get();
   }
 
   @Override

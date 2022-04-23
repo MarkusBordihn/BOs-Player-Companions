@@ -46,7 +46,7 @@ public class FireflyRenderer extends MobRenderer<Firefly, FireflyModel<Firefly>>
 
   @Override
   public ResourceLocation getTextureLocation(Firefly entity) {
-    return entity.getResourceLocation();
+    return entity.getTextureLocation();
   }
 
 }

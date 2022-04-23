@@ -63,7 +63,7 @@ public class Dobutsu extends FollowerEntityWalking {
   // Variants
   public static final String CREEPER_VARIANT = "creeper";
 
-  // Entity texture by color
+  // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,

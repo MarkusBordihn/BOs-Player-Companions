@@ -69,7 +69,7 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   public static final String NAME = "Rooster";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS);
 
-  // Entity texture by color
+  // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,

@@ -80,16 +80,10 @@ public class CapturedCompanion extends Item {
 
   public static final String COMPANION_UUID_TAG = "CompanionUUID";
 
-  private DyeColor color = null;
   private PlayerCompanionVariant variant = PlayerCompanionVariant.DEFAULT;
 
   public CapturedCompanion() {
     this(new Item.Properties().stacksTo(1).durability(16).tab(PlayerCompanionsTab.TAB_COMPANIONS));
-  }
-
-  public CapturedCompanion(DyeColor color) {
-    this();
-    this.color = color;
   }
 
   public CapturedCompanion(PlayerCompanionVariant variant) {
@@ -246,9 +240,6 @@ public class CapturedCompanion extends Item {
     if (entityType != null) {
       Entity entity = entityType.create(level);
       if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-        if (this.color != null) {
-          playerCompanionEntity.setColor(this.color);
-        }
         if (this.variant != null && this.variant != PlayerCompanionVariant.DEFAULT) {
           playerCompanionEntity.setVariant(this.variant);
         }

@@ -100,6 +100,9 @@ public class ModItems {
           () -> new SmallGhastItem(PlayerCompanionVariant.DEFAULT));
 
   // Slimes
+  public static final RegistryObject<Item> SMALL_SLIME_DEFAULT =
+      ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new SmallSlimeItem(PlayerCompanionVariant.DEFAULT));
   public static final RegistryObject<Item> SMALL_SLIME_BLACK =
       ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.BLACK.getSuffix(),
           () -> new SmallSlimeItem(PlayerCompanionVariant.BLACK));

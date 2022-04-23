@@ -90,8 +90,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.BOOLEAN);
   private static final EntityDataAccessor<Boolean> DATA_IS_CHARGING =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.BOOLEAN);
-  private static final EntityDataAccessor<Integer> DATA_COLOR =
-      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_EXPERIENCE =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_EXPERIENCE_LEVEL =
@@ -109,7 +107,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   // Stored Entity Data Tags
   private static final String DATA_ACTIVE_TAG = "Active";
-  private static final String DATA_COLOR_TAG = "Color";
   private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
   private static final String DATA_CUSTOM_TEXTURE_SKIN_TAG = "CustomTextureSkin";
   private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
@@ -243,14 +240,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void setCharging(boolean charging) {
     this.entityData.set(DATA_IS_CHARGING, charging);
-  }
-
-  public DyeColor getColor() {
-    return DyeColor.byId(this.entityData.get(DATA_COLOR));
-  }
-
-  public void setColor(DyeColor dyeColor) {
-    this.entityData.set(DATA_COLOR, dyeColor.getId());
   }
 
   public boolean isActive() {
@@ -772,7 +761,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
   protected void defineSynchedData() {
     super.defineSynchedData();
     this.entityData.define(DATA_ACTIVE, true);
-    this.entityData.define(DATA_COLOR, DyeColor.GREEN.getId());
     this.entityData.define(DATA_CUSTOM_COMPANION_NAME, getRandomName());
     this.entityData.define(DATA_EXPERIENCE, 1);
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 1);
@@ -786,7 +774,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public void addAdditionalSaveData(CompoundTag compoundTag) {
     super.addAdditionalSaveData(compoundTag);
     compoundTag.putBoolean(DATA_ACTIVE_TAG, this.isActive());
-    compoundTag.putByte(DATA_COLOR_TAG, (byte) this.getColor().getId());
     compoundTag.putInt(DATA_EXPERIENCE_LEVEL_TAG, this.getExperienceLevel());
     compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
@@ -799,9 +786,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public void readAdditionalSaveData(CompoundTag compoundTag) {
     super.readAdditionalSaveData(compoundTag);
     this.setActive(compoundTag.getBoolean(DATA_ACTIVE_TAG));
-    if (compoundTag.contains(DATA_COLOR_TAG, 99)) {
-      this.setColor(DyeColor.byId(compoundTag.getInt(DATA_COLOR_TAG)));
-    }
 
     // Handle experience, level and relevant modifier.
     this.setExperienceLevel(Math.max(compoundTag.getInt(DATA_EXPERIENCE_LEVEL_TAG), 1));

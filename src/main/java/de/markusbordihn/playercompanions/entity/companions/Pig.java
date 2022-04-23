@@ -74,7 +74,7 @@ public class Pig extends CollectorEntityWalking {
   // Variants
   public static final String SPOTTED_VARIANT = "spotted";
 
-  // Entity texture by color
+  // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(

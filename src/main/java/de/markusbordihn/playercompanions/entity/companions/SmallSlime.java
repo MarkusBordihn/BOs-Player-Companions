@@ -65,9 +65,11 @@ public class SmallSlime extends FollowerEntityJumping {
   public static final String NAME = "Small Slime";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
 
-  // Entity texture by color
+  // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/small_slime/small_slime_green.png"));
         hashMap.put(PlayerCompanionVariant.BLACK, new ResourceLocation(Constants.MOD_ID,
             "textures/entity/small_slime/small_slime_black.png"));
         hashMap.put(PlayerCompanionVariant.BLUE, new ResourceLocation(Constants.MOD_ID,
@@ -105,6 +107,7 @@ public class SmallSlime extends FollowerEntityJumping {
   // Companion Item by color
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_SLIME_GREEN.get());
         hashMap.put(PlayerCompanionVariant.BLACK, ModItems.SMALL_SLIME_BLACK.get());
         hashMap.put(PlayerCompanionVariant.BLUE, ModItems.SMALL_SLIME_BLUE.get());
         hashMap.put(PlayerCompanionVariant.BROWN, ModItems.SMALL_SLIME_BROWN.get());

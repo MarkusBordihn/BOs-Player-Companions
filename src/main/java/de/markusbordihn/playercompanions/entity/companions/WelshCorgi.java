@@ -65,7 +65,7 @@ public class WelshCorgi extends SupporterWalking {
   public static final String NAME = "Welsh Corgi";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
 
-  // Entity texture by color
+  // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(

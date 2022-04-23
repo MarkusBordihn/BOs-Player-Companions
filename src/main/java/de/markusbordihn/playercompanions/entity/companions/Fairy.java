@@ -75,7 +75,7 @@ public class Fairy extends HealerEntityFlyingAround {
   public static final String NAME = "Fairy";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.CAKE, Items.COOKIE);
 
-  // Entity texture by color
+  // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,

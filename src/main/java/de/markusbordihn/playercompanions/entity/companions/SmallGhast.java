@@ -70,10 +70,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
@@ -84,7 +80,6 @@ import de.markusbordihn.playercompanions.entity.ai.goal.ShootLargeFireballGoal;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFloating;
 import de.markusbordihn.playercompanions.item.ModItems;
 
-@EventBusSubscriber
 public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
@@ -98,7 +93,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   // Config settings
   private static int explosionPower = COMMON.smallGhastExplosionPower.get();
 
-  // Entity texture by color
+  // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,
@@ -115,11 +110,6 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   public SmallGhast(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
-  }
-
-  @SubscribeEvent
-  public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    explosionPower = COMMON.smallGhastExplosionPower.get();
   }
 
   static class SmallGhastLookGoal extends Goal {

@@ -50,6 +50,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.RandomFlyAroundGoal;
 import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityFlying;
 import de.markusbordihn.playercompanions.item.ModItems;
 
@@ -98,6 +99,7 @@ public class Firefly extends FollowerEntityFlying {
     this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
     this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0D, 6.0F, 2.0F, false));
     this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
+    this.goalSelector.addGoal(10, new RandomFlyAroundGoal(this));
     this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
   }
 

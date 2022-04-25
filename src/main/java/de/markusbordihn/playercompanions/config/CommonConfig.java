@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import org.apache.logging.log4j.LogManager;
@@ -65,7 +66,6 @@ public class CommonConfig {
 
     public final ForgeConfigSpec.BooleanValue respawnOnDeath;
     public final ForgeConfigSpec.IntValue respawnDelay;
-    public final ForgeConfigSpec.BooleanValue enableCompanionGhost;
     public final ForgeConfigSpec.BooleanValue friendlyFire;
 
     public final ForgeConfigSpec.IntValue maxHealth;
@@ -162,8 +162,6 @@ public class CommonConfig {
       friendlyFire = builder
           .comment("Allow's damage to an owned companion by the owner or their owned companions.")
           .define("friendlyFire", false);
-      enableCompanionGhost = builder.comment("Enable / Disable ghosts for died player companions.")
-          .define("enableCompanionGhost", true);
       builder.pop();
 
       builder.push("Level scaling");

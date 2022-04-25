@@ -40,8 +40,6 @@ public class ClientSetup {
     log.info("{} Client setup ...", Constants.LOG_REGISTER_PREFIX);
 
     event.enqueueWork(() -> {
-      ItemBlockRenderTypes.setRenderLayer(ModBlocks.COMPANION_GHOST.get(),
-          RenderType.translucent());
       ItemBlockRenderTypes.setRenderLayer(ModBlocks.LIGHT_BLOCK.get(), RenderType.cutoutMipped());
     });
   }

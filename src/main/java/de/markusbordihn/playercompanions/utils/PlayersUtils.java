@@ -50,6 +50,7 @@ public class PlayersUtils {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String USER_REGEX = "\\w.*";
+  private static final String TEXTURES_STRING = "textures";
 
   protected PlayersUtils() {}
 
@@ -113,7 +114,7 @@ public class PlayersUtils {
         for (JsonElement property : properties) {
           JsonObject propertyObject = property.getAsJsonObject();
           if (propertyObject.has("name")
-              && "textures".equals(propertyObject.get("name").getAsString())
+              && TEXTURES_STRING.equals(propertyObject.get("name").getAsString())
               && propertyObject.has("value")) {
             String textureData =
                 new String(Base64.getDecoder().decode(propertyObject.get("value").getAsString()));
@@ -139,8 +140,8 @@ public class PlayersUtils {
     if (jsonElement != null && jsonElement.isJsonObject()) {
       JsonObject jsonObject = jsonElement.getAsJsonObject();
       log.debug("getUserTextureFromTextureData: {}", jsonObject);
-      if (jsonObject.has("textures")) {
-        JsonObject textureObject = jsonObject.getAsJsonObject("textures");
+      if (jsonObject.has(TEXTURES_STRING)) {
+        JsonObject textureObject = jsonObject.getAsJsonObject(TEXTURES_STRING);
         if (textureObject.has("SKIN")) {
           JsonObject skinObject = textureObject.getAsJsonObject("SKIN");
           if (skinObject.has("url")) {

@@ -20,8 +20,10 @@
 package de.markusbordihn.playercompanions.sounds;
 
 import de.markusbordihn.playercompanions.Constants;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;

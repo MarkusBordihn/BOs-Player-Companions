@@ -1,0 +1,6 @@
+{
+  "parent": "player_companions:item/template/samurai",
+  "textures": {
+    "texture": "player_companions:entity/samurai/samurai_black"
+  }
+}

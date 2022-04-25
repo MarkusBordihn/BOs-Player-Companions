@@ -80,12 +80,12 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(
-            PlayerCompanionVariant.DEFAULT,
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_default.png"));
-        hashMap.put(
-            PlayerCompanionVariant.BLUE,
+        hashMap.put(PlayerCompanionVariant.BLUE,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_blue.png"));
+        hashMap.put(PlayerCompanionVariant.BLACK,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_black.png"));
       });
 
   // Companion Item by variant
@@ -93,6 +93,7 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SAMURAI_DEFAULT.get());
         hashMap.put(PlayerCompanionVariant.BLUE, ModItems.SAMURAI_BLUE.get());
+        hashMap.put(PlayerCompanionVariant.BLACK, ModItems.SAMURAI_BLACK.get());
       });
 
   public Samurai(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {

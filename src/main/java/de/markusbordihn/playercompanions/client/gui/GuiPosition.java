@@ -21,8 +21,8 @@ package de.markusbordihn.playercompanions.client.gui;
 
 public enum GuiPosition {
   BOTTOM,
-  BOTTON_RIGHT,
-  BUTTON_LEFT,
+  BOTTOM_LEFT,
+  BOTTOM_RIGHT,
   HOTBAR_LEFT,
   HOTBAR_RIGHT,
   LEFT,

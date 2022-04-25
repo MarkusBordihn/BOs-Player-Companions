@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.item;
 
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.MaterialColor;
@@ -36,7 +35,6 @@ import de.markusbordihn.playercompanions.item.companions.*;
 import de.markusbordihn.playercompanions.item.tameitems.*;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 import de.markusbordihn.playercompanions.Annotations.TemplateEntryPoint;
-import de.markusbordihn.playercompanions.block.ModBlocks;
 
 public class ModItems {
 
@@ -80,6 +78,9 @@ public class ModItems {
   public static final RegistryObject<Item> SAMURAI_BLUE =
       ITEMS.register(SamuraiItem.ID + PlayerCompanionVariant.BLUE.getSuffix(),
           () -> new SamuraiItem(PlayerCompanionVariant.BLUE));
+  public static final RegistryObject<Item> SAMURAI_BLACK =
+      ITEMS.register(SamuraiItem.ID + PlayerCompanionVariant.BLACK.getSuffix(),
+          () -> new SamuraiItem(PlayerCompanionVariant.BLACK));
 
   // Pigs
   public static final RegistryObject<Item> PIG_DEFAULT =
@@ -185,9 +186,6 @@ public class ModItems {
       ITEMS.register("tame_wheat_seeds", TameWheatSeeds::new);
 
   @TemplateEntryPoint("Register Block Items")
-
-  public static final RegistryObject<Item> COMPANION_GHOST = ITEMS.register("companion_ghost",
-      () -> new BlockItem(ModBlocks.COMPANION_GHOST.get(), new Item.Properties()));
 
   @TemplateEntryPoint("Register Spawn Eggs")
   public static final RegistryObject<Item> DOBUTSU_SPAWN_EGG = ITEMS.register("dobutsu_spawn_egg",

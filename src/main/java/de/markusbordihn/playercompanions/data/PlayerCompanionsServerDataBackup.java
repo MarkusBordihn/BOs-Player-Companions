@@ -32,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.world.level.storage.LevelResource;
+
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import de.markusbordihn.playercompanions.Constants;

@@ -94,6 +94,9 @@ public class ModItems {
   public static final RegistryObject<Item> ROOSTER_DEFAULT =
       ITEMS.register(RoosterItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
           () -> new RoosterItem(PlayerCompanionVariant.DEFAULT));
+  public static final RegistryObject<Item> ROOSTER_MIXED =
+      ITEMS.register(RoosterItem.ID + PlayerCompanionVariant.MIXED.getSuffix(),
+          () -> new RoosterItem(PlayerCompanionVariant.MIXED));
 
   // Small Ghast
   public static final RegistryObject<Item> SMALL_GHAST_DEFAULT =

@@ -68,6 +68,9 @@ public class AvoidCreeperGoal extends PlayerCompanionGoal {
 
   @Override
   public boolean canUse() {
+    if (!this.playerCompanionEntity.hasOwnerAndIsAlive()) {
+      return false;
+    }
     this.creeperToAvoid =
         this.playerCompanionEntity.level.getNearestEntity(
             this.playerCompanionEntity.level.getEntitiesOfClass(Creeper.class,

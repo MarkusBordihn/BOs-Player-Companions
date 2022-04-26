@@ -74,12 +74,15 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_default.png"));
+        hashMap.put(PlayerCompanionVariant.MIXED,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_mixed.png"));
       });
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.ROOSTER_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.MIXED, ModItems.ROOSTER_MIXED.get());
       });
 
   public Rooster(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {

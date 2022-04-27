@@ -67,6 +67,7 @@ Most of the companions could be controlled with the following controls:
 - **CTRL + Right Click** (on Player Companion with empty Hand or Weapon) Order to sit / Un-order to sit
 - **ALT + Right Click** (on Player Companion with empty Hand or Weapon) Change Aggressive status like passive, neutral, aggressive
 - **Right Click** (on Collector with empty hand or normal Block) Open Inventory
+- **Right Click** (with Player Companion Item) Order to position
 - **SHIFT + Right Click** (with empty hand) Pet Companion
 
 ### Order to a specific position

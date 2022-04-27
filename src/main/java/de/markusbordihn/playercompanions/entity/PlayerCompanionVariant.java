@@ -39,6 +39,7 @@ public enum PlayerCompanionVariant {
   LIME,
   MAGENTA,
   MIXED,
+  NONE,
   ORANGE,
   PINK,
   PURPLE,
@@ -54,7 +55,7 @@ public enum PlayerCompanionVariant {
       try {
         return valueOf(value);
       } catch (IllegalArgumentException exception) {
-        log.warn("Unable to find valid variant for {}!", value);
+        log.warn("Unable to find a valid variant for {}!", value);
       }
     }
     return PlayerCompanionVariant.DEFAULT;

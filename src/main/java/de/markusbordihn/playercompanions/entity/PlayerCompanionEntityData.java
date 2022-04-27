@@ -131,7 +131,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   // Cache
   private ResourceLocation textureCache = null;
   private ResourceLocation textureCustomCache = null;
-  private PlayerCompanionVariant textureCustomCacheVariant = null;
+  private PlayerCompanionVariant textureCustomCacheVariant = PlayerCompanionVariant.NONE;
   private String lastCustomTextureSkin = null;
 
   // Temporary stats
@@ -766,7 +766,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.entityData.define(DATA_IS_CHARGING, false);
     this.entityData.define(DATA_RESPAWN_TIMER, 0);
     this.entityData.define(DATA_CUSTOM_TEXTURE_SKIN, "");
-    this.entityData.define(DATA_VARIANT, PlayerCompanionVariant.DEFAULT.name());
+    this.entityData.define(DATA_VARIANT, PlayerCompanionVariant.NONE.name());
   }
 
   @Override

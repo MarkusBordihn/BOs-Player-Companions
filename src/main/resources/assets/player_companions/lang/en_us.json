@@ -1,8 +1,4 @@
 {
-  "block.placeholder.text": "Template placeholder do not remove!",
-
-  "entity.placeholder.text": "Template placeholder do not remove!",
-
   "entity.player_companions.dobutsu": "Dobutsu",
   "entity.player_companions.fairy": "Fairy",
   "entity.player_companions.firefly": "Firefly",
@@ -47,8 +43,6 @@
 
   "text.player_companions.companion_is_near_you": "Companion %1$s is already spawned within 16 blocks from your position!",
 
-  "item.placeholder.text": "Template placeholder do not remove!",
-
   "item.player_companions.dobutsu_spawn_egg": "Dobutsu Spawn Egg",
   "item.player_companions.fairy_spawn_egg": "Fairy Spawn Egg",
   "item.player_companions.firefly_spawn_egg": "Firefly Spawn Egg",
@@ -73,7 +67,7 @@
   "item.player_companions.samurai_default": "Samurai",
   "item.player_companions.samurai_blue": "Samurai (blue)",
   "item.player_companions.samurai_black": "Samurai (black)",
-  "item.player_companions.small_ghast": "Small Ghast",
+  "item.player_companions.small_ghast_default": "Small Ghast",
   "item.player_companions.small_slime_default": "Small Slime",
   "item.player_companions.small_slime_black": "Small Slime (black)",
   "item.player_companions.small_slime_blue": "Small Slime (blue)",

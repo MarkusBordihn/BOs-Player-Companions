@@ -276,20 +276,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   public void finalizeSpawn() {
-    // Set random custom companion name, if not set.
-    if (!this.hasCustomName()) {
-      this.setCustomName(this.getCustomCompanionNameComponent());
-    }
-
-    // Set random texture variants, if available.
-    if (!hasCustomTextureSkin()) {
-      this.setVariant(this.getRandomVariant());
-    }
-
-    // Set random baby variants for more fun.
-    if (this.random.nextInt(10) == 0) {
-      this.setAge(-BABY_GROW_TIME);
-    }
 
     // Reset respawn timer, if needed.
     int respawnTimer = this.getRespawnTimer();
@@ -517,6 +503,21 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
     spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
         spawnGroupData, compoundTag);
+
+    // Set random custom companion name, if not set.
+    if (!this.hasCustomName()) {
+      this.setCustomName(this.getCustomCompanionNameComponent());
+    }
+
+    // Set random texture variants, if available.
+    if (!hasCustomTextureSkin() && this.getVariant() == PlayerCompanionVariant.NONE) {
+      this.setVariant(this.getRandomVariant());
+    }
+
+    // Set random baby variants for more fun.
+    if (this.random.nextInt(10) == 0) {
+      this.setAge(-BABY_GROW_TIME);
+    }
 
     finalizeSpawn();
     return spawnGroupData;

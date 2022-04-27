@@ -50,7 +50,6 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.RandomFlyAroundGoal;
 import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityFlying;
 import de.markusbordihn.playercompanions.item.ModItems;
 

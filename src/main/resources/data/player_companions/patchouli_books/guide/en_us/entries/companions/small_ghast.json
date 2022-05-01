@@ -1,6 +1,6 @@
 {
   "name": "Small Ghast",
-  "icon": "player_companions:small_ghast",
+  "icon": "player_companions:small_ghast_default",
   "category": "player_companions:companions",
   "pages": [
     {

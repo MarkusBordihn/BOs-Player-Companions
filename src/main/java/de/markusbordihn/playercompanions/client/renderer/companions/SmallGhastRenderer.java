@@ -30,7 +30,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import de.markusbordihn.playercompanions.client.model.SmallGhastModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 
 @OnlyIn(Dist.CLIENT)
@@ -42,8 +41,7 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<
 
   @Override
   public ResourceLocation getTextureLocation(SmallGhast entity) {
-    return entity.isCharging() ? entity.getTextureLocation(
-        PlayerCompanionVariant.DEFAULT_ACTION) : entity.getTextureLocation();
+    return entity.getTextureLocation();
   }
 
   @Override

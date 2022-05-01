@@ -1,6 +1,6 @@
 {
   "name": "Rooster",
-  "icon": "player_companions:rooster",
+  "icon": "player_companions:rooster_default",
   "category": "player_companions:companions",
   "pages": [
     {

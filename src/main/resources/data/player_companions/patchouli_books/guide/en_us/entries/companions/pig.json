@@ -1,6 +1,6 @@
 {
   "name": "Pig",
-  "icon": "player_companions:pig",
+  "icon": "player_companions:pig_default",
   "category": "player_companions:companions",
   "pages": [
     {

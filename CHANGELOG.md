@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.05.01
+
+- Finalized first release candidate.
+- Unified companions for easier integration and maintenance.
+
 ### 2022.04.22
 
 - Added idle status which improves performance by 20%-50% for unowned player companions.

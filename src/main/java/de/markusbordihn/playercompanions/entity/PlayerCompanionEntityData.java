@@ -222,7 +222,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public Item getCompanionItem() {
-    return companionItemByVariant.get(this.getVariant());
+    return companionItemByVariant.getOrDefault(this.getVariant(),
+        companionItemByVariant.get(PlayerCompanionVariant.DEFAULT));
   }
 
   public ItemStack getCompanionTypeIcon() {
@@ -391,7 +392,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public ResourceLocation getTextureLocation(PlayerCompanionVariant variant) {
-    if (level.isClientSide && !this.hasCustomTextureSkin() && textureCustomCacheVariant != variant) {
+    if (level.isClientSide && !this.hasCustomTextureSkin()
+        && textureCustomCacheVariant != variant) {
       this.setCustomTextureCache(textureByVariant.getOrDefault(variant,
           textureByVariant.get(PlayerCompanionVariant.DEFAULT)));
       textureCustomCacheVariant = variant;

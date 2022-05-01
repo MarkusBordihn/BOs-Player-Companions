@@ -1,6 +1,6 @@
 {
   "name": "Welsh Corgi",
-  "icon": "player_companions:welsh_corgi",
+  "icon": "player_companions:welsh_corgi_default",
   "category": "player_companions:companions",
   "pages": [
     {

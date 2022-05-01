@@ -1,6 +1,6 @@
 {
   "name": "Snail",
-  "icon": "player_companions:snail",
+  "icon": "player_companions:snail_default",
   "category": "player_companions:companions",
   "pages": [
     {

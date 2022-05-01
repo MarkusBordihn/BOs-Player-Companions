@@ -90,23 +90,22 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   public static final String NAME = "Small Ghast";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
 
+  // Alternative Texture
+  private static final ResourceLocation SHOOTING_TEXTURE =
+      new ResourceLocation("textures/entity/ghast/ghast_shooting.png");
+
   // Config settings
   private static int explosionPower = COMMON.smallGhastExplosionPower.get();
 
   // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation("textures/entity/ghast/ghast.png"));
-        hashMap.put(PlayerCompanionVariant.DEFAULT_ACTION,
-            new ResourceLocation("textures/entity/ghast/ghast_shooting.png"));
-      });
+      Util.make(Maps.newHashMap(), hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT,
+          new ResourceLocation("textures/entity/ghast/ghast.png")));
 
   // Companion Item by variant
-  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_GHAST_DEFAULT.get());
-      });
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT = Util.make(
+      Maps.newHashMap(),
+      hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_GHAST_DEFAULT.get()));
 
   public SmallGhast(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
@@ -283,7 +282,12 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   @Override
   public int getEntityGuiTop() {
-    return 30;
+    return 42;
+  }
+
+  @Override
+  public ResourceLocation getTextureLocation() {
+    return this.isCharging() ? SHOOTING_TEXTURE : super.getTextureLocation();
   }
 
 }

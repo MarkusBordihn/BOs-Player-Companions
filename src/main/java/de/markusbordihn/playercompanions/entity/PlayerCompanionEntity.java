@@ -277,6 +277,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   public void finalizeSpawn() {
 
+    // Reset charging, if needed.
+    if (this.isCharging()) {
+      this.setCharging(false);
+    }
+
     // Reset respawn timer, if needed.
     int respawnTimer = this.getRespawnTimer();
     if (respawnTimer > 0 && respawnTimer < java.time.Instant.now().getEpochSecond()) {

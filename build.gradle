@@ -1,17 +1,5 @@
 buildscript {
   repositories {
-    maven {
-      url = 'http://revy:49161/repository/MinecraftForge/'
-      allowInsecureProtocol = true
-    }
-    maven {
-      url = 'http://revy:49161/repository/maven-central/'
-      allowInsecureProtocol = true
-    }
-    maven {
-      url = 'http://revy:49161/repository/jcenter/'
-      allowInsecureProtocol = true
-    }
     maven { url = 'https://maven.minecraftforge.net' }
     mavenCentral()
     jcenter()
@@ -131,10 +119,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 // Curse Maven
 repositories {
   maven {
-    url "http://revy:49161/repository/CurseMaven/"
-    allowInsecureProtocol = true
-  }
-  maven {
     url "https://www.cursemaven.com"
     content {
         includeGroup "curse.maven"
@@ -147,7 +131,7 @@ dependencies {
   // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
   // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-  minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
+  minecraft 'net.minecraftforge:forge:1.18.2-40.1.19'
 
   // Jade Integration
   compileOnly fg.deobf("curse.maven:jade-324717:3761542")

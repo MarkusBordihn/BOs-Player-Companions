@@ -73,7 +73,7 @@ public class SmallGhastModel<T extends TamableAnimal> extends AgeableListModel<T
 
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
-    if (entity.isInSittingPose()) {
+    if (!entity.isInSittingPose()) {
       for (int i = 0; i < this.tentacles.length; ++i) {
         this.tentacles[i].xRot = 0.2F * Mth.sin(ageInTicks * 0.3F + i) + 0.4F;
       }
@@ -83,11 +83,11 @@ public class SmallGhastModel<T extends TamableAnimal> extends AgeableListModel<T
   @Override
   public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
     if (entity.isInSittingPose()) {
-      this.body.setPos(0.0F, 30.0F, 0.0F);
+      this.body.setPos(0.0F, 34.0F, 0.0F);
       for (int i = 0; i < this.tentacles.length; ++i) {
         float f = (((i % 3) - (i / 3F % 2) * 0.5F + 0.25F) / 2.0F * 2.0F - 1.0F) * 5.0F;
         float f1 = ((i / 3F) / 2.0F * 2.0F - 1.3F) * 5.0F;
-        this.tentacles[i].setPos(f, 16.6F, f1 - 0.5F);
+        this.tentacles[i].setPos(f, 20.6F, f1 - 0.5F);
         this.tentacles[i].xRot = 1.40F;
       }
     } else {
@@ -96,7 +96,6 @@ public class SmallGhastModel<T extends TamableAnimal> extends AgeableListModel<T
         float f = (((i % 3) - (i / 3F % 2) * 0.5F + 0.25F) / 2.0F * 2.0F - 1.0F) * 5.0F;
         float f1 = ((i / 3F) / 2.0F * 2.0F - 1.3F) * 5.0F;
         this.tentacles[i].setPos(f, 2.6F, f1);
-        this.tentacles[i].visible = true;
       }
     }
   }

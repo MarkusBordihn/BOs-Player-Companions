@@ -108,9 +108,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Temporary states
   private boolean wasOnGround;
 
-  public PlayerCompanionEntity(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
-      Map<PlayerCompanionVariant,Item> companionItemByVariant) {
+  public PlayerCompanionEntity(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
+      Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, textureByVariant, companionItemByVariant);
 
     // Set Reference to this object for easier sync and other tasks.
@@ -180,7 +180,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       float randomOffset = this.random.nextFloat() * 0.5F + 0.5F;
       float randomOffsetX = Mth.sin(randomCircleDistance) * 0.5F * randomOffset;
       float randomOffsetZ = Mth.cos(randomCircleDistance) * 0.5F * randomOffset;
-      this.level.addParticle(particleOptions, this.getX() + randomOffsetX, this.getY(),
+      this.level.addParticle(particleOptions, this.getX() + randomOffsetX, this.getY() + 0.5,
           this.getZ() + randomOffsetZ, 0.0D, 0.0D, 0.0D);
     }
   }
@@ -276,6 +276,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   public void finalizeSpawn() {
+
+    // Cache random custom companion name.
+    if (!this.hasCustomName()) {
+      this.setCustomName(this.getCustomCompanionNameComponent());
+    }
 
     // Reset charging, if needed.
     if (this.isCharging()) {
@@ -468,17 +473,22 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           return InteractionResult.SUCCESS;
         }
 
+      } else if (getTameItem() != null && itemStack.is(getTameItem()) && !this.isTame()) {
+        return InteractionResult.CONSUME;
       }
-
-      // Early return for other client side events.
-      boolean isOwnedOrTamed =
-          getTameItem() != null && itemStack.is(getTameItem()) && !this.isTame();
-      return isOwnedOrTamed ? InteractionResult.CONSUME : InteractionResult.PASS;
     }
 
     // Health companion with food item, from any player.
-    if (this.canEat(itemStack) && this.eat(itemStack, player)) {
-      return InteractionResult.sidedSuccess(this.level.isClientSide);
+    if (this.isFood(itemStack)) {
+      if (this.canEat(itemStack)) {
+        if (this.eat(itemStack, player)) {
+          this.addParticle(ParticleTypes.HEART);
+          return InteractionResult.sidedSuccess(this.level.isClientSide);
+        }
+      } else {
+        log.info("Fully staffed ...");
+      }
+      return InteractionResult.PASS;
     }
 
     return super.mobInteract(player, hand);
@@ -508,11 +518,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
     spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
         spawnGroupData, compoundTag);
-
-    // Set random custom companion name, if not set.
-    if (!this.hasCustomName()) {
-      this.setCustomName(this.getCustomCompanionNameComponent());
-    }
 
     // Set random texture variants, if available.
     if (!hasCustomTextureSkin() && this.getVariant() == PlayerCompanionVariant.NONE) {

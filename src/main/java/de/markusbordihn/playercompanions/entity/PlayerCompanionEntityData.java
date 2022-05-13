@@ -805,6 +805,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
     // Handle custom name.
     if (compoundTag.contains(DATA_CUSTOM_COMPANION_NAME_TAG)) {
       this.setCustomCompanionName(compoundTag.getString(DATA_CUSTOM_COMPANION_NAME_TAG));
+      if (!this.hasCustomName()) {
+        this.setCustomName(this.getCustomCompanionNameComponent());
+      }
     }
 
     // Handle hand items for additional effects like light effects.

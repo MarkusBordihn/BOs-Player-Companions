@@ -5,6 +5,12 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.05.13
+
+- Fixed missing particle animations for feeding player companions
+- Fixed crash with creative companion items
+- Removed duplicated call of rendering the background for the UI
+
 ### 2022.05.01
 
 - Finalized first release candidate.

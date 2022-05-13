@@ -102,7 +102,8 @@ public class CompanionTameItem extends Item {
   }
 
   public boolean canTameCompanion(LivingEntity livingEntity) {
-    return livingEntity instanceof PlayerCompanionEntity;
+    return livingEntity instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.isTamable();
   }
 
   public boolean canTameCompanionType(String mobType) {

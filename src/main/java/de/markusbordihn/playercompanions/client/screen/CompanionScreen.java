@@ -321,11 +321,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
   @Override
   public void render(PoseStack poseStack, int x, int y, float partialTicks) {
-    this.renderBackground(poseStack);
+    super.render(poseStack, x, y, partialTicks);
     this.xMouse = x;
     this.yMouse = y;
     boolean renderTooltip = true;
-    super.render(poseStack, x, y, partialTicks);
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
       renderEntityStats(playerCompanionEntity, poseStack, this.leftPos, this.topPos);
       if (this.showTextureSettings) {

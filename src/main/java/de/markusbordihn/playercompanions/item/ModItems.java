@@ -192,46 +192,46 @@ public class ModItems {
 
   @TemplateEntryPoint("Register Spawn Eggs")
   public static final RegistryObject<Item> DOBUTSU_SPAWN_EGG = ITEMS.register("dobutsu_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.DOBUTSU::get, MaterialColor.GOLD.col,
+      () -> new ForgeSpawnEggItem(ModEntityType.DOBUTSU::get, MaterialColor.COLOR_PURPLE.col,
           MaterialColor.COLOR_PURPLE.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> FAIRY_SPAWN_EGG = ITEMS.register("fairy_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.FAIRY::get, MaterialColor.GOLD.col,
-          MaterialColor.COLOR_PURPLE.col,
+      () -> new ForgeSpawnEggItem(ModEntityType.FAIRY::get, MaterialColor.COLOR_PURPLE.col,
+          MaterialColor.COLOR_BLUE.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> FIREFLY_SPAWN_EGG = ITEMS.register("firefly_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.FIREFLY::get, MaterialColor.GOLD.col,
+      () -> new ForgeSpawnEggItem(ModEntityType.FIREFLY::get, MaterialColor.COLOR_YELLOW.col,
           MaterialColor.COLOR_ORANGE.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> PIG_SPAWN_EGG = ITEMS.register("pig_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.GOLD.col,
+      () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.COLOR_PINK.col,
           MaterialColor.COLOR_PINK.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> ROOSTER_SPAWN_EGG = ITEMS.register("rooster_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.ROOSTER::get, MaterialColor.GOLD.col,
+      () -> new ForgeSpawnEggItem(ModEntityType.ROOSTER::get, MaterialColor.COLOR_ORANGE.col,
           MaterialColor.COLOR_RED.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SAMURAI_SPAWN_EGG = ITEMS.register("samurai_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.SAMURAI::get, MaterialColor.GOLD.col,
+      () -> new ForgeSpawnEggItem(ModEntityType.SAMURAI::get, MaterialColor.COLOR_BLACK.col,
           MaterialColor.COLOR_RED.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SMALL_GHAST_SPAWN_EGG =
       ITEMS.register("small_ghast_spawn_egg",
-          () -> new ForgeSpawnEggItem(ModEntityType.SMALL_GHAST::get, MaterialColor.GOLD.col,
+          () -> new ForgeSpawnEggItem(ModEntityType.SMALL_GHAST::get, MaterialColor.SNOW.col,
               MaterialColor.SNOW.col,
               new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SMALL_SLIME_SPAWN_EGG =
       ITEMS.register("small_slime_spawn_egg",
-          () -> new ForgeSpawnEggItem(ModEntityType.SMALL_SLIME::get, MaterialColor.GOLD.col,
+          () -> new ForgeSpawnEggItem(ModEntityType.SMALL_SLIME::get, MaterialColor.COLOR_GREEN.col,
               MaterialColor.COLOR_GREEN.col,
               new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> SNAIL_SPAWN_EGG = ITEMS.register("snail_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.GOLD.col,
+      () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.COLOR_ORANGE.col,
           MaterialColor.COLOR_BLUE.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> WELSH_CORGI_SPAWN_EGG =
       ITEMS.register("welsh_corgi_spawn_egg",
-          () -> new ForgeSpawnEggItem(ModEntityType.WELSH_CORGI::get, MaterialColor.GOLD.col,
-              MaterialColor.COLOR_ORANGE.col,
+          () -> new ForgeSpawnEggItem(ModEntityType.WELSH_CORGI::get,
+              MaterialColor.COLOR_ORANGE.col, MaterialColor.COLOR_ORANGE.col,
               new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
 }

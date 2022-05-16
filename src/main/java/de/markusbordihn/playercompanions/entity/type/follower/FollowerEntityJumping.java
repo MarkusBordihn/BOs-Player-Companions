@@ -25,7 +25,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 import de.markusbordihn.playercompanions.entity.AggressionLevel;
@@ -33,6 +32,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityJumping;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionTypeIcon;
 
 public class FollowerEntityJumping extends PlayerCompanionEntityJumping {
 
@@ -42,12 +42,20 @@ public class FollowerEntityJumping extends PlayerCompanionEntityJumping {
       Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, textureByVariant, companionItemByVariant);
-    this.setCompanionType(PlayerCompanionType.FOLLOWER);
-    this.setCompanionTypeIcon(new ItemStack(Items.CARROT_ON_A_STICK));
     this.setAggressionLevel(AggressionLevel.PASSIVE);
 
     // Shared Follower Features
     this.followerFeatures = new FollowerFeatures(this, level);
+  }
+
+  @Override
+  public PlayerCompanionType getCompanionType() {
+    return PlayerCompanionType.FOLLOWER;
+  }
+
+  @Override
+  public ItemStack getCompanionTypeIcon() {
+    return PlayerCompanionTypeIcon.FOLLOWER;
   }
 
   @Override

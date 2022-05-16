@@ -137,8 +137,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
   // Temporary stats
   private BlockPos orderedToPosition = null;
   private AggressionLevel aggressionLevel = AggressionLevel.UNKNOWN;
-  private ItemStack companionTypeIcon = new ItemStack(Items.BONE);
-  private PlayerCompanionType companionType = PlayerCompanionType.UNKNOWN;
   private String dimensionName = "";
   private boolean isDataSyncNeeded = false;
   private boolean sitOnShoulder = false;
@@ -214,11 +212,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public PlayerCompanionType getCompanionType() {
-    return this.companionType;
-  }
-
-  public void setCompanionType(PlayerCompanionType type) {
-    this.companionType = type;
+    return PlayerCompanionType.UNKNOWN;
   }
 
   public Item getCompanionItem() {
@@ -227,11 +221,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public ItemStack getCompanionTypeIcon() {
-    return this.companionTypeIcon;
-  }
-
-  public void setCompanionTypeIcon(ItemStack icon) {
-    this.companionTypeIcon = icon;
+    return null;
   }
 
   public boolean isCharging() {

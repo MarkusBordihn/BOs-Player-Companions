@@ -95,7 +95,7 @@ public class PlayerCompanionEntityJumpControl extends MoveControl {
         BlockPos blockPos = this.mob.blockPosition();
         BlockState blockState = this.mob.level.getBlockState(blockPos);
         VoxelShape voxelShape = blockState.getCollisionShape(this.mob.level, blockPos);
-        if (newY > this.mob.maxUpStep
+        if (newY > this.mob.getStepHeight()
             && newX * newX + newZ * newZ < Math.max(1.0F, this.mob.getBbWidth())
             || !voxelShape.isEmpty()
                 && this.mob.getY() < voxelShape.max(Direction.Axis.Y) + blockPos.getY()

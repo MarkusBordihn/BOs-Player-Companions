@@ -25,7 +25,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 import de.markusbordihn.playercompanions.entity.AggressionLevel;
@@ -33,6 +32,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityFloating;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionTypeIcon;
 
 public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
 
@@ -42,12 +42,20 @@ public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
       Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, textureByVariant, companionItemByVariant);
-    this.setCompanionType(PlayerCompanionType.COLLECTOR);
-    this.setCompanionTypeIcon(new ItemStack(Items.CHEST));
     this.setAggressionLevel(AggressionLevel.PASSIVE_FLEE);
 
     // Shared Collector Features
     this.collectorFeatures = new CollectorFeatures(this, level);
+  }
+
+  @Override
+  public PlayerCompanionType getCompanionType() {
+    return PlayerCompanionType.COLLECTOR;
+  }
+
+  @Override
+  public ItemStack getCompanionTypeIcon() {
+    return PlayerCompanionTypeIcon.COLLECTOR;
   }
 
   @Override

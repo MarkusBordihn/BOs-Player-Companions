@@ -177,7 +177,7 @@ public class CompanionTameItem extends Item {
               .withStyle(ChatFormatting.DARK_GREEN);
       for (String tamableMob : tameableMobTypes) {
         TranslatableComponent acceptedMobName = TranslatableText.getEntityName(tamableMob);
-        if (!acceptedMobName.getString().isBlank()) {
+        if (acceptedMobName != null) {
           tameableMobTypeOverview.append(acceptedMobName).append(", ")
               .withStyle(ChatFormatting.DARK_GREEN);
         }

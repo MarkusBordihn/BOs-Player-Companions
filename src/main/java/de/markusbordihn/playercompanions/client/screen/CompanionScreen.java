@@ -321,6 +321,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
   @Override
   public void render(PoseStack poseStack, int x, int y, float partialTicks) {
+    this.renderBackground(poseStack);
     super.render(poseStack, x, y, partialTicks);
     this.xMouse = x;
     this.yMouse = y;

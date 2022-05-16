@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "player_companions:item/spawn_egg",
+    "layer1": "player_companions:item/spawn_egg_overlay"
+  }
+}

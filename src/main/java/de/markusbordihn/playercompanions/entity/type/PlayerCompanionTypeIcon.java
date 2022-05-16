@@ -17,35 +17,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.tabs;
+package de.markusbordihn.playercompanions.entity.type;
 
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
-import de.markusbordihn.playercompanions.item.ModItems;
+public class PlayerCompanionTypeIcon {
 
-public class PlayerCompanionsTab {
+  public static final ItemStack COLLECTOR = new ItemStack(Items.CHEST);
+  public static final ItemStack FOLLOWER = new ItemStack(Items.CARROT_ON_A_STICK);
+  public static final ItemStack GUARD = new ItemStack(Items.NETHERITE_SWORD);
+  public static final ItemStack HEALER = new ItemStack(Items.POTION);
+  public static final ItemStack SUPPORTER = new ItemStack(Items.ENCHANTED_BOOK);
 
-  protected PlayerCompanionsTab() {}
+  protected PlayerCompanionTypeIcon() {
 
-  public static final CreativeModeTab TAB_SPAWN_EGGS =
-      new CreativeModeTab("player_companions.spawn_eggs") {
-        public ItemStack makeIcon() {
-          return new ItemStack(ModItems.SMALL_SLIME_SPAWN_EGG.get());
-        }
-      };
-
-  public static final CreativeModeTab TAB_COMPANIONS = new CreativeModeTab("player_companions") {
-    public ItemStack makeIcon() {
-      return new ItemStack(ModItems.SMALL_SLIME_GREEN.get());
-    }
-  };
-
-  public static final CreativeModeTab TAB_TAME_ITEMS =
-      new CreativeModeTab("player_companions.tame_items") {
-        public ItemStack makeIcon() {
-          return new ItemStack(ModItems.TAME_APPLE.get());
-        }
-      };
+  }
 
 }

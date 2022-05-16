@@ -60,7 +60,7 @@ public class TranslatableText {
       if (!translatableComponent.getString().equals(key)) {
         return translatableComponent;
       }
-      return new TranslatableComponent("");
+      return null;
     });
   }
 
@@ -74,7 +74,7 @@ public class TranslatableText {
       if (!translatableComponent.getString().equals(itemName)) {
         return translatableComponent;
       }
-      return new TranslatableComponent("");
+      return null;
     });
   }
 

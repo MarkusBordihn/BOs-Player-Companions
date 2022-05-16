@@ -5,6 +5,13 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.05.14
+
+- Fixed missing description text for tame items.
+- Fixed missing ui background.
+- Added alternative design for spawn eggs.
+- Optimized code.
+
 ### 2022.05.13
 
 - Fixed missing particle animations for feeding player companions

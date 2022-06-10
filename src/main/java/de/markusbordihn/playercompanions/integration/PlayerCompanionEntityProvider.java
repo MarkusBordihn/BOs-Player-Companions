@@ -19,18 +19,17 @@
 
 package de.markusbordihn.playercompanions.integration;
 
-import mcp.mobius.waila.api.EntityAccessor;
-import mcp.mobius.waila.api.IEntityComponentProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
-import mcp.mobius.waila.api.ui.IElement;
-import mcp.mobius.waila.impl.ui.ElementHelper;
-
-import snownee.jade.VanillaPlugin;
+import snownee.jade.api.EntityAccessor;
+import snownee.jade.api.IEntityComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.IElement;
+import snownee.jade.impl.ui.ElementHelper;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.item.ItemStack;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -51,10 +50,10 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   @OnlyIn(Dist.CLIENT)
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
     if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
-      tooltip.add(new TextComponent("Type: " + playerCompanionEntity.getCompanionType()));
+      tooltip.add(Component.literal("Type: " + playerCompanionEntity.getCompanionType()));
       if (playerCompanionEntity.getOwner() != null) {
         PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
-        if (!config.get(VanillaPlugin.ANIMAL_OWNER)) {
+        if (accessor.getEntity() instanceof OwnableEntity) {
           String ownerName =
               UsernameCache.getLastKnownUsername(playerCompanionEntity.getOwnerUUID());
           if (ownerName == null) {
@@ -64,9 +63,9 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
               ownerName = playerCompanionEntity.getOwnerUUID().toString();
             }
           }
-          tooltip.add(new TextComponent("Owner: " + ownerName));
+          tooltip.add(Component.literal("Owner: " + ownerName));
         }
-        tooltip.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_level",
+        tooltip.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_level",
             playerCompanionEntity.getExperienceLevel(), playerCompanionEntity.getExperience(),
             Experience.getExperienceForNextLevel(playerCompanionEntity.getExperienceLevel())));
         if (data != null) {
@@ -75,23 +74,24 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
 
           if (respawnTimer <= 0) {
             if (data.isOrderedToPosition()) {
-              tooltip.add(new TextComponent("Order: To Position"));
+              tooltip.add(Component.literal("Order: To Position"));
             }
             if (data.isOrderedToSit()) {
-              tooltip.add(new TextComponent("Order: Sitting"));
+              tooltip.add(Component.literal("Order: Sitting"));
             } else {
-              tooltip.add(new TextComponent("Order: Following"));
+              tooltip.add(Component.literal("Order: Following"));
             }
           }
           // Display respawn timer, if any.
           if (respawnTimer >= 0) {
-            tooltip.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tamed_companion_respawn",
-                respawnTimer).withStyle(ChatFormatting.RED));
+            tooltip.add(Component
+                .translatable(Constants.TEXT_PREFIX + "tamed_companion_respawn", respawnTimer)
+                .withStyle(ChatFormatting.RED));
           }
 
           // Aggression Level
           tooltip.add(
-              new TextComponent("Aggression Level: " + data.getEntityAggressionLevel().name()));
+              Component.literal("Aggression Level: " + data.getEntityAggressionLevel().name()));
         }
       }
     }
@@ -104,6 +104,11 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
       ItemStack itemStack = new ItemStack(playerCompanionEntity.getCompanionItem());
       return new ElementHelper().item(itemStack, 2F);
     }
+    return null;
+  }
+
+  @Override
+  public ResourceLocation getUid() {
     return null;
   }
 

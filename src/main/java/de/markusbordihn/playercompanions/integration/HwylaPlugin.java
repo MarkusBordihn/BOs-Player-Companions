@@ -19,10 +19,9 @@
 
 package de.markusbordihn.playercompanions.integration;
 
-import mcp.mobius.waila.api.IWailaClientRegistration;
-import mcp.mobius.waila.api.IWailaPlugin;
-import mcp.mobius.waila.api.TooltipPosition;
-import mcp.mobius.waila.api.WailaPlugin;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityFloating;
@@ -36,20 +35,18 @@ public class HwylaPlugin implements IWailaPlugin {
   @Override
   public void registerClient(IWailaClientRegistration registration) {
     // General provider
-    registration.registerIconProvider(PlayerCompanionEntityProvider.INSTANCE,
+    registration.registerEntityIcon(PlayerCompanionEntityProvider.INSTANCE,
         PlayerCompanionEntity.class);
-    registration.registerComponentProvider(PlayerCompanionEntityProvider.INSTANCE,
-        TooltipPosition.BODY, PlayerCompanionEntity.class);
+    registration.registerEntityComponent(PlayerCompanionEntityProvider.INSTANCE,
+        PlayerCompanionEntity.class);
 
     // Type specific provider
-    registration.registerComponentProvider(CollectorEntityProvider.INSTANCE, TooltipPosition.BODY,
+    registration.registerEntityComponent(CollectorEntityProvider.INSTANCE,
         CollectorEntityFloating.class);
-    registration.registerComponentProvider(CollectorEntityProvider.INSTANCE, TooltipPosition.BODY,
+    registration.registerEntityComponent(CollectorEntityProvider.INSTANCE,
         CollectorEntityWalking.class);
-    registration.registerComponentProvider(GuardEntityProvider.INSTANCE, TooltipPosition.BODY,
-        GuardEntityFloating.class);
-    registration.registerComponentProvider(GuardEntityProvider.INSTANCE, TooltipPosition.BODY,
-        GuardEntityWalking.class);
+    registration.registerEntityComponent(GuardEntityProvider.INSTANCE, GuardEntityFloating.class);
+    registration.registerEntityComponent(GuardEntityProvider.INSTANCE, GuardEntityWalking.class);
   }
 
 }

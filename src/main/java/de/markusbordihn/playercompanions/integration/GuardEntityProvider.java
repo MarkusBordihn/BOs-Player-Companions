@@ -19,13 +19,14 @@
 
 package de.markusbordihn.playercompanions.integration;
 
-import mcp.mobius.waila.api.EntityAccessor;
-import mcp.mobius.waila.api.IEntityComponentProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
+import snownee.jade.api.EntityAccessor;
+import snownee.jade.api.IEntityComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -45,9 +46,16 @@ public class GuardEntityProvider implements IEntityComponentProvider {
     if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
       PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
       if (data != null && data.hasEntityTarget()) {
-        tooltip.add(new TranslatableComponent("Target: ").append(
-            TranslatableText.getEntityName(data.getEntityTarget())).withStyle(ChatFormatting.RED));
+        tooltip.add(Component.literal("Target: ")
+            .append(TranslatableText.getEntityName(data.getEntityTarget()))
+            .withStyle(ChatFormatting.RED));
       }
     }
   }
+
+  @Override
+  public ResourceLocation getUid() {
+    return null;
+  }
+
 }

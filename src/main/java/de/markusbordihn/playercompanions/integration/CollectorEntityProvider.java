@@ -19,12 +19,14 @@
 
 package de.markusbordihn.playercompanions.integration;
 
-import mcp.mobius.waila.api.EntityAccessor;
-import mcp.mobius.waila.api.IEntityComponentProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
+import snownee.jade.api.EntityAccessor;
+import snownee.jade.api.IEntityComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
 
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -38,7 +40,12 @@ public class CollectorEntityProvider implements IEntityComponentProvider {
   @OnlyIn(Dist.CLIENT)
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
     if (accessor.getEntity() instanceof PlayerCompanionEntity) {
-      tooltip.add(new TextComponent("Collector"));
+      tooltip.add(Component.literal("Collector"));
     }
+  }
+
+  @Override
+  public ResourceLocation getUid() {
+    return null;
   }
 }

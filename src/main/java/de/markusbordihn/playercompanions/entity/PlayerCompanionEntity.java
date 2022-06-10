@@ -31,7 +31,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -211,7 +210,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     if (!canEat(itemStack)) {
       return false;
     }
-    this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
+    this.gameEvent(GameEvent.EAT, this);
     SoundEvent eatingSound = this.getEatingSound(itemStack);
     if (eatingSound != null) {
       playSound(eatingSound, this.getSoundVolume(), this.getSoundPitch());
@@ -307,7 +306,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public void sendOwnerMessage(Component component) {
     LivingEntity owner = this.getOwner();
     if (component != null && owner != null) {
-      owner.sendMessage(component, Util.NIL_UUID);
+      owner.sendSystemMessage(component);
     }
   }
 
@@ -317,7 +316,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     if (level > 1) {
       addParticle(ParticleTypes.ENCHANT);
-      sendOwnerMessage(new TranslatableComponent(
+      sendOwnerMessage(Component.translatable(
           Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, LEVEL_UP_MESSAGE),
           this.getCustomCompanionName(), level));
     }
@@ -343,7 +342,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void stopRespawnTimer() {
     super.stopRespawnTimer();
-    sendOwnerMessage(new TranslatableComponent(
+    sendOwnerMessage(Component.translatable(
         Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, RESPAWN_MESSAGE),
         this.getCustomCompanionName()));
     setDataSyncNeeded();
@@ -604,11 +603,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         if (respawnDelay > 1) {
           setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
         }
-        sendOwnerMessage(new TranslatableComponent(
+        sendOwnerMessage(Component.translatable(
             Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_RESPAWN_MESSAGE),
             getCustomCompanionName(), respawnDelay));
       } else {
-        sendOwnerMessage(new TranslatableComponent(
+        sendOwnerMessage(Component.translatable(
             Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_NOT_RESPAWN_MESSAGE),
             getCustomCompanionName()));
         setActive(false);

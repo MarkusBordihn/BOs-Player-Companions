@@ -37,8 +37,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -114,14 +112,14 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     poseStack.scale(STATES_SCALE, STATES_SCALE, STATES_SCALE);
     leftPos = (int) ((x + 38) / STATES_SCALE);
     font.drawShadow(poseStack,
-        new TextComponent("" + (int) playerCompanionEntity.getHealth() + " / "
+        Component.literal("" + (int) playerCompanionEntity.getHealth() + " / "
             + (int) playerCompanionEntity.getMaxHealth()),
         leftPos, (int) ((y + 23) / STATES_SCALE), ChatFormatting.WHITE.getColor());
-    font.drawShadow(poseStack, new TextComponent("" + playerCompanionEntity.getArmorValue()),
+    font.drawShadow(poseStack, Component.literal("" + playerCompanionEntity.getArmorValue()),
         leftPos, (int) ((y + 41) / STATES_SCALE), ChatFormatting.WHITE.getColor());
-    font.drawShadow(poseStack, new TextComponent("" + playerCompanionEntity.getAttackDamage()),
+    font.drawShadow(poseStack, Component.literal("" + playerCompanionEntity.getAttackDamage()),
         leftPos, (int) ((y + 58) / STATES_SCALE), ChatFormatting.WHITE.getColor());
-    font.drawShadow(poseStack, new TextComponent("" + playerCompanionEntity.getExperienceLevel()),
+    font.drawShadow(poseStack, Component.literal("" + playerCompanionEntity.getExperienceLevel()),
         leftPos, (int) ((y + 95) / STATES_SCALE), ChatFormatting.WHITE.getColor());
     poseStack.popPose();
   }
@@ -185,10 +183,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     // Render Dialog
     renderDialogBg(poseStack, leftPosDialog, topPosDialog,
-        new TextComponent("Change Player Companion Skin"));
+        Component.literal("Change Player Companion Skin"));
 
     // Render Options
-    font.draw(poseStack, new TextComponent("Use a Player Name / Skin URL"), leftPosDialog + 10F,
+    font.draw(poseStack, Component.literal("Use a Player Name / Skin URL"), leftPosDialog + 10F,
         topPosDialog + 25F, 4210752);
 
     this.textureSkinLocationBox.render(poseStack, x, y, partialTicks);
@@ -250,7 +248,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
   private void validateTextureSkinLocation() {
     String textureSkinLocationValue = this.textureSkinLocationBox.getValue();
-    this.canTextureSkinLocationChange = java.time.Instant.now().getEpochSecond() >= this.nextTextureSkinLocationChange;
+    this.canTextureSkinLocationChange =
+        java.time.Instant.now().getEpochSecond() >= this.nextTextureSkinLocationChange;
 
     // Additional check to make sure that the server is not spammed with requests.
     if (this.canTextureSkinLocationChange) {
@@ -291,7 +290,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     // Texture Settings
     this.textureSkinLocationBox = new EditBox(this.font, leftPosDialog + 10, topPosDialog + 42, 190,
-        20, new TranslatableComponent("Texture URL"));
+        20, Component.literal("Texture URL"));
     this.textureSkinLocationBox.setMaxLength(256);
     this.textureSkinLocationBox.setValue(this.formerTextureSkinLocation);
     this.textureSkinLocationBox.setResponder(consumer -> this.validateTextureSkinLocation());
@@ -301,11 +300,11 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     // Texture Settings Buttons
     this.clearTextureSettingsButton =
         this.addRenderableWidget(new Button(this.leftPosDialog + 205, this.topPosDialog + 42, 20,
-            20, new TextComponent("X"), onPress -> this.clearTextureSkinLocation()));
+            20, Component.literal("X"), onPress -> this.clearTextureSkinLocation()));
     this.clearTextureSettingsButton.visible = false;
 
     this.saveTextureSettingsButton = this.addRenderableWidget(new Button(this.leftPosDialog + 10,
-        this.topPosDialog + 68, 80, 20, new TranslatableComponent("Save"), onPress -> {
+        this.topPosDialog + 68, 80, 20, Component.literal("Save"), onPress -> {
           this.saveTextureSkinLocation();
           this.showTextureSettings(false);
         }));
@@ -314,7 +313,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     this.closeTextureSettingsButton =
         this.addRenderableWidget(new Button(this.leftPosDialog + 145, this.topPosDialog + 68, 80,
-            20, new TranslatableComponent("Cancel"), onPress -> this.showTextureSettings(false)));
+            20, Component.literal("Cancel"), onPress -> this.showTextureSettings(false)));
     this.closeTextureSettingsButton.active = true;
     this.closeTextureSettingsButton.visible = false;
   }

@@ -37,7 +37,7 @@ public class RoosterRenderer extends MobRenderer<Rooster, RoosterModel<Rooster>>
 
   public RoosterRenderer(EntityRendererProvider.Context context) {
     super(context, new RoosterModel<>(context.bakeLayer(ClientRenderer.ROOSTER)), 0.35F);
-    this.addLayer(new HandItemLayer<>(this));
+    this.addLayer(new HandItemLayer<>(this, context.getItemInHandRenderer()));
   }
 
   @Override

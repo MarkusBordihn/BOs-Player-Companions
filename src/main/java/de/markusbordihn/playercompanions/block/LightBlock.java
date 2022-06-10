@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.block;
 
-import java.util.Random;
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -136,7 +136,8 @@ public class LightBlock extends Block {
   /** @deprecated */
   @Deprecated
   @Override
-  public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, Random random) {
+  public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos,
+      RandomSource random) {
     if (level.isClientSide) {
       return;
     }

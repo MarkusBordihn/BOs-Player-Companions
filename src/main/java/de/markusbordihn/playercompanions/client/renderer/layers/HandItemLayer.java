@@ -28,6 +28,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -44,11 +45,14 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
+  private final ItemInHandRenderer itemInHandRenderer;
+
   ModelPart rightHand;
   ModelPart leftHand;
 
-  public HandItemLayer(RenderLayerParent<T, M> parent) {
+  public HandItemLayer(RenderLayerParent<T, M> parent, ItemInHandRenderer itemInHandRenderer) {
     super(parent);
+    this.itemInHandRenderer = itemInHandRenderer;
   }
 
   @Override
@@ -83,8 +87,8 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
       }
       boolean flag = humanoidArm == HumanoidArm.LEFT;
       poseStack.translate((flag ? -1 : 1) / 16.0F, 0.125D, -0.625D);
-      Minecraft.getInstance().getItemInHandRenderer().renderItem(livingEntity, itemStack,
-          transformType, flag, poseStack, buffer, lightLevel);
+      itemInHandRenderer.renderItem(livingEntity, itemStack, transformType, flag, poseStack, buffer,
+          lightLevel);
       poseStack.popPose();
     }
   }

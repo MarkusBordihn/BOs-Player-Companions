@@ -39,6 +39,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
@@ -147,7 +148,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   }
 
   public static boolean checkGhastSpawnRules(EntityType<SmallGhast> entityType, LevelAccessor level,
-      MobSpawnType mobSpawnType, BlockPos blockPos, Random random) {
+      MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource random) {
     return level.getDifficulty() != Difficulty.PEACEFUL
         && checkMobSpawnRules(entityType, level, mobSpawnType, blockPos, random);
   }

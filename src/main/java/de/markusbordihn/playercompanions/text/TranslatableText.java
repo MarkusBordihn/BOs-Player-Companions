@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -41,8 +41,8 @@ public class TranslatableText {
 
   protected TranslatableText() {}
 
-  private static Map<String, TranslatableComponent> entityNameCache = new ConcurrentHashMap<>();
-  private static Map<String, TranslatableComponent> itemNameCache = new ConcurrentHashMap<>();
+  private static Map<String, Component> entityNameCache = new ConcurrentHashMap<>();
+  private static Map<String, Component> itemNameCache = new ConcurrentHashMap<>();
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
@@ -50,13 +50,13 @@ public class TranslatableText {
     itemNameCache = new ConcurrentHashMap<>();
   }
 
-  public static TranslatableComponent getEntityName(String entityName) {
+  public static Component getEntityName(String entityName) {
     // Format entity name to entity.x.y format for automatic translations.
     if (!entityName.contains("entity.") && entityName.contains(":")) {
       entityName = "entity." + entityName.replace(':', '.');
     }
     return entityNameCache.computeIfAbsent(entityName, key -> {
-      TranslatableComponent translatableComponent = new TranslatableComponent(key);
+      Component translatableComponent = Component.translatable(key);
       if (!translatableComponent.getString().equals(key)) {
         return translatableComponent;
       }
@@ -64,13 +64,13 @@ public class TranslatableText {
     });
   }
 
-  public static TranslatableComponent getItemName(ItemStack itemStack) {
+  public static Component getItemName(ItemStack itemStack) {
     return getItemName(itemStack.getDescriptionId());
   }
 
-  public static TranslatableComponent getItemName(String itemName) {
+  public static Component getItemName(String itemName) {
     return itemNameCache.computeIfAbsent(itemName, key -> {
-      TranslatableComponent translatableComponent = new TranslatableComponent(itemName);
+      Component translatableComponent = Component.translatable(itemName);
       if (!translatableComponent.getString().equals(itemName)) {
         return translatableComponent;
       }

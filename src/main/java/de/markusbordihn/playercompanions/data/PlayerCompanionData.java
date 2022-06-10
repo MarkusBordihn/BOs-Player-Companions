@@ -351,7 +351,7 @@ public class PlayerCompanionData {
     }
     this.blockPos = companion.blockPosition();
     this.level = companion.getLevel().dimension();
-    this.levelName = this.level.getRegistryName() + "/" + this.level.location();
+    this.levelName = this.level.registry() + "/" + this.level.location();
     this.entityId = companion.getId();
     this.entityAggressionLevel = companion.getAggressionLevel();
     this.entityDimension = companion.getDimensionName();
@@ -470,7 +470,7 @@ public class PlayerCompanionData {
       compoundTag.putString(LEVEL_TAG, this.levelName);
     }
     compoundTag.putInt(ENTITY_ID_TAG, this.entityId);
-    compoundTag.putString(ENTITY_TYPE_TAG, this.entityType.getRegistryName().toString());
+    compoundTag.putString(ENTITY_TYPE_TAG, EntityType.getKey(this.entityType).toString());
     compoundTag.putInt(ENTITY_RESPAWN_TIMER_TAG, this.entityRespawnTimer);
 
     // Try to get current Player Companion if not exists.

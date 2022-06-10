@@ -31,9 +31,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -124,7 +125,7 @@ public class CompanionTameItem extends Item {
     }
 
     // Check if we could catch the mob Type
-    String mobType = livingEntity.getType().getRegistryName().toString();
+    String mobType = EntityType.getKey(livingEntity.getType()).toString();
     if (!canTameCompanion(livingEntity) || !canTameCompanionType(mobType)) {
       return InteractionResult.FAIL;
     }
@@ -167,26 +168,24 @@ public class CompanionTameItem extends Item {
   public void appendHoverText(ItemStack itemStack, @Nullable Level level,
       List<Component> tooltipList, TooltipFlag tooltipFlag) {
     // Display description.
-    tooltipList.add(new TranslatableComponent(Constants.TEXT_PREFIX + "tame_companion"));
+    tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tame_companion"));
 
     // Display possible tameable mobs.
     Set<String> tameableMobTypes = getTameableMobTypes();
     if (!tameableMobTypes.isEmpty()) {
-      TranslatableComponent tameableMobTypeOverview =
-          (TranslatableComponent) new TranslatableComponent("")
-              .withStyle(ChatFormatting.DARK_GREEN);
+      MutableComponent tameableMobTypeOverview =
+          Component.literal("").withStyle(ChatFormatting.DARK_GREEN);
       for (String tamableMob : tameableMobTypes) {
-        TranslatableComponent acceptedMobName = TranslatableText.getEntityName(tamableMob);
+        Component acceptedMobName = TranslatableText.getEntityName(tamableMob);
         if (acceptedMobName != null) {
           tameableMobTypeOverview.append(acceptedMobName).append(", ")
               .withStyle(ChatFormatting.DARK_GREEN);
         }
       }
       if (!tameableMobTypeOverview.getString().isBlank()) {
-        TranslatableComponent tameableMobsOverview =
-            (TranslatableComponent) new TranslatableComponent(
-                Constants.TEXT_PREFIX + "tameable_companions").append(" ")
-                    .withStyle(ChatFormatting.GREEN);
+        MutableComponent tameableMobsOverview =
+            Component.translatable(Constants.TEXT_PREFIX + "tameable_companions").append(" ")
+                .withStyle(ChatFormatting.GREEN);
         tameableMobsOverview.append(tameableMobTypeOverview).append("...");
         tooltipList.add(tameableMobsOverview);
       }

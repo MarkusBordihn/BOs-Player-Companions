@@ -32,7 +32,8 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -296,8 +297,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return this.entityData.get(DATA_CUSTOM_COMPANION_NAME);
   }
 
-  public TextComponent getCustomCompanionNameComponent() {
-    return new TextComponent(getCustomCompanionName());
+  public MutableComponent getCustomCompanionNameComponent() {
+    return Component.literal(getCustomCompanionName());
   }
 
   public void setCustomCompanionName(String name) {

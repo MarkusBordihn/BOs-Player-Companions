@@ -44,7 +44,7 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
 
   public DobutsuRenderer(EntityRendererProvider.Context context) {
     super(context, new DobutsuModel<>(context.bakeLayer(ClientRenderer.DOBUTSU)), 0.3F);
-    this.addLayer(new HandItemLayer<>(this));
+    this.addLayer(new HandItemLayer<>(this, context.getItemInHandRenderer()));
   }
 
   @Override

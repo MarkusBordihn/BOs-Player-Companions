@@ -21,7 +21,6 @@ package de.markusbordihn.playercompanions.client.screen;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -50,7 +49,7 @@ public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMe
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
         && playerCompanionEntity.enableCustomTextureSkin()) {
       this.addRenderableWidget(new Button(this.leftPos + 5, this.topPos + 107, 108, 20,
-          new TranslatableComponent("Texture Settings"), event -> {
+          Component.literal("Texture Settings"), event -> {
             this.showTextureSettings(true);
             this.setFocused(null);
           }));

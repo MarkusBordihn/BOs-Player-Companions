@@ -100,56 +100,7 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue supporterTypeDamageResistanceDuration;
     public final ForgeConfigSpec.IntValue supporterTypeFireResistanceDuration;
 
-    public final ForgeConfigSpec.BooleanValue dobutsuSpawnEnable;
-    public final ForgeConfigSpec.IntValue dobutsuMinGroup;
-    public final ForgeConfigSpec.IntValue dobutsuMaxGroup;
-    public final ForgeConfigSpec.IntValue dobutsuWeight;
-
-    public final ForgeConfigSpec.BooleanValue fairySpawnEnable;
-    public final ForgeConfigSpec.IntValue fairyMinGroup;
-    public final ForgeConfigSpec.IntValue fairyMaxGroup;
-    public final ForgeConfigSpec.IntValue fairyWeight;
-
-    public final ForgeConfigSpec.BooleanValue fireflySpawnEnable;
-    public final ForgeConfigSpec.IntValue fireflyMinGroup;
-    public final ForgeConfigSpec.IntValue fireflyMaxGroup;
-    public final ForgeConfigSpec.IntValue fireflyWeight;
-
-    public final ForgeConfigSpec.BooleanValue pigSpawnEnable;
-    public final ForgeConfigSpec.IntValue pigMinGroup;
-    public final ForgeConfigSpec.IntValue pigMaxGroup;
-    public final ForgeConfigSpec.IntValue pigWeight;
-
-    public final ForgeConfigSpec.BooleanValue roosterSpawnEnable;
-    public final ForgeConfigSpec.IntValue roosterMinGroup;
-    public final ForgeConfigSpec.IntValue roosterMaxGroup;
-    public final ForgeConfigSpec.IntValue roosterWeight;
-
-    public final ForgeConfigSpec.BooleanValue samuraiSpawnEnable;
-    public final ForgeConfigSpec.IntValue samuraiMinGroup;
-    public final ForgeConfigSpec.IntValue samuraiMaxGroup;
-    public final ForgeConfigSpec.IntValue samuraiWeight;
-
-    public final ForgeConfigSpec.BooleanValue smallGhastSpawnEnable;
-    public final ForgeConfigSpec.IntValue smallGhastMinGroup;
-    public final ForgeConfigSpec.IntValue smallGhastMaxGroup;
-    public final ForgeConfigSpec.IntValue smallGhastWeight;
     public final ForgeConfigSpec.IntValue smallGhastExplosionPower;
-
-    public final ForgeConfigSpec.BooleanValue smallSlimeSpawnEnable;
-    public final ForgeConfigSpec.IntValue smallSlimeMinGroup;
-    public final ForgeConfigSpec.IntValue smallSlimeMaxGroup;
-    public final ForgeConfigSpec.IntValue smallSlimeWeight;
-
-    public final ForgeConfigSpec.BooleanValue snailSpawnEnable;
-    public final ForgeConfigSpec.IntValue snailMinGroup;
-    public final ForgeConfigSpec.IntValue snailMaxGroup;
-    public final ForgeConfigSpec.IntValue snailWeight;
-
-    public final ForgeConfigSpec.BooleanValue welshCorgiSpawnEnable;
-    public final ForgeConfigSpec.IntValue welshCorgiMinGroup;
-    public final ForgeConfigSpec.IntValue welshCorgiMaxGroup;
-    public final ForgeConfigSpec.IntValue welshCorgiWeight;
 
     Config(ForgeConfigSpec.Builder builder) {
       builder.comment("Player Companion's (General configuration)");
@@ -266,103 +217,9 @@ public class CommonConfig {
           .defineInRange("supporterTypeFireResistanceDuration", 1200, 20, 6000);
       builder.pop();
 
-      builder.push("Dobutsu");
-      dobutsuSpawnEnable =
-          builder.comment("Enable/Disable the dobutsu spawn.").define("dobutsuSpawnEnable", true);
-      dobutsuMinGroup =
-          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("dobutsuMinGroup", 1, 0, 64);
-      dobutsuMaxGroup =
-          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("dobutsuMaxGroup", 2, 0, 64);
-      dobutsuWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("dobutsuWeight", 6, 0, 100);
-      builder.pop();
-
-      builder.push("Fairy");
-      fairySpawnEnable =
-          builder.comment("Enable/Disable the fairy spawn.").define("fairySpawnEnable", true);
-      fairyMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fairyMinGroup", 1, 0, 64);
-      fairyMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fairyMaxGroup", 2, 0, 64);
-      fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 6, 0, 100);
-      builder.pop();
-
-      builder.push("Firefly");
-      fireflySpawnEnable =
-          builder.comment("Enable/Disable the firefly spawn.").define("fireflySpawnEnable", true);
-      fireflyMinGroup =
-          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fireflyMinGroup", 1, 0, 64);
-      fireflyMaxGroup =
-          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fireflyMaxGroup", 1, 0, 64);
-      fireflyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fireflyWeight", 6, 0, 100);
-      builder.pop();
-
-      builder.push("Pig");
-      pigSpawnEnable =
-          builder.comment("Enable/Disable the pig spawn.").define("pigSpawnEnable", true);
-      pigMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("pigMinGroup", 1, 0, 64);
-      pigMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("pigMaxGroup", 1, 0, 64);
-      pigWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("pigWeight", 6, 0, 100);
-      builder.pop();
-
-      builder.push("Rooster");
-      roosterSpawnEnable =
-          builder.comment("Enable/Disable the rooster spawn.").define("roosterSpawnEnable", true);
-      roosterMinGroup =
-          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("roosterMinGroup", 1, 0, 64);
-      roosterMaxGroup =
-          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("roosterMaxGroup", 2, 0, 64);
-      roosterWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("roosterWeight", 6, 0, 100);
-      builder.pop();
-
-      builder.push("Samurai");
-      samuraiSpawnEnable =
-          builder.comment("Enable/Disable the samurai spawn.").define("samuraiSpawnEnable", true);
-      samuraiMinGroup =
-          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("samuraiMinGroup", 1, 0, 64);
-      samuraiMaxGroup =
-          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("samuraiMaxGroup", 1, 0, 64);
-      samuraiWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("samuraiWeight", 6, 0, 100);
-      builder.pop();
-
-      builder.push("Small Slime");
-      smallSlimeSpawnEnable = builder.comment("Enable/Disable the small slime spawn.")
-          .define("smallSlimeSpawnEnable", true);
-      smallSlimeMinGroup =
-          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("smallSlimeMinGroup", 1, 0, 64);
-      smallSlimeMaxGroup =
-          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("smallSlimeMaxGroup", 2, 0, 64);
-      smallSlimeWeight =
-          builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("smallSlimeWeight", 6, 0, 100);
-      builder.pop();
-
       builder.push("Small Ghast");
       smallGhastExplosionPower =
           builder.comment("Explosion power").defineInRange("smallGhastExplosionPower", 0, 0, 16);
-      smallGhastSpawnEnable = builder.comment("Enable/Disable the small ghast spawn.")
-          .define("smallGhastSpawnEnable", true);
-      smallGhastMinGroup =
-          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("smallGhastMinGroup", 1, 0, 64);
-      smallGhastMaxGroup =
-          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("smallGhastMaxGroup", 2, 0, 64);
-      smallGhastWeight =
-          builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("smallGhastWeight", 6, 0, 100);
-      builder.pop();
-
-      builder.push("Snail");
-      snailSpawnEnable =
-          builder.comment("Enable/Disable the snail spawn.").define("snailSpawnEnable", true);
-      snailMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("snailMinGroup", 1, 0, 64);
-      snailMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("snailMaxGroup", 2, 0, 64);
-      snailWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("snailWeight", 6, 0, 100);
-      builder.pop();
-
-      builder.push("Welsh Corgi");
-      welshCorgiSpawnEnable = builder.comment("Enable/Disable the welsh corgi spawn.")
-          .define("welshCorgiSpawnEnable", true);
-      welshCorgiMinGroup =
-          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("welshCorgiMinGroup", 1, 0, 64);
-      welshCorgiMaxGroup =
-          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("welshCorgiMaxGroup", 2, 0, 64);
-      welshCorgiWeight =
-          builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("welshCorgiWeight", 6, 0, 100);
       builder.pop();
     }
   }

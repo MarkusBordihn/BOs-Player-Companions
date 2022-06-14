@@ -32,7 +32,7 @@ license="MIT"
 [[dependencies.player_companions]]
   modId="forge"
   mandatory=true
-  versionRange="[41,)"
+  versionRange="[41.0.27,)"
   ordering="NONE"
   side="BOTH"
 

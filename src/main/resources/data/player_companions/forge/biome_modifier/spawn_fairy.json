@@ -1,0 +1,12 @@
+{
+  "type": "player_companions:player_companions_spawn_modifier",
+  "biomes": ["minecraft:flower_forest", "minecraft:lush_caves"],
+  "denylist_biomes": [],
+  "spawn": {
+    "type": "player_companions:fairy",
+    "minCount": 1,
+    "maxCount": 2,
+    "weight": 15
+  },
+  "mob_category": "creature"
+}

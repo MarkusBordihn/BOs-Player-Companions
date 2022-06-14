@@ -17,38 +17,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.integration;
+package de.markusbordihn.playercompanions.level.biome;
 
-import snownee.jade.api.EntityAccessor;
-import snownee.jade.api.IEntityComponentProvider;
-import snownee.jade.api.ITooltip;
-import snownee.jade.api.config.IPluginConfig;
+import com.mojang.serialization.Codec;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.world.BiomeModifier;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
-public class CollectorEntityProvider implements IEntityComponentProvider {
+public class ModBiomeModifiers {
 
-  public static final CollectorEntityProvider INSTANCE = new CollectorEntityProvider();
-  public static final ResourceLocation UID =
-      new ResourceLocation(Constants.MOD_ID, "player_companion_collector_entity_provider");
+  protected ModBiomeModifiers() {}
 
-  @Override
-  @OnlyIn(Dist.CLIENT)
-  public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-    if (accessor.getEntity() instanceof PlayerCompanionEntity) {
-      tooltip.add(Component.literal("Collector"));
-    }
-  }
+  public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS =
+      DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Constants.MOD_ID);
 
-  @Override
-  public ResourceLocation getUid() {
-    return UID;
-  }
+  public static final RegistryObject<Codec<ModBiomeModifier>> ENTITY_MODIFIER_TYPE =
+      BIOME_MODIFIER_SERIALIZERS.register("player_companions_spawn_modifier",
+          ModBiomeModifier::makeCodec);
+
 }

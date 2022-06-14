@@ -36,9 +36,11 @@ import de.markusbordihn.playercompanions.client.screen.ClientScreens;
 import de.markusbordihn.playercompanions.container.ModContainer;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.item.ModItems;
+import de.markusbordihn.playercompanions.level.biome.ModBiomeModifiers;
 import de.markusbordihn.playercompanions.level.spawner.SpawnHandler;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
 import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
+import de.markusbordihn.playercompanions.utils.StopModReposts;
 
 @Mod(Constants.MOD_ID)
 public class PlayerCompanions {
@@ -48,6 +50,8 @@ public class PlayerCompanions {
   public PlayerCompanions() {
     final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     final IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
+
+    StopModReposts.checkStopModReposts();
 
     modEventBus.addListener(NetworkHandler::registerNetworkHandler);
 
@@ -65,6 +69,9 @@ public class PlayerCompanions {
 
     log.info("{} Sound Events ...", Constants.LOG_REGISTER_PREFIX);
     ModSoundEvents.SOUNDS.register(modEventBus);
+
+    log.info("{} Biome Modifier Serializers ...", Constants.LOG_REGISTER_PREFIX);
+    ModBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(modEventBus);
 
     modEventBus.addListener(SpawnHandler::registerSpawnPlacements);
 

@@ -31,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
@@ -39,6 +40,8 @@ import de.markusbordihn.playercompanions.text.TranslatableText;
 public class GuardEntityProvider implements IEntityComponentProvider {
 
   public static final GuardEntityProvider INSTANCE = new GuardEntityProvider();
+  public static final ResourceLocation UID =
+      new ResourceLocation(Constants.MOD_ID, "player_companion_guard_entity_provider");
 
   @Override
   @OnlyIn(Dist.CLIENT)
@@ -55,7 +58,7 @@ public class GuardEntityProvider implements IEntityComponentProvider {
 
   @Override
   public ResourceLocation getUid() {
-    return null;
+    return UID;
   }
 
 }

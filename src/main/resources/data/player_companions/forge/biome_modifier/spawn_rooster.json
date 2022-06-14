@@ -1,0 +1,12 @@
+{
+  "type": "player_companions:player_companions_spawn_modifier",
+  "biomes": "minecraft:plains",
+  "denylist_biomes": ["minecraft:flower_forest"],
+  "spawn": {
+    "type": "player_companions:rooster",
+    "minCount": 1,
+    "maxCount": 2,
+    "weight": 6
+  },
+  "mob_category": "creature"
+}

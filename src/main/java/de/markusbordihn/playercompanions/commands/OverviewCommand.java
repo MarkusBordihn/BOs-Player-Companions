@@ -45,7 +45,7 @@ public class OverviewCommand extends CustomCommand {
     ServerPlayer player = context.getSource().getPlayerOrException();
     Set<PlayerCompanionData> playerCompanionsSet =
         PlayerCompanionsServerData.get().getCompanions(player.getUUID());
-    if (playerCompanionsSet.isEmpty()) {
+    if (playerCompanionsSet == null || playerCompanionsSet.isEmpty()) {
       sendFeedback(context, "Unable to find any owned companions!");
       return 0;
     }

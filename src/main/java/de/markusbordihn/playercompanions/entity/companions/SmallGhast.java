@@ -21,7 +21,6 @@ package de.markusbordihn.playercompanions.entity.companions;
 
 import java.util.EnumSet;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.annotation.Nullable;

@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.05.15
+
+- Refactored code for 1.19-41.0.27
+
 ### 2022.05.14
 
 - Fixed missing description text for tame items.

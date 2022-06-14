@@ -18,6 +18,10 @@
 
   "container.player_companions.companions_menu": "Player Companions",
 
+  "config.jade.plugin_player_companions.player_companion_entity_provider": "Player Companion",
+  "config.jade.plugin_player_companions.player_companion_collector_entity_provider": "Player Companion (Collector)",
+  "config.jade.plugin_player_companions.player_companion_guard_entity_provider": "Player Companion (Guard)",
+
   "text.player_companions.tamed_companion_dimension": "Dimension: %1$s",
   "text.player_companions.tamed_companion_food": "Food: %1$s",
   "text.player_companions.tamed_companion_health": "Health: %1$s (%2$s)",

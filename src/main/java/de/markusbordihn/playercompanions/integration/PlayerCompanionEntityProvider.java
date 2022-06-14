@@ -45,6 +45,8 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
 
   public static final PlayerCompanionEntityProvider INSTANCE = new PlayerCompanionEntityProvider();
+  public static final ResourceLocation UID =
+      new ResourceLocation(Constants.MOD_ID, "player_companion_entity_provider");
 
   @Override
   @OnlyIn(Dist.CLIENT)
@@ -102,14 +104,16 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   public IElement getIcon(EntityAccessor accessor, IPluginConfig config, IElement currentIcon) {
     if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
       ItemStack itemStack = new ItemStack(playerCompanionEntity.getCompanionItem());
-      return new ElementHelper().item(itemStack, 2F);
+      if (!itemStack.isEmpty()) {
+        return new ElementHelper().item(itemStack, 2F);
+      }
     }
     return null;
   }
 
   @Override
   public ResourceLocation getUid() {
-    return null;
+    return UID;
   }
 
 }

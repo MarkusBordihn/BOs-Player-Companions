@@ -1,0 +1,12 @@
+{
+  "type": "player_companions:player_companions_spawn_modifier",
+  "biomes": "minecraft:taiga",
+  "denylist_biomes": [],
+  "spawn": {
+    "type": "player_companions:welsh_corgi",
+    "minCount": 1,
+    "maxCount": 2,
+    "weight": 6
+  },
+  "mob_category": "creature"
+}

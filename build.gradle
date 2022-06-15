@@ -131,15 +131,15 @@ dependencies {
   // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
   // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-  minecraft 'net.minecraftforge:forge:1.18.2-40.1.20'
+  minecraft 'net.minecraftforge:forge:1.18.2-40.1.51'
 
   // Jade Integration
-  compileOnly fg.deobf("curse.maven:jade-324717:3761542")
-  runtimeOnly fg.deobf("curse.maven:jade-324717:3761542")
+  compileOnly fg.deobf("curse.maven:jade-324717:3822510")
+  runtimeOnly fg.deobf("curse.maven:jade-324717:3822510")
 
   // Patchouli Integration
-  compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67:api")
-  runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-67")
+  compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-70:api")
+  runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-70")
   // compileOnly fg.deobf("curse.maven:patchouli-306770:3729975")
   // runtimeOnly fg.deobf("curse.maven:patchouli-306770:3729975")
 

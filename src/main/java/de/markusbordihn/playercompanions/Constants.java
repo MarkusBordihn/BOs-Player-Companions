@@ -24,8 +24,7 @@ import net.minecraftforge.fml.ModList;
 
 public final class Constants {
 
-  protected Constants() {
-  }
+  protected Constants() {}
 
   // General Mod definitions
   public static final String LOG_NAME = "Bo's Player Companions";
@@ -37,6 +36,8 @@ public final class Constants {
   public static final String MOD_COMMAND = "player_companions";
   public static final String MOD_ID = "player_companions";
   public static final String MOD_NAME = "Bo's Player Companions";
+  public static final String MOD_URL =
+      "https://www.curseforge.com/minecraft/mc-mods/player-companions";
 
   // Prefixes
   public static final String ENTITY_TEXT_PREFIX = "entity";

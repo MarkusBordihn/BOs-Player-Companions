@@ -30,7 +30,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import de.markusbordihn.playercompanions.block.ModBlocks;
-import de.markusbordihn.playercompanions.client.gui.ClientGui;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.screen.ClientScreens;
@@ -72,7 +71,6 @@ public class PlayerCompanions {
     forgeEventBus.addListener(ServerSetup::handleServerStartingEvent);
 
     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-      modEventBus.addListener(ClientGui::registerClientGui);
       modEventBus.addListener(ClientRenderer::registerEntityLayerDefinitions);
       modEventBus.addListener(ClientRenderer::registerEntityRenderers);
       modEventBus.addListener(ClientScreens::registerScreens);

@@ -71,6 +71,11 @@ public class ModItems {
       ITEMS.register(FireflyItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
           () -> new FireflyItem(PlayerCompanionVariant.DEFAULT));
 
+  // Lizard
+  public static final RegistryObject<Item> LIZARD_DEFAULT =
+      ITEMS.register(LizardItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new LizardItem(PlayerCompanionVariant.DEFAULT));
+
   // Samurai
   public static final RegistryObject<Item> SAMURAI_DEFAULT =
       ITEMS.register(SamuraiItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -202,6 +207,10 @@ public class ModItems {
   public static final RegistryObject<Item> FIREFLY_SPAWN_EGG = ITEMS.register("firefly_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.FIREFLY::get, MaterialColor.COLOR_YELLOW.col,
           MaterialColor.COLOR_ORANGE.col,
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+  public static final RegistryObject<Item> LIZARD_SPAWN_EGG = ITEMS.register("lizard_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.LIZARD::get, MaterialColor.COLOR_ORANGE.col,
+          MaterialColor.COLOR_BROWN.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> PIG_SPAWN_EGG = ITEMS.register("pig_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.COLOR_PINK.col,

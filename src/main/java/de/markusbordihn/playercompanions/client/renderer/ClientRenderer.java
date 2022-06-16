@@ -33,6 +33,7 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.DobutsuModel;
 import de.markusbordihn.playercompanions.client.model.FairyModel;
 import de.markusbordihn.playercompanions.client.model.FireflyModel;
+import de.markusbordihn.playercompanions.client.model.LizardModel;
 import de.markusbordihn.playercompanions.client.model.PigModel;
 import de.markusbordihn.playercompanions.client.model.RoosterModel;
 import de.markusbordihn.playercompanions.client.model.SamuraiModel;
@@ -43,6 +44,7 @@ import de.markusbordihn.playercompanions.client.model.WelshCorgiModel;
 import de.markusbordihn.playercompanions.client.renderer.companions.DobutsuRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.FairyRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.FireflyRenderer;
+import de.markusbordihn.playercompanions.client.renderer.companions.LizardRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.PigRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.RoosterRenderer;
 import de.markusbordihn.playercompanions.client.renderer.companions.SamuraiRenderer;
@@ -64,6 +66,8 @@ public class ClientRenderer {
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "fairy"), "main");
   public static final ModelLayerLocation FIREFLY =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "firefly"), "main");
+  public static final ModelLayerLocation LIZARD =
+      new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "lizard"), "main");
   public static final ModelLayerLocation PIG =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "pig"), "main");
   public static final ModelLayerLocation ROOSTER =
@@ -89,6 +93,7 @@ public class ClientRenderer {
     event.registerEntityRenderer(ModEntityType.DOBUTSU.get(), DobutsuRenderer::new);
     event.registerEntityRenderer(ModEntityType.FAIRY.get(), FairyRenderer::new);
     event.registerEntityRenderer(ModEntityType.FIREFLY.get(), FireflyRenderer::new);
+    event.registerEntityRenderer(ModEntityType.LIZARD.get(), LizardRenderer::new);
     event.registerEntityRenderer(ModEntityType.PIG.get(), PigRenderer::new);
     event.registerEntityRenderer(ModEntityType.ROOSTER.get(), RoosterRenderer::new);
     event.registerEntityRenderer(ModEntityType.SAMURAI.get(), SamuraiRenderer::new);
@@ -106,6 +111,7 @@ public class ClientRenderer {
     event.registerLayerDefinition(DOBUTSU, DobutsuModel::createBodyLayer);
     event.registerLayerDefinition(FAIRY, FairyModel::createBodyLayer);
     event.registerLayerDefinition(FIREFLY, FireflyModel::createBodyLayer);
+    event.registerLayerDefinition(LIZARD, LizardModel::createBodyLayer);
     event.registerLayerDefinition(PIG, PigModel::createBodyLayer);
     event.registerLayerDefinition(ROOSTER, RoosterModel::createBodyLayer);
     event.registerLayerDefinition(SAMURAI, SamuraiModel::createBodyLayer);

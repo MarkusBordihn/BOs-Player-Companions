@@ -51,10 +51,12 @@ public class ModEntityType {
           .sized(0.8F, 0.9F).clientTrackingRange(8).build(Snail.ID));
 
   // Follower Entity
-  public static final RegistryObject<EntityType<Dobutsu>> DOBUTSU =
-      ENTITIES.register(Dobutsu.ID,
-          () -> EntityType.Builder.<Dobutsu>of(Dobutsu::new, PlayerCompanionEntity.CATEGORY)
-              .sized(0.5F, 0.9F).clientTrackingRange(8).build(Dobutsu.ID));
+  public static final RegistryObject<EntityType<Dobutsu>> DOBUTSU = ENTITIES.register(Dobutsu.ID,
+      () -> EntityType.Builder.<Dobutsu>of(Dobutsu::new, PlayerCompanionEntity.CATEGORY)
+          .sized(0.5F, 0.9F).clientTrackingRange(8).build(Dobutsu.ID));
+  public static final RegistryObject<EntityType<Lizard>> LIZARD = ENTITIES.register(Lizard.ID,
+      () -> EntityType.Builder.<Lizard>of(Lizard::new, PlayerCompanionEntity.CATEGORY)
+          .sized(0.5F, 0.9F).clientTrackingRange(8).build(Lizard.ID));
   public static final RegistryObject<EntityType<SmallSlime>> SMALL_SLIME =
       ENTITIES.register(SmallSlime.ID,
           () -> EntityType.Builder.<SmallSlime>of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)
@@ -94,6 +96,7 @@ public class ModEntityType {
     event.put(DOBUTSU.get(), Dobutsu.createAttributes().build());
     event.put(FAIRY.get(), Fairy.createAttributes().build());
     event.put(FIREFLY.get(), Firefly.createAttributes().build());
+    event.put(LIZARD.get(), Lizard.createAttributes().build());
     event.put(PIG.get(), Pig.createAttributes().build());
     event.put(ROOSTER.get(), Rooster.createAttributes().build());
     event.put(SAMURAI.get(), Samurai.createAttributes().build());

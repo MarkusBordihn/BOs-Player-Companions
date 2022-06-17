@@ -17,54 +17,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.entity;
+package de.markusbordihn.playercompanions.client.renderer.companions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 
-import de.markusbordihn.playercompanions.Constants;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public enum PlayerCompanionVariant {
-  BLACK,
-  BLUE,
-  BROWN,
-  CREEPER,
-  CYAN,
-  DEFAULT,
-  DEFAULT_ACTION,
-  DESERT,
-  ENDERMAN,
-  GRAY,
-  GREEN,
-  LIGHT_BLUE,
-  LIGHT_GRAY,
-  LIME,
-  MAGENTA,
-  MIXED,
-  NONE,
-  ORANGE,
-  PINK,
-  PURPLE,
-  RED,
-  SPOTTED,
-  WHITE,
-  YELLOW;
+import de.markusbordihn.playercompanions.client.model.LizardModel;
+import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.entity.companions.Lizard;
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+@OnlyIn(Dist.CLIENT)
+public class LizardRenderer extends MobRenderer<Lizard, LizardModel<Lizard>> {
 
-  public static PlayerCompanionVariant getOrDefault(String value) {
-    if (value != null && !value.isEmpty()) {
-      try {
-        return valueOf(value);
-      } catch (IllegalArgumentException exception) {
-        log.warn("Unable to find a valid variant for {}!", value);
-      }
-    }
-    return PlayerCompanionVariant.DEFAULT;
+  public LizardRenderer(EntityRendererProvider.Context context) {
+    super(context, new LizardModel<>(context.bakeLayer(ClientRenderer.LIZARD)), 0.5F);
   }
 
-  public String getSuffix() {
-    return "_" + this.name().toLowerCase();
+  public ResourceLocation getTextureLocation(Lizard entity) {
+    return entity.getTextureLocation();
   }
 
 }

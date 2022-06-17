@@ -44,13 +44,6 @@ import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 public class SupporterFeatures extends PlayerCompanionsFeatures {
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static int supporterTypeDamageBoostDuration =
-      COMMON.supporterTypeDamageBoostDuration.get();
-  private static int supporterTypeDamageResistanceDuration =
-      COMMON.supporterTypeDamageResistanceDuration.get();
-      private static int supporterTypeFireResistanceDuration =
-      COMMON.supporterTypeFireResistanceDuration.get();
-  private static int supporterTypeRadius = COMMON.supporterTypeRadius.get();
 
   private static final short SUPPORTER_TICK = 180;
 
@@ -60,14 +53,9 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    supporterTypeDamageBoostDuration = COMMON.supporterTypeDamageBoostDuration.get();
-    supporterTypeDamageResistanceDuration = COMMON.supporterTypeDamageResistanceDuration.get();
-    supporterTypeFireResistanceDuration = COMMON.supporterTypeFireResistanceDuration.get();
-    supporterTypeRadius = COMMON.supporterTypeRadius.get();
-
-    if (supporterTypeRadius > 0) {
+    if (COMMON.supporterTypeRadius.get() > 0) {
       log.info("{} Supporter will automatically buff in a {} block radius.", Constants.LOG_ICON,
-          supporterTypeRadius);
+          COMMON.supporterTypeRadius.get());
     } else {
       log.info("{} Supporter will not automatically buff!", Constants.LOG_ICON);
     }
@@ -76,7 +64,7 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
   private void supporterTick() {
 
     // Automatic buff entities in the defined radius.
-    if (!level.isClientSide && supporterTypeRadius > 0 && ticker++ >= SUPPORTER_TICK) {
+    if (!level.isClientSide && COMMON.supporterTypeRadius.get() > 0 && ticker++ >= SUPPORTER_TICK) {
       boolean hasBuffSomething = false;
 
       // 1. Priority: Buff owner.
@@ -92,7 +80,7 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       // 3. Priority: Buff other players in radius.
       if (!hasBuffSomething) {
         List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
-            new AABB(playerCompanionEntity.blockPosition()).inflate(supporterTypeRadius),
+            new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.supporterTypeRadius.get()),
             entity -> true);
         for (Player player : playerEntities) {
           if (player != this.getOwner() && buffLivingEntity(player)) {
@@ -106,7 +94,7 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       if (!hasBuffSomething && this.getOwner() != null) {
         List<PlayerCompanionEntity> playerCompanions =
             playerCompanionEntity.level.getEntitiesOfClass(PlayerCompanionEntity.class,
-                new AABB(playerCompanionEntity.blockPosition()).inflate(supporterTypeRadius),
+                new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.supporterTypeRadius.get()),
                 entity -> true);
         for (PlayerCompanionEntity playerCompanion : playerCompanions) {
           if (playerCompanion != this.playerCompanionEntity
@@ -123,7 +111,7 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       if (!hasBuffSomething && this.getOwner() != null) {
         List<TamableAnimal> tamableAnimals =
             playerCompanionEntity.level.getEntitiesOfClass(TamableAnimal.class,
-                new AABB(playerCompanionEntity.blockPosition()).inflate(supporterTypeRadius),
+                new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.supporterTypeRadius.get()),
                 entity -> true);
         for (TamableAnimal tamableAnimal : tamableAnimals) {
           if (tamableAnimal != this.playerCompanionEntity
@@ -180,29 +168,29 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
   }
 
   public boolean buffLivingEntityDamageBoost(LivingEntity livingEntity) {
-    if (supporterTypeDamageBoostDuration > 0 && !livingEntity.hasEffect(MobEffects.DAMAGE_BOOST)) {
+    if (COMMON.supporterTypeDamageBoostDuration.get() > 0 && !livingEntity.hasEffect(MobEffects.DAMAGE_BOOST)) {
       livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,
-          supporterTypeDamageBoostDuration, 0, false, false, true));
+          COMMON.supporterTypeDamageBoostDuration.get(), 0, false, false, true));
       return true;
     }
     return false;
   }
 
   public boolean buffLivingEntityDamageResistance(LivingEntity livingEntity) {
-    if (supporterTypeDamageResistanceDuration > 0
+    if (COMMON.supporterTypeDamageResistanceDuration.get() > 0
         && !livingEntity.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
       livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE,
-          supporterTypeDamageResistanceDuration, 0, false, false, true));
+          COMMON.supporterTypeDamageResistanceDuration.get(), 0, false, false, true));
       return true;
     }
     return false;
   }
 
   public boolean buffLivingEntityFireResistance(LivingEntity livingEntity) {
-    if (supporterTypeFireResistanceDuration > 0
+    if (COMMON.supporterTypeFireResistanceDuration.get() > 0
         && !livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE)) {
       livingEntity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,
-          supporterTypeFireResistanceDuration, 0, false, false, true));
+          COMMON.supporterTypeFireResistanceDuration.get(), 0, false, false, true));
       return true;
     }
     return false;

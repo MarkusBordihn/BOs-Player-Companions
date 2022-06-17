@@ -80,10 +80,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  // Config values
   protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static int maxHealth = COMMON.maxHealth.get();
-  private static int maxAttackDamage = COMMON.maxAttackDamage.get();
 
   // Synced Entity Data
   private static final EntityDataAccessor<Boolean> DATA_ACTIVE =
@@ -172,16 +169,15 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    maxHealth = COMMON.maxHealth.get();
-    if (maxHealth > 0) {
-      log.info("The max base health for player companions is set to {}.", maxHealth);
+    if (COMMON.maxHealth.get() > 0) {
+      log.info("The max base health for player companions is set to {}.", COMMON.maxHealth.get());
     } else {
       log.warn("The max base health for player companions will not be adjusted!");
     }
 
-    maxAttackDamage = COMMON.maxAttackDamage.get();
-    if (maxAttackDamage > 0) {
-      log.info("The max base attack damage for player companions is set to {}.", maxAttackDamage);
+    if (COMMON.maxAttackDamage.get() > 0) {
+      log.info("The max base attack damage for player companions is set to {}.",
+          COMMON.maxAttackDamage.get());
     } else {
       log.warn("The max base attack damage for player companions will not be adjusted!");
     }
@@ -633,7 +629,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public void adjustMaxHealthPerLevel(int level) {
-    int healthAdjustment = getHealthAdjustmentFromExperienceLevel(level, maxHealth,
+    int healthAdjustment = getHealthAdjustmentFromExperienceLevel(level, COMMON.maxHealth.get(),
         (int) getAttribute(Attributes.MAX_HEALTH).getBaseValue());
     increaseMaxHealth(healthAdjustment);
   }
@@ -666,7 +662,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public void adjustAttackDamagePerLevel(int level) {
     int attackDamageAdjustment = getAttackDamageAdjustmentFromExperienceLevel(level,
-        maxAttackDamage, (int) getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+        COMMON.maxAttackDamage.get(), (int) getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
     increaseAttackDamage(attackDamageAdjustment);
   }
 

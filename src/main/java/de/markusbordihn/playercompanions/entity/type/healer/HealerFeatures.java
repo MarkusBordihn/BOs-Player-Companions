@@ -42,9 +42,6 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
 public class HealerFeatures extends PlayerCompanionsFeatures {
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static int healerTypeRadius = COMMON.healerTypeRadius.get();
-  private static int healerTypeMinAmount = COMMON.healerTypeMinAmount.get();
-  private static int healerTypeMaxAmount = COMMON.healerTypeMaxAmount.get();
 
   private static final short HEALER_TICK = 20 * 2;
   private static final int PARTICLE_FRAMES = 3;
@@ -55,13 +52,12 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    healerTypeRadius = COMMON.healerTypeRadius.get();
-    healerTypeMinAmount = COMMON.healerTypeMinAmount.get();
-    healerTypeMaxAmount = COMMON.healerTypeMaxAmount.get();
 
-    if (healerTypeRadius > 0 && healerTypeMinAmount < healerTypeMaxAmount) {
+    if (COMMON.healerTypeRadius.get() > 0
+        && COMMON.healerTypeMinAmount.get() < COMMON.healerTypeMaxAmount.get()) {
       log.info("{} Healer will automatically heal between {} - {} hp in a {} block radius.",
-          Constants.LOG_ICON, healerTypeMinAmount, healerTypeMaxAmount, healerTypeRadius);
+          Constants.LOG_ICON, COMMON.healerTypeMinAmount.get(), COMMON.healerTypeMaxAmount.get(),
+          COMMON.healerTypeRadius.get());
     } else {
       log.info("{} Healer will not automatically heal!", Constants.LOG_ICON);
     }
@@ -70,7 +66,7 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
   private void healerTick() {
 
     // Automatic heal entities in the defined radius.
-    if (healerTypeRadius > 0 && ticker++ >= HEALER_TICK) {
+    if (COMMON.healerTypeRadius.get() > 0 && ticker++ >= HEALER_TICK) {
       boolean hasHealthSomething = false;
 
       // 1. Priority: Heal owner
@@ -86,7 +82,7 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
       // 3. Priority: Heal other players in radius.
       if (!hasHealthSomething) {
         List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
-            new AABB(playerCompanionEntity.blockPosition()).inflate(healerTypeRadius),
+            new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.healerTypeRadius.get()),
             entity -> true);
         for (Player player : playerEntities) {
           if (player != this.getOwner() && healEntity(level, player)) {
@@ -98,10 +94,10 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
       // 4. Priority: Heal owned tamed animals regardless of type.
       if (!hasHealthSomething && this.getOwner() != null) {
-        List<TamableAnimal> tamableAnimals =
-            playerCompanionEntity.level.getEntitiesOfClass(TamableAnimal.class,
-                new AABB(playerCompanionEntity.blockPosition()).inflate(healerTypeRadius),
-                entity -> true);
+        List<TamableAnimal> tamableAnimals = playerCompanionEntity.level.getEntitiesOfClass(
+            TamableAnimal.class,
+            new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.healerTypeRadius.get()),
+            entity -> true);
         for (TamableAnimal tamableAnimal : tamableAnimals) {
           if (tamableAnimal != this.playerCompanionEntity
               && tamableAnimal.getOwner() == this.getOwner() && healEntity(level, tamableAnimal)) {
@@ -129,7 +125,7 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
       healAnimation(livingEntity, level);
     } else {
       int healingAmount = playerCompanionEntity.getHealingAmountFromExperienceLevel(
-          getExperienceLevel(), healerTypeMinAmount, healerTypeMaxAmount);
+          getExperienceLevel(), COMMON.healerTypeMinAmount.get(), COMMON.healerTypeMaxAmount.get());
       livingEntity.heal(healingAmount);
       return true;
     }

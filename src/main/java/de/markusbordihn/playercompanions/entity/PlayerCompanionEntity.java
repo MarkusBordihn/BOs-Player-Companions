@@ -69,6 +69,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.block.LightBlock;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
+import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
@@ -90,10 +91,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   private static final ResourceLocation WILL_NOT_RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_will_not_respawn_message");
 
-  // Config settings
-  private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
-  private static int respawnDelay = COMMON.respawnDelay.get();
-  private static boolean friendlyFire = COMMON.friendlyFire.get();
+  // Config
+  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static final int BABY_GROW_TIME = 20 * 60 * 60 * 24; // In ticks: 1 day
 
   // Additional ticker
@@ -126,16 +125,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    respawnOnDeath = COMMON.respawnOnDeath.get();
-    respawnDelay = COMMON.respawnDelay.get();
-    friendlyFire = COMMON.friendlyFire.get();
-    if (respawnOnDeath) {
+    if (Boolean.TRUE.equals(COMMON.respawnOnDeath.get())) {
       log.info("{} will be respawn on death with a {} secs delay.", Constants.LOG_ICON_NAME,
-          COMMON.respawnDelay.get(), respawnDelay);
+          COMMON.respawnDelay.get());
     } else {
       log.warn("{} will NOT respawn on death!", Constants.LOG_ICON_NAME);
     }
-    if (!friendlyFire) {
+    if (Boolean.FALSE.equals(COMMON.friendlyFire.get())) {
       log.info("{} ignore entities from the same owner as attack target!", Constants.LOG_ICON_NAME);
     }
   }
@@ -363,7 +359,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
 
     // Ignore entities from the same Owner.
-    if (!friendlyFire && livingEntity instanceof TamableAnimal tamableAnimal
+    if (!COMMON.friendlyFire.get() && livingEntity instanceof TamableAnimal tamableAnimal
         && tamableAnimal.getOwner() == this.getOwner()) {
       return;
     }
@@ -599,13 +595,14 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       // Decrease Experience Level
       decreaseExperienceLevel();
 
-      if (respawnOnDeath) {
-        if (respawnDelay > 1) {
-          setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
+      if (Boolean.TRUE.equals(COMMON.respawnOnDeath.get())) {
+        if (COMMON.respawnDelay.get() > 1) {
+          setRespawnTimer(
+              (int) java.time.Instant.now().getEpochSecond() + COMMON.respawnDelay.get());
         }
         sendOwnerMessage(Component.translatable(
             Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_RESPAWN_MESSAGE),
-            getCustomCompanionName(), respawnDelay));
+            getCustomCompanionName(), COMMON.respawnDelay.get()));
       } else {
         sendOwnerMessage(Component.translatable(
             Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_NOT_RESPAWN_MESSAGE),

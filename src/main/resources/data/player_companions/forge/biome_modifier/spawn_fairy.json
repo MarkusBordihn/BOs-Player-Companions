@@ -6,7 +6,7 @@
     "type": "player_companions:fairy",
     "minCount": 1,
     "maxCount": 2,
-    "weight": 15
+    "weight": 16
   },
   "mob_category": "creature"
 }

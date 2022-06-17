@@ -70,6 +70,8 @@ public class Dobutsu extends FollowerEntityWalking {
             new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
         hashMap.put(PlayerCompanionVariant.CREEPER,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
+        hashMap.put(PlayerCompanionVariant.ENDERMAN,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_enderman.png"));
       });
 
   // Companion Item by variant
@@ -77,6 +79,7 @@ public class Dobutsu extends FollowerEntityWalking {
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.DOBUTSU_DEFAULT.get());
         hashMap.put(PlayerCompanionVariant.CREEPER, ModItems.DOBUTSU_CREEPER.get());
+        hashMap.put(PlayerCompanionVariant.ENDERMAN, ModItems.DOBUTSU_ENDERMAN.get());
       });
 
   public Dobutsu(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {

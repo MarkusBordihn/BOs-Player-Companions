@@ -43,7 +43,6 @@ public class PlayerCompanionNames {
 
   private static Random rand = new Random();
 
-  // Config values
   protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   private static List<String> namesNPCFemale = new ArrayList<>(Arrays.asList("Unnamed female NPC"));

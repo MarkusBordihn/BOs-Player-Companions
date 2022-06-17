@@ -83,6 +83,7 @@ import de.markusbordihn.playercompanions.item.ModItems;
 public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   // General Information
@@ -93,9 +94,6 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   // Alternative Texture
   private static final ResourceLocation SHOOTING_TEXTURE =
       new ResourceLocation("textures/entity/ghast/ghast_shooting.png");
-
-  // Config settings
-  private static int explosionPower = COMMON.smallGhastExplosionPower.get();
 
   // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
@@ -216,7 +214,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   @Override
   public int getExplosionPower() {
-    return explosionPower;
+    return COMMON.smallGhastExplosionPower.get();
   }
 
   @Override

@@ -29,6 +29,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -45,14 +46,12 @@ public class PlayerCompanionDamageManager {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static boolean friendlyFire = COMMON.friendlyFire.get();
 
   protected PlayerCompanionDamageManager() {}
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
-    friendlyFire = COMMON.friendlyFire.get();
-    if (friendlyFire) {
+    if (Boolean.TRUE.equals(COMMON.friendlyFire.get())) {
       log.warn("{} friendly fire is enabled!", Constants.LOG_ICON_NAME);
     } else {
       log.info("{} friendly fire is disabled.", Constants.LOG_ICON_NAME);
@@ -62,7 +61,7 @@ public class PlayerCompanionDamageManager {
   @SubscribeEvent
   public static void handleLivingAttackEvent(LivingAttackEvent event) {
     // Ignore event if friendly fire is enabled!
-    if (friendlyFire) {
+    if (Boolean.TRUE.equals(COMMON.friendlyFire.get())) {
       return;
     }
 
@@ -76,7 +75,7 @@ public class PlayerCompanionDamageManager {
   @SubscribeEvent
   public static void handleLivingHurtEvent(LivingHurtEvent event) {
     // Ignore event if friendly fire is enabled!
-    if (friendlyFire) {
+    if (Boolean.TRUE.equals(COMMON.friendlyFire.get())) {
       return;
     }
 

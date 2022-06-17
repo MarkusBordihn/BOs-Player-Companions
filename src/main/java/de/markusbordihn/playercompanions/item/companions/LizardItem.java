@@ -17,54 +17,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.entity;
+package de.markusbordihn.playercompanions.item.companions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.crafting.Ingredient;
 
-import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
+import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
+import de.markusbordihn.playercompanions.entity.companions.Lizard;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
-public enum PlayerCompanionVariant {
-  BLACK,
-  BLUE,
-  BROWN,
-  CREEPER,
-  CYAN,
-  DEFAULT,
-  DEFAULT_ACTION,
-  DESERT,
-  ENDERMAN,
-  GRAY,
-  GREEN,
-  LIGHT_BLUE,
-  LIGHT_GRAY,
-  LIME,
-  MAGENTA,
-  MIXED,
-  NONE,
-  ORANGE,
-  PINK,
-  PURPLE,
-  RED,
-  SPOTTED,
-  WHITE,
-  YELLOW;
+public class LizardItem extends CapturedCompanion {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  public static final String ID = "lizard";
 
-  public static PlayerCompanionVariant getOrDefault(String value) {
-    if (value != null && !value.isEmpty()) {
-      try {
-        return valueOf(value);
-      } catch (IllegalArgumentException exception) {
-        log.warn("Unable to find a valid variant for {}!", value);
-      }
-    }
-    return PlayerCompanionVariant.DEFAULT;
+  public LizardItem() {
+    super();
   }
 
-  public String getSuffix() {
-    return "_" + this.name().toLowerCase();
+  public LizardItem(PlayerCompanionVariant variant) {
+    super(variant);
   }
 
+  public LizardItem(Properties properties) {
+    super(properties);
+  }
+
+  @Override
+  public Ingredient getEntityFood() {
+    return Lizard.FOOD_ITEMS;
+  }
+
+  @Override
+  public EntityType<Lizard> getEntityType() {
+    return ModEntityType.LIZARD.get();
+  }
 }

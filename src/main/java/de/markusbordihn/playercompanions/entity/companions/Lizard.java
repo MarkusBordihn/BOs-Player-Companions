@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.entity.companions;
 
 import java.util.Map;
-
 import com.google.common.collect.Maps;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,8 +27,6 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -56,41 +53,44 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
-import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityFloating;
+import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityWalking;
 import de.markusbordihn.playercompanions.item.ModItems;
 
-public class Snail extends CollectorEntityFloating {
+public class Lizard extends FollowerEntityWalking {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // General Information
-  public static final String ID = "snail";
-  public static final String NAME = "Snail";
-  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.SEAGRASS);
+  public static final String ID = "lizard";
+  public static final String NAME = "Lizard";
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.SWEET_BERRIES, Items.EGG);
 
   // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail_default.png"));
-        hashMap.put(PlayerCompanionVariant.BROWN,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail_brown.png"));
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_default.png"));
+        hashMap.put(PlayerCompanionVariant.DESERT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_desert.png"));
+        hashMap.put(PlayerCompanionVariant.GREEN,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_green.png"));
       });
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SNAIL_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.BROWN, ModItems.SNAIL_BROWN.get());
+        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.LIZARD_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.DESERT, ModItems.LIZARD_DESERT.get());
+        hashMap.put(PlayerCompanionVariant.GREEN, ModItems.LIZARD_GREEN.get());
       });
 
-  public Snail(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
+  public Lizard(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
     return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 0.5D);
+        .add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.ATTACK_DAMAGE, 0.0D);
   }
 
   @Override
@@ -111,7 +111,7 @@ public class Snail extends CollectorEntityFloating {
 
   @Override
   public Item getTameItem() {
-    return ModItems.TAME_SEAGRASS.get();
+    return ModItems.TAME_SWEET_BERRIES.get();
   }
 
   @Override
@@ -120,28 +120,23 @@ public class Snail extends CollectorEntityFloating {
   }
 
   @Override
-  public SoundEvent getPetSound() {
-    return SoundEvents.CAT_PURR;
-  }
-
-  @Override
   public Vec3 getLeashOffset() {
-    return new Vec3(0.0D, 0.1F * this.getEyeHeight(), this.getBbWidth() * 0.4F);
+    return new Vec3(0.0D, 0.5F * this.getEyeHeight(), this.getBbWidth() * 0.4F);
   }
 
   @Override
   public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-    return 0.60F;
+    return 0.3F;
   }
 
   @Override
   public int getEntityGuiScaling() {
-    return 50;
+    return 60;
   }
 
   @Override
   public int getEntityGuiTop() {
-    return 14;
+    return 10;
   }
 
 }

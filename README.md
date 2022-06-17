@@ -1,7 +1,7 @@
+# 🐾 Player Companion's
+
 [![Player Companions Downloads](http://cf.way2muchnoise.eu/full_552456_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 [![Player Companions Versions](http://cf.way2muchnoise.eu/versions/Minecraft_552456_all.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
-
-# 🐾 Player Companion's
 
 Player Companions adds additional creatures which will follow, protect or help you.
 
@@ -94,6 +94,44 @@ Most of the should be supported out of the box, but this is a list of mods which
 Note: If the mod is not listed here, you need to test it on your own, if it works as expected.
 I'm not able to test all different kind of mod combinations or mod packs.
 
+## Type of Companions
+
+### Fairies
+
+![Example image with fairies](examples/fairies.png)
+
+### Lizards
+
+![Example image with lizards](examples/lizards.png)
+
+### Pigs
+
+![Example image with pigs](examples/pigs.png)
+
+### Rooster
+
+![Example image with lizards](examples/rooster.png)
+
+### Samurai
+
+![Example image with samurai](examples/samurai.png)
+
+### Small Ghasts
+
+![Example image with small ghasts](examples/small_ghasts.png)
+
+### Small Slimes
+
+![Example image with small slimes](examples/small_slimes.png)
+
+### Snails
+
+![Example image with snails](examples/snails.png)
+
+### Welsh Corgis
+
+![Example image with welsh corgis](examples/welsh_corgis.png)
+
 ## Version Status Overview 🛠️
 
 | Version        | Status                |
@@ -112,7 +150,7 @@ The MIT [LICENSE.md](LICENSE.md) applies only to the code in this repository. Im
 
 Please only download the mod from the official CurseForge page or with the official CurseForge launcher like:
 
-🚀 https://www.curseforge.com/minecraft/mc-mods/player-companions
+🚀 <https://www.curseforge.com/minecraft/mc-mods/player-companions>
 
 If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
 

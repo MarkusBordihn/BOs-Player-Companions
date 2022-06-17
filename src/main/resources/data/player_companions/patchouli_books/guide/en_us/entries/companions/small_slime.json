@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Small Slime will follow you along your journey.$(br)They have no specific abilities, but easy to handle player companions."
+      "text": "Small Slime will follow you along your journey.$(br)They have no specific abilities, but are an easy to handle player companion."
     },
     {
       "type": "patchouli:entity",

@@ -32,6 +32,8 @@ public enum PlayerCompanionVariant {
   CYAN,
   DEFAULT,
   DEFAULT_ACTION,
+  DESERT,
+  ENDERMAN,
   GRAY,
   GREEN,
   LIGHT_BLUE,

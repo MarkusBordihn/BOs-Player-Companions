@@ -40,7 +40,6 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
   private final ModelPart rightHindLeg;
   private final ModelPart tail;
   private final ModelPart tongue;
-  private final ModelPart trill;
 
   public LizardModel(ModelPart modelPart) {
     this.body = modelPart.getChild("body");
@@ -51,7 +50,6 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
     this.rightHindLeg = modelPart.getChild("right_hind_leg");
     this.tail = this.body.getChild("tail");
     this.tongue = this.head.getChild("tongue");
-    this.trill = this.head.getChild("trill");
   }
 
   public static LayerDefinition createBodyLayer() {

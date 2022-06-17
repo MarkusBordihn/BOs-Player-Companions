@@ -1,0 +1,18 @@
+{
+  "name": "Lizard",
+  "icon": "player_companions:lizard_default",
+  "category": "player_companions:companions",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The lizard will follow you along your journey.$(br)They have no specific abilities, but are an easy to handle player companion."
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "player_companions:lizard",
+      "scale": 1.1,
+      "offset": -0.25,
+      "text": "They live in the desert, jungle, swamp and badlands and like eating eggs and berries."
+    }
+  ]
+}

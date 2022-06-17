@@ -73,12 +73,15 @@ public class Snail extends CollectorEntityFloating {
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail_default.png"));
+        hashMap.put(PlayerCompanionVariant.BROWN,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail_brown.png"));
       });
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SNAIL_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.BROWN, ModItems.SNAIL_BROWN.get());
       });
 
   public Snail(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {

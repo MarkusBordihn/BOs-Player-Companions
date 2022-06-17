@@ -5,6 +5,12 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.06.17
+
+- Added new lizard player companion.
+- Added crafting recipe for patchouli player companions book.
+- Reworked snail textures.
+
 ### 2022.05.14
 
 - Fixed missing description text for tame items.

@@ -1,0 +1,6 @@
+{
+  "parent": "player_companions:item/template/dobutsu",
+  "textures": {
+    "texture": "player_companions:entity/dobutsu/dobutsu_enderman"
+  }
+}

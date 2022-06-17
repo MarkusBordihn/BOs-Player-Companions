@@ -63,19 +63,25 @@ public class Lizard extends FollowerEntityWalking {
   // General Information
   public static final String ID = "lizard";
   public static final String NAME = "Lizard";
-  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
+  public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.SWEET_BERRIES, Items.EGG);
 
   // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_default.png"));
+        hashMap.put(PlayerCompanionVariant.DESERT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_desert.png"));
+        hashMap.put(PlayerCompanionVariant.GREEN,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_green.png"));
       });
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.LIZARD_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.DESERT, ModItems.LIZARD_DESERT.get());
+        hashMap.put(PlayerCompanionVariant.GREEN, ModItems.LIZARD_GREEN.get());
       });
 
   public Lizard(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
@@ -105,7 +111,7 @@ public class Lizard extends FollowerEntityWalking {
 
   @Override
   public Item getTameItem() {
-    return ModItems.TAME_BONE.get();
+    return ModItems.TAME_SWEET_BERRIES.get();
   }
 
   @Override

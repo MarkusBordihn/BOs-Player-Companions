@@ -54,6 +54,9 @@ public class ModItems {
   public static final RegistryObject<Item> DOBUTSU_CREEPER =
       ITEMS.register(DobutsuItem.ID + PlayerCompanionVariant.CREEPER.getSuffix(),
           () -> new DobutsuItem(PlayerCompanionVariant.CREEPER));
+  public static final RegistryObject<Item> DOBUTSU_ENDERMAN =
+      ITEMS.register(DobutsuItem.ID + PlayerCompanionVariant.ENDERMAN.getSuffix(),
+          () -> new DobutsuItem(PlayerCompanionVariant.ENDERMAN));
 
   // Fairies
   public static final RegistryObject<Item> FAIRY_DEFAULT =
@@ -75,6 +78,12 @@ public class ModItems {
   public static final RegistryObject<Item> LIZARD_DEFAULT =
       ITEMS.register(LizardItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
           () -> new LizardItem(PlayerCompanionVariant.DEFAULT));
+  public static final RegistryObject<Item> LIZARD_DESERT =
+      ITEMS.register(LizardItem.ID + PlayerCompanionVariant.DESERT.getSuffix(),
+          () -> new LizardItem(PlayerCompanionVariant.DESERT));
+  public static final RegistryObject<Item> LIZARD_GREEN =
+      ITEMS.register(LizardItem.ID + PlayerCompanionVariant.GREEN.getSuffix(),
+          () -> new LizardItem(PlayerCompanionVariant.GREEN));
 
   // Samurai
   public static final RegistryObject<Item> SAMURAI_DEFAULT =
@@ -165,6 +174,9 @@ public class ModItems {
   public static final RegistryObject<Item> SNAIL_DEFAULT =
       ITEMS.register(SnailItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
           () -> new SnailItem(PlayerCompanionVariant.DEFAULT));
+  public static final RegistryObject<Item> SNAIL_BROWN =
+      ITEMS.register(SnailItem.ID + PlayerCompanionVariant.BROWN.getSuffix(),
+          () -> new SnailItem(PlayerCompanionVariant.BROWN));
 
   // Welsh Corgi
   public static final RegistryObject<Item> WELSH_CORGI_DEFAULT =

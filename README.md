@@ -94,6 +94,44 @@ Most of the should be supported out of the box, but this is a list of mods which
 Note: If the mod is not listed here, you need to test it on your own, if it works as expected.
 I'm not able to test all different kind of mod combinations or mod packs.
 
+## Type of Companions
+
+### Fairies
+
+![Example image with fairies](examples/fairies.png)
+
+### Lizards
+
+![Example image with lizards](examples/lizards.png)
+
+### Pigs
+
+![Example image with pigs](examples/pigs.png)
+
+### Rooster
+
+![Example image with lizards](examples/rooster.png)
+
+### Samurai
+
+![Example image with samurai](examples/samurai.png)
+
+### Small Ghasts
+
+![Example image with small ghasts](examples/small_ghasts.png)
+
+### Small Slimes
+
+![Example image with small slimes](examples/small_slimes.png)
+
+### Snails
+
+![Example image with snails](examples/snails.png)
+
+### Welsh Corgis
+
+![Example image with welsh corgis](examples/welsh_corgis.png)
+
 ## Version Status Overview 🛠️
 
 | Version        | Status                |

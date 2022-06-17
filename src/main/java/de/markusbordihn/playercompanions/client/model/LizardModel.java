@@ -62,10 +62,9 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
     PartDefinition body = partDefinition.addOrReplaceChild("body", CubeListBuilder.create()
         .texOffs(0, 0).addBox(-1.5F, 4.0F, -4.0F, 3.0F, 2.0F, 7.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 16.0F, 0.0F));
-    body.addOrReplaceChild("tail",
-        CubeListBuilder.create().texOffs(10, 9)
-            .addBox(-1.0F, -0.5F, 0.0F, 2.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
-            .addBox(-0.5F, -0.5F, 3.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)),
+    body.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(10, 12)
+        .addBox(-1.0F, -0.25F, -0.75F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
+        .addBox(-0.5F, -0.25F, 3.25F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 4.75F, 3.0F));
 
     // Head with trill
@@ -95,16 +94,16 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
     // Legs
     partDefinition.addOrReplaceChild("right_hind_leg", CubeListBuilder.create().texOffs(0, 9)
-        .addBox(1.495F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
+        .addBox(1.5F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-3.0F, 18.0F, 6.0F));
     partDefinition.addOrReplaceChild("left_hind_leg", CubeListBuilder.create().texOffs(0, 9)
-        .addBox(-0.495F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
+        .addBox(-0.5F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(1.0F, 18.0F, 6.0F));
     partDefinition.addOrReplaceChild("right_front_leg", CubeListBuilder.create().texOffs(0, 9)
-        .addBox(1.495F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
+        .addBox(1.5F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-3.0F, 18.0F, -1.0F));
     partDefinition.addOrReplaceChild("left_front_leg", CubeListBuilder.create().texOffs(0, 9)
-        .addBox(-0.495F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
+        .addBox(-0.5F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(1.0F, 18.0F, -1.0F));
 
     return LayerDefinition.create(meshDefinition, 32, 32);
@@ -123,12 +122,19 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
   @Override
   public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
+    if (this.young) {
+      this.head.setPos(0.0F, 12.5F, -2.0F);
+    } else {
+      this.head.setPos(0.0F, 16.0F, -2.0F);
+    }
     if (entity.isInSittingPose()) {
       this.body.xRot = ((float) Math.PI / -10F);
+      this.body.setPos(0.0F, 17.1F, 1.5F);
       this.tail.xRot = 0;
       this.tongue.visible = true;
     } else {
       this.body.xRot = 0;
+      this.body.setPos(0.0F, 16.0F, 0.0F);
       this.tail.xRot = 0;
       this.tongue.visible = false;
     }
@@ -138,8 +144,8 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
     if (!entity.isInSittingPose()) {
-      this.head.xRot = headPitch * ((float) Math.PI / 180F);
-      this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
+      this.head.xRot = headPitch * ((float) Math.PI / 210F);
+      this.head.yRot = netHeadYaw * ((float) Math.PI / 210F);
       this.tail.yRot = -netHeadYaw * ((float) Math.PI / 220F);
       this.rightHindLeg.xRot = Mth.cos(limbSwing * 1.333F) * 0.3F * limbSwingAmount;
       this.leftHindLeg.xRot =

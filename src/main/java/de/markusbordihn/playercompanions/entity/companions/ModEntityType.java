@@ -56,7 +56,7 @@ public class ModEntityType {
           .sized(0.5F, 0.9F).clientTrackingRange(8).build(Dobutsu.ID));
   public static final RegistryObject<EntityType<Lizard>> LIZARD = ENTITIES.register(Lizard.ID,
       () -> EntityType.Builder.<Lizard>of(Lizard::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.5F, 0.9F).clientTrackingRange(8).build(Lizard.ID));
+          .sized(0.6F, 0.5F).clientTrackingRange(8).build(Lizard.ID));
   public static final RegistryObject<EntityType<SmallSlime>> SMALL_SLIME =
       ENTITIES.register(SmallSlime.ID,
           () -> EntityType.Builder.<SmallSlime>of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)

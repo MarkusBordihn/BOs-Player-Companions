@@ -115,6 +115,11 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue fireflyMaxGroup;
     public final ForgeConfigSpec.IntValue fireflyWeight;
 
+    public final ForgeConfigSpec.BooleanValue lizardSpawnEnable;
+    public final ForgeConfigSpec.IntValue lizardMinGroup;
+    public final ForgeConfigSpec.IntValue lizardMaxGroup;
+    public final ForgeConfigSpec.IntValue lizardWeight;
+
     public final ForgeConfigSpec.BooleanValue pigSpawnEnable;
     public final ForgeConfigSpec.IntValue pigMinGroup;
     public final ForgeConfigSpec.IntValue pigMaxGroup;
@@ -281,7 +286,7 @@ public class CommonConfig {
           builder.comment("Enable/Disable the fairy spawn.").define("fairySpawnEnable", true);
       fairyMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fairyMinGroup", 1, 0, 64);
       fairyMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fairyMaxGroup", 2, 0, 64);
-      fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 6, 0, 100);
+      fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 15, 0, 100);
       builder.pop();
 
       builder.push("Firefly");
@@ -291,7 +296,17 @@ public class CommonConfig {
           builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fireflyMinGroup", 1, 0, 64);
       fireflyMaxGroup =
           builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fireflyMaxGroup", 1, 0, 64);
-      fireflyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fireflyWeight", 6, 0, 100);
+      fireflyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fireflyWeight", 5, 0, 100);
+      builder.pop();
+
+      builder.push("Lizard");
+      lizardSpawnEnable =
+          builder.comment("Enable/Disable the lizard spawn.").define("lizardSpawnEnable", true);
+      lizardMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("lizardMinGroup", 1, 0, 64);
+      lizardMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("lizardMaxGroup", 1, 0, 64);
+      lizardWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("lizardWeight", 10, 0, 100);
       builder.pop();
 
       builder.push("Pig");
@@ -343,7 +358,7 @@ public class CommonConfig {
       smallGhastMaxGroup =
           builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("smallGhastMaxGroup", 2, 0, 64);
       smallGhastWeight =
-          builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("smallGhastWeight", 6, 0, 100);
+          builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("smallGhastWeight", 10, 0, 100);
       builder.pop();
 
       builder.push("Snail");

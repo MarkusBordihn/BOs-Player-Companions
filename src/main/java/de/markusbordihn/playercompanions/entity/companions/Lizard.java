@@ -115,22 +115,22 @@ public class Lizard extends FollowerEntityWalking {
 
   @Override
   public Vec3 getLeashOffset() {
-    return new Vec3(0.0D, 0.7F * this.getEyeHeight(), this.getBbWidth() * 0.7F);
+    return new Vec3(0.0D, 0.5F * this.getEyeHeight(), this.getBbWidth() * 0.4F);
   }
 
   @Override
   public float getStandingEyeHeight(Pose pose, EntityDimensions entityDimensions) {
-    return 0.9F;
+    return 0.3F;
   }
 
   @Override
   public int getEntityGuiScaling() {
-    return 45;
+    return 60;
   }
 
   @Override
   public int getEntityGuiTop() {
-    return 18;
+    return 10;
   }
 
 }

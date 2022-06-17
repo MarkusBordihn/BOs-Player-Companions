@@ -47,6 +47,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
 import de.markusbordihn.playercompanions.entity.companions.Firefly;
+import de.markusbordihn.playercompanions.entity.companions.Lizard;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
@@ -73,6 +74,8 @@ public class SpawnHandler {
         COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get());
     logSpawn(Firefly.NAME, COMMON.fireflySpawnEnable.get(), COMMON.fireflyWeight.get(),
         COMMON.fireflyMinGroup.get(), COMMON.fireflyMaxGroup.get());
+    logSpawn(Lizard.NAME, COMMON.lizardSpawnEnable.get(), COMMON.lizardWeight.get(),
+        COMMON.lizardMinGroup.get(), COMMON.lizardMaxGroup.get());
     logSpawn(Pig.NAME, COMMON.pigSpawnEnable.get(), COMMON.pigWeight.get(),
         COMMON.pigMinGroup.get(), COMMON.pigMaxGroup.get());
     logSpawn(Rooster.NAME, COMMON.roosterSpawnEnable.get(), COMMON.roosterWeight.get(),
@@ -97,9 +100,11 @@ public class SpawnHandler {
     }
     BiomeCategory biomeCategory = event.getCategory();
     ResourceKey<Biome> biomeKey = ResourceKey.create(Registry.BIOME_REGISTRY, biomeRegistry);
+    boolean isBadlands = biomeKey == Biomes.BADLANDS;
     boolean isBeach =
         biomeCategory == BiomeCategory.BEACH || BiomeDictionary.hasType(biomeKey, Type.BEACH);
     boolean isDarkForest = biomeKey == Biomes.DARK_FOREST;
+    boolean isDesert = biomeKey == Biomes.DESERT;
     boolean isFlowerForest = biomeKey == Biomes.FLOWER_FOREST;
     boolean isJungle =
         biomeCategory == BiomeCategory.JUNGLE || BiomeDictionary.hasType(biomeKey, Type.JUNGLE);
@@ -113,7 +118,6 @@ public class SpawnHandler {
     boolean isTaiga = biomeCategory == BiomeCategory.TAIGA;
     boolean isMountain =
         biomeCategory == BiomeCategory.MOUNTAIN || BiomeDictionary.hasType(biomeKey, Type.MOUNTAIN);
-
 
     // Dobutsu Spawn
     if (Boolean.TRUE.equals(COMMON.dobutsuSpawnEnable.get()) && isDarkForest) {
@@ -136,6 +140,14 @@ public class SpawnHandler {
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.FIREFLY.get(),
               COMMON.fireflyWeight.get(), COMMON.fireflyMinGroup.get(),
               COMMON.fireflyMaxGroup.get()));
+    }
+
+    // Lizard Spawn
+    if (Boolean.TRUE.equals(COMMON.lizardSpawnEnable.get())
+        && (isDesert || isJungle || isSwamp || isBadlands)) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.LIZARD.get(),
+              COMMON.lizardWeight.get(), COMMON.lizardMinGroup.get(), COMMON.lizardMaxGroup.get()));
     }
 
     // Pig Spawn
@@ -202,6 +214,8 @@ public class SpawnHandler {
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.FIREFLY.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Firefly::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.LIZARD.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Lizard::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.ROOSTER.get(), SpawnPlacements.Type.ON_GROUND,

@@ -39,6 +39,7 @@ import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.level.spawner.SpawnHandler;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
 import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
+import de.markusbordihn.playercompanions.utils.StopModReposts;
 
 @Mod(Constants.MOD_ID)
 public class PlayerCompanions {
@@ -48,6 +49,8 @@ public class PlayerCompanions {
   public PlayerCompanions() {
     final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     final IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
+
+    StopModReposts.checkStopModReposts();
 
     modEventBus.addListener(NetworkHandler::registerNetworkHandler);
 

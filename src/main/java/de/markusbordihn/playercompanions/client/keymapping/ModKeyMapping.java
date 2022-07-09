@@ -28,9 +28,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 
 import net.minecraft.client.KeyMapping;
 
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import de.markusbordihn.playercompanions.Constants;
 
@@ -40,21 +39,19 @@ public class ModKeyMapping {
 
   protected ModKeyMapping() {}
 
-  public static final KeyMapping AGGRESSION_KEY = new KeyMapping(Constants.KEY_PREFIX + "aggression",
-      KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_ALT),
-      Constants.KEY_PREFIX + "category");
+  public static final KeyMapping AGGRESSION_KEY =
+      new KeyMapping(Constants.KEY_PREFIX + "aggression", KeyConflictContext.IN_GAME,
+          InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_ALT),
+          Constants.KEY_PREFIX + "category");
 
   public static final KeyMapping COMMAND_KEY =
       new KeyMapping(Constants.KEY_PREFIX + "control", KeyConflictContext.IN_GAME,
           InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL),
           Constants.KEY_PREFIX + "category");
 
-  public static void registerKeyMapping(final FMLClientSetupEvent event) {
+  public static void registerKeyMapping(RegisterKeyMappingsEvent event) {
     log.info("{} Key Mapping ...", Constants.LOG_REGISTER_PREFIX);
-
-    event.enqueueWork(() -> {
-      ClientRegistry.registerKeyBinding(ModKeyMapping.AGGRESSION_KEY);
-      ClientRegistry.registerKeyBinding(ModKeyMapping.COMMAND_KEY);
-    });
+    event.register(ModKeyMapping.AGGRESSION_KEY);
+    event.register(ModKeyMapping.COMMAND_KEY);
   }
 }

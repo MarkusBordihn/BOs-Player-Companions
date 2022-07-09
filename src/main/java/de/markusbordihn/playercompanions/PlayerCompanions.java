@@ -81,7 +81,6 @@ public class PlayerCompanions {
       modEventBus.addListener(ClientRenderer::registerEntityLayerDefinitions);
       modEventBus.addListener(ClientRenderer::registerEntityRenderers);
       modEventBus.addListener(ClientScreens::registerScreens);
-      modEventBus.addListener(ClientSetup::new);
       modEventBus.addListener(ModKeyMapping::registerKeyMapping);
     });
   }

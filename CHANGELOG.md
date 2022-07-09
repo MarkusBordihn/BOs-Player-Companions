@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.07.09
+
+- Fixed changes with 41.0.79 release.
+
 ### 2022.06.17
 
 - Added new lizard player companion.

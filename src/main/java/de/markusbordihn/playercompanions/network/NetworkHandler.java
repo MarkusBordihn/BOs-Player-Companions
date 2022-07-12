@@ -65,17 +65,17 @@ public class NetworkHandler {
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void handlePlayerChangedDimensionEvent(PlayerChangedDimensionEvent event) {
-    addServerPlayer(event.getPlayer());
+    addServerPlayer(event.getEntity());
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void handlePlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-    addServerPlayer(event.getPlayer());
+    addServerPlayer(event.getEntity());
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void handlePlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
-    removeServerPlayer(event.getPlayer());
+    removeServerPlayer(event.getEntity());
   }
 
   public static void registerNetworkHandler(final FMLCommonSetupEvent event) {

@@ -66,7 +66,7 @@ public class PlayerCompanionDamageManager {
     }
 
     // Should we prevent the attack damage ?
-    if (event.getEntityLiving() instanceof TamableAnimal tamableAnimal
+    if (event.getEntity() instanceof TamableAnimal tamableAnimal
         && preventAttack(tamableAnimal, event.getSource())) {
       event.setCanceled(true);
     }
@@ -80,7 +80,7 @@ public class PlayerCompanionDamageManager {
     }
 
     // Should we prevent the attack damage ?
-    if (event.getEntityLiving() instanceof TamableAnimal tamableAnimal
+    if (event.getEntity() instanceof TamableAnimal tamableAnimal
         && preventAttack(tamableAnimal, event.getSource())) {
       event.setCanceled(true);
     }

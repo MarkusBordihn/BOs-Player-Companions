@@ -30,17 +30,17 @@ import de.markusbordihn.playercompanions.container.slots.InventorySlot;
 public class CollectorCompanionMenu extends CompanionMenu {
 
   public CollectorCompanionMenu(int windowId, Inventory playerInventory, FriendlyByteBuf data) {
-    super(ModContainer.COLLECTOR_COMPANION_MENU.get(), windowId, playerInventory, data);
+    super(ModMenuTypes.COLLECTOR_COMPANION_MENU.get(), windowId, playerInventory, data);
   }
 
   public CollectorCompanionMenu(int windowId, Inventory inventory, UUID playerCompanionUUID) {
-    super(ModContainer.COLLECTOR_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
+    super(ModMenuTypes.COLLECTOR_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
   }
 
   public CollectorCompanionMenu(int windowId, Inventory playerInventory, Container armorContainer,
       Container equipmentContainer, Container handContainer, Container inventoryContainer,
       UUID playerCompanionUUID) {
-    super(ModContainer.COLLECTOR_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
+    super(ModMenuTypes.COLLECTOR_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
         equipmentContainer, handContainer, inventoryContainer, playerCompanionUUID);
   }
 

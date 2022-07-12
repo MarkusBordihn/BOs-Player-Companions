@@ -28,27 +28,27 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ModContainer {
+public class ModMenuTypes {
 
-  protected ModContainer() {}
+  protected ModMenuTypes() {}
 
-  public static final DeferredRegister<MenuType<?>> CONTAINERS =
-      DeferredRegister.create(ForgeRegistries.CONTAINERS, Constants.MOD_ID);
+  public static final DeferredRegister<MenuType<?>> MENU_TYPES =
+      DeferredRegister.create(ForgeRegistries.MENU_TYPES, Constants.MOD_ID);
 
-  public static final RegistryObject<MenuType<CompanionMenu>> DEFAULT_COMPANION_MENU = CONTAINERS
+  public static final RegistryObject<MenuType<CompanionMenu>> DEFAULT_COMPANION_MENU = MENU_TYPES
       .register("default_companion_menu", () -> IForgeMenuType.create(DefaultCompanionMenu::new));
   public static final RegistryObject<MenuType<CollectorCompanionMenu>> COLLECTOR_COMPANION_MENU =
-      CONTAINERS.register("collector_companion_menu",
+      MENU_TYPES.register("collector_companion_menu",
           () -> IForgeMenuType.create(CollectorCompanionMenu::new));
   public static final RegistryObject<MenuType<FollowerCompanionMenu>> FOLLOWER_COMPANION_MENU =
-      CONTAINERS.register("follower_companion_menu",
+      MENU_TYPES.register("follower_companion_menu",
           () -> IForgeMenuType.create(FollowerCompanionMenu::new));
-  public static final RegistryObject<MenuType<GuardCompanionMenu>> GUARD_COMPANION_MENU = CONTAINERS
+  public static final RegistryObject<MenuType<GuardCompanionMenu>> GUARD_COMPANION_MENU = MENU_TYPES
       .register("guard_companion_menu", () -> IForgeMenuType.create(GuardCompanionMenu::new));
   public static final RegistryObject<MenuType<HealerCompanionMenu>> HEALER_COMPANION_MENU =
-      CONTAINERS.register("healer_companion_menu",
+      MENU_TYPES.register("healer_companion_menu",
           () -> IForgeMenuType.create(HealerCompanionMenu::new));
   public static final RegistryObject<MenuType<SupporterCompanionMenu>> SUPPORTER_COMPANION_MENU =
-      CONTAINERS.register("supporter_companion_menu",
+      MENU_TYPES.register("supporter_companion_menu",
           () -> IForgeMenuType.create(SupporterCompanionMenu::new));
 }

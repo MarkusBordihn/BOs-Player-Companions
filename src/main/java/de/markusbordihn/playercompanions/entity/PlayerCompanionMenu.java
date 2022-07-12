@@ -96,7 +96,7 @@ public class PlayerCompanionMenu {
             return new DefaultCompanionMenu(windowId, inventory, playerCompanionUUID);
           }
         };
-        NetworkHooks.openGui(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -123,7 +123,7 @@ public class PlayerCompanionMenu {
             return new CollectorCompanionMenu(windowId, inventory, playerCompanionUUID);
           }
         };
-        NetworkHooks.openGui(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -150,7 +150,7 @@ public class PlayerCompanionMenu {
             return new FollowerCompanionMenu(windowId, inventory, playerCompanionUUID);
           }
         };
-        NetworkHooks.openGui(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -177,7 +177,7 @@ public class PlayerCompanionMenu {
             return new GuardCompanionMenu(windowId, inventory, playerCompanionUUID);
           }
         };
-        NetworkHooks.openGui(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -204,7 +204,7 @@ public class PlayerCompanionMenu {
             return new HealerCompanionMenu(windowId, inventory, playerCompanionUUID);
           }
         };
-        NetworkHooks.openGui(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -231,7 +231,7 @@ public class PlayerCompanionMenu {
             return new SupporterCompanionMenu(windowId, inventory, playerCompanionUUID);
           }
         };
-        NetworkHooks.openGui(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }

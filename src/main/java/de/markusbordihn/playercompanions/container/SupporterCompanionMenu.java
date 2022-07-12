@@ -28,17 +28,17 @@ import net.minecraft.world.entity.player.Inventory;
 public class SupporterCompanionMenu extends CompanionMenu {
 
   public SupporterCompanionMenu(int windowId, Inventory playerInventory, FriendlyByteBuf data) {
-    super(ModContainer.SUPPORTER_COMPANION_MENU.get(), windowId, playerInventory, data);
+    super(ModMenuTypes.SUPPORTER_COMPANION_MENU.get(), windowId, playerInventory, data);
   }
 
   public SupporterCompanionMenu(int windowId, Inventory inventory, UUID playerCompanionUUID) {
-    super(ModContainer.SUPPORTER_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
+    super(ModMenuTypes.SUPPORTER_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
   }
 
   public SupporterCompanionMenu(int windowId, Inventory playerInventory, Container armorContainer,
       Container equipmentContainer, Container handContainer, Container inventoryContainer,
       UUID playerCompanionUUID) {
-    super(ModContainer.SUPPORTER_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
+    super(ModMenuTypes.SUPPORTER_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
         equipmentContainer, handContainer, inventoryContainer, playerCompanionUUID);
   }
 

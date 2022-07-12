@@ -33,7 +33,7 @@ import de.markusbordihn.playercompanions.block.ModBlocks;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.screen.ClientScreens;
-import de.markusbordihn.playercompanions.container.ModContainer;
+import de.markusbordihn.playercompanions.container.ModMenuTypes;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.level.biome.ModBiomeModifiers;
@@ -55,11 +55,11 @@ public class PlayerCompanions {
 
     modEventBus.addListener(NetworkHandler::registerNetworkHandler);
 
-    log.info("{} Container ...", Constants.LOG_REGISTER_PREFIX);
-    ModContainer.CONTAINERS.register(modEventBus);
+    log.info("{} Menu Types ...", Constants.LOG_REGISTER_PREFIX);
+    ModMenuTypes.MENU_TYPES.register(modEventBus);
 
-    log.info("{} Entities ...", Constants.LOG_REGISTER_PREFIX);
-    ModEntityType.ENTITIES.register(modEventBus);
+    log.info("{} Entity Types ...", Constants.LOG_REGISTER_PREFIX);
+    ModEntityType.ENTITIES_TYPES.register(modEventBus);
 
     log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     ModItems.ITEMS.register(modEventBus);

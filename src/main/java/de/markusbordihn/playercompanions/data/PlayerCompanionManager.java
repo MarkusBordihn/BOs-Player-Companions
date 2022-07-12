@@ -34,8 +34,8 @@ import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.player.Player;
 
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -69,7 +69,7 @@ public class PlayerCompanionManager {
   }
 
   @SubscribeEvent(priority = EventPriority.LOW)
-  public static void handleEntityJoinWorldEvent(EntityJoinWorldEvent event) {
+  public static void handleEntityJoinLevelEvent(EntityJoinLevelEvent event) {
     updateOrRegisterCompanion(event.getEntity());
   }
 
@@ -84,7 +84,7 @@ public class PlayerCompanionManager {
   }
 
   @SubscribeEvent(priority = EventPriority.LOW)
-  public static void handleEntityLeaveWorldEvent(EntityLeaveWorldEvent event) {
+  public static void handleEntityLeaveLevelEvent(EntityLeaveLevelEvent event) {
     updateCompanionData(event.getEntity());
   }
 
@@ -118,13 +118,13 @@ public class PlayerCompanionManager {
 
   @SubscribeEvent
   public static void handlePlayerChangedDimensionEvent(PlayerChangedDimensionEvent event) {
-    verifyPlayerCompanionForPlayer(event.getPlayer());
-    syncPlayerCompanionsDataToPlayer(event.getPlayer());
+    verifyPlayerCompanionForPlayer(event.getEntity());
+    syncPlayerCompanionsDataToPlayer(event.getEntity());
   }
 
   @SubscribeEvent
   public static void handlePlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
-    syncPlayerCompanionsDataToPlayer(event.getPlayer());
+    syncPlayerCompanionsDataToPlayer(event.getEntity());
   }
 
   private static void scheduleCompanionDataUpdate(Entity entity) {

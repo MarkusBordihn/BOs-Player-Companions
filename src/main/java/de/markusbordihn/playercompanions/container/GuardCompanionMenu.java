@@ -28,17 +28,17 @@ import net.minecraft.world.entity.player.Inventory;
 public class GuardCompanionMenu extends CompanionMenu {
 
   public GuardCompanionMenu(int windowId, Inventory playerInventory, FriendlyByteBuf data) {
-    super(ModContainer.GUARD_COMPANION_MENU.get(), windowId, playerInventory, data);
+    super(ModMenuTypes.GUARD_COMPANION_MENU.get(), windowId, playerInventory, data);
   }
 
   public GuardCompanionMenu(int windowId, Inventory inventory, UUID playerCompanionUUID) {
-    super(ModContainer.GUARD_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
+    super(ModMenuTypes.GUARD_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
   }
 
   public GuardCompanionMenu(int windowId, Inventory playerInventory, Container armorContainer,
       Container equipmentContainer, Container handContainer, Container inventoryContainer,
       UUID playerCompanionUUID) {
-    super(ModContainer.GUARD_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
+    super(ModMenuTypes.GUARD_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
         equipmentContainer, handContainer, inventoryContainer, playerCompanionUUID);
   }
 

@@ -28,17 +28,17 @@ import net.minecraft.world.entity.player.Inventory;
 public class HealerCompanionMenu extends CompanionMenu {
 
   public HealerCompanionMenu(int windowId, Inventory playerInventory, FriendlyByteBuf data) {
-    super(ModContainer.HEALER_COMPANION_MENU.get(), windowId, playerInventory, data);
+    super(ModMenuTypes.HEALER_COMPANION_MENU.get(), windowId, playerInventory, data);
   }
 
   public HealerCompanionMenu(int windowId, Inventory inventory, UUID playerCompanionUUID) {
-    super(ModContainer.HEALER_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
+    super(ModMenuTypes.HEALER_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
   }
 
   public HealerCompanionMenu(int windowId, Inventory playerInventory, Container armorContainer,
       Container equipmentContainer, Container handContainer, Container inventoryContainer,
       UUID playerCompanionUUID) {
-    super(ModContainer.HEALER_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
+    super(ModMenuTypes.HEALER_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
         equipmentContainer, handContainer, inventoryContainer, playerCompanionUUID);
   }
 

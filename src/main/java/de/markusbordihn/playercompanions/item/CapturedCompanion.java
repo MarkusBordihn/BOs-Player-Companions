@@ -238,6 +238,9 @@ public class CapturedCompanion extends Item {
         if (this.variant != null && this.variant != PlayerCompanionVariant.DEFAULT) {
           playerCompanionEntity.setVariant(this.variant);
         }
+        if (itemStack.hasCustomHoverName()) {
+          playerCompanionEntity.setCustomName(itemStack.getHoverName());
+        }
         playerCompanionEntity.finalizeSpawn();
         playerCompanionEntity.tame(player);
         playerCompanionEntity.follow();
@@ -423,60 +426,73 @@ public class CapturedCompanion extends Item {
   @Override
   public void appendHoverText(ItemStack itemStack, @Nullable Level level,
       List<Component> tooltipList, TooltipFlag tooltipFlag) {
-    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
-    if (playerCompanion != null) {
-      long respawnTimer =
-          playerCompanion.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
 
-      tooltipList.add(Component
-          .translatable(Constants.TEXT_PREFIX + "tamed_companion_name", playerCompanion.getName())
-          .withStyle(ChatFormatting.GOLD));
-      tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_health",
-          playerCompanion.getEntityHealth(), playerCompanion.getEntityHealthMax()));
-      tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_owner",
-          playerCompanion.getOwnerName()));
-      tooltipList.add(Component
-          .translatable(Constants.TEXT_PREFIX + "tamed_companion_type", playerCompanion.getType())
-          .withStyle(ChatFormatting.GRAY));
 
-      // Add experience and level, if available.
-      if (playerCompanion.getExperience() > 0) {
-        tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_level",
-            playerCompanion.getExperienceLevel(), playerCompanion.getExperience(),
-            Experience.getExperienceForNextLevel(playerCompanion.getExperienceLevel())));
+    if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion) {
+      PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
+
+      // Display capture companion specific information.
+      if (playerCompanion != null) {
+        tooltipList.add(Component
+            .translatable(Constants.TEXT_PREFIX + "tamed_companion_name", playerCompanion.getName())
+            .withStyle(ChatFormatting.GOLD));
+        tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_health",
+            playerCompanion.getEntityHealth(), playerCompanion.getEntityHealthMax()));
+        tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_owner",
+            playerCompanion.getOwnerName()));
       }
 
-      if (respawnTimer <= 0) {
-        if (playerCompanion.isSittingOnShoulder()) {
-          tooltipList.add(Component
-              .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_sit_on_shoulder"));
-        } else if (playerCompanion.isOrderedToPosition()) {
-          tooltipList.add(Component
-              .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_order_to_position"));
-        } else if (playerCompanion.isOrderedToSit()) {
-          tooltipList.add(Component
-              .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_order_to_sit"));
-        } else {
-          tooltipList.add(Component
-              .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_order_to_follow"));
+      // Display companion Type
+      if (playerCompanion != null) {
+        tooltipList.add(Component
+            .translatable(Constants.TEXT_PREFIX + "tamed_companion_type", playerCompanion.getType())
+            .withStyle(ChatFormatting.GRAY));
+      }
+
+      if (playerCompanion != null) {
+
+        // Add experience and level, if available.
+        if (playerCompanion.getExperience() > 0) {
+          tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_level",
+              playerCompanion.getExperienceLevel(), playerCompanion.getExperience(),
+              Experience.getExperienceForNextLevel(playerCompanion.getExperienceLevel())));
         }
-      } else {
-        tooltipList
-            .add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_status_dead"));
+
+        // Handle respawn timer, if any.
+        long respawnTimer =
+            playerCompanion.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
+        if (respawnTimer <= 0) {
+          if (playerCompanion.isSittingOnShoulder()) {
+            tooltipList.add(Component
+                .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_sit_on_shoulder"));
+          } else if (playerCompanion.isOrderedToPosition()) {
+            tooltipList.add(Component
+                .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_order_to_position"));
+          } else if (playerCompanion.isOrderedToSit()) {
+            tooltipList.add(Component
+                .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_order_to_sit"));
+          } else {
+            tooltipList.add(Component
+                .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_order_to_follow"));
+          }
+        } else {
+          tooltipList
+              .add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_status_dead"));
+        }
+
+        // Display respawn timer, if any.
+        if (respawnTimer >= 0) {
+          tooltipList.add(Component
+              .translatable(Constants.TEXT_PREFIX + "tamed_companion_respawn", respawnTimer)
+              .withStyle(ChatFormatting.RED));
+        }
+
+        tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_dimension",
+            playerCompanion.getDimensionName()).withStyle(ChatFormatting.GRAY));
       }
 
-      // Display respawn timer, if any.
-      if (respawnTimer >= 0) {
-        tooltipList.add(
-            Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_respawn", respawnTimer)
-                .withStyle(ChatFormatting.RED));
-      }
-
-      tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_dimension",
-          playerCompanion.getDimensionName()).withStyle(ChatFormatting.GRAY));
-
-      if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion
-          && capturedCompanion.getEntityFood() != null) {
+      // Display entity food.
+      if (capturedCompanion.getEntityFood() != null) {
         MutableComponent foodOverview = Component.literal("").withStyle(ChatFormatting.DARK_GREEN);
         for (ItemStack foodItemStack : capturedCompanion.getEntityFood().getItems()) {
           foodOverview.append(TranslatableText.getItemName(foodItemStack)).append(", ");
@@ -485,10 +501,13 @@ public class CapturedCompanion extends Item {
         tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_food")
             .withStyle(ChatFormatting.GREEN).append(foodOverview));
       }
-    } else {
-      UUID uuid = getCompanionUUID(itemStack);
-      if (uuid != null) {
-        tooltipList.add(Component.literal("UUID: " + uuid).withStyle(ChatFormatting.GRAY));
+
+      // Display Debug information
+      if (playerCompanion == null) {
+        UUID uuid = getCompanionUUID(itemStack);
+        if (uuid != null) {
+          tooltipList.add(Component.literal("UUID: " + uuid).withStyle(ChatFormatting.GRAY));
+        }
       }
     }
   }

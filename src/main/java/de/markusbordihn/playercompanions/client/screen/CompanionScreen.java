@@ -303,6 +303,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
             20, Component.literal("X"), onPress -> this.clearTextureSkinLocation()));
     this.clearTextureSettingsButton.visible = false;
 
+    // Save Button
     this.saveTextureSettingsButton = this.addRenderableWidget(new Button(this.leftPosDialog + 10,
         this.topPosDialog + 68, 80, 20, Component.literal("Save"), onPress -> {
           this.saveTextureSkinLocation();
@@ -311,6 +312,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.saveTextureSettingsButton.active = false;
     this.saveTextureSettingsButton.visible = false;
 
+    // Close Button
     this.closeTextureSettingsButton =
         this.addRenderableWidget(new Button(this.leftPosDialog + 145, this.topPosDialog + 68, 80,
             20, Component.literal("Cancel"), onPress -> this.showTextureSettings(false)));

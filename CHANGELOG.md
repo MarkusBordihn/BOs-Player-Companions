@@ -5,6 +5,12 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.07.22
+
+- Added better compatibility with twitchspawn to allow directly spawn of companions with pre-define names.
+- Removed duplicated storing of companion name and will use the standard custom name instead.
+- Added additional goal to let untamed companions more moving around the world.
+
 ### 2022.07.12
 
 - Refactored code for version 1.19-41.0.96.

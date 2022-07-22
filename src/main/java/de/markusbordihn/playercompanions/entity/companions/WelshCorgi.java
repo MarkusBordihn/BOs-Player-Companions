@@ -68,14 +68,11 @@ public class WelshCorgi extends SupporterWalking {
   // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(
-            PlayerCompanionVariant.DEFAULT, new ResourceLocation(Constants.MOD_ID,
+        hashMap.put(PlayerCompanionVariant.DEFAULT, new ResourceLocation(Constants.MOD_ID,
             "textures/entity/welsh_corgi/welsh_corgi_default.png"));
-        hashMap.put(
-            PlayerCompanionVariant.MIXED, new ResourceLocation(Constants.MOD_ID,
+        hashMap.put(PlayerCompanionVariant.MIXED, new ResourceLocation(Constants.MOD_ID,
             "textures/entity/welsh_corgi/welsh_corgi_mixed.png"));
-        hashMap.put(
-            PlayerCompanionVariant.BLACK, new ResourceLocation(Constants.MOD_ID,
+        hashMap.put(PlayerCompanionVariant.BLACK, new ResourceLocation(Constants.MOD_ID,
             "textures/entity/welsh_corgi/welsh_corgi_black.png"));
       });
 

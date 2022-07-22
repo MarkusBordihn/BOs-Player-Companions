@@ -64,16 +64,13 @@ public class Firefly extends FollowerEntityFlying {
 
   // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/firefly/firefly.png"));
-      });
+      Util.make(Maps.newHashMap(), hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT,
+          new ResourceLocation(Constants.MOD_ID, "textures/entity/firefly/firefly.png")));
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.FIREFLY_DEFAULT.get());
-      });
+      Util.make(Maps.newHashMap(),
+          hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.FIREFLY_DEFAULT.get()));
 
   public Firefly(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);

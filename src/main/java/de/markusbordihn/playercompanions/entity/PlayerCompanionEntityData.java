@@ -26,14 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
+import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -93,8 +92,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<Integer> DATA_RESPAWN_TIMER =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
-  private static final EntityDataAccessor<String> DATA_CUSTOM_COMPANION_NAME =
-      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_CUSTOM_TEXTURE_SKIN =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =
@@ -104,7 +101,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   // Stored Entity Data Tags
   private static final String DATA_ACTIVE_TAG = "Active";
-  private static final String DATA_CUSTOM_COMPANION_NAME_TAG = "CompanionCustomName";
   private static final String DATA_CUSTOM_TEXTURE_SKIN_TAG = "CustomTextureSkin";
   private static final String DATA_EXPERIENCE_LEVEL_TAG = "CompanionExperienceLevel";
   private static final String DATA_EXPERIENCE_TAG = "CompanionExperience";
@@ -149,9 +145,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   // Additional ticker
   private static final int DATA_SYNC_TICK = 10;
-  private static final int IDLE_TICK = 1;
   private int dataSyncTicker = 0;
-  private int idleTicker = 0;
 
   protected static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
@@ -287,18 +281,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   public boolean shouldGlowInTheDark() {
     return this.shouldGlowInTheDark;
-  }
-
-  public String getCustomCompanionName() {
-    return this.entityData.get(DATA_CUSTOM_COMPANION_NAME);
-  }
-
-  public MutableComponent getCustomCompanionNameComponent() {
-    return Component.literal(getCustomCompanionName());
-  }
-
-  public void setCustomCompanionName(String name) {
-    this.entityData.set(DATA_CUSTOM_COMPANION_NAME, name);
   }
 
   public void setCustomTextureCache(ResourceLocation resourceLocation) {
@@ -452,7 +434,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
     this.setRespawnTimer(0);
   }
 
-  protected String getRandomName() {
+  public String getRandomName() {
     return PlayerCompanionNames.getRandomCompanionName();
   }
 
@@ -727,6 +709,12 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   @Override
+  public void setCustomName(@Nullable Component name) {
+    super.setCustomName(name);
+    setDataSyncNeeded();
+  }
+
+  @Override
   public void setItemSlot(EquipmentSlot equipmentSlot, ItemStack itemStack) {
     super.setItemSlot(equipmentSlot, itemStack);
     PlayerCompanionData data = this.getData();
@@ -749,7 +737,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
   protected void defineSynchedData() {
     super.defineSynchedData();
     this.entityData.define(DATA_ACTIVE, true);
-    this.entityData.define(DATA_CUSTOM_COMPANION_NAME, getRandomName());
     this.entityData.define(DATA_EXPERIENCE, 1);
     this.entityData.define(DATA_EXPERIENCE_LEVEL, 1);
     this.entityData.define(DATA_IS_CHARGING, false);
@@ -765,7 +752,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
     compoundTag.putInt(DATA_EXPERIENCE_LEVEL_TAG, this.getExperienceLevel());
     compoundTag.putInt(DATA_EXPERIENCE_TAG, this.getExperience());
     compoundTag.putInt(DATA_RESPAWN_TIMER_TAG, this.getRespawnTimer());
-    compoundTag.putString(DATA_CUSTOM_COMPANION_NAME_TAG, this.getCustomCompanionName());
     compoundTag.putString(DATA_CUSTOM_TEXTURE_SKIN_TAG, this.getCustomTextureSkin());
     compoundTag.putString(DATA_VARIANT_TAG, this.getVariant().name());
   }
@@ -787,14 +773,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
     // Handle respawn ticker.
     if (compoundTag.contains(DATA_RESPAWN_TIMER_TAG)) {
       this.setRespawnTimer(compoundTag.getInt(DATA_RESPAWN_TIMER_TAG));
-    }
-
-    // Handle custom name.
-    if (compoundTag.contains(DATA_CUSTOM_COMPANION_NAME_TAG)) {
-      this.setCustomCompanionName(compoundTag.getString(DATA_CUSTOM_COMPANION_NAME_TAG));
-      if (!this.hasCustomName()) {
-        this.setCustomName(this.getCustomCompanionNameComponent());
-      }
     }
 
     // Handle hand items for additional effects like light effects.
@@ -820,13 +798,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   @Override
   public void tick() {
 
-    // ServerSide: Reduce ticks for unowned entities.
-    if (this.level.isClientSide || hasOwner()) {
-      super.tick();
-    } else if (this.idleTicker++ >= IDLE_TICK) {
-      super.tick();
-      this.idleTicker = 0;
-    }
+    super.tick();
 
     // ServerSide: Automatically Sync Data, if needed.
     if (!this.level.isClientSide && this.dataSyncTicker++ >= DATA_SYNC_TICK && syncDataIfNeeded()) {

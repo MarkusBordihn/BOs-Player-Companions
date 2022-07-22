@@ -77,11 +77,9 @@ public class Pig extends CollectorEntityWalking {
   // Entity texture by variant
   private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(
-            PlayerCompanionVariant.DEFAULT,
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig_default.png"));
-        hashMap.put(
-            PlayerCompanionVariant.SPOTTED,
+        hashMap.put(PlayerCompanionVariant.SPOTTED,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig_spotted.png"));
       });
 

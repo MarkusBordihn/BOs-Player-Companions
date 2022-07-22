@@ -31,6 +31,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -54,6 +55,7 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -277,9 +279,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   public void finalizeSpawn() {
 
-    // Cache random custom companion name.
+    // Set random custom companion name, if not already set.
     if (!this.hasCustomName()) {
-      this.setCustomName(this.getCustomCompanionNameComponent());
+      this.setCustomName(new TextComponent(this.getRandomName()));
     }
 
     // Reset charging, if needed.
@@ -319,7 +321,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       addParticle(ParticleTypes.ENCHANT);
       sendOwnerMessage(new TranslatableComponent(
           Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, LEVEL_UP_MESSAGE),
-          this.getCustomCompanionName(), level));
+          this.getCustomName(), level));
     }
   }
 
@@ -345,7 +347,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     super.stopRespawnTimer();
     sendOwnerMessage(new TranslatableComponent(
         Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, RESPAWN_MESSAGE),
-        this.getCustomCompanionName()));
+        this.getCustomName()));
     setDataSyncNeeded();
   }
 
@@ -412,9 +414,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   protected void registerGoals() {
     super.registerGoals();
 
-    // It not tamed, the companion will react to tame items.
+    // It not tamed, the companion will react to tame items and stroll around.
     if (this.isTamable() && this.getTameItem() != null) {
-      this.goalSelector.addGoal(3, new TameItemGoal(this, 0.8D));
+      this.goalSelector.addGoal(3, new TameItemGoal(this, 0.9D));
+      this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.8D));
     }
 
     // Adding food goals for tamed and untamed player companions.
@@ -600,17 +603,18 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       // Decrease Experience Level
       decreaseExperienceLevel();
 
+      // Inform owner about dead of companion and possible respawn.
       if (respawnOnDeath) {
         if (respawnDelay > 1) {
           setRespawnTimer((int) java.time.Instant.now().getEpochSecond() + respawnDelay);
         }
         sendOwnerMessage(new TranslatableComponent(
             Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_RESPAWN_MESSAGE),
-            getCustomCompanionName(), respawnDelay));
+            getCustomName(), respawnDelay));
       } else {
         sendOwnerMessage(new TranslatableComponent(
             Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_NOT_RESPAWN_MESSAGE),
-            getCustomCompanionName()));
+            getCustomName()));
         setActive(false);
       }
     }

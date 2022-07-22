@@ -340,7 +340,8 @@ public class PlayerCompanionData {
   public void load(PlayerCompanionEntity companion) {
     this.companionEntity = companion;
     this.companionUUID = companion.getUUID();
-    this.name = companion.getCustomCompanionName();
+    this.name = companion.hasCustomName() ? companion.getCustomName().getString()
+        : companion.getRandomName();
     this.type = companion.getCompanionType();
     this.hasOwner = companion.hasOwner();
     if (this.hasOwner) {

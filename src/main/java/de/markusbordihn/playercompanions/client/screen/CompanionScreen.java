@@ -201,7 +201,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       RenderSystem.setShaderTexture(0, DIALOG_TEXTURE);
       poseStack.translate(0, 0, 100);
       this.blit(poseStack, this.leftPosDialog + 78, this.topPosDialog + 73, 236, 17, 7, 10);
-
     }
 
     poseStack.popPose();
@@ -250,7 +249,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
   private void validateTextureSkinLocation() {
     String textureSkinLocationValue = this.textureSkinLocationBox.getValue();
-    this.canTextureSkinLocationChange = java.time.Instant.now().getEpochSecond() >= this.nextTextureSkinLocationChange;
+    this.canTextureSkinLocationChange =
+        java.time.Instant.now().getEpochSecond() >= this.nextTextureSkinLocationChange;
 
     // Additional check to make sure that the server is not spammed with requests.
     if (this.canTextureSkinLocationChange) {
@@ -304,6 +304,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
             20, new TextComponent("X"), onPress -> this.clearTextureSkinLocation()));
     this.clearTextureSettingsButton.visible = false;
 
+    // Save Button
     this.saveTextureSettingsButton = this.addRenderableWidget(new Button(this.leftPosDialog + 10,
         this.topPosDialog + 68, 80, 20, new TranslatableComponent("Save"), onPress -> {
           this.saveTextureSkinLocation();
@@ -312,6 +313,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.saveTextureSettingsButton.active = false;
     this.saveTextureSettingsButton.visible = false;
 
+    // Close Button
     this.closeTextureSettingsButton =
         this.addRenderableWidget(new Button(this.leftPosDialog + 145, this.topPosDialog + 68, 80,
             20, new TranslatableComponent("Cancel"), onPress -> this.showTextureSettings(false)));

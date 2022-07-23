@@ -106,6 +106,7 @@ public class SpawnHandler {
     boolean isDarkForest = biomeKey == Biomes.DARK_FOREST;
     boolean isDesert = biomeKey == Biomes.DESERT;
     boolean isFlowerForest = biomeKey == Biomes.FLOWER_FOREST;
+    boolean isLushCaves = biomeKey == Biomes.LUSH_CAVES;
     boolean isJungle =
         biomeCategory == BiomeCategory.JUNGLE || BiomeDictionary.hasType(biomeKey, Type.JUNGLE);
     boolean isNether =
@@ -128,7 +129,7 @@ public class SpawnHandler {
     }
 
     // Fairy Spawn
-    if (Boolean.TRUE.equals(COMMON.fairySpawnEnable.get()) && isFlowerForest) {
+    if (Boolean.TRUE.equals(COMMON.fairySpawnEnable.get()) && (isFlowerForest || isLushCaves)) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.FAIRY.get(), COMMON.fairyWeight.get(),
               COMMON.fairyMinGroup.get(), COMMON.fairyMaxGroup.get()));
@@ -144,7 +145,7 @@ public class SpawnHandler {
 
     // Lizard Spawn
     if (Boolean.TRUE.equals(COMMON.lizardSpawnEnable.get())
-        && (isDesert || isJungle || isSwamp || isBadlands)) {
+        && (isDesert || isJungle || isSwamp || isBadlands) && !isFlowerForest) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.LIZARD.get(),
               COMMON.lizardWeight.get(), COMMON.lizardMinGroup.get(), COMMON.lizardMaxGroup.get()));
@@ -166,7 +167,7 @@ public class SpawnHandler {
     }
 
     // Samurai Spawn
-    if (Boolean.TRUE.equals(COMMON.samuraiSpawnEnable.get()) && isMountain) {
+    if (Boolean.TRUE.equals(COMMON.samuraiSpawnEnable.get()) && isMountain && !isFlowerForest) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.SAMURAI.get(),
               COMMON.samuraiWeight.get(), COMMON.samuraiMinGroup.get(),

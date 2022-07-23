@@ -284,9 +284,9 @@ public class CommonConfig {
       builder.push("Fairy");
       fairySpawnEnable =
           builder.comment("Enable/Disable the fairy spawn.").define("fairySpawnEnable", true);
-      fairyMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fairyMinGroup", 1, 0, 64);
-      fairyMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fairyMaxGroup", 2, 0, 64);
-      fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 15, 0, 100);
+      fairyMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("fairyMinGroup", 2, 0, 64);
+      fairyMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("fairyMaxGroup", 3, 0, 64);
+      fairyWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("fairyWeight", 20, 0, 100);
       builder.pop();
 
       builder.push("Firefly");

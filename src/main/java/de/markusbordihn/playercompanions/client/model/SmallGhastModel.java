@@ -71,8 +71,15 @@ public class SmallGhastModel<T extends TamableAnimal> extends AgeableListModel<T
     return LayerDefinition.create(meshDefinition, 64, 32);
   }
 
+  @Override
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
+
+    // Don't animate death entities
+    if (entity.isDeadOrDying()) {
+      return;
+    }
+
     if (!entity.isInSittingPose()) {
       for (int i = 0; i < this.tentacles.length; ++i) {
         this.tentacles[i].xRot = 0.2F * Mth.sin(ageInTicks * 0.3F + i) + 0.4F;

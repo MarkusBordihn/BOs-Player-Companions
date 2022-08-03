@@ -135,9 +135,12 @@ public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
-    if (!entity.isAlive()) {
+
+    // Don't animate death entities
+    if (entity.isDeadOrDying()) {
       return;
     }
+
     if ((entity.isOnGround() && entity.getDeltaMovement().lengthSqr() < 1.0E-7D)
         || entity.isInSittingPose()) {
       this.rightWing.setPos(-1.0F, 15.001F, -3.0F);

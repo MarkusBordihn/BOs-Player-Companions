@@ -66,6 +66,9 @@ public class ModEntityType {
   public static final RegistryObject<EntityType<Samurai>> SAMURAI = ENTITIES_TYPES.register(
       Samurai.ID, () -> EntityType.Builder.<Samurai>of(Samurai::new, PlayerCompanionEntity.CATEGORY)
           .sized(0.5F, 1.4F).clientTrackingRange(16).build(Samurai.ID));
+  public static final RegistryObject<EntityType<Raptor>> RAPTOR = ENTITIES_TYPES.register(Raptor.ID,
+      () -> EntityType.Builder.<Raptor>of(Raptor::new, PlayerCompanionEntity.CATEGORY)
+          .sized(0.8F, 1.5F).clientTrackingRange(16).build(Raptor.ID));
   public static final RegistryObject<EntityType<Rooster>> ROOSTER = ENTITIES_TYPES.register(
       Rooster.ID, () -> EntityType.Builder.<Rooster>of(Rooster::new, PlayerCompanionEntity.CATEGORY)
           .sized(0.6F, 1.1F).clientTrackingRange(16).build(Rooster.ID));
@@ -98,6 +101,7 @@ public class ModEntityType {
     event.put(FIREFLY.get(), Firefly.createAttributes().build());
     event.put(LIZARD.get(), Lizard.createAttributes().build());
     event.put(PIG.get(), Pig.createAttributes().build());
+    event.put(RAPTOR.get(), Rooster.createAttributes().build());
     event.put(ROOSTER.get(), Rooster.createAttributes().build());
     event.put(SAMURAI.get(), Samurai.createAttributes().build());
     event.put(SMALL_GHAST.get(), SmallGhast.createAttributes().build());

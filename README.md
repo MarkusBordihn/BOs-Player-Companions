@@ -108,6 +108,10 @@ I'm not able to test all different kind of mod combinations or mod packs.
 
 ![Example image with pigs](examples/pigs.png)
 
+### Raptor
+
+![Example image with raptor](examples/raptor.png)
+
 ### Rooster
 
 ![Example image with lizards](examples/rooster.png)

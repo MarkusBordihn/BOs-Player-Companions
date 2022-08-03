@@ -30,6 +30,10 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.TamableAnimal;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+@OnlyIn(Dist.CLIENT)
 public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
   public final ModelPart head;
@@ -141,6 +145,12 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
   @Override
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
+
+    // Don't animate death entities
+    if (entity.isDeadOrDying()) {
+      return;
+    }
+
     if (!entity.isInSittingPose()) {
       this.head.xRot = headPitch * ((float) Math.PI / 210F);
       this.head.yRot = netHeadYaw * ((float) Math.PI / 210F);

@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.08.03
+
+- Added new raptor player companion.
+
 ### 2022.07.22
 
 - Added better compatibility with twitchspawn to allow directly spawn of companions with pre-define names.

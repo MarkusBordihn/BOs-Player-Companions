@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:mutton"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "minecraft:lead"
+    }
+  ],
+  "result": {
+    "item": "player_companions:tame_raw_mutton",
+    "count": 1
+  }
+}

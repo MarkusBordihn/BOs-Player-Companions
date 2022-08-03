@@ -50,6 +50,7 @@ import de.markusbordihn.playercompanions.entity.companions.Firefly;
 import de.markusbordihn.playercompanions.entity.companions.Lizard;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
+import de.markusbordihn.playercompanions.entity.companions.Raptor;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
 import de.markusbordihn.playercompanions.entity.companions.Samurai;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
@@ -78,6 +79,8 @@ public class SpawnHandler {
         COMMON.lizardMinGroup.get(), COMMON.lizardMaxGroup.get());
     logSpawn(Pig.NAME, COMMON.pigSpawnEnable.get(), COMMON.pigWeight.get(),
         COMMON.pigMinGroup.get(), COMMON.pigMaxGroup.get());
+    logSpawn(Raptor.NAME, COMMON.raptorSpawnEnable.get(), COMMON.raptorWeight.get(),
+        COMMON.raptorMinGroup.get(), COMMON.raptorMaxGroup.get());
     logSpawn(Rooster.NAME, COMMON.roosterSpawnEnable.get(), COMMON.roosterWeight.get(),
         COMMON.roosterMinGroup.get(), COMMON.roosterMaxGroup.get());
     logSpawn(Samurai.NAME, COMMON.samuraiSpawnEnable.get(), COMMON.samuraiWeight.get(),
@@ -158,6 +161,14 @@ public class SpawnHandler {
               COMMON.pigMinGroup.get(), COMMON.pigMaxGroup.get()));
     }
 
+    // Raptor Spawn
+    if (Boolean.TRUE.equals(COMMON.raptorSpawnEnable.get()) && isJungle) {
+      event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
+          .add(new MobSpawnSettings.SpawnerData(ModEntityType.RAPTOR.get(),
+              COMMON.raptorWeight.get(), COMMON.raptorMinGroup.get(),
+              COMMON.raptorMaxGroup.get()));
+    }
+
     // Rooster Spawn
     if (Boolean.TRUE.equals(COMMON.roosterSpawnEnable.get()) && isPlains && !isFlowerForest) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
@@ -218,6 +229,8 @@ public class SpawnHandler {
       SpawnPlacements.register(ModEntityType.LIZARD.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Lizard::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
+          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+      SpawnPlacements.register(ModEntityType.RAPTOR.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
       SpawnPlacements.register(ModEntityType.ROOSTER.get(), SpawnPlacements.Type.ON_GROUND,
           Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);

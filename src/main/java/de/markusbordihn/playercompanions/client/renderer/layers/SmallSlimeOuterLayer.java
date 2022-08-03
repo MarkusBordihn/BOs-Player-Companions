@@ -50,9 +50,9 @@ public class SmallSlimeOuterLayer<T extends TamableAnimal>
     this.model = new SmallSlimeModel<>(entityModelSet.bakeLayer(ClientRenderer.SMALL_SLIME_OUTER));
   }
 
-  public void render(PoseStack poseStack, MultiBufferSource buffer, int p_117472_, T entity,
-      float p_117474_, float p_117475_, float p_117476_, float p_117477_, float p_117478_,
-      float p_117479_) {
+  public void render(PoseStack poseStack, MultiBufferSource buffer, int lightLevel, T entity,
+      float limbSwing, float limbSwingAmount, float ageInTicks, float ageInTicks2, float netHeadYaw,
+      float headPitch) {
     Minecraft minecraft = Minecraft.getInstance();
     boolean flag = minecraft.shouldEntityAppearGlowing(entity) && entity.isInvisible();
     if (!entity.isInvisible() || flag) {
@@ -64,9 +64,9 @@ public class SmallSlimeOuterLayer<T extends TamableAnimal>
             buffer.getBuffer(RenderType.entityTranslucent(this.getTextureLocation(entity)));
       }
       this.getParentModel().copyPropertiesTo(this.model);
-      this.model.prepareMobModel(entity, p_117474_, p_117475_, p_117476_);
-      this.model.setupAnim(entity, p_117474_, p_117475_, p_117477_, p_117478_, p_117479_);
-      this.model.renderToBuffer(poseStack, vertexConsumer, p_117472_,
+      this.model.prepareMobModel(entity, limbSwing, limbSwingAmount, ageInTicks);
+      this.model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks2, netHeadYaw, headPitch);
+      this.model.renderToBuffer(poseStack, vertexConsumer, lightLevel,
           LivingEntityRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
     }
   }

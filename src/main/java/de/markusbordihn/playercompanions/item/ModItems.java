@@ -104,6 +104,11 @@ public class ModItems {
       ITEMS.register(PigItem.ID + PlayerCompanionVariant.SPOTTED.getSuffix(),
           () -> new PigItem(PlayerCompanionVariant.SPOTTED));
 
+  // Raptor
+  public static final RegistryObject<Item> RAPTOR_DEFAULT =
+      ITEMS.register(RaptorItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
+          () -> new RaptorItem(PlayerCompanionVariant.DEFAULT));
+
   // Rooster
   public static final RegistryObject<Item> ROOSTER_DEFAULT =
       ITEMS.register(RoosterItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -198,14 +203,14 @@ public class ModItems {
       ITEMS.register("tame_carrot", TameCarrot::new);
   public static final RegistryObject<Item> TAME_HONEYCOMP =
       ITEMS.register("tame_honeycomb", TameHoneycomp::new);
+  public static final RegistryObject<Item> TAME_RAW_MUTTON =
+      ITEMS.register("tame_raw_mutton", TameRawMutton::new);
   public static final RegistryObject<Item> TAME_SEAGRASS =
       ITEMS.register("tame_seagrass", TameSeagrass::new);
   public static final RegistryObject<Item> TAME_SWEET_BERRIES =
       ITEMS.register("tame_sweet_berries", TameSweetBerries::new);
   public static final RegistryObject<Item> TAME_WHEAT_SEEDS =
       ITEMS.register("tame_wheat_seeds", TameWheatSeeds::new);
-
-  @TemplateEntryPoint("Register Block Items")
 
   @TemplateEntryPoint("Register Spawn Eggs")
   public static final RegistryObject<Item> DOBUTSU_SPAWN_EGG = ITEMS.register("dobutsu_spawn_egg",
@@ -227,6 +232,10 @@ public class ModItems {
   public static final RegistryObject<Item> PIG_SPAWN_EGG = ITEMS.register("pig_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.COLOR_PINK.col,
           MaterialColor.COLOR_PINK.col,
+          new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
+  public static final RegistryObject<Item> RAPTOR_SPAWN_EGG = ITEMS.register("raptor_spawn_egg",
+      () -> new ForgeSpawnEggItem(ModEntityType.RAPTOR::get, MaterialColor.COLOR_BLACK.col,
+          MaterialColor.COLOR_GREEN.col,
           new Item.Properties().rarity(Rarity.EPIC).tab(PlayerCompanionsTab.TAB_SPAWN_EGGS)));
   public static final RegistryObject<Item> ROOSTER_SPAWN_EGG = ITEMS.register("rooster_spawn_egg",
       () -> new ForgeSpawnEggItem(ModEntityType.ROOSTER::get, MaterialColor.COLOR_ORANGE.col,

@@ -1,11 +1,9 @@
+# 🐾 Player Companion's
+
 [![Player Companions Downloads](http://cf.way2muchnoise.eu/full_552456_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 [![Player Companions Versions](http://cf.way2muchnoise.eu/versions/Minecraft_552456_all.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 
-# 🐾 Player Companion's
-
 Player Companions adds additional creatures which will follow, protect or help you.
-
-**BETA Status: It could be that the release version will not be compatible with the BETA version and you will lose existing player companions!**
 
 ## Features
 
@@ -107,6 +105,10 @@ I'm not able to test all different kind of mod combinations or mod packs.
 ### Pigs
 
 ![Example image with pigs](examples/pigs.png)
+
+### Raptor
+
+![Example image with raptor](examples/raptor.png)
 
 ### Rooster
 

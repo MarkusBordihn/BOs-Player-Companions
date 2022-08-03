@@ -91,6 +91,12 @@ public class SamuraiModel<T extends TamableAnimal> extends HumanoidModel<T> {
   @Override
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
+
+    // Don't animate death entities
+    if (entity.isDeadOrDying()) {
+      return;
+    }
+
     if (entity.isInSittingPose()) {
       this.head.setPos(0.0F, 8.0F, 0.0F);
       this.body.setPos(0.0F, 8.0F, 0.0F);

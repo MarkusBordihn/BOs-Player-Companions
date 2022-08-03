@@ -125,6 +125,11 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue pigMaxGroup;
     public final ForgeConfigSpec.IntValue pigWeight;
 
+    public final ForgeConfigSpec.BooleanValue raptorSpawnEnable;
+    public final ForgeConfigSpec.IntValue raptorMinGroup;
+    public final ForgeConfigSpec.IntValue raptorMaxGroup;
+    public final ForgeConfigSpec.IntValue raptorWeight;
+
     public final ForgeConfigSpec.BooleanValue roosterSpawnEnable;
     public final ForgeConfigSpec.IntValue roosterMinGroup;
     public final ForgeConfigSpec.IntValue roosterMaxGroup;
@@ -315,6 +320,16 @@ public class CommonConfig {
       pigMinGroup = builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("pigMinGroup", 1, 0, 64);
       pigMaxGroup = builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("pigMaxGroup", 1, 0, 64);
       pigWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("pigWeight", 6, 0, 100);
+      builder.pop();
+
+      builder.push("Raptor");
+      raptorSpawnEnable =
+          builder.comment("Enable/Disable the raptor spawn.").define("raptorSpawnEnable", true);
+      raptorMinGroup =
+          builder.comment(MIN_GROUP_SIZE_TEXT).defineInRange("raptorMinGroup", 1, 0, 64);
+      raptorMaxGroup =
+          builder.comment(MAX_GROUP_SIZE_TEXT).defineInRange("raptorMaxGroup", 2, 0, 64);
+      raptorWeight = builder.comment(SPAWN_WEIGHT_TEXT).defineInRange("raptorWeight", 6, 0, 100);
       builder.pop();
 
       builder.push("Rooster");

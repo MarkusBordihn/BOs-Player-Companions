@@ -56,7 +56,8 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
 
   @Override
   public void render(PoseStack poseStack, MultiBufferSource buffer, int lightLevel, T entity,
-      float unused1, float unused2, float unused3, float unused4, float unused5, float unused6) {
+      float limbSwing, float limbSwingAmount, float ageInTicks, float ageInTicks2, float netHeadYaw,
+      float headPitch) {
     ItemStack itemStackMainHand = entity.getMainHandItem();
 
     if (this.getParentModel() instanceof PlayerCompanionModel playerCompanionModel) {

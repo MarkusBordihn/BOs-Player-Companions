@@ -107,9 +107,11 @@ public class FairyModel<T extends TamableAnimal> extends HumanoidModel<T> {
   @Override
   public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
       float netHeadYaw, float headPitch) {
-    if (!entity.isAlive()) {
+    // Don't animate death entities
+    if (entity.isDeadOrDying()) {
       return;
     }
+
     // General animations
     super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 

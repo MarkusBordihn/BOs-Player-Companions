@@ -483,7 +483,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           return InteractionResult.sidedSuccess(this.level.isClientSide);
         }
       } else {
-        log.info("Fully staffed ...");
+        log.debug("{} is fully staffed ...", this);
       }
       return InteractionResult.PASS;
     }

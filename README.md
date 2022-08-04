@@ -3,11 +3,11 @@
 [![Player Companions Downloads](http://cf.way2muchnoise.eu/full_552456_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 [![Player Companions Versions](http://cf.way2muchnoise.eu/versions/Minecraft_552456_all.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 
+![Logo](/examples/player_companions.gif)
+
 Player Companions adds additional creatures which will follow, protect or help you.
 
-**BETA Status: It could be that the release version will not be compatible with the BETA version and you will lose existing player companions!**
-
-## Features
+## ✨ Features
 
 - Persistent Player companions with dedicated item to easy spawn and despawn.
 - Different player companion types like collector, follower, guard, healer and supporter.

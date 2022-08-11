@@ -139,6 +139,7 @@ dependencies {
   // runtimeOnly fg.deobf("curse.maven:patchouli-306770:3729975")
 
   // Testing
+  runtimeOnly fg.deobf("curse.maven:rubidium-574856:3864138")
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
 
   // Compability tests for other npc / custom mods

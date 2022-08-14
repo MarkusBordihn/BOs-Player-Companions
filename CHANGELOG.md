@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.08.14
+
+- Added pink raptor variant and fixed head animation.
+- Improved automatic data backup with additional options.
+
 ### 2022.08.03
 
 - Added new raptor player companion.

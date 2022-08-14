@@ -65,9 +65,9 @@ public class PlayerCompanionsServerDataBackup {
       log.warn("{} skipping Backup, because data are empty!", Constants.LOG_ICON_NAME);
       return false;
     }
-    log.info("{} creating Backup ...", Constants.LOG_ICON_NAME);
     File file = new File(BACKUP_FOLDER.getAbsoluteFile(),
         new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + "-" + BACKUP_FILE_NAME);
+    log.info("{} creating Backup {} ...", Constants.LOG_ICON_NAME, file.getName());
     try {
       if (!file.getParentFile().exists()) {
         log.info("{} creating backup folder at {}", Constants.LOG_ICON_NAME, file.getParentFile());

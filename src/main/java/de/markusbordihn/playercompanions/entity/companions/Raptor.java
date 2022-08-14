@@ -80,12 +80,15 @@ public class Raptor extends GuardEntityWalking implements NeutralMob {
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT,
             new ResourceLocation(Constants.MOD_ID, "textures/entity/raptor/raptor_default.png"));
+        hashMap.put(PlayerCompanionVariant.PINK,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/raptor/raptor_pink.png"));
       });
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(Maps.newHashMap(), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.RAPTOR_DEFAULT.get());
+        hashMap.put(PlayerCompanionVariant.PINK, ModItems.RAPTOR_PINK.get());
       });
 
   public Raptor(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {

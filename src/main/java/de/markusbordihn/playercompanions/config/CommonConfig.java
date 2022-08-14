@@ -81,6 +81,9 @@ public class CommonConfig {
     public final ForgeConfigSpec.BooleanValue hudStatusEnabled;
     public final ForgeConfigSpec.IntValue hudDisplayRadius;
 
+    public final ForgeConfigSpec.BooleanValue dataBackupEnabled;
+    public final ForgeConfigSpec.IntValue dataBackupInterval;
+
     public final ForgeConfigSpec.ConfigValue<List<String>> namesNPCFemale;
     public final ForgeConfigSpec.ConfigValue<List<String>> namesNPCMale;
     public final ForgeConfigSpec.ConfigValue<List<String>> namesNPCMisc;
@@ -141,6 +144,14 @@ public class CommonConfig {
           .define("hudStatusEnabled", true);
       hudDisplayRadius = builder.comment("Radius in which hud is displayed.")
           .defineInRange("hudDisplayRadius", 32, 0, 256);
+      builder.pop();
+
+      builder.push("Backup");
+      dataBackupEnabled =
+          builder.comment("Enable automatic data backups.").define("dataBackupEnabled", true);
+      dataBackupInterval =
+          builder.comment("Time between automatic backups in minutes. (0 = disabled)")
+              .defineInRange("dataBackupInterval", 1440, 0, 10080);
       builder.pop();
 
       builder.push("NPC Names");

@@ -108,6 +108,9 @@ public class ModItems {
   public static final RegistryObject<Item> RAPTOR_DEFAULT =
       ITEMS.register(RaptorItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
           () -> new RaptorItem(PlayerCompanionVariant.DEFAULT));
+  public static final RegistryObject<Item> RAPTOR_PINK =
+      ITEMS.register(RaptorItem.ID + PlayerCompanionVariant.PINK.getSuffix(),
+          () -> new RaptorItem(PlayerCompanionVariant.PINK));
 
   // Rooster
   public static final RegistryObject<Item> ROOSTER_DEFAULT =

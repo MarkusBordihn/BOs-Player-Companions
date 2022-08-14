@@ -150,7 +150,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     playerCompanionEntity.setYRot(180.0F + f * 40.0F);
     playerCompanionEntity.setXRot(-f1 * 20.0F);
     playerCompanionEntity.yHeadRot = playerCompanionEntity.getYRot();
-    playerCompanionEntity.yHeadRotO = playerCompanionEntity.getYRot();
     Component customName = playerCompanionEntity.getCustomName();
     playerCompanionEntity.setCustomName(null);
     Lighting.setupForEntityInInventory();
@@ -168,8 +167,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     playerCompanionEntity.yBodyRot = entityYBodyRot;
     playerCompanionEntity.setYRot(entityYRot);
     playerCompanionEntity.setXRot(entityXRot);
-    playerCompanionEntity.yHeadRotO = entityYHeadRotO;
     playerCompanionEntity.yHeadRot = entityYHeadRot;
+    playerCompanionEntity.yHeadRotO = entityYHeadRotO;
     playerCompanionEntity.setCustomName(customName);
     poseStack.popPose();
     RenderSystem.applyModelViewMatrix();

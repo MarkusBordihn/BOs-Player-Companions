@@ -44,6 +44,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 
@@ -51,6 +52,8 @@ import de.markusbordihn.playercompanions.item.CapturedCompanion;
 public class PlayerCompanionsServerData extends SavedData {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
+  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   public static final String COMPANIONS_TAG = "Companions";
   public static final String NPC_TAG = "NPCs";
@@ -65,12 +68,22 @@ public class PlayerCompanionsServerData extends SavedData {
 
   private static final String PLAYER_COMPANIONS_FILE_ID = Constants.MOD_ID;
 
-  private int nextDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
+  private static long nextBackupTime = 0;
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     playerCompanionsMap = new ConcurrentHashMap<>();
     companionsPerPlayerMap = new ConcurrentHashMap<>();
+
+    if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get())) {
+      nextBackupTime =
+          (int) java.time.Instant.now().getEpochSecond() + (60 * COMMON.dataBackupInterval.get());
+      log.info("Enable automatic data backups every {} minutes, next backup will run at {} ...",
+          COMMON.dataBackupInterval.get(), nextBackupTime);
+    } else {
+      log.warn(
+          "Automatic Data backups are deactivated, please make sure to create regular backups!");
+    }
   }
 
   public PlayerCompanionsServerData() {
@@ -279,7 +292,13 @@ public class PlayerCompanionsServerData extends SavedData {
 
   public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
     // Create a backup before we loading anything!
-    PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
+    if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get())) {
+      PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
+      if (COMMON.dataBackupInterval.get() > 0) {
+        updateBackupTime(
+            java.time.Instant.now().getEpochSecond() + (60 * COMMON.dataBackupInterval.get()));
+      }
+    }
 
     // Create a new data instance and set last update field.
     PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
@@ -317,16 +336,25 @@ public class PlayerCompanionsServerData extends SavedData {
     ListTag npcListTag = new ListTag();
     compoundTag.put(NPC_TAG, npcListTag);
 
-    // Create a backup at least every 24 hours.
-    if (nextDailyBackup >= java.time.Instant.now().getEpochSecond()) {
-      int nextPlanedDailyBackup = (int) java.time.Instant.now().getEpochSecond() + (60 * 60 * 24);
-      log.info("{} Storing daily backup at {}, next planned backup is scheduled for {}.",
-          Constants.LOG_ICON_NAME, nextDailyBackup, nextPlanedDailyBackup);
+    // Create a automatic backup, if enabled for the configured interval.
+    if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get()) && nextBackupTime > 0
+        && java.time.Instant.now().getEpochSecond() >= nextBackupTime) {
       PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
-      nextDailyBackup = nextPlanedDailyBackup;
+      updateBackupTime(
+          java.time.Instant.now().getEpochSecond() + (60 * COMMON.dataBackupInterval.get()));
     }
 
     return compoundTag;
+  }
+
+  private static void updateBackupTime(long backupTime) {
+    if (nextBackupTime != backupTime && backupTime > 0
+        && backupTime >= java.time.Instant.now().getEpochSecond()) {
+      log.info("{} next planned backup is scheduled for {} in about {} min.",
+          Constants.LOG_ICON_NAME, backupTime,
+          (backupTime - java.time.Instant.now().getEpochSecond()) / 60);
+      nextBackupTime = backupTime;
+    }
   }
 
 }

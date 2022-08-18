@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.08.18
+
+- Added possibility to link empty companion item to existing companion.
+
 ### 2022.08.14
 
 - Added pink raptor variant and fixed head animation.

@@ -54,8 +54,8 @@ public class OverviewCommand extends CustomCommand {
     while (playerCompanionIterator.hasNext()) {
       PlayerCompanionData playerCompanion = playerCompanionIterator.next();
       if (playerCompanion != null) {
-        sendFeedback(context,
-            String.format("\u25CB %s (%s)", playerCompanion.getName(), playerCompanion.getType()));
+        sendFeedback(context, String.format("\u25CB %s (%s) [%s]", playerCompanion.getName(),
+            playerCompanion.getType(), playerCompanion.getUUID()));
       }
     }
     return 0;

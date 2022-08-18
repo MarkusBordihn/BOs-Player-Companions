@@ -74,6 +74,7 @@ import de.markusbordihn.playercompanions.block.LightBlock;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
 import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
 
 @EventBusSubscriber
@@ -295,14 +296,19 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       this.stopRespawnTimer();
     }
 
-    // Trigger Hand change events, if needed.
+    // Trigger hand change events, if needed.
     ItemStack mainHandItemStack = this.getItemBySlot(EquipmentSlot.MAINHAND);
     if (mainHandItemStack != null) {
-      onMainHandItemSlotChange(mainHandItemStack);
+      this.onMainHandItemSlotChange(mainHandItemStack);
     }
     ItemStack offHandItemStack = this.getItemBySlot(EquipmentSlot.OFFHAND);
     if (offHandItemStack != null) {
-      onOffHandItemSlotChange(offHandItemStack);
+      this.onOffHandItemSlotChange(offHandItemStack);
+    }
+
+    // Make sure to set variant to DEFAULT instead of NONE, if not was define until now.
+    if (this.getVariant() == PlayerCompanionVariant.NONE) {
+      this.setVariant(PlayerCompanionVariant.DEFAULT);
     }
   }
 
@@ -421,7 +427,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
 
     // Adding food goals for tamed and untamed player companions.
-    if (this.getFoodItems() != null) {
+    if (this.getFoodItems() != null && !this.getFoodItems().isEmpty()) {
       this.goalSelector.addGoal(3, new FoodItemGoal(this, 1.0D));
     }
   }
@@ -468,6 +474,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           }
           NetworkHandler.commandPlayerCompanion(getStringUUID(), PlayerCompanionCommand.PET);
           return InteractionResult.SUCCESS;
+        }
+
+        // No further interaction with "empty" captured companion items.
+        else if (itemStack != null && !itemStack.isEmpty()
+            && itemStack.getItem() instanceof CapturedCompanion capturedCompanion
+            && !capturedCompanion.hasCompanion(itemStack)) {
+          return InteractionResult.FAIL;
         }
 
         // Open Player Companion Inventory, if none eatable item.

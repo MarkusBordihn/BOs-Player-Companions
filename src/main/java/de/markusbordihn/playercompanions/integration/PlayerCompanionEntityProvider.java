@@ -52,6 +52,7 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
     if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
       tooltip.add(new TextComponent("Type: " + playerCompanionEntity.getCompanionType()));
+      tooltip.add(new TextComponent("Variant: " + playerCompanionEntity.getVariant()));
       if (playerCompanionEntity.getOwner() != null) {
         PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
         if (!config.get(VanillaPlugin.ANIMAL_OWNER)) {

@@ -53,6 +53,7 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
     if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
       tooltip.add(Component.literal("Type: " + playerCompanionEntity.getCompanionType()));
+      tooltip.add(Component.literal("Variant: " + playerCompanionEntity.getVariant()));
       if (playerCompanionEntity.getOwner() != null) {
         PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
         if (accessor.getEntity() instanceof OwnableEntity) {

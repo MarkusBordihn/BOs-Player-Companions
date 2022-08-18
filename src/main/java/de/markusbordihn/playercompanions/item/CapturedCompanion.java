@@ -120,6 +120,10 @@ public class CapturedCompanion extends Item {
     return serverLevel.getEntity(companionUUID);
   }
 
+  public PlayerCompanionVariant getVariant() {
+    return this.variant;
+  }
+
   public boolean spawnCompanion(ItemStack itemStack, BlockPos blockPos, Player player,
       Level level) {
     Entity playerCompanion = null;
@@ -142,7 +146,6 @@ public class CapturedCompanion extends Item {
 
     // If companion exits and alive, just port the companion to the player.
     if (playerCompanion != null && playerCompanion.isAlive()) {
-
       if (playerCompanion.closerThan(player, 16)) {
         if (playerCompanion instanceof PlayerCompanionEntity playerCompanionEntity) {
           playerCompanionEntity.setOrderedToPosition(
@@ -235,7 +238,7 @@ public class CapturedCompanion extends Item {
     if (entityType != null) {
       Entity entity = entityType.create(level);
       if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-        if (this.variant != null && this.variant != PlayerCompanionVariant.DEFAULT) {
+        if (this.variant != null && this.variant != PlayerCompanionVariant.NONE) {
           playerCompanionEntity.setVariant(this.variant);
         }
         if (itemStack.hasCustomHoverName()) {
@@ -315,13 +318,37 @@ public class CapturedCompanion extends Item {
   public InteractionResult interactLivingEntity(ItemStack itemStack, Player player,
       LivingEntity livingEntity, InteractionHand hand) {
 
+    Level level = player.getLevel();
+
     // Check if we have any captured companion.
     if (!hasCompanion(itemStack)) {
+
+      // Check if we could link the targeted companion to the current item.
+      if (!level.isClientSide()
+          && livingEntity instanceof PlayerCompanionEntity playerCompanionEntity
+          && playerCompanionEntity.isTame()
+          && playerCompanionEntity.getOwnerUUID().equals(player.getUUID())) {
+
+        // Compare companion type and variant with item type and variant.
+        if (playerCompanionEntity.getType().equals(this.getEntityType())
+            && (playerCompanionEntity.getVariant().equals(this.getVariant())
+                || (playerCompanionEntity.getVariant() == PlayerCompanionVariant.NONE
+                    && this.getVariant() == PlayerCompanionVariant.DEFAULT))) {
+          log.info("Player {} linked {} with {}", player, itemStack, playerCompanionEntity);
+          ItemStack handItemStack = player.getItemInHand(hand);
+          setCompanionUUID(handItemStack, playerCompanionEntity.getUUID());
+          return InteractionResult.CONSUME;
+        } else {
+          log.debug(
+              "Player companion type {} and variant {} is not compatible with item type {} and variant {}!",
+              playerCompanionEntity.getType(), playerCompanionEntity.getVariant(),
+              this.getEntityType(), this.getVariant());
+        }
+      }
       return InteractionResult.FAIL;
     }
 
     // Try to despawn companion (server-side only).
-    Level level = player.getLevel();
     if (!level.isClientSide() && despawnCompanion(livingEntity, itemStack)) {
       return InteractionResult.CONSUME;
     }
@@ -356,9 +383,10 @@ public class CapturedCompanion extends Item {
     }
 
     // Check if there is any active respawn timer.
-    PlayerCompanionData playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
-    if (playerCompanion != null && playerCompanion.hasEntityRespawnTimer()
-        && playerCompanion.getEntityRespawnTimer() > java.time.Instant.now().getEpochSecond()) {
+    PlayerCompanionData playerCompanionData =
+        PlayerCompanionsServerData.get().getCompanion(itemStack);
+    if (playerCompanionData != null && playerCompanionData.hasEntityRespawnTimer()
+        && playerCompanionData.getEntityRespawnTimer() > java.time.Instant.now().getEpochSecond()) {
       return InteractionResult.FAIL;
     }
 
@@ -388,8 +416,8 @@ public class CapturedCompanion extends Item {
 
   @Override
   public boolean isBarVisible(ItemStack itemStack) {
-    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
-    return playerCompanion != null;
+    PlayerCompanionData playerCompanionData = PlayerCompanionsClientData.getCompanion(itemStack);
+    return playerCompanionData != null;
   }
 
   @Override
@@ -399,20 +427,20 @@ public class CapturedCompanion extends Item {
 
   @Override
   public int getBarWidth(ItemStack itemStack) {
-    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
-    if (playerCompanion != null) {
-      return Math
-          .round(playerCompanion.getEntityHealth() * (13f / playerCompanion.getEntityHealthMax()));
+    PlayerCompanionData playerCompanionData = PlayerCompanionsClientData.getCompanion(itemStack);
+    if (playerCompanionData != null) {
+      return Math.round(
+          playerCompanionData.getEntityHealth() * (13f / playerCompanionData.getEntityHealthMax()));
     }
     return super.getBarWidth(itemStack);
   }
 
   @Override
   public int getBarColor(ItemStack itemStack) {
-    PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
-    if (playerCompanion != null) {
-      float barColor =
-          Math.max(0.0F, playerCompanion.getEntityHealth() / playerCompanion.getEntityHealthMax());
+    PlayerCompanionData playerCompanionData = PlayerCompanionsClientData.getCompanion(itemStack);
+    if (playerCompanionData != null) {
+      float barColor = Math.max(0.0F,
+          playerCompanionData.getEntityHealth() / playerCompanionData.getEntityHealthMax());
       return Mth.hsvToRgb(barColor / 3.0F, 1.0F, 1.0F);
     }
     return super.getBarColor(itemStack);
@@ -429,46 +457,44 @@ public class CapturedCompanion extends Item {
 
 
     if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion) {
-      PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
+      PlayerCompanionData playerCompanionData = PlayerCompanionsClientData.getCompanion(itemStack);
 
       // Display capture companion specific information.
-      if (playerCompanion != null) {
-        tooltipList.add(Component
-            .translatable(Constants.TEXT_PREFIX + "tamed_companion_name", playerCompanion.getName())
-            .withStyle(ChatFormatting.GOLD));
+      if (playerCompanionData != null) {
+        tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_name",
+            playerCompanionData.getName()).withStyle(ChatFormatting.GOLD));
         tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_health",
-            playerCompanion.getEntityHealth(), playerCompanion.getEntityHealthMax()));
+            playerCompanionData.getEntityHealth(), playerCompanionData.getEntityHealthMax()));
         tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_owner",
-            playerCompanion.getOwnerName()));
+            playerCompanionData.getOwnerName()));
       }
 
       // Display companion Type
-      if (playerCompanion != null) {
-        tooltipList.add(Component
-            .translatable(Constants.TEXT_PREFIX + "tamed_companion_type", playerCompanion.getType())
-            .withStyle(ChatFormatting.GRAY));
+      if (playerCompanionData != null) {
+        tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_type",
+            playerCompanionData.getType()).withStyle(ChatFormatting.GRAY));
       }
 
-      if (playerCompanion != null) {
+      if (playerCompanionData != null) {
 
         // Add experience and level, if available.
-        if (playerCompanion.getExperience() > 0) {
+        if (playerCompanionData.getExperience() > 0) {
           tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_level",
-              playerCompanion.getExperienceLevel(), playerCompanion.getExperience(),
-              Experience.getExperienceForNextLevel(playerCompanion.getExperienceLevel())));
+              playerCompanionData.getExperienceLevel(), playerCompanionData.getExperience(),
+              Experience.getExperienceForNextLevel(playerCompanionData.getExperienceLevel())));
         }
 
         // Handle respawn timer, if any.
         long respawnTimer =
-            playerCompanion.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
+            playerCompanionData.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
         if (respawnTimer <= 0) {
-          if (playerCompanion.isSittingOnShoulder()) {
+          if (playerCompanionData.isSittingOnShoulder()) {
             tooltipList.add(Component
                 .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_sit_on_shoulder"));
-          } else if (playerCompanion.isOrderedToPosition()) {
+          } else if (playerCompanionData.isOrderedToPosition()) {
             tooltipList.add(Component
                 .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_order_to_position"));
-          } else if (playerCompanion.isOrderedToSit()) {
+          } else if (playerCompanionData.isOrderedToSit()) {
             tooltipList.add(Component
                 .translatable(Constants.TEXT_PREFIX + "tamed_companion_status_order_to_sit"));
           } else {
@@ -488,7 +514,19 @@ public class CapturedCompanion extends Item {
         }
 
         tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_dimension",
-            playerCompanion.getDimensionName()).withStyle(ChatFormatting.GRAY));
+            playerCompanionData.getDimensionName()).withStyle(ChatFormatting.GRAY));
+      }
+
+      // Adding basic usage notes
+      if (getCompanionUUID(itemStack) == null) {
+        tooltipList
+            .add(Component.translatable(Constants.TEXT_PREFIX + "empty_captured_companion_usage")
+                .withStyle(ChatFormatting.GREEN));
+      } else {
+        tooltipList.add(Component
+            .translatable(Constants.TEXT_PREFIX + "captured_companion_usage",
+                playerCompanionData != null ? playerCompanionData.getName() : "")
+            .withStyle(ChatFormatting.GRAY));
       }
 
       // Display entity food.
@@ -503,7 +541,7 @@ public class CapturedCompanion extends Item {
       }
 
       // Display Debug information
-      if (playerCompanion == null) {
+      if (playerCompanionData == null) {
         UUID uuid = getCompanionUUID(itemStack);
         if (uuid != null) {
           tooltipList.add(Component.literal("UUID: " + uuid).withStyle(ChatFormatting.GRAY));

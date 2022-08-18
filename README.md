@@ -64,11 +64,13 @@ Each player companion prefer a specific tame item, in most cases you need severa
 
 Most of the companions could be controlled with the following controls:
 
-- **CTRL + Right Click** (on Player Companion with empty Hand or Weapon) Order to sit / Un-order to sit
 - **ALT + Right Click** (on Player Companion with empty Hand or Weapon) Change Aggressive status like passive, neutral, aggressive
-- **Right Click** (on Collector with empty hand or normal Block) Open Inventory
-- **Right Click** (with Player Companion Item) Order to position
-- **SHIFT + Right Click** (with empty hand) Pet Companion
+- **CTRL + Right Click** (on Player Companion with empty Hand or Weapon) Order to sit / un-order to sit
+- **Right Click** (on Collector with empty hand or normal Block) Open the companion inventory
+- **Right Click** (on Player Companion with empty hand or normal Block) Open the companion menu
+- **Right Click** (with Player Companion Item on Companion) Despawn/Spawn the companion
+- **Right Click** (with Player Companion Item on empty place) Order to position
+- **SHIFT + Right Click** (with empty hand) Pet the companion
 
 ### Order to a specific position
 
@@ -135,6 +137,13 @@ I'm not able to test all different kind of mod combinations or mod packs.
 ### Welsh Corgis
 
 ![Example image with welsh corgis](examples/welsh_corgis.png)
+
+## 🙋FAQ
+
+### I lost my companion item, is there are way to get it back❓
+
+The easiest way is to get the identical (same type/variant) Player Companion Item (over creative mode or `/give command`) and just clicking on the corresponding player companion to link it.
+Please keep in mind that only the owner is able to link a player companion to an item.
 
 ## Version Status Overview 🛠️
 

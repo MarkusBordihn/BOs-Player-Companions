@@ -48,7 +48,7 @@
   "text.player_companions.empty_captured_companion_usage": "Click on an empty place to create a new companion or click on an existing companion to link the existed companion instead.",
 
   "text.player_companions.aggression_level.PASSIVE_FLEE": "Passive (flee)",
-  "text.player_companions.aggression_level.PASSIVE": "Passive (flee)",
+  "text.player_companions.aggression_level.PASSIVE": "Passive",
   "text.player_companions.aggression_level.NEUTRAL": "Neutral",
   "text.player_companions.aggression_level.AGGRESSIVE": "Aggressive",
   "text.player_companions.aggression_level.AGGRESSIVE_ANIMALS": "Aggressive (animals)",

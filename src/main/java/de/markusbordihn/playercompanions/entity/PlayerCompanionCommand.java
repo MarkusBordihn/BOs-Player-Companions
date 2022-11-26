@@ -20,6 +20,9 @@
 package de.markusbordihn.playercompanions.entity;
 
 public enum PlayerCompanionCommand {
+  AGGRESSION_LEVEL_DEFAULT,
+  AGGRESSION_LEVEL_NEXT,
+  AGGRESSION_LEVEL_PREVIOUS,
   AGGRESSION_LEVEL_TOGGLE,
   FOLLOW,
   OPEN_MENU,

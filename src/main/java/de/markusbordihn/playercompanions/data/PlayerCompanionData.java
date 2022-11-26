@@ -41,6 +41,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.ActionType;
 import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
@@ -50,6 +51,7 @@ public class PlayerCompanionData {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String ACTIVE_TAG = "Active";
+  private static final String ENTITY_ACTION_TYPE = "EntityActionType";
   private static final String ENTITY_AGGRESSION_LEVEL = "EntityAggressionLevel";
   private static final String ENTITY_DATA_TAG = "EntityData";
   private static final String ENTITY_DIMENSION = "EntityDimension";
@@ -73,6 +75,7 @@ public class PlayerCompanionData {
   private static final String TYPE_TAG = "Type";
   public static final String UUID_TAG = "UUID";
 
+  private ActionType entityActionType = ActionType.UNKNOWN;
   private AggressionLevel entityAggressionLevel = AggressionLevel.UNKNOWN;
   private BlockPos blockPos;
   private ClientLevel clientLevel;
@@ -177,6 +180,15 @@ public class PlayerCompanionData {
     return this.entityExperienceLevel;
   }
 
+  public ActionType getEntityActionType() {
+    return this.entityActionType;
+  }
+
+  public void setEntityActionType(ActionType actionType) {
+    this.entityActionType = actionType;
+  }
+
+
   public AggressionLevel getEntityAggressionLevel() {
     return this.entityAggressionLevel;
   }
@@ -210,6 +222,12 @@ public class PlayerCompanionData {
 
   public CompoundTag getEntityData() {
     return this.entityData;
+  }
+
+  public void syncEntityData(Entity entity) {
+    if (entity instanceof LivingEntity livingEntity) {
+      syncEntityData(livingEntity);
+    }
   }
 
   public void syncEntityData(LivingEntity livingEntity) {
@@ -354,6 +372,7 @@ public class PlayerCompanionData {
     this.level = companion.getLevel().dimension();
     this.levelName = this.level.getRegistryName() + "/" + this.level.location();
     this.entityId = companion.getId();
+    this.entityActionType = companion.getActionType();
     this.entityAggressionLevel = companion.getAggressionLevel();
     this.entityDimension = companion.getDimensionName();
     this.entityExperience = companion.getExperience();
@@ -366,9 +385,10 @@ public class PlayerCompanionData {
     this.entityOrderedToPosition = companion.isOrderedToPosition();
     this.entitySitOnShoulder = companion.isSitOnShoulder();
     this.entityData = companion.serializeNBT();
-    this.entityTarget =
-        companion.getTarget() == null || companion.getTarget().getEncodeId() == null ? ""
-            : companion.getTarget().getEncodeId();
+
+    // Entity Target
+    LivingEntity target = companion.getTarget();
+    this.entityTarget = target == null || target.getEncodeId() == null ? "" : target.getEncodeId();
 
     // Handle level references (client and server)
     Level companionLevel = companion.getLevel();
@@ -434,6 +454,17 @@ public class PlayerCompanionData {
     this.entityTarget = compoundTag.getString(ENTITY_TARGET_TAG);
     this.entitySitOnShoulder = compoundTag.getBoolean(ENTITY_SITTING_ON_SHOULDER_TAG);
 
+    // Action Type
+    if (compoundTag.contains(ENTITY_ACTION_TYPE)) {
+      this.entityActionType = ActionType.get(compoundTag.getString(ENTITY_ACTION_TYPE));
+    }
+
+    // Aggression Level
+    if (compoundTag.contains(ENTITY_AGGRESSION_LEVEL)) {
+      this.entityAggressionLevel =
+          AggressionLevel.get(compoundTag.getString(ENTITY_AGGRESSION_LEVEL));
+    }
+
     // Load Armor
     PlayerCompanionDataHelper.loadArmorItems(compoundTag, this.armorItems);
 
@@ -442,12 +473,6 @@ public class PlayerCompanionData {
 
     // Load inventory
     PlayerCompanionDataHelper.loadInventoryItems(compoundTag, this.inventoryItems);
-
-    // Aggression Level
-    if (compoundTag.contains(ENTITY_AGGRESSION_LEVEL)) {
-      this.entityAggressionLevel =
-          AggressionLevel.get(compoundTag.getString(ENTITY_AGGRESSION_LEVEL));
-    }
 
     log.trace("Loaded PlayerCompanion {} data over compoundTag with {}", this.name, this);
   }
@@ -490,6 +515,9 @@ public class PlayerCompanionData {
     // Sync specific meta data from entity directly, if available.
     // If not use stored values instead.
     if (playerCompanionEntity != null && playerCompanionEntity.isAlive()) {
+      compoundTag.putString(ENTITY_ACTION_TYPE, playerCompanionEntity.getActionType().name());
+      compoundTag.putString(ENTITY_AGGRESSION_LEVEL,
+          playerCompanionEntity.getAggressionLevel().name());
       compoundTag.putString(ENTITY_DIMENSION, playerCompanionEntity.getDimensionName());
       compoundTag.putBoolean(ENTITY_SITTING_TAG, playerCompanionEntity.isOrderedToSit());
       compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG,
@@ -500,21 +528,18 @@ public class PlayerCompanionData {
       compoundTag.putFloat(ENTITY_HEALTH_TAG, playerCompanionEntity.getHealth());
       compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, playerCompanionEntity.getExperienceLevel());
       compoundTag.putInt(ENTITY_EXPERIENCE_TAG, playerCompanionEntity.getExperience());
-      compoundTag.putString(ENTITY_AGGRESSION_LEVEL,
-          playerCompanionEntity.getAggressionLevel().name());
 
       // Set Owner, if any.
-      if (playerCompanionEntity.getOwner() != null) {
-        compoundTag.putUUID(OWNER_TAG, playerCompanionEntity.getOwner().getUUID());
-        compoundTag.putString(OWNER_NAME_TAG,
-            playerCompanionEntity.getOwner().getName().getString());
+      LivingEntity owner = playerCompanionEntity.getOwner();
+      if (owner != null) {
+        compoundTag.putUUID(OWNER_TAG, owner.getUUID());
+        compoundTag.putString(OWNER_NAME_TAG, owner.getName().getString());
       }
 
       // Set target, if any
+      LivingEntity target = playerCompanionEntity.getTarget();
       compoundTag.putString(ENTITY_TARGET_TAG,
-          playerCompanionEntity.getTarget() == null
-              || playerCompanionEntity.getTarget().getEncodeId() == null ? ""
-                  : playerCompanionEntity.getTarget().getEncodeId());
+          target == null || target.getEncodeId() == null ? "" : target.getEncodeId());
 
       // Get current armor items from entity to be in sync.
       setArmorItems((NonNullList<ItemStack>) playerCompanionEntity.getArmorSlots());
@@ -523,6 +548,8 @@ public class PlayerCompanionData {
       setHandItems((NonNullList<ItemStack>) playerCompanionEntity.getHandSlots());
     } else {
       // Alternative: Use cached values instead.
+      compoundTag.putString(ENTITY_ACTION_TYPE, this.entityActionType.name());
+      compoundTag.putString(ENTITY_AGGRESSION_LEVEL, this.entityAggressionLevel.name());
       compoundTag.putString(ENTITY_DIMENSION, this.entityDimension);
       compoundTag.putBoolean(ENTITY_SITTING_TAG, this.entitySitting);
       compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG, this.entitySitOnShoulder);
@@ -531,7 +558,6 @@ public class PlayerCompanionData {
       compoundTag.putFloat(ENTITY_HEALTH_TAG, this.entityHealth);
       compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, this.entityExperienceLevel);
       compoundTag.putInt(ENTITY_EXPERIENCE_TAG, this.entityExperience);
-      compoundTag.putString(ENTITY_AGGRESSION_LEVEL, this.entityAggressionLevel.name());
 
       // Set Owner, if any.
       if (this.ownerUUID != null) {
@@ -562,8 +588,9 @@ public class PlayerCompanionData {
         + this.entityHealth + "/" + this.entityHealthMax + ", x=" + this.blockPos.getX() + ", y="
         + this.blockPos.getY() + ", z=" + this.blockPos.getZ() + ", armor=" + this.getArmorItems()
         + ", hand=" + this.getHandItems() + ", dimension=" + this.entityDimension
-        + ", aggression_level= " + this.entityAggressionLevel.name() + ", respawnTimer="
-        + this.entityRespawnTimer + ", id=" + this.entityId + ", UUID=" + this.companionUUID + "]";
+        + ", action_type = " + this.entityActionType.name() + ", aggression_level= "
+        + this.entityAggressionLevel.name() + ", respawnTimer=" + this.entityRespawnTimer + ", id="
+        + this.entityId + ", UUID=" + this.companionUUID + "]";
   }
 
   private void setDirty() {

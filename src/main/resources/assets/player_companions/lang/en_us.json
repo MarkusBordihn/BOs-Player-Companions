@@ -20,6 +20,9 @@
 
   "container.player_companions.companions_menu": "Player Companions",
 
+  "text.player_companions.commands.summon.action": "summon",
+  "text.player_companions.commands.summon.list_entry": "\u25CB %1$s (%2$s) %3$s [%4$s]",
+
   "text.player_companions.tamed_companion_dimension": "Dimension: %1$s",
   "text.player_companions.tamed_companion_food": "Food: %1$s",
   "text.player_companions.tamed_companion_health": "Health: %1$s (%2$s)",
@@ -34,12 +37,25 @@
   "text.player_companions.tamed_companion_status_order_to_follow": "Status: Is order to follow",
   "text.player_companions.tamed_companion_status_order_to_position": "Status: Is order to position",
 
+  "text.player_companions.tamed_companion_warning_not_owner": "Companion %1$s (%2$s) is owned by %3$s!",
+  "text.player_companions.tamed_companion_warning_respawn_timer": "Unable to spawn companion %1$s (%2$s), because there is a active respawn timer for %3$s secs remaining!",
+
   "text.player_companions.tame_companion": "The item is used to tame the different type of player companions.",
   "text.player_companions.tameable_companions": "Tameable Companions:",
 
   "text.player_companions.companion_is_near_you": "Companion %1$s is already spawned within 16 blocks from your position!",
   "text.player_companions.captured_companion_usage": "You can spawn / order to a position (click on empty place) or despawn (click on the companion) your companion %1$s with this item in your hand.",
   "text.player_companions.empty_captured_companion_usage": "Click on an empty place to create a new companion or click on an existing companion to link the existed companion instead.",
+
+  "text.player_companions.aggression_level.PASSIVE_FLEE": "Passive (flee)",
+  "text.player_companions.aggression_level.PASSIVE": "Passive (flee)",
+  "text.player_companions.aggression_level.NEUTRAL": "Neutral",
+  "text.player_companions.aggression_level.AGGRESSIVE": "Aggressive",
+  "text.player_companions.aggression_level.AGGRESSIVE_ANIMALS": "Aggressive (animals)",
+  "text.player_companions.aggression_level.AGGRESSIVE_MONSTER": "Aggressive (monster)",
+  "text.player_companions.aggression_level.AGGRESSIVE_PLAYERS": "Aggressive (players)",
+  "text.player_companions.aggression_level.AGGRESSIVE_ALL": "Aggressive (all)",
+  "text.player_companions.aggression_level.UNKNOWN": "Unknown",
 
   "key.player_companions.category": "Player Companions Keys",
   "key.player_companions.player_companions": "Open Player Companions Screen",

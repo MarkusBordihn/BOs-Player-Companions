@@ -89,11 +89,15 @@ public class PlayerCompanionDamageManager {
 
   public static boolean preventAttack(TamableAnimal attackedTamableAnimal, DamageSource source) {
     // Avoid null errors and entities without any owner.
-    if (attackedTamableAnimal == null || source == null
-        || attackedTamableAnimal.getOwner() == null) {
+    if (attackedTamableAnimal == null || source == null) {
       return false;
     }
+
+    // Ignore tamable animals without owners.
     LivingEntity owner = attackedTamableAnimal.getOwner();
+    if (owner == null) {
+      return false;
+    }
     UUID ownerUUID = owner.getUUID();
 
     // Avoid damage directly from owner and other players depending on additional conditions.

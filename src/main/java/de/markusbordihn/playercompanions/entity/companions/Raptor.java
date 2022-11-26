@@ -196,7 +196,7 @@ public class Raptor extends GuardEntityWalking implements NeutralMob {
   }
 
   @Override
-  protected SoundEvent getAmbientSound() {
+  public SoundEvent getAmbientSound() {
     return SoundEvents.WOLF_GROWL;
   }
 

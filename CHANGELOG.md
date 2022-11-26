@@ -5,6 +5,12 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2022.11.26
+
+- Added `/player_companion summon` command to summon "lost" player companions.
+- Added new UI element to display basic information and possibility to control the companion (wip).
+- Fixed smaller edge cases and added additional client and debug messages.
+
 ### 2022.08.18
 
 - Added possibility to link empty companion item to existing companion.

@@ -28,6 +28,8 @@ import com.google.common.collect.Maps;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
@@ -177,6 +179,11 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   public void aiStep() {
     super.aiStep();
     this.guardFeatures.aiFlappingStep();
+  }
+
+  @Override
+  public SoundEvent getAmbientSound() {
+    return SoundEvents.CHICKEN_AMBIENT;
   }
 
   @Override

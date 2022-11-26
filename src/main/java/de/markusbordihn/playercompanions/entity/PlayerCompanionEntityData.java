@@ -71,12 +71,11 @@ import de.markusbordihn.playercompanions.client.textures.ModTextureManager;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsDataSync;
-import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
 @EventBusSubscriber
 public class PlayerCompanionEntityData extends TamableAnimal
-    implements PlayerCompanionsDataSync, PlayerCompanionExperience {
+    implements PlayerCompanionsDataSync, PlayerCompanionExperience, PlayerCompanionAttributes {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
@@ -117,8 +116,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
 
   // Default values
   private int explosionPower = 0;
-  private static final int ENTITY_GUI_SCALING = 60;
-  private static final int ENTITY_GUI_TOP = 20;
   private static final int JUMP_MOVE_DELAY = 10;
   protected static final int RIDE_COOLDOWN = 600;
 
@@ -133,8 +130,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private String lastCustomTextureSkin = null;
 
   // Temporary stats
-  private BlockPos orderedToPosition = null;
+  private ActionType actionType = ActionType.UNKNOWN;
   private AggressionLevel aggressionLevel = AggressionLevel.UNKNOWN;
+  private BlockPos orderedToPosition = null;
   private String dimensionName = "";
   private boolean isDataSyncNeeded = false;
   private boolean sitOnShoulder = false;
@@ -207,17 +205,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return this.level.getNearestPlayer(targetingConditions, this);
   }
 
-  public PlayerCompanionType getCompanionType() {
-    return PlayerCompanionType.UNKNOWN;
-  }
-
   public Item getCompanionItem() {
     return companionItemByVariant.getOrDefault(this.getVariant(),
         companionItemByVariant.get(PlayerCompanionVariant.DEFAULT));
-  }
-
-  public ItemStack getCompanionTypeIcon() {
-    return null;
   }
 
   public boolean isCharging() {
@@ -533,6 +523,18 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return this.orderedToPosition;
   }
 
+  public void setActionType(ActionType actionType) {
+    if (this.actionType == actionType) {
+      return;
+    }
+    this.actionType = actionType;
+    this.setDataSyncNeeded();
+  }
+
+  public ActionType getActionType() {
+    return this.actionType;
+  }
+
   public void setAggressionLevel(AggressionLevel aggressionLevel) {
     if (this.aggressionLevel == aggressionLevel) {
       return;
@@ -551,21 +553,23 @@ public class PlayerCompanionEntityData extends TamableAnimal
     return this.aggressionLevel;
   }
 
-  public void toggleAggressionLevel() {
-    AggressionLevel nextAggressionLevel = this.aggressionLevel.getNext();
-    int loopProtection = 0;
-    int maxLoopSize = AggressionLevel.values().length;
-    while (!isSupportedAggressionLevel(nextAggressionLevel) && loopProtection++ < maxLoopSize) {
-      nextAggressionLevel = nextAggressionLevel.getNext();
-    }
-    if (nextAggressionLevel != this.aggressionLevel
-        && isSupportedAggressionLevel(aggressionLevel)) {
-      setAggressionLevel(nextAggressionLevel);
-    }
+  public AggressionLevel getNextAggressionLevel() {
+    return getNextAggressionLevel(this.aggressionLevel);
   }
 
-  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
-    return aggressionLevel != null;
+  public AggressionLevel getPreviousAggressionLevel() {
+    return getPreviousAggressionLevel(this.aggressionLevel);
+  }
+
+  public void toggleAggressionLevel() {
+    if (this.aggressionLevel == getLastAggressionLevel()) {
+      setAggressionLevel(getFirstAggressionLevel());
+    } else {
+      AggressionLevel nextAggressionLevel = getNextAggressionLevel();
+      if (nextAggressionLevel != this.aggressionLevel) {
+        setAggressionLevel(nextAggressionLevel);
+      }
+    }
   }
 
   public boolean shouldAttack() {
@@ -695,14 +699,6 @@ public class PlayerCompanionEntityData extends TamableAnimal
       }
     }
     return (int) baseAttackDamage;
-  }
-
-  public int getEntityGuiScaling() {
-    return ENTITY_GUI_SCALING;
-  }
-
-  public int getEntityGuiTop() {
-    return ENTITY_GUI_TOP;
   }
 
   public void onMainHandItemSlotChange(ItemStack itemStack) {

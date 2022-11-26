@@ -25,7 +25,10 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 
 import de.markusbordihn.playercompanions.Constants;
@@ -38,5 +41,17 @@ public abstract class CustomCommand implements Command<CommandSourceStack> {
   public static void sendFeedback(CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(new TextComponent(feedback), false);
+  }
+
+  public static void sendErrorFeedback(CommandContext<CommandSourceStack> context,
+      String feedback) {
+    CommandSourceStack commandSource = context.getSource();
+    commandSource.sendSuccess(
+        new TextComponent(feedback).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), false);
+  }
+
+  public static void sendFeedback(CommandContext<CommandSourceStack> context, Component component) {
+    CommandSourceStack commandSource = context.getSource();
+    commandSource.sendSuccess(component, false);
   }
 }

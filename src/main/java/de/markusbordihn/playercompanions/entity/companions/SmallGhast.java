@@ -131,7 +131,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
         this.smallGhast.yBodyRot = this.smallGhast.getYRot();
       } else {
         LivingEntity livingEntity = this.smallGhast.getTarget();
-        if (livingEntity.distanceToSqr(this.smallGhast) < 4096.0D) {
+        if (livingEntity != null && livingEntity.distanceToSqr(this.smallGhast) < 4096.0D) {
           double d1 = livingEntity.getX() - this.smallGhast.getX();
           double d2 = livingEntity.getZ() - this.smallGhast.getZ();
           this.smallGhast.setYRot(-((float) Mth.atan2(d1, d2)) * (180F / (float) Math.PI));
@@ -246,7 +246,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   }
 
   @Override
-  protected SoundEvent getAmbientSound() {
+  public SoundEvent getAmbientSound() {
     return SoundEvents.GHAST_AMBIENT;
   }
 

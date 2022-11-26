@@ -28,7 +28,6 @@ minecraft {
   // Simply re-run your setup task after changing the mappings to update your workspace.
   mappings channel: 'official', version: "${mc_version}"
   // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-
   // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
   // Default run configurations.
@@ -127,15 +126,16 @@ dependencies {
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
   minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-  // Jade Integration
+  // Integration: Jade Integration
   compileOnly fg.deobf("curse.maven:jade-324717:3865918")
   runtimeOnly fg.deobf("curse.maven:jade-324717:3865918")
 
-  // Patchouli Integration
+  // Integration: Patchouli
   compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-71.1:api")
   runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-71.1")
-  // compileOnly fg.deobf("curse.maven:patchouli-306770:3729975")
-  // runtimeOnly fg.deobf("curse.maven:patchouli-306770:3729975")
+
+  // Integration: Inventory Next
+  // compileOnly fg.deobf("curse.maven:inventory-profiles-next-495267:4082932")
 
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")

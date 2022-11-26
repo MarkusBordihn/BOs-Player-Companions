@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.entity.companions;
 
 import java.util.Map;
-
 import com.google.common.collect.Maps;
 
 import org.apache.logging.log4j.LogManager;
@@ -134,7 +133,7 @@ public class Pig extends CollectorEntityWalking {
   }
 
   @Override
-  protected SoundEvent getAmbientSound() {
+  public SoundEvent getAmbientSound() {
     return SoundEvents.PIG_AMBIENT;
   }
 

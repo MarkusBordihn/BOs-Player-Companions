@@ -87,6 +87,9 @@ public class WelshCorgi extends SupporterWalking {
         hashMap.put(PlayerCompanionVariant.BLACK, ModItems.WELSH_CORGI_BLACK.get());
       });
 
+  // Aggression Levels
+
+
   public WelshCorgi(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
   }

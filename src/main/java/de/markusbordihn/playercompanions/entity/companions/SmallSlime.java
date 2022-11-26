@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.entity.companions;
 
 import java.util.Map;
-
 import com.google.common.collect.Maps;
 
 import net.minecraft.Util;
@@ -176,7 +175,7 @@ public class SmallSlime extends FollowerEntityJumping {
   }
 
   @Override
-  protected ParticleOptions getParticleType() {
+  public ParticleOptions getParticleType() {
     return ParticleTypes.ITEM_SLIME;
   }
 
@@ -186,7 +185,7 @@ public class SmallSlime extends FollowerEntityJumping {
   }
 
   @Override
-  protected SoundEvent getAmbientSound() {
+  public SoundEvent getAmbientSound() {
     return SoundEvents.SLIME_SQUISH_SMALL;
   }
 

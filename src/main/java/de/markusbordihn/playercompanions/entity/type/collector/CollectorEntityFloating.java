@@ -19,8 +19,9 @@
 
 package de.markusbordihn.playercompanions.entity.type.collector;
 
+import java.util.EnumSet;
 import java.util.Map;
-
+import java.util.Set;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -38,14 +39,37 @@ public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
 
   protected CollectorFeatures collectorFeatures;
 
+  private static final Set<AggressionLevel> AGGRESSION_LEVELS =
+      EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
+
   public CollectorEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType,
       Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, textureByVariant, companionItemByVariant);
-    this.setAggressionLevel(AggressionLevel.PASSIVE_FLEE);
+    this.setAggressionLevel(getDefaultAggressionLevel());
 
     // Shared Collector Features
     this.collectorFeatures = new CollectorFeatures(this, level);
+  }
+
+  @Override
+  public Set<AggressionLevel> getAggressionLevels() {
+    return AGGRESSION_LEVELS;
+  }
+
+  @Override
+  public AggressionLevel getDefaultAggressionLevel() {
+    return AggressionLevel.PASSIVE_FLEE;
+  }
+
+  @Override
+  public AggressionLevel getFirstAggressionLevel() {
+    return AggressionLevel.PASSIVE_FLEE;
+  }
+
+  @Override
+  public AggressionLevel getLastAggressionLevel() {
+    return AggressionLevel.PASSIVE;
   }
 
   @Override
@@ -56,12 +80,6 @@ public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
   @Override
   public ItemStack getCompanionTypeIcon() {
     return PlayerCompanionTypeIcon.COLLECTOR;
-  }
-
-  @Override
-  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
-    return aggressionLevel == AggressionLevel.PASSIVE_FLEE
-        || aggressionLevel == AggressionLevel.PASSIVE;
   }
 
   @Override

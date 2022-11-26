@@ -33,9 +33,9 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   private final double speedModifier;
   private final boolean followingTargetEvenIfNotSeen;
   private Path path;
-  private double pathedTargetX;
-  private double pathedTargetY;
-  private double pathedTargetZ;
+  private double pathTargetX;
+  private double pathTargetY;
+  private double pathTargetZ;
   private int ticksUntilNextPathRecalculation;
   private int ticksUntilNextAttack;
   private long lastCanUseCheck;
@@ -76,12 +76,13 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
         this.path = this.playerCompanionEntity.getNavigation().createPath(livingEntity, 0);
         if (this.path != null) {
           return true;
-        } else {
+        } else if (livingEntity != null) {
           return this.getAttackReachSqr(livingEntity) >= this.playerCompanionEntity
               .distanceToSqr(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
         }
       }
     }
+    return false;
   }
 
   @Override
@@ -91,7 +92,7 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
       return false;
     } else if (!this.followingTargetEvenIfNotSeen) {
       return !this.playerCompanionEntity.getNavigation().isDone();
-    } else if (!this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition())) {
+    } else if (livingEntity != null && !this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition())) {
       return false;
     }
     return true;
@@ -131,13 +132,13 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
       if ((this.followingTargetEvenIfNotSeen
           || this.playerCompanionEntity.getSensing().hasLineOfSight(livingEntity))
           && this.ticksUntilNextPathRecalculation <= 0
-          && (this.pathedTargetX == 0.0D && this.pathedTargetY == 0.0D && this.pathedTargetZ == 0.0D
-              || livingEntity.distanceToSqr(this.pathedTargetX, this.pathedTargetY,
-                  this.pathedTargetZ) >= 1.0D
+          && (this.pathTargetX == 0.0D && this.pathTargetY == 0.0D && this.pathTargetZ == 0.0D
+              || livingEntity.distanceToSqr(this.pathTargetX, this.pathTargetY,
+                  this.pathTargetZ) >= 1.0D
               || this.playerCompanionEntity.getRandom().nextFloat() < 0.05F)) {
-        this.pathedTargetX = livingEntity.getX();
-        this.pathedTargetY = livingEntity.getY();
-        this.pathedTargetZ = livingEntity.getZ();
+        this.pathTargetX = livingEntity.getX();
+        this.pathTargetY = livingEntity.getY();
+        this.pathTargetZ = livingEntity.getZ();
         this.ticksUntilNextPathRecalculation =
             4 + this.playerCompanionEntity.getRandom().nextInt(7);
         if (this.canPenalize) {

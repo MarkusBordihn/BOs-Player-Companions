@@ -64,6 +64,10 @@ public class MessageSkinChangePlayerCompanion {
   public static void handlePacket(MessageSkinChangePlayerCompanion message,
       NetworkEvent.Context context) {
     ServerPlayer serverPlayer = context.getSender();
+    if (serverPlayer == null) {
+      log.error("Unable to get server player for message {} from {}", message, context);
+      return;
+    }
     ServerLevel serverLevel = serverPlayer.getLevel();
     UUID uuid = UUID.fromString(message.getPlayerCompanionUUID());
     Entity entity = serverLevel.getEntity(uuid);

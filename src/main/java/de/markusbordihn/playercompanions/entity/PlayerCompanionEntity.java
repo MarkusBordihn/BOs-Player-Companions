@@ -21,6 +21,7 @@ package de.markusbordihn.playercompanions.entity;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.mojang.datafixers.util.Pair;
@@ -37,7 +38,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -60,7 +60,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -149,34 +148,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         .add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
-  public SoundEvent getJumpSound() {
-    return SoundEvents.SLIME_JUMP_SMALL;
-  }
-
-  public SoundEvent getWaitSound() {
-    return getAmbientSound();
-  }
-
-  public Item getTameItem() {
-    return null;
-  }
-
-  public Ingredient getFoodItems() {
-    return Ingredient.of(getTameItem());
-  }
-
-  public boolean doPlayJumpSound() {
-    return true;
-  }
-
-  protected SoundEvent getPetSound() {
-    return SoundEvents.WOLF_WHINE;
-  }
-
-  protected ParticleOptions getParticleType() {
-    return null;
-  }
-
   protected void addParticle(ParticleOptions particleOptions) {
     for (int i = 0; i < 4; ++i) {
       float randomCircleDistance = this.random.nextFloat() * ((float) Math.PI * 2F);
@@ -198,16 +169,24 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
   }
 
+  public void follow() {
+    this.setActionType(ActionType.FOLLOW);
+    this.setOrderedToSit(false);
+    this.navigation.recomputePath();
+  }
+
+  protected void sit() {
+    this.setActionType(ActionType.SIT);
+    this.setOrderedToSit(true);
+    this.navigation.stop();
+    super.setTarget(null);
+  }
+
   protected void pet() {
     // Heal pet by 0.1 points.
     if (this.getHealth() < this.getMaxHealth()) {
       this.setHealth((float) (this.getHealth() + 0.1));
     }
-  }
-
-  public void follow() {
-    this.setOrderedToSit(false);
-    this.navigation.recomputePath();
   }
 
   public boolean eat(ItemStack itemStack, Player player) {
@@ -245,12 +224,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     return this.isFood(itemStack) && this.getHealth() < this.getMaxHealth();
   }
 
-  protected void sit() {
-    this.setOrderedToSit(true);
-    this.navigation.stop();
-    super.setTarget(null);
-  }
-
   public void handleCommand(PlayerCompanionCommand command) {
     switch (command) {
       case SIT:
@@ -266,8 +239,17 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           sit();
         }
         break;
+      case AGGRESSION_LEVEL_DEFAULT:
+        setAggressionLevel(getDefaultAggressionLevel());
+        break;
+      case AGGRESSION_LEVEL_NEXT:
+        setAggressionLevel(getNextAggressionLevel());
+        break;
+      case AGGRESSION_LEVEL_PREVIOUS:
+        setAggressionLevel(getPreviousAggressionLevel());
+        break;
       case AGGRESSION_LEVEL_TOGGLE:
-        this.toggleAggressionLevel();
+        toggleAggressionLevel();
         break;
       case OPEN_MENU:
         PlayerCompanionMenu.openMenu(this);
@@ -646,7 +628,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   public String toString() {
     RemovalReason removalReason = this.getRemovalReason();
     String level = this.level == null ? "~NULL~" : this.level.toString();
-    String owner = this.getOwnerUUID() == null ? "~NULL~" : this.getOwnerUUID().toString();
+    UUID ownerUUID = this.getOwnerUUID();
+    String owner = ownerUUID == null ? "~NULL~" : ownerUUID.toString();
     Boolean tamed = this.isTame();
     int id = this.getId();
 

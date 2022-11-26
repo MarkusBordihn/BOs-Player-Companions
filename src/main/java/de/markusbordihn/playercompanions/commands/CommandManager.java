@@ -49,6 +49,7 @@ public class CommandManager {
         .then(BackupCommand.register())
         .then(ListCommand.register())
         .then(OverviewCommand.register())
+        .then(SummonCommand.register())
         .then(VersionCommand.register())
       // @formatter:on
     );

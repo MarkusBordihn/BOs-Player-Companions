@@ -20,11 +20,10 @@
 package de.markusbordihn.playercompanions.entity.companions;
 
 import java.util.Map;
+import com.google.common.collect.Maps;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.Maps;
 
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleOptions;
@@ -157,7 +156,7 @@ public class Fairy extends HealerEntityFlyingAround {
   }
 
   @Override
-  protected ParticleOptions getParticleType() {
+  public ParticleOptions getParticleType() {
     return ParticleTypes.END_ROD;
   }
 
@@ -167,7 +166,7 @@ public class Fairy extends HealerEntityFlyingAround {
   }
 
   @Override
-  protected SoundEvent getAmbientSound() {
+  public SoundEvent getAmbientSound() {
     return ModSoundEvents.COMPANION_FAIRY_AMBIENT.get();
   }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Markus Bordihn
+ * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,27 +19,24 @@
 
 package de.markusbordihn.playercompanions.entity;
 
-public enum AggressionLevel {
+public enum ActionType {
   // @formatter:off
-  PASSIVE_FLEE,
-  PASSIVE,
-  NEUTRAL,
-  AGGRESSIVE,
-  AGGRESSIVE_ANIMALS,
-  AGGRESSIVE_MONSTER,
-  AGGRESSIVE_PLAYERS,
-  AGGRESSIVE_ALL,
+  SIT,
+  WAIT,
+  FOLLOW,
+  MOVE,
+  PATROL,
   UNKNOWN;
   // @formatter:on
 
-  public static AggressionLevel get(String aggressionLevel) {
-    if (aggressionLevel == null || aggressionLevel.isEmpty()) {
-      return AggressionLevel.UNKNOWN;
+  public static ActionType get(String actionType) {
+    if (actionType == null || actionType.isEmpty()) {
+      return ActionType.UNKNOWN;
     }
     try {
-      return AggressionLevel.valueOf(aggressionLevel);
+      return ActionType.valueOf(actionType);
     } catch (IllegalArgumentException e) {
-      return AggressionLevel.UNKNOWN;
+      return ActionType.UNKNOWN;
     }
   }
 }

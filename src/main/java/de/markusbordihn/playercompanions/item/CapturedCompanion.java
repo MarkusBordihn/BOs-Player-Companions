@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.item;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,14 +28,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -51,9 +53,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.data.Experience;
@@ -61,6 +60,7 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionSpawnManager;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 import de.markusbordihn.playercompanions.text.TranslatableText;
@@ -68,12 +68,6 @@ import de.markusbordihn.playercompanions.text.TranslatableText;
 public class CapturedCompanion extends Item {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
-  private static final String FALL_DISTANCE_TAG = "FallDistance";
-  private static final String FIRE_TAG = "Fire";
-  private static final String HEALTH_TAG = "Health";
-  private static final String MOTION_TAG = "Motion";
-  private static final String ON_GROUND_TAG = "OnGround";
 
   public static final String COMPANION_UUID_TAG = "CompanionUUID";
 
@@ -100,7 +94,7 @@ public class CapturedCompanion extends Item {
     return PlayerCompanionsServerData.get().hasCompanion(itemStack);
   }
 
-  public UUID getCompanionUUID(ItemStack itemStack) {
+  public static UUID getCompanionUUID(ItemStack itemStack) {
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     if (compoundTag.hasUUID(COMPANION_UUID_TAG)) {
       return compoundTag.getUUID(COMPANION_UUID_TAG);
@@ -124,82 +118,6 @@ public class CapturedCompanion extends Item {
     return this.variant;
   }
 
-  public boolean spawnCompanion(ItemStack itemStack, BlockPos blockPos, Player player,
-      Level level) {
-    Entity playerCompanion = null;
-
-    // Check if companion already exists in current level.
-    if (level instanceof ServerLevel serverLevel) {
-      playerCompanion = getCompanionEntity(itemStack, serverLevel);
-      if (playerCompanion != null && playerCompanion.isAlive()) {
-        log.debug("Found existing player companion {}", playerCompanion);
-      }
-      // Make sure companion doesn't exists in other levels
-      despawnCompanionExcept(itemStack, serverLevel);
-    }
-
-    // Remove dead companions before respawn.
-    if (playerCompanion != null && !playerCompanion.isAlive()) {
-      playerCompanion.remove(RemovalReason.KILLED);
-      playerCompanion = null;
-    }
-
-    // If companion exits and alive, just port the companion to the player.
-    if (playerCompanion != null && playerCompanion.isAlive()) {
-      if (playerCompanion.closerThan(player, 16)) {
-        if (playerCompanion instanceof PlayerCompanionEntity playerCompanionEntity) {
-          playerCompanionEntity.setOrderedToPosition(
-              new BlockPos(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5));
-        } else {
-          player.sendSystemMessage(Component.translatable(
-              Constants.TEXT_PREFIX + "companion_is_near_you", playerCompanion.getName()));
-        }
-      } else {
-        BlockState blockState = level.getBlockState(blockPos);
-        if (isValidSpawnPlace(blockState)) {
-          playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5,
-              blockPos.getZ() + 0.5);
-          log.debug("Teleport companion {} to position ...", playerCompanion, blockPos);
-        } else {
-          Vec3 playerPosition = player.position();
-          playerCompanion.teleportTo(playerPosition.x, playerPosition.y, playerPosition.z);
-          log.debug("Teleport companion {} to player ...", playerCompanion, player);
-        }
-        return true;
-      }
-      return false;
-    }
-
-    // Prepare spawn of companion based on the existing data.
-    Entity entity = createCompanionEntity(itemStack, level);
-    if (entity != null) {
-      // Make sure we have an empty Block to spawn the entity, otherwise try above block.
-      BlockState blockState = level.getBlockState(blockPos);
-      if (!isValidSpawnPlace(blockState)) {
-        blockPos = blockPos.above();
-        blockState = level.getBlockState(blockPos);
-      }
-
-      // Only spawn on empty blocks like air,water, grass, sea grass.
-      if (isValidSpawnPlace(blockState)) {
-        // Adjust entity position to spawn position.
-        entity.setPos(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
-
-        // Add entity to the world.
-        log.debug("Spawn companion {} ...", entity);
-        if (level.addFreshEntity(entity)) {
-          playerCompanion = entity;
-          if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-            playerCompanionEntity.finalizeSpawn();
-          }
-          return true;
-        }
-        return false;
-      }
-    }
-    return false;
-  }
-
   public boolean despawnCompanion(LivingEntity livingEntity, ItemStack itemStack) {
     UUID capturedCompanionUUID = getCompanionUUID(itemStack);
     if (!(livingEntity instanceof PlayerCompanionEntity playerCompanionEntity)
@@ -207,30 +125,7 @@ public class CapturedCompanion extends Item {
       return false;
     }
 
-    // Sync data before we despawn entity.
-    PlayerCompanionData playerCompanionData =
-        PlayerCompanionsServerData.get().updatePlayerCompanion(playerCompanionEntity);
-    playerCompanionData.syncEntityData(livingEntity);
-    log.debug("Despawn companion {} with {} ...", livingEntity, playerCompanionData);
-
-    // Discarded Entity from the world.
-    livingEntity.setRemoved(RemovalReason.DISCARDED);
-
-    return true;
-  }
-
-  public void despawnCompanionExcept(ItemStack itemStack, ServerLevel serverLevel) {
-    MinecraftServer server = serverLevel.getServer();
-    Iterator<ServerLevel> serverLevels = server.getAllLevels().iterator();
-    while (serverLevels.hasNext()) {
-      ServerLevel serverLevelToCheck = serverLevels.next();
-      if (serverLevelToCheck != serverLevel) {
-        Entity playerCompanion = getCompanionEntity(itemStack, serverLevelToCheck);
-        if (playerCompanion != null) {
-          playerCompanion.remove(RemovalReason.CHANGED_DIMENSION);
-        }
-      }
-    }
+    return PlayerCompanionSpawnManager.despawn(livingEntity);
   }
 
   public boolean createTamedCompanion(ItemStack itemStack, Player player, Level level) {
@@ -254,54 +149,12 @@ public class CapturedCompanion extends Item {
     return false;
   }
 
-  public Entity createCompanionEntity(ItemStack itemStack, Level level) {
-    PlayerCompanionData playerCompanion = PlayerCompanionsServerData.get().getCompanion(itemStack);
-    if (playerCompanion == null) {
-      log.error("Unable to find player companion with UUID {} for item {}",
-          getCompanionUUID(itemStack), itemStack);
-      return null;
-    }
-    EntityType<?> entityType = playerCompanion.getEntityType();
-    CompoundTag entityData = playerCompanion.getEntityData();
-    Entity entity = entityType.create(level);
-    if (entity != null && !entityData.isEmpty()) {
-
-      // Restore health, if needed
-      if (entityData.contains(HEALTH_TAG) && entityData.getFloat(HEALTH_TAG) <= 0) {
-        entityData.putFloat(HEALTH_TAG, playerCompanion.getEntityHealthMax());
-      }
-
-      // Remove negative effects
-      if (entityData.contains(FIRE_TAG) && entityData.getShort(FIRE_TAG) > 0) {
-        entityData.putShort(FIRE_TAG, (short) 0);
-      }
-      if (entityData.contains(FALL_DISTANCE_TAG) && entityData.getFloat(FALL_DISTANCE_TAG) > 0) {
-        entityData.putFloat(FALL_DISTANCE_TAG, 0);
-      }
-      if (entityData.contains(MOTION_TAG)) {
-        entityData.put(MOTION_TAG, this.newDoubleList(0, 0, 0));
-      }
-      if (entityData.contains(ON_GROUND_TAG) && !entityData.getBoolean(ON_GROUND_TAG)) {
-        entityData.putBoolean(ON_GROUND_TAG, true);
-      }
-
-      entity.load(entityData);
-    }
-    return entity;
-  }
-
   public EntityType<?> getEntityType() {
     return null;
   }
 
   public Ingredient getEntityFood() {
     return null;
-  }
-
-  private boolean isValidSpawnPlace(BlockState blockState) {
-    return blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
-        || blockState.is(Blocks.SEAGRASS) || blockState.is(Blocks.SNOW)
-        || blockState.is(Blocks.FERN);
   }
 
   @Override
@@ -317,7 +170,6 @@ public class CapturedCompanion extends Item {
   @Override
   public InteractionResult interactLivingEntity(ItemStack itemStack, Player player,
       LivingEntity livingEntity, InteractionHand hand) {
-
     Level level = player.getLevel();
 
     // Check if we have any captured companion.
@@ -327,7 +179,7 @@ public class CapturedCompanion extends Item {
       if (!level.isClientSide()
           && livingEntity instanceof PlayerCompanionEntity playerCompanionEntity
           && playerCompanionEntity.isTame()
-          && playerCompanionEntity.getOwnerUUID().equals(player.getUUID())) {
+          && player.getUUID().equals(playerCompanionEntity.getOwnerUUID())) {
 
         // Compare companion type and variant with item type and variant.
         if (playerCompanionEntity.getType().equals(this.getEntityType())
@@ -365,10 +217,19 @@ public class CapturedCompanion extends Item {
       return InteractionResult.SUCCESS;
     }
 
-    BlockPos blockPos = context.getClickedPos();
-    BlockState blockState = level.getBlockState(blockPos);
-    ItemStack itemStack = context.getItemInHand();
+    // Ignore levels which are not Server Levels
+    if (!(level instanceof ServerLevel serverLevel)) {
+      return InteractionResult.FAIL;
+    }
+
+    // Ignore player which are not Server Players
     Player player = context.getPlayer();
+    if (!(player instanceof ServerPlayer serverPlayer)) {
+      return InteractionResult.FAIL;
+    }
+
+    BlockPos blockPos = context.getClickedPos();
+    ItemStack itemStack = context.getItemInHand();
 
     // Check if we have any captured companion, if not try to create one.
     if (!hasCompanion(itemStack) && !createTamedCompanion(itemStack, player, level)) {
@@ -385,33 +246,31 @@ public class CapturedCompanion extends Item {
     // Check if there is any active respawn timer.
     PlayerCompanionData playerCompanionData =
         PlayerCompanionsServerData.get().getCompanion(itemStack);
-    if (playerCompanionData != null && playerCompanionData.hasEntityRespawnTimer()
+    if (playerCompanionData != null
+        && !player.getUUID().equals(playerCompanionData.getOwnerUUID())) {
+      player.sendSystemMessage(Component
+          .translatable(Constants.TEXT_PREFIX + "tamed_companion_warning_not_owner",
+              playerCompanionData.getName(), playerCompanionData.getUUID(),
+              playerCompanionData.getOwnerName())
+          .setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+      return InteractionResult.FAIL;
+    } else if (playerCompanionData != null && playerCompanionData.hasEntityRespawnTimer()
         && playerCompanionData.getEntityRespawnTimer() > java.time.Instant.now().getEpochSecond()) {
+      player.sendSystemMessage(Component
+          .translatable(Constants.TEXT_PREFIX + "tamed_companion_warning_respawn_timer",
+              playerCompanionData.getName(), playerCompanionData.getUUID(),
+              (playerCompanionData.getEntityRespawnTimer()
+                  - java.time.Instant.now().getEpochSecond()))
+          .setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
       return InteractionResult.FAIL;
     }
 
-    // Place directly on grass or similar blocks.
-    if (isValidSpawnPlace(blockState) && spawnCompanion(itemStack, blockPos, player, level)) {
-      return InteractionResult.CONSUME;
-    }
-
-    // Check if we can release the captured mob above.
-    BlockPos blockPosAbove = blockPos.above();
-    BlockState blockStateBlockAbove = level.getBlockState(blockPosAbove);
-    if (isValidSpawnPlace(blockStateBlockAbove)
-        && spawnCompanion(itemStack, blockPosAbove, player, level)) {
+    // Place directly on grass or similar blocks and try block above.
+    if (PlayerCompanionSpawnManager.spawn(itemStack, serverPlayer, serverLevel, blockPos)) {
       return InteractionResult.CONSUME;
     }
 
     return InteractionResult.sidedSuccess(level.isClientSide);
-  }
-
-  protected ListTag newDoubleList(double... values) {
-    ListTag listTag = new ListTag();
-    for (double value : values) {
-      listTag.add(DoubleTag.valueOf(value));
-    }
-    return listTag;
   }
 
   @Override

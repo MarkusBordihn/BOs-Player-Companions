@@ -75,26 +75,26 @@ public class FoodItemGoal extends PlayerCompanionGoal {
 
   @Override
   public boolean canContinueToUse() {
-    if (!this.playerCompanionEntity.canEat()) {
+    Player nearestPlayer = this.player;
+    if (!this.playerCompanionEntity.canEat() || nearestPlayer == null) {
       return false;
     } else if (this.canScare()) {
-      if (this.playerCompanionEntity.distanceToSqr(this.player) < 36.0D) {
-        if (this.player.distanceToSqr(this.px, this.py, this.pz) > 0.010000000000000002D) {
+      if (this.playerCompanionEntity.distanceToSqr(nearestPlayer) < 36.0D) {
+        if (nearestPlayer.distanceToSqr(this.px, this.py, this.pz) > 0.010000000000000002D) {
           return false;
         }
 
-        if (Math.abs(this.player.getXRot() - this.pRotX) > 5.0D
-            || Math.abs(this.player.getYRot() - this.pRotY) > 5.0D) {
+        if (Math.abs(nearestPlayer.getXRot() - this.pRotX) > 5.0D
+            || Math.abs(nearestPlayer.getYRot() - this.pRotY) > 5.0D) {
           return false;
         }
       } else {
-        this.px = this.player.getX();
-        this.py = this.player.getY();
-        this.pz = this.player.getZ();
+        this.px = nearestPlayer.getX();
+        this.py = nearestPlayer.getY();
+        this.pz = nearestPlayer.getZ();
       }
-
-      this.pRotX = this.player.getXRot();
-      this.pRotY = this.player.getYRot();
+      this.pRotX = nearestPlayer.getXRot();
+      this.pRotY = nearestPlayer.getYRot();
     }
 
     return this.canUse();
@@ -106,9 +106,12 @@ public class FoodItemGoal extends PlayerCompanionGoal {
 
   @Override
   public void start() {
-    this.px = this.player.getX();
-    this.py = this.player.getY();
-    this.pz = this.player.getZ();
+    Player nearestPlayer = this.player;
+    if (nearestPlayer != null) {
+      this.px = nearestPlayer.getX();
+      this.py = nearestPlayer.getY();
+      this.pz = nearestPlayer.getZ();
+    }
     this.isRunning = true;
   }
 

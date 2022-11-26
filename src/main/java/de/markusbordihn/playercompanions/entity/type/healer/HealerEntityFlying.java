@@ -19,7 +19,9 @@
 
 package de.markusbordihn.playercompanions.entity.type.healer;
 
+import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -38,14 +40,37 @@ public class HealerEntityFlying extends PlayerCompanionEntityFlying {
 
   protected HealerFeatures healerFeatures;
 
+  private static final Set<AggressionLevel> AGGRESSION_LEVELS =
+      EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
+
   public HealerEntityFlying(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
       Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, textureByVariant, companionItemByVariant);
-    this.setAggressionLevel(AggressionLevel.PASSIVE);
+    this.setAggressionLevel(getDefaultAggressionLevel());
 
     // Shared Healer Features
     this.healerFeatures = new HealerFeatures(this, level);
+  }
+
+  @Override
+  public Set<AggressionLevel> getAggressionLevels() {
+    return AGGRESSION_LEVELS;
+  }
+
+  @Override
+  public AggressionLevel getDefaultAggressionLevel() {
+    return AggressionLevel.PASSIVE;
+  }
+
+  @Override
+  public AggressionLevel getFirstAggressionLevel() {
+    return AggressionLevel.PASSIVE_FLEE;
+  }
+
+  @Override
+  public AggressionLevel getLastAggressionLevel() {
+    return AggressionLevel.PASSIVE;
   }
 
   @Override
@@ -56,12 +81,6 @@ public class HealerEntityFlying extends PlayerCompanionEntityFlying {
   @Override
   public ItemStack getCompanionTypeIcon() {
     return PlayerCompanionTypeIcon.HEALER;
-  }
-
-  @Override
-  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
-    return aggressionLevel == AggressionLevel.PASSIVE_FLEE
-        || aggressionLevel == AggressionLevel.PASSIVE;
   }
 
   @Override

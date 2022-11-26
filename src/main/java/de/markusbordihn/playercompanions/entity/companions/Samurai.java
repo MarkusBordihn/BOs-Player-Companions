@@ -200,7 +200,7 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   }
 
   @Override
-  protected SoundEvent getAmbientSound() {
+  public SoundEvent getAmbientSound() {
     return SoundEvents.VILLAGER_AMBIENT;
   }
 

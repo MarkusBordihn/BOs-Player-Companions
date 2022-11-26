@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.entity.companions;
 
 import java.util.Map;
-
 import com.google.common.collect.Maps;
 
 import net.minecraft.Util;

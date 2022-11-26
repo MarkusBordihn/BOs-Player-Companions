@@ -44,7 +44,7 @@ public class StopModReposts {
   private static boolean isDevEnvironment =
       version.isPresent() && version.get() != null && "MOD_DEV".equals(version.get());
 
-  private static String modFileFormatRegEx = Constants.MOD_ID + "_1.19.2-\\d.\\d.\\d.jar";
+  private static String modFileFormatRegEx = Constants.MOD_ID + "_1.19.2-\\d+.\\d+.\\d+.jar";
 
   private static Pattern expectedFilePattern = Pattern.compile(modFileFormatRegEx);
 
@@ -59,7 +59,7 @@ public class StopModReposts {
     try {
       jarFilePath = PlayerCompanions.class.getProtectionDomain().getCodeSource().getLocation()
           .toURI().getPath();
-    } catch (URISyntaxException exception) {
+    } catch (SecurityException | URISyntaxException | NullPointerException exception) {
       log.error("Unable to get jar file path: {}", exception);
     }
     if (jarFilePath == null || jarFilePath.isEmpty()) {

@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import net.minecraft.world.MenuProvider;
@@ -77,9 +78,9 @@ public class PlayerCompanionMenu {
   public static void openDefaultMenu(PlayerCompanionEntity playerCompanionEntity) {
     log.debug("Open Default Player Companion Menu for {} ...", playerCompanionEntity);
     LivingEntity owner = playerCompanionEntity.getOwner();
-    if (owner != null && PlayerCompanionsServerData.available()) {
-      ServerPlayer player =
-          playerCompanionEntity.level.getServer().getPlayerList().getPlayer(owner.getUUID());
+    MinecraftServer minecraftServer = playerCompanionEntity.level.getServer();
+    if (owner != null && minecraftServer != null && PlayerCompanionsServerData.available()) {
+      ServerPlayer player = minecraftServer.getPlayerList().getPlayer(owner.getUUID());
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
@@ -104,9 +105,9 @@ public class PlayerCompanionMenu {
   public static void openCollectorMenu(PlayerCompanionEntity playerCompanionEntity) {
     log.debug("Open Collector Player Companion Menu for {} ...", playerCompanionEntity);
     LivingEntity owner = playerCompanionEntity.getOwner();
-    if (owner != null && PlayerCompanionsServerData.available()) {
-      ServerPlayer player =
-          playerCompanionEntity.level.getServer().getPlayerList().getPlayer(owner.getUUID());
+    MinecraftServer minecraftServer = playerCompanionEntity.level.getServer();
+    if (owner != null && minecraftServer != null && PlayerCompanionsServerData.available()) {
+      ServerPlayer player = minecraftServer.getPlayerList().getPlayer(owner.getUUID());
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
@@ -131,9 +132,9 @@ public class PlayerCompanionMenu {
   public static void openFollowerMenu(PlayerCompanionEntity playerCompanionEntity) {
     log.debug("Open Follower Player Companion Menu for {} ...", playerCompanionEntity);
     LivingEntity owner = playerCompanionEntity.getOwner();
-    if (owner != null && PlayerCompanionsServerData.available()) {
-      ServerPlayer player =
-          playerCompanionEntity.level.getServer().getPlayerList().getPlayer(owner.getUUID());
+    MinecraftServer minecraftServer = playerCompanionEntity.level.getServer();
+    if (owner != null && minecraftServer != null && PlayerCompanionsServerData.available()) {
+      ServerPlayer player = minecraftServer.getPlayerList().getPlayer(owner.getUUID());
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
@@ -158,9 +159,9 @@ public class PlayerCompanionMenu {
   public static void openGuardMenu(PlayerCompanionEntity playerCompanionEntity) {
     log.debug("Open Guard Player Companion Menu for {} ...", playerCompanionEntity);
     LivingEntity owner = playerCompanionEntity.getOwner();
-    if (owner != null && PlayerCompanionsServerData.available()) {
-      ServerPlayer player =
-          playerCompanionEntity.level.getServer().getPlayerList().getPlayer(owner.getUUID());
+    MinecraftServer minecraftServer = playerCompanionEntity.level.getServer();
+    if (owner != null && minecraftServer != null && PlayerCompanionsServerData.available()) {
+      ServerPlayer player = minecraftServer.getPlayerList().getPlayer(owner.getUUID());
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
@@ -185,9 +186,9 @@ public class PlayerCompanionMenu {
   public static void openHealerMenu(PlayerCompanionEntity playerCompanionEntity) {
     log.debug("Open Healer Player Companion Menu for {} ...", playerCompanionEntity);
     LivingEntity owner = playerCompanionEntity.getOwner();
-    if (owner != null && PlayerCompanionsServerData.available()) {
-      ServerPlayer player =
-          playerCompanionEntity.level.getServer().getPlayerList().getPlayer(owner.getUUID());
+    MinecraftServer minecraftServer = playerCompanionEntity.level.getServer();
+    if (owner != null && minecraftServer != null && PlayerCompanionsServerData.available()) {
+      ServerPlayer player = minecraftServer.getPlayerList().getPlayer(owner.getUUID());
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
@@ -212,9 +213,9 @@ public class PlayerCompanionMenu {
   public static void openSupporterMenu(PlayerCompanionEntity playerCompanionEntity) {
     log.debug("Open Supporter Player Companion Menu for {} ...", playerCompanionEntity);
     LivingEntity owner = playerCompanionEntity.getOwner();
-    if (owner != null && PlayerCompanionsServerData.available()) {
-      ServerPlayer player =
-          playerCompanionEntity.level.getServer().getPlayerList().getPlayer(owner.getUUID());
+    MinecraftServer minecraftServer = playerCompanionEntity.level.getServer();
+    if (owner != null && minecraftServer != null && PlayerCompanionsServerData.available()) {
+      ServerPlayer player = minecraftServer.getPlayerList().getPlayer(owner.getUUID());
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();

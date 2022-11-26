@@ -19,7 +19,9 @@
 
 package de.markusbordihn.playercompanions.entity.type.guard;
 
+import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -38,14 +40,39 @@ public class GuardEntityFloating extends PlayerCompanionEntityFloating {
 
   protected GuardFeatures guardFeatures;
 
+  private static final Set<AggressionLevel> AGGRESSION_LEVELS =
+      EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE, AggressionLevel.NEUTRAL,
+          AggressionLevel.AGGRESSIVE, AggressionLevel.AGGRESSIVE_MONSTER,
+          AggressionLevel.AGGRESSIVE_ANIMALS, AggressionLevel.AGGRESSIVE_PLAYERS);
+
   public GuardEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
       Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, textureByVariant, companionItemByVariant);
-    this.setAggressionLevel(AggressionLevel.NEUTRAL);
+    this.setAggressionLevel(getDefaultAggressionLevel());
 
     // Shared Guard Features
     this.guardFeatures = new GuardFeatures(this, level);
+  }
+
+  @Override
+  public Set<AggressionLevel> getAggressionLevels() {
+    return AGGRESSION_LEVELS;
+  }
+
+  @Override
+  public AggressionLevel getDefaultAggressionLevel() {
+    return AggressionLevel.NEUTRAL;
+  }
+
+  @Override
+  public AggressionLevel getFirstAggressionLevel() {
+    return AggressionLevel.PASSIVE_FLEE;
+  }
+
+  @Override
+  public AggressionLevel getLastAggressionLevel() {
+    return AggressionLevel.AGGRESSIVE_PLAYERS;
   }
 
   @Override
@@ -56,16 +83,6 @@ public class GuardEntityFloating extends PlayerCompanionEntityFloating {
   @Override
   public ItemStack getCompanionTypeIcon() {
     return PlayerCompanionTypeIcon.GUARD;
-  }
-
-  @Override
-  public boolean isSupportedAggressionLevel(AggressionLevel aggressionLevel) {
-    return aggressionLevel == AggressionLevel.PASSIVE_FLEE
-        || aggressionLevel == AggressionLevel.PASSIVE || aggressionLevel == AggressionLevel.NEUTRAL
-        || aggressionLevel == AggressionLevel.AGGRESSIVE
-        || aggressionLevel == AggressionLevel.AGGRESSIVE_MONSTER
-        || aggressionLevel == AggressionLevel.AGGRESSIVE_ANIMALS
-        || aggressionLevel == AggressionLevel.AGGRESSIVE_PLAYERS;
   }
 
   @Override

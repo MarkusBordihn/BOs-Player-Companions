@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.02.01
+
+- Added additional on-screen messages after successful capturing a player companion.
+
 ### 2022.11.26
 
 - Added `/player_companion summon` command to summon "lost" player companions.

@@ -19,6 +19,8 @@
 
 package de.markusbordihn.playercompanions.integration;
 
+import java.util.UUID;
+
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -29,6 +31,7 @@ import snownee.jade.impl.ui.ElementHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -60,10 +63,12 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
           String ownerName =
               UsernameCache.getLastKnownUsername(playerCompanionEntity.getOwnerUUID());
           if (ownerName == null) {
-            if (playerCompanionEntity.getOwner() != null) {
-              ownerName = playerCompanionEntity.getOwner().getName().getString();
-            } else {
-              ownerName = playerCompanionEntity.getOwnerUUID().toString();
+            LivingEntity owner = playerCompanionEntity.getOwner();
+            UUID ownerUUID = playerCompanionEntity.getOwnerUUID();
+            if (owner != null) {
+              ownerName = owner.getName().getString();
+            } else if (ownerUUID != null) {
+              ownerName = ownerUUID.toString();
             }
           }
           tooltip.add(Component.literal("Owner: " + ownerName));

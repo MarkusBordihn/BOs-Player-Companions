@@ -47,6 +47,10 @@
   "text.player_companions.captured_companion_usage": "You can spawn / order to a position (click on empty place) or despawn (click on the companion) your companion %1$s with this item in your hand.",
   "text.player_companions.empty_captured_companion_usage": "Click on an empty place to create a new companion or click on an existing companion to link the existed companion instead.",
 
+  "text.player_companions.captured_companion_title": "Captured %1$s",
+  "text.player_companions.captured_companion_subtitle_inventory": "Item was stored in your inventory!",
+  "text.player_companions.captured_companion_subtitle_ground": "Item was dropped to ground!",
+
   "text.player_companions.aggression_level.PASSIVE_FLEE": "Passive (flee)",
   "text.player_companions.aggression_level.PASSIVE": "Passive",
   "text.player_companions.aggression_level.NEUTRAL": "Neutral",

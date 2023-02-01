@@ -144,9 +144,9 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
             4 + this.playerCompanionEntity.getRandom().nextInt(7);
         if (this.canPenalize) {
           this.ticksUntilNextPathRecalculation += failedPathFindingPenalty;
-          if (this.playerCompanionEntity.getNavigation().getPath() != null) {
-            net.minecraft.world.level.pathfinder.Node finalPathPoint =
-                this.playerCompanionEntity.getNavigation().getPath().getEndNode();
+          Path navigationPath = this.playerCompanionEntity.getNavigation().getPath();
+          if (navigationPath != null) {
+            net.minecraft.world.level.pathfinder.Node finalPathPoint = navigationPath.getEndNode();
             if (finalPathPoint != null && livingEntity.distanceToSqr(finalPathPoint.x,
                 finalPathPoint.y, finalPathPoint.z) < 1)
               failedPathFindingPenalty = 0;

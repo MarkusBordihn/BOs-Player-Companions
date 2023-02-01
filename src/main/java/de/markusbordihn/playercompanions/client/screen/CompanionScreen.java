@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -39,8 +40,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
 
-// import org.anti_ad.mc.ipn.api.IPNIgnore;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.CompanionMenu;
 import de.markusbordihn.playercompanions.data.Experience;
@@ -53,7 +52,6 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
-// @IPNIgnore
 @OnlyIn(Dist.CLIENT)
 public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerScreen<T> {
 
@@ -156,7 +154,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     y += 12;
 
     AggressionLevel aggressionLevel = playerCompanionData.getEntityAggressionLevel();
-    if (aggressionLevel != playerCompanionEntity.getFirstAggressionLevel()) {
+    if (playerCompanionEntity != null
+        && aggressionLevel != playerCompanionEntity.getFirstAggressionLevel()) {
       this.aggressiveLevelPreviousButton.x = x;
       this.aggressiveLevelPreviousButton.y = y - 1;
       this.aggressiveLevelPreviousButton.visible = true;
@@ -169,7 +168,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       this.aggressiveLevelPreviousButton.visible = false;
     }
 
-    if (aggressionLevel != playerCompanionEntity.getLastAggressionLevel()) {
+    if (playerCompanionEntity != null
+        && aggressionLevel != playerCompanionEntity.getLastAggressionLevel()) {
       this.aggressiveLevelNextButton.x = x + 125;
       this.aggressiveLevelNextButton.y = y - 1;
       this.aggressiveLevelNextButton.visible = true;
@@ -275,7 +275,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.saveTextureSettingsButton.visible = visible;
     this.closeTextureSettingsButton.visible = visible;
     this.textureSkinLocationBox.visible = visible;
-    this.minecraft.keyboardHandler.setSendRepeatsToGui(visible);
+    Minecraft minecraft = this.minecraft;
+    if (minecraft != null) {
+      minecraft.keyboardHandler.setSendRepeatsToGui(visible);
+    }
     if (visible && playerCompanionEntity != null) {
       this.formerTextureSkinLocation = playerCompanionEntity.getCustomTextureSkin();
       this.textureSkinLocationBox.setValue(formerTextureSkinLocation);
@@ -453,8 +456,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     if (playerCompanionEntity != null) {
       CompanionScreenHelper.renderEntity(this.leftPos + 59,
           this.topPos + 70 + playerCompanionEntity.getEntityGuiTop(),
-          this.leftPos + 51 - this.xMouse, this.topPos + 75 - 50 - this.yMouse,
-          playerCompanionEntity);
+          this.leftPos + 58 - this.xMouse, this.topPos + 40 - this.yMouse, playerCompanionEntity);
     }
   }
 
@@ -476,7 +478,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
   @Override
   public void removed() {
-    this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+    Minecraft minecraft = this.minecraft;
+    if (minecraft != null) {
+      minecraft.keyboardHandler.setSendRepeatsToGui(false);
+    }
     super.removed();
   }
 

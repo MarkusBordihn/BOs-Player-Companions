@@ -134,9 +134,6 @@ dependencies {
   compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-71.1:api")
   runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-71.1")
 
-  // Integration: Inventory Next
-  // compileOnly fg.deobf("curse.maven:inventory-profiles-next-495267:4082932")
-
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
 

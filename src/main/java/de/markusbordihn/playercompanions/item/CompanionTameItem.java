@@ -32,6 +32,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,6 +51,7 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
 import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 import de.markusbordihn.playercompanions.text.TranslatableText;
+import de.markusbordihn.playercompanions.utils.TitleUtils;
 
 public class CompanionTameItem extends Item {
 
@@ -64,11 +67,11 @@ public class CompanionTameItem extends Item {
     super(properties);
   }
 
-  public void convertEntityToItem(Item companionItem, Player player, LivingEntity livingEntity,
-      Level level) {
+  public void convertEntityToItem(Item companionItem, ServerPlayer serverPlayer,
+      LivingEntity livingEntity, Level level) {
 
     // Capture mob inside item.
-    log.debug("Capturing mob {} for {} with {}", livingEntity, player, companionItem);
+    log.debug("Capturing mob {} for {} with {}", livingEntity, serverPlayer, companionItem);
     ItemStack itemStack = new ItemStack(companionItem);
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     compoundTag.putUUID(CapturedCompanion.COMPANION_UUID_TAG, livingEntity.getUUID());
@@ -80,21 +83,40 @@ public class CompanionTameItem extends Item {
       return;
     }
 
-    // Try to give Player new item in inventory or drop item.
-    Inventory playerInventory = player.getInventory();
-    if (!playerInventory.add(itemStack)) {
+    // Try to give Player new item in inventory.
+    Inventory playerInventory = serverPlayer.getInventory();
+    boolean gavePlayerItemStack = playerInventory.add(itemStack.copy());
+    if (gavePlayerItemStack) {
+      playerInventory.setChanged();
+    }
+
+    // Confirm that the item is in the players inventory or drop the item to the player.
+    if (gavePlayerItemStack && playerInventory.contains(itemStack)) {
+      log.info("Gave player {} captured companion item with {}.", serverPlayer, companionItem);
+      TitleUtils.setTitle(
+          new TranslatableComponent(Constants.TEXT_PREFIX + "captured_companion_title",
+              livingEntity.getName().getString()),
+          new TranslatableComponent(Constants.TEXT_PREFIX + "captured_companion_subtitle_inventory")
+              .withStyle(ChatFormatting.GRAY),
+          serverPlayer);
+    } else {
       BlockPos blockPos = livingEntity.blockPosition();
       if (!level.addFreshEntity(
           new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack))) {
         log.error("Unable to give item {} to player {} or to drop it to the world {}!", itemStack,
-            player, level);
+            serverPlayer, level);
         return;
       } else {
         log.warn("Dropped captured companion item for {} with {}, because inventory is full!",
-            player, itemStack);
+            serverPlayer, itemStack);
+        TitleUtils.setTitle(
+            new TranslatableComponent(Constants.TEXT_PREFIX + "captured_companion_title",
+                livingEntity.getName().getString()),
+            new TranslatableComponent(
+                Constants.TEXT_PREFIX + "captured_companion_subtitle_ground")
+                    .withStyle(ChatFormatting.RED),
+            serverPlayer);
       }
-    } else {
-      log.info("Gave player {} captured companion item with {}.", player, companionItem);
     }
 
     // Discarded Entity from the world, if we are able to give or drop the item to the player.
@@ -124,7 +146,11 @@ public class CompanionTameItem extends Item {
     }
 
     // Check if we could catch the mob Type
-    String mobType = livingEntity.getType().getRegistryName().toString();
+    ResourceLocation registryName = livingEntity.getType().getRegistryName();
+    if (registryName == null) {
+      return InteractionResult.FAIL;
+    }
+    String mobType = registryName.toString();
     if (!canTameCompanion(livingEntity) || !canTameCompanionType(mobType)) {
       return InteractionResult.FAIL;
     }
@@ -132,7 +158,7 @@ public class CompanionTameItem extends Item {
     // Interact with entity if it is TameablePlayerCompanion compatible
     if (livingEntity instanceof TameablePlayerCompanion tameablePlayerCompanion) {
       Level level = player.level;
-      if (!level.isClientSide) {
+      if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
         if (tameablePlayerCompanion.canTamePlayerCompanion(itemStack, player, livingEntity, hand)) {
           InteractionResult result =
               tameablePlayerCompanion.tamePlayerCompanion(itemStack, player, livingEntity, hand);
@@ -140,7 +166,7 @@ public class CompanionTameItem extends Item {
             if (livingEntity instanceof PlayerCompanionEntity companionEntity) {
               Item companionItem = companionEntity.getCompanionItem();
               if (companionItem != null) {
-                convertEntityToItem(companionItem, player, livingEntity, level);
+                convertEntityToItem(companionItem, serverPlayer, livingEntity, level);
               } else {
                 log.error("Unable to capture companion entity {} in item {}!", livingEntity,
                     companionItem);

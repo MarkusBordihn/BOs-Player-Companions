@@ -19,6 +19,8 @@
 
 package de.markusbordihn.playercompanions.integration;
 
+import java.util.UUID;
+
 import mcp.mobius.waila.api.EntityAccessor;
 import mcp.mobius.waila.api.IEntityComponentProvider;
 import mcp.mobius.waila.api.ITooltip;
@@ -31,6 +33,7 @@ import snownee.jade.VanillaPlugin;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -59,10 +62,12 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
           String ownerName =
               UsernameCache.getLastKnownUsername(playerCompanionEntity.getOwnerUUID());
           if (ownerName == null) {
-            if (playerCompanionEntity.getOwner() != null) {
-              ownerName = playerCompanionEntity.getOwner().getName().getString();
-            } else {
-              ownerName = playerCompanionEntity.getOwnerUUID().toString();
+            LivingEntity owner = playerCompanionEntity.getOwner();
+            UUID ownerUUID = playerCompanionEntity.getOwnerUUID();
+            if (owner != null) {
+              ownerName = owner.getName().getString();
+            } else if (ownerUUID != null) {
+              ownerName = ownerUUID.toString();
             }
           }
           tooltip.add(new TextComponent("Owner: " + ownerName));

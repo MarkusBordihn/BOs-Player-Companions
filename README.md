@@ -1,4 +1,4 @@
-# 🐾 Player Companion's
+# 🐾 Player Companion's (1.18.2)
 
 [![Player Companions Downloads](http://cf.way2muchnoise.eu/full_552456_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 [![Player Companions Versions](http://cf.way2muchnoise.eu/versions/Minecraft_552456_all.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
@@ -144,6 +144,10 @@ I'm not able to test all different kind of mod combinations or mod packs.
 
 The easiest way is to get the identical (same type/variant) Player Companion Item (over creative mode or `/give command`) and just clicking on the corresponding player companion to link it.
 Please keep in mind that only the owner is able to link a player companion to an item.
+
+### I lost my companion, is there are way to summon it❓
+
+The easiest way is to use your Player Companion Item or alternative over the `/player_companions summon` command.
 
 ## Version Status Overview 🛠️
 

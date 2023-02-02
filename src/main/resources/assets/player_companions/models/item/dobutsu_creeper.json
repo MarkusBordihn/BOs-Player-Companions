@@ -1,6 +1,6 @@
 {
   "parent": "player_companions:item/template/dobutsu",
   "textures": {
-    "texture": "player_companions:entity/dobutsu/dobutsu_creeper"
+    "texture": "player_companions:item/entity/dobutsu/dobutsu_creeper"
   }
 }

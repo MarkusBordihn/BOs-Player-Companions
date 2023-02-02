@@ -1,6 +1,6 @@
 {
   "parent": "player_companions:item/template/rooster",
   "textures": {
-    "texture": "player_companions:entity/rooster/rooster_mixed"
+    "texture": "player_companions:item/entity/rooster/rooster_mixed"
   }
 }

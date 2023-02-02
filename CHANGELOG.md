@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.02.02
+
+- Refactored code for version 1.19.3-44.1.8
+
 ### 2023.02.01
 
 - Added additional on-screen messages after successful capturing a player companion.

@@ -57,7 +57,6 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionSpawnManager;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 import de.markusbordihn.playercompanions.text.TranslatableText;
 
 public class CapturedCompanion extends Item {
@@ -69,7 +68,7 @@ public class CapturedCompanion extends Item {
   private PlayerCompanionVariant variant = PlayerCompanionVariant.DEFAULT;
 
   public CapturedCompanion() {
-    this(new Item.Properties().stacksTo(1).durability(16).tab(PlayerCompanionsTab.TAB_COMPANIONS));
+    this(new Item.Properties().stacksTo(1).durability(16));
   }
 
   public CapturedCompanion(PlayerCompanionVariant variant) {

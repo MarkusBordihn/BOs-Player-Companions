@@ -1,6 +1,6 @@
 {
   "parent": "player_companions:item/template/raptor",
   "textures": {
-    "texture": "player_companions:entity/raptor/raptor_pink"
+    "texture": "player_companions:item/entity/raptor/raptor_pink"
   }
 }

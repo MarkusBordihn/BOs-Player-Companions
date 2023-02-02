@@ -1,6 +1,6 @@
 {
   "parent": "player_companions:item/template/small_slime",
   "textures": {
-    "texture": "player_companions:entity/small_slime/small_slime_white"
+    "texture": "player_companions:item/entity/small_slime/small_slime_white"
   }
 }

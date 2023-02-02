@@ -27,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
@@ -39,6 +38,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.ActionType;
@@ -439,8 +439,8 @@ public class PlayerCompanionData {
       this.entityId = compoundTag.getInt(ENTITY_ID_TAG);
     }
     if (compoundTag.contains(ENTITY_TYPE_TAG)) {
-      this.entityType =
-          Registry.ENTITY_TYPE.get(new ResourceLocation(compoundTag.getString(ENTITY_TYPE_TAG)));
+      this.entityType = ForgeRegistries.ENTITY_TYPES
+          .getValue(new ResourceLocation(compoundTag.getString(ENTITY_TYPE_TAG)));
     }
     this.entityData = compoundTag.getCompound(ENTITY_DATA_TAG);
     this.entityDimension = compoundTag.getString(ENTITY_DIMENSION);

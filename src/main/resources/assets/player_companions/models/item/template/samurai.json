@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench by Markus Bordihn",
 	"texture_size": [128, 128],
 	"textures": {
-		"texture": "player_companions:entity/samurai/samurai_default"
+		"texture": "player_companions:item/entity/samurai/samurai_default"
 	},
 	"elements": [
 		{

@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench by Markus Bordihn",
 	"texture_size": [32, 32],
 	"textures": {
-		"texture": "player_companions:entity/lizard/lizard_default"
+		"texture": "player_companions:item/entity/lizard/lizard_default"
 	},
 	"elements": [
 		{

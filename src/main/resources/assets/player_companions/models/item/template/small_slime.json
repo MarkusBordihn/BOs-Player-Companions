@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench by Markus Bordihn",
 	"texture_size": [32, 32],
 	"textures": {
-		"texture": "player_companions:entity/small_slime/small_slime_green"
+		"texture": "player_companions:item/entity/small_slime/small_slime_green"
 	},
 	"elements": [
 		{

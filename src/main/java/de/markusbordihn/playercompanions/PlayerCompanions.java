@@ -37,9 +37,9 @@ import de.markusbordihn.playercompanions.container.ModMenuTypes;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.item.ModItems;
 import de.markusbordihn.playercompanions.level.biome.ModBiomeModifiers;
-import de.markusbordihn.playercompanions.level.spawner.SpawnHandler;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
 import de.markusbordihn.playercompanions.sounds.ModSoundEvents;
+import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 import de.markusbordihn.playercompanions.utils.StopModReposts;
 
 @Mod(Constants.MOD_ID)
@@ -73,8 +73,6 @@ public class PlayerCompanions {
     log.info("{} Biome Modifier Serializers ...", Constants.LOG_REGISTER_PREFIX);
     ModBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(modEventBus);
 
-    modEventBus.addListener(SpawnHandler::registerSpawnPlacements);
-
     forgeEventBus.addListener(ServerSetup::handleServerStartingEvent);
 
     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
@@ -82,6 +80,7 @@ public class PlayerCompanions {
       modEventBus.addListener(ClientRenderer::registerEntityRenderers);
       modEventBus.addListener(ClientScreens::registerScreens);
       modEventBus.addListener(ModKeyMapping::registerKeyMapping);
+      modEventBus.addListener(PlayerCompanionsTab::handleCreativeModeTabRegister);
     });
   }
 

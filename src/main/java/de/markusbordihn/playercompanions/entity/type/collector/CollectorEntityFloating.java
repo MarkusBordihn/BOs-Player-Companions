@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.entity.type.collector;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;

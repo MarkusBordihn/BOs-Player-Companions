@@ -49,7 +49,6 @@ import net.minecraft.world.level.Level;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
-import de.markusbordihn.playercompanions.tabs.PlayerCompanionsTab;
 import de.markusbordihn.playercompanions.text.TranslatableText;
 import de.markusbordihn.playercompanions.utils.TitleUtils;
 
@@ -60,7 +59,7 @@ public class CompanionTameItem extends Item {
   public static final Set<String> TAMEABLE_MOB_TYPES = Collections.emptySet();
 
   public CompanionTameItem() {
-    this(new Item.Properties().tab(PlayerCompanionsTab.TAB_TAME_ITEMS));
+    this(new Item.Properties());
   }
 
   public CompanionTameItem(Properties properties) {

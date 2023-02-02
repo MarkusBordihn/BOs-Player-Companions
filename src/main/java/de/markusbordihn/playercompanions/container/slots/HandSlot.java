@@ -45,9 +45,9 @@ public class HandSlot extends Slot {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final ResourceLocation EMPTY_ARMOR_SLOT_WEAPON =
-      new ResourceLocation(Constants.MOD_ID, "item/empty_armor_slot_weapon");
+      new ResourceLocation(Constants.MOD_ID, "item/empty_armor/empty_armor_slot_weapon");
   public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD =
-      new ResourceLocation(Constants.MOD_ID, "item/empty_armor_slot_shield");
+      new ResourceLocation(Constants.MOD_ID, "item/empty_armor/empty_armor_slot_shield");
   static final ResourceLocation[] TEXTURE_EMPTY_SLOTS =
       new ResourceLocation[] {EMPTY_ARMOR_SLOT_WEAPON, EMPTY_ARMOR_SLOT_SHIELD};
   private static final EquipmentSlot[] SLOT_IDS =

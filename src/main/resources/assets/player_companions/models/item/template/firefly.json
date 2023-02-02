@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench by Markus Bordihn",
 	"texture_size": [64, 64],
 	"textures": {
-		"texture": "player_companions:entity/firefly/firefly"
+		"texture": "player_companions:item/entity/firefly/firefly"
 	},
 	"elements": [
 		{

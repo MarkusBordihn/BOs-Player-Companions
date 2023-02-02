@@ -1,6 +1,6 @@
 {
   "parent": "player_companions:item/template/lizard",
   "textures": {
-    "texture": "player_companions:entity/lizard/lizard_green"
+    "texture": "player_companions:item/entity/lizard/lizard_green"
   }
 }

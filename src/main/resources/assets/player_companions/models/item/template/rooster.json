@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench by Markus Bordihn",
 	"texture_size": [64, 64],
 	"textures": {
-		"texture": "player_companions:entity/rooster/rooster"
+		"texture": "player_companions:item/entity/rooster/rooster"
 	},
 	"elements": [
 		{

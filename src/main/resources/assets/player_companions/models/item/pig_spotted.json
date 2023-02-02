@@ -1,6 +1,6 @@
 {
   "parent": "player_companions:item/template/pig",
   "textures": {
-    "texture": "player_companions:entity/pig/pig_spotted"
+    "texture": "player_companions:item/entity/pig/pig_spotted"
   }
 }

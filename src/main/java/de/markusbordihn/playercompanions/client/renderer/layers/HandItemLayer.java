@@ -23,7 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -79,11 +79,11 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
       poseStack.pushPose();
       if (rightHand != null) {
         poseStack.translate(rightHand.x, rightHand.y, rightHand.z);
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(rightHand.xRot));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(rightHand.yRot));
+        poseStack.mulPose(Axis.XP.rotationDegrees(rightHand.xRot));
+        poseStack.mulPose(Axis.YP.rotationDegrees(rightHand.yRot));
       } else {
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
       }
       boolean flag = humanoidArm == HumanoidArm.LEFT;
       poseStack.translate((flag ? -1 : 1) / 16.0F, 0.125D, -0.625D);

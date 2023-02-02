@@ -48,11 +48,10 @@ public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMe
 
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
         && playerCompanionEntity.enableCustomTextureSkin()) {
-      this.addRenderableWidget(new Button(this.leftPos + 5, this.topPos + 107, 108, 20,
-          Component.literal("Texture Settings"), event -> {
-            this.showTextureSettings(true);
-            this.setFocused(null);
-          }));
+      this.addRenderableWidget(Button.builder(Component.translatable("Texture Settings"), event -> {
+        this.showTextureSettings(true);
+        this.setFocused(null);
+      }).bounds(this.leftPos + 5, this.topPos + 107, 108, 20).build());
     }
   }
 

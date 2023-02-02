@@ -128,8 +128,8 @@ dependencies {
   minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
   // Integration:: Jade
-  compileOnly fg.deobf("curse.maven:jade-324717:3903693")
-  runtimeOnly fg.deobf("curse.maven:jade-324717:3903693")
+  compileOnly fg.deobf("curse.maven:jade-324717:4330163")
+  runtimeOnly fg.deobf("curse.maven:jade-324717:4330163")
 
   // Patchouli Integration
   // compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.19-74-SNAPSHOT:api")
@@ -155,7 +155,7 @@ dependencies {
   // Additional helpful Mods for development (dev depenedency)
   // runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3749454")
   // runtimeOnly fg.deobf("curse.maven:jei-238222:3884337")
-  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:3907322")
+  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:4338625")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

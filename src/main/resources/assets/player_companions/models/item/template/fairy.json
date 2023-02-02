@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench by Markus Bordihn",
 	"texture_size": [128, 128],
 	"textures": {
-		"texture": "player_companions:entity/fairy/fairy_default"
+		"texture": "player_companions:item/entity/fairy/fairy_default"
 	},
 	"elements": [
 		{

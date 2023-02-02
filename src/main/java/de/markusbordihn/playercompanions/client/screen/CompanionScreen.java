@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -132,15 +131,15 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     poseStack.popPose();
 
     // Actions like order to sit, follow, patrol, attack, ...
-    this.actionTypeFollowButton.x = x;
-    this.actionTypeFollowButton.y = y;
+    this.actionTypeFollowButton.setX(x);
+    this.actionTypeFollowButton.setY(y);
     this.actionTypeFollowButton.visible = true;
     this.actionTypeFollowButton.active =
         !ActionType.FOLLOW.equals(playerCompanionData.getEntityActionType());
     y += 25;
 
-    this.actionTypeSitButton.x = x;
-    this.actionTypeSitButton.y = y;
+    this.actionTypeSitButton.setX(x);
+    this.actionTypeSitButton.setY(y);
     this.actionTypeSitButton.visible = true;
     this.actionTypeSitButton.active =
         !ActionType.SIT.equals(playerCompanionData.getEntityActionType());
@@ -156,8 +155,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     AggressionLevel aggressionLevel = playerCompanionData.getEntityAggressionLevel();
     if (playerCompanionEntity != null
         && aggressionLevel != playerCompanionEntity.getFirstAggressionLevel()) {
-      this.aggressiveLevelPreviousButton.x = x;
-      this.aggressiveLevelPreviousButton.y = y - 1;
+      this.aggressiveLevelPreviousButton.setX(x);
+      this.aggressiveLevelPreviousButton.setY(y - 1);
       this.aggressiveLevelPreviousButton.visible = true;
     } else {
       RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
@@ -170,8 +169,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     if (playerCompanionEntity != null
         && aggressionLevel != playerCompanionEntity.getLastAggressionLevel()) {
-      this.aggressiveLevelNextButton.x = x + 125;
-      this.aggressiveLevelNextButton.y = y - 1;
+      this.aggressiveLevelNextButton.setX(x + 125);
+      this.aggressiveLevelNextButton.setY(y - 1);
       this.aggressiveLevelNextButton.visible = true;
     } else {
       RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
@@ -191,8 +190,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     poseStack.popPose();
     y += 10;
 
-    aggressionLevelDefaultButton.x = x;
-    aggressionLevelDefaultButton.y = y;
+    aggressionLevelDefaultButton.setX(x);
+    aggressionLevelDefaultButton.setY(y);
     aggressionLevelDefaultButton.visible = true;
   }
 
@@ -275,10 +274,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.saveTextureSettingsButton.visible = visible;
     this.closeTextureSettingsButton.visible = visible;
     this.textureSkinLocationBox.visible = visible;
-    Minecraft minecraft = this.minecraft;
-    if (minecraft != null) {
-      minecraft.keyboardHandler.setSendRepeatsToGui(visible);
-    }
+
     if (visible && playerCompanionEntity != null) {
       this.formerTextureSkinLocation = playerCompanionEntity.getCustomTextureSkin();
       this.textureSkinLocationBox.setValue(formerTextureSkinLocation);
@@ -358,41 +354,41 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.textureSkinLocationBox.visible = false;
 
     // Texture Settings Buttons
-    this.clearTextureSettingsButton =
-        this.addRenderableWidget(new Button(this.leftPosDialog + 205, this.topPosDialog + 42, 20,
-            20, Component.literal("X"), onPress -> this.clearTextureSkinLocation()));
+    this.clearTextureSettingsButton = this.addRenderableWidget(
+        Button.builder(Component.literal("X"), onPress -> this.clearTextureSkinLocation())
+            .bounds(this.leftPosDialog + 205, this.topPosDialog + 42, 20, 20).build());
     this.clearTextureSettingsButton.visible = false;
 
     // Save Button
-    this.saveTextureSettingsButton = this.addRenderableWidget(new Button(this.leftPosDialog + 10,
-        this.topPosDialog + 68, 80, 20, Component.literal("Save"), onPress -> {
+    this.saveTextureSettingsButton =
+        this.addRenderableWidget(Button.builder(Component.translatable("Save"), onPress -> {
           this.saveTextureSkinLocation();
           this.showTextureSettings(false);
-        }));
+        }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 80, 20).build());
     this.saveTextureSettingsButton.active = false;
     this.saveTextureSettingsButton.visible = false;
 
     // Close Button
-    this.closeTextureSettingsButton =
-        this.addRenderableWidget(new Button(this.leftPosDialog + 145, this.topPosDialog + 68, 80,
-            20, Component.literal("Cancel"), onPress -> this.showTextureSettings(false)));
+    this.closeTextureSettingsButton = this.addRenderableWidget(
+        Button.builder(Component.translatable("Cancel"), onPress -> this.showTextureSettings(false))
+            .bounds(this.leftPosDialog + 145, this.topPosDialog + 68, 80, 20).build());
     this.closeTextureSettingsButton.active = true;
     this.closeTextureSettingsButton.visible = false;
 
     // Action Type: Follow
-    this.actionTypeFollowButton = this.addRenderableWidget(new Button(this.leftPosDialog + 10,
-        this.topPosDialog + 68, 132, 20, Component.translatable("Follow"), onPress -> {
+    this.actionTypeFollowButton =
+        this.addRenderableWidget(Button.builder(Component.translatable("Follow"), onPress -> {
           NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
               PlayerCompanionCommand.FOLLOW);
-        }));
+        }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());
     this.actionTypeFollowButton.visible = false;
 
     // Action Type: Sit
-    this.actionTypeSitButton = this.addRenderableWidget(new Button(this.leftPosDialog + 10,
-        this.topPosDialog + 68, 132, 20, Component.translatable("Sit"), onPress -> {
+    this.actionTypeSitButton =
+        this.addRenderableWidget(Button.builder(Component.translatable("Sit"), onPress -> {
           NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
               PlayerCompanionCommand.SIT);
-        }));
+        }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());
     this.actionTypeSitButton.visible = false;
 
     // Aggressive Level Previous Button
@@ -412,11 +408,11 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.aggressiveLevelNextButton.visible = false;
 
     // Aggressive Level Default Button
-    this.aggressionLevelDefaultButton = this.addRenderableWidget(new Button(this.leftPosDialog + 10,
-        this.topPosDialog + 68, 132, 20, Component.translatable("Default Aggression"), onPress -> {
+    this.aggressionLevelDefaultButton = this.addRenderableWidget(
+        Button.builder(Component.translatable("Default Aggression"), onPress -> {
           NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
               PlayerCompanionCommand.AGGRESSION_LEVEL_DEFAULT);
-        }));
+        }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());
     this.aggressionLevelDefaultButton.visible = false;
   }
 
@@ -474,15 +470,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     } else {
       return true;
     }
-  }
-
-  @Override
-  public void removed() {
-    Minecraft minecraft = this.minecraft;
-    if (minecraft != null) {
-      minecraft.keyboardHandler.setSendRepeatsToGui(false);
-    }
-    super.removed();
   }
 
 }

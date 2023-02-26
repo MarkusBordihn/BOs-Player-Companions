@@ -19,6 +19,10 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
+import java.util.EnumMap;
+import java.util.Map;
+
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -27,13 +31,26 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.RoosterModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.renderer.layers.HandItemLayer;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.Rooster;
 
 @OnlyIn(Dist.CLIENT)
 public class RoosterRenderer extends MobRenderer<Rooster, RoosterModel<Rooster>> {
+
+  // Variant Textures
+  protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_default.png"));
+        hashMap.put(PlayerCompanionVariant.MIXED,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_mixed.png"));
+      });
+  protected static final ResourceLocation DEFAULT_TEXTURE =
+      TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
   public RoosterRenderer(EntityRendererProvider.Context context) {
     super(context, new RoosterModel<>(context.bakeLayer(ClientRenderer.ROOSTER)), 0.35F);
@@ -42,7 +59,7 @@ public class RoosterRenderer extends MobRenderer<Rooster, RoosterModel<Rooster>>
 
   @Override
   public ResourceLocation getTextureLocation(Rooster entity) {
-    return entity.getTextureLocation();
+    return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
 
   @Override

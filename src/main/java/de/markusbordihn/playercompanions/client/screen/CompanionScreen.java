@@ -50,6 +50,7 @@ import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
+import de.markusbordihn.playercompanions.skin.SkinType;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
 @OnlyIn(Dist.CLIENT)
@@ -58,6 +59,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final float STATES_SCALE = 0.8f;
+  private static final int ADD_SKIN_DELAY = 20;
 
   private static final ResourceLocation DIALOG_TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/dialog.png");
@@ -87,8 +89,11 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   private float xMouse;
   private float yMouse;
   private int leftPosDialog = this.leftPos - 18;
-  private int nextTextureSkinLocationChange = (int) java.time.Instant.now().getEpochSecond();
   private int topPosDialog = this.topPos + 90;
+
+  // Cache
+  protected static int nextTextureSkinLocationChange =
+      (int) java.time.Instant.now().getEpochSecond();
 
   public CompanionScreen(T menu, Inventory inventory, Component component,
       ResourceLocation backgroundTexture) {
@@ -280,7 +285,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       minecraft.keyboardHandler.setSendRepeatsToGui(visible);
     }
     if (visible && playerCompanionEntity != null) {
-      this.formerTextureSkinLocation = playerCompanionEntity.getCustomTextureSkin();
       this.textureSkinLocationBox.setValue(formerTextureSkinLocation);
     }
   }
@@ -293,21 +297,35 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
   private void saveTextureSkinLocation() {
     String textureSkinLocationValue = this.textureSkinLocationBox.getValue();
-    if (playerCompanionEntity != null && textureSkinLocationValue != null
+    if (textureSkinLocationValue != null
         && !textureSkinLocationValue.equals(this.formerTextureSkinLocation)
         && (textureSkinLocationValue.isEmpty()
             || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
             || PlayersUtils.isValidUrl(textureSkinLocationValue))) {
-      NetworkHandler.skinChangePlayerCompanion(playerCompanionEntity.getStringUUID(),
-          textureSkinLocationValue);
-      this.nextTextureSkinLocationChange = (int) java.time.Instant.now().getEpochSecond() + 30;
+
+      if (PlayersUtils.isValidPlayerName(textureSkinLocationValue)) {
+        log.debug("Settings player user texture to {}", textureSkinLocationValue);
+        NetworkHandler.skinChange(playerCompanionEntity.getUUID(), textureSkinLocationValue,
+            SkinType.PLAYER_SKIN);
+      } else if (PlayersUtils.isValidUrl(textureSkinLocationValue)) {
+        log.debug("Setting remote user texture to {}", textureSkinLocationValue);
+        NetworkHandler.skinChange(playerCompanionEntity.getUUID(), textureSkinLocationValue,
+            SkinType.INSECURE_REMOTE_URL);
+      }
+      this.formerTextureSkinLocation = textureSkinLocationValue;
+      updateNextTextureSkinLocationChange();
     }
+  }
+
+  private static void updateNextTextureSkinLocationChange() {
+    CompanionScreen.nextTextureSkinLocationChange =
+        (int) java.time.Instant.now().getEpochSecond() + ADD_SKIN_DELAY;
   }
 
   private void validateTextureSkinLocation() {
     String textureSkinLocationValue = this.textureSkinLocationBox.getValue();
     this.canTextureSkinLocationChange =
-        java.time.Instant.now().getEpochSecond() >= this.nextTextureSkinLocationChange;
+        java.time.Instant.now().getEpochSecond() >= CompanionScreen.nextTextureSkinLocationChange;
 
     // Additional check to make sure that the server is not spammed with requests.
     if (this.canTextureSkinLocationChange) {
@@ -342,11 +360,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     // Position for the dialog
     this.leftPosDialog = this.leftPos - 18;
     this.topPosDialog = this.topPos + 85;
-
-    // Player Companions settings
-    if (playerCompanionEntity != null) {
-      this.formerTextureSkinLocation = playerCompanionEntity.getCustomTextureSkin();
-    }
 
     // Texture Settings
     this.textureSkinLocationBox = new EditBox(this.font, leftPosDialog + 10, topPosDialog + 42, 190,

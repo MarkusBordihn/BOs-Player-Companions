@@ -19,11 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
-import com.google.common.collect.Maps;
 
 import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -44,13 +44,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityWalking;
 import de.markusbordihn.playercompanions.item.ModItems;
+import de.markusbordihn.playercompanions.skin.SkinModel;
 
 public class Dobutsu extends FollowerEntityWalking {
 
@@ -60,29 +60,20 @@ public class Dobutsu extends FollowerEntityWalking {
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE, Items.SWEET_BERRIES);
 
   // Variants
-  public static final String CREEPER_VARIANT = "creeper";
-
-  // Entity texture by variant
-  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
-        hashMap.put(PlayerCompanionVariant.CREEPER,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
-        hashMap.put(PlayerCompanionVariant.ENDERMAN,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_enderman.png"));
-      });
+  public static final List<PlayerCompanionVariant> VARIANTS =
+      List.of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.CREEPER,
+          PlayerCompanionVariant.ENDERMAN);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.DOBUTSU_DEFAULT.get());
         hashMap.put(PlayerCompanionVariant.CREEPER, ModItems.DOBUTSU_CREEPER.get());
         hashMap.put(PlayerCompanionVariant.ENDERMAN, ModItems.DOBUTSU_ENDERMAN.get());
       });
 
   public Dobutsu(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
+    super(entityType, level, COMPANION_ITEM_BY_VARIANT);
     this.enableCustomTextureSkin(true);
   }
 
@@ -114,6 +105,19 @@ public class Dobutsu extends FollowerEntityWalking {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
+  }
+
+  @Override
+  public PlayerCompanionVariant getRandomVariant() {
+    if (VARIANTS.size() > 1 && this.random.nextInt(2) == 0) {
+      return VARIANTS.get(this.random.nextInt(VARIANTS.size()));
+    }
+    return PlayerCompanionVariant.DEFAULT;
+  }
+
+  @Override
+  public SkinModel getSkinModel() {
+    return SkinModel.DOBUTSU;
   }
 
   @Override

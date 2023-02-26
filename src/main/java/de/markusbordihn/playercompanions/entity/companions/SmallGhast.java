@@ -19,13 +19,13 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
-
-import com.google.common.collect.Maps;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +33,6 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -91,22 +90,17 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   public static final String NAME = "Small Ghast";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
 
-  // Alternative Texture
-  private static final ResourceLocation SHOOTING_TEXTURE =
-      new ResourceLocation("textures/entity/ghast/ghast_shooting.png");
-
-  // Entity texture by variant
-  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT,
-          new ResourceLocation("textures/entity/ghast/ghast.png")));
+  // Variants
+  public static final List<PlayerCompanionVariant> VARIANTS =
+      List.of(PlayerCompanionVariant.DEFAULT);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT = Util.make(
-      Maps.newHashMap(),
+      new EnumMap<>(PlayerCompanionVariant.class),
       hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_GHAST_DEFAULT.get()));
 
   public SmallGhast(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
+    super(entityType, level, COMPANION_ITEM_BY_VARIANT);
   }
 
   static class SmallGhastLookGoal extends Goal {
@@ -233,6 +227,14 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   }
 
   @Override
+  public PlayerCompanionVariant getRandomVariant() {
+    if (VARIANTS.size() > 1 && this.random.nextInt(2) == 0) {
+      return VARIANTS.get(this.random.nextInt(VARIANTS.size()));
+    }
+    return PlayerCompanionVariant.DEFAULT;
+  }
+
+  @Override
   public SoundEvent getPetSound() {
     return SoundEvents.GHAST_AMBIENT;
   }
@@ -281,11 +283,6 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   @Override
   public int getEntityGuiTop() {
     return 42;
-  }
-
-  @Override
-  public ResourceLocation getTextureLocation() {
-    return this.isCharging() ? SHOOTING_TEXTURE : super.getTextureLocation();
   }
 
 }

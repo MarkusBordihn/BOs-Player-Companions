@@ -19,8 +19,12 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -30,10 +34,29 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import de.markusbordihn.playercompanions.client.model.SmallGhastModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 
 @OnlyIn(Dist.CLIENT)
 public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<SmallGhast>> {
+
+  // Variant Textures
+  protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation("textures/entity/ghast/ghast.png"));
+      });
+  protected static final ResourceLocation DEFAULT_TEXTURE =
+      TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
+
+  // Variant Shooting Textures
+  protected static final Map<PlayerCompanionVariant, ResourceLocation> SHOOTING_TEXTURE_BY_VARIANT =
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation("textures/entity/ghast/ghast_shooting.png"));
+      });
+  private static final ResourceLocation DEFAULT_SHOOTING_TEXTURE =
+      SHOOTING_TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
   public SmallGhastRenderer(EntityRendererProvider.Context context) {
     super(context, new SmallGhastModel<>(context.bakeLayer(ClientRenderer.SMALL_GHAST)), 0.4F);
@@ -41,7 +64,9 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<
 
   @Override
   public ResourceLocation getTextureLocation(SmallGhast entity) {
-    return entity.getTextureLocation();
+    return entity.isCharging()
+        ? SHOOTING_TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_SHOOTING_TEXTURE)
+        : TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
 
   @Override

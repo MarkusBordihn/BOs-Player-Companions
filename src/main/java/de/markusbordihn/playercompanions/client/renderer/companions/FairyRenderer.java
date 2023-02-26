@@ -19,8 +19,12 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.core.BlockPos;
@@ -29,15 +33,35 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.FairyModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
 
 @OnlyIn(Dist.CLIENT)
 public class FairyRenderer extends HumanoidMobRenderer<Fairy, FairyModel<Fairy>> {
 
+  // Variant Textures
+  protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_default.png"));
+        hashMap.put(PlayerCompanionVariant.BLUE,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_blue.png"));
+        hashMap.put(PlayerCompanionVariant.RED,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_red.png"));
+      });
+  protected static final ResourceLocation DEFAULT_TEXTURE =
+      TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
+
   public FairyRenderer(EntityRendererProvider.Context context) {
     super(context, new FairyModel<>(context.bakeLayer(ClientRenderer.FAIRY)), 0.3F);
+  }
+
+  @Override
+  public ResourceLocation getTextureLocation(Fairy entity) {
+    return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
 
   @Override
@@ -48,11 +72,6 @@ public class FairyRenderer extends HumanoidMobRenderer<Fairy, FairyModel<Fairy>>
   @Override
   protected void scale(Fairy entity, PoseStack poseStack, float unused) {
     poseStack.scale(0.4F, 0.4F, 0.4F);
-  }
-
-  @Override
-  public ResourceLocation getTextureLocation(Fairy entity) {
-    return entity.getTextureLocation();
   }
 
 }

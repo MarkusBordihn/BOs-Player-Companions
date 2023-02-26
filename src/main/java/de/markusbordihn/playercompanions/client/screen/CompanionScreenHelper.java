@@ -36,6 +36,8 @@ public class CompanionScreenHelper {
 
   public static void renderEntity(int x, int y, float yRot, float xRot,
       PlayerCompanionEntity playerCompanionEntity) {
+    // Prepare Renderer
+    Minecraft minecraft = Minecraft.getInstance();
     float f = (float) Math.atan(yRot / 40.0F);
     float f1 = (float) Math.atan(xRot / 40.0F);
     int scale = playerCompanionEntity.getEntityGuiScaling();
@@ -51,17 +53,34 @@ public class CompanionScreenHelper {
     Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
     quaternion.mul(quaternion1);
     poseStack1.mulPose(quaternion);
+
+    // Backup entity information
+    Component entityCustomName = playerCompanionEntity.getCustomName();
+    boolean entityShouldShowName = playerCompanionEntity.shouldShowName();
     float entityYBodyRot = playerCompanionEntity.yBodyRot;
     float entityYRot = playerCompanionEntity.getYRot();
     float entityXRot = playerCompanionEntity.getXRot();
     float entityYHeadRotO = playerCompanionEntity.yHeadRotO;
     float entityYHeadRot = playerCompanionEntity.yHeadRot;
+
+    // Adjust entity information for rendering
     playerCompanionEntity.yBodyRot = 180.0F + f * 20.0F;
     playerCompanionEntity.setYRot(180.0F + f * 40.0F);
     playerCompanionEntity.setXRot(-f1 * 20.0F);
     playerCompanionEntity.yHeadRot = playerCompanionEntity.getYRot();
     Component customName = playerCompanionEntity.getCustomName();
-    playerCompanionEntity.setCustomName(null);
+
+    // Hide gui elements or remove custom name
+    boolean minecraftHideGui = false;
+    if (minecraft != null) {
+      minecraftHideGui = minecraft.options.hideGui;
+      minecraft.options.hideGui = true;
+    } else {
+      playerCompanionEntity.setCustomName(null);
+      playerCompanionEntity.setCustomNameVisible(false);
+    }
+
+    // Render Entity
     Lighting.setupForEntityInInventory();
     EntityRenderDispatcher entityRenderDispatcher =
         Minecraft.getInstance().getEntityRenderDispatcher();
@@ -74,12 +93,23 @@ public class CompanionScreenHelper {
         multiBuffer, 15728880);
     multiBuffer.endBatch();
     entityRenderDispatcher.setRenderShadow(true);
+
+    // Restore entity information
     playerCompanionEntity.yBodyRot = entityYBodyRot;
     playerCompanionEntity.setYRot(entityYRot);
     playerCompanionEntity.setXRot(entityXRot);
     playerCompanionEntity.yHeadRot = entityYHeadRot;
     playerCompanionEntity.yHeadRotO = entityYHeadRotO;
     playerCompanionEntity.setCustomName(customName);
+
+    // Restore gui elements or custom name
+    if (minecraft != null) {
+      minecraft.options.hideGui = minecraftHideGui;
+    } else {
+      playerCompanionEntity.setCustomName(entityCustomName);
+      playerCompanionEntity.setCustomNameVisible(entityShouldShowName);
+    }
+
     poseStack.popPose();
     RenderSystem.applyModelViewMatrix();
     Lighting.setupFor3DItems();

@@ -19,15 +19,14 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Maps;
-
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
@@ -55,7 +54,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
@@ -71,24 +69,19 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   public static final String NAME = "Rooster";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.WHEAT_SEEDS);
 
-  // Entity texture by variant
-  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_default.png"));
-        hashMap.put(PlayerCompanionVariant.MIXED,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_mixed.png"));
-      });
+  // Variants
+  public static final List<PlayerCompanionVariant> VARIANTS =
+      List.of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.MIXED);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.ROOSTER_DEFAULT.get());
         hashMap.put(PlayerCompanionVariant.MIXED, ModItems.ROOSTER_MIXED.get());
       });
 
   public Rooster(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
+    super(entityType, level, COMPANION_ITEM_BY_VARIANT);
     this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
   }
 
@@ -199,6 +192,14 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
+  }
+
+  @Override
+  public PlayerCompanionVariant getRandomVariant() {
+    if (VARIANTS.size() > 1 && this.random.nextInt(2) == 0) {
+      return VARIANTS.get(this.random.nextInt(VARIANTS.size()));
+    }
+    return PlayerCompanionVariant.DEFAULT;
   }
 
   @Override

@@ -74,6 +74,7 @@ import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
+import de.markusbordihn.playercompanions.skin.SkinType;
 
 @EventBusSubscriber
 public class PlayerCompanionEntity extends PlayerCompanionEntityData
@@ -99,18 +100,15 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
   private static final int GLOW_TICK = 30;
-  private static final int TEXTURE_CACHE_TICK = 50;
   private int ticker = 0;
   private int glowTicker = 0;
-  private int textureCacheTicker = 0;
 
   // Temporary states
   private boolean wasOnGround;
 
   public PlayerCompanionEntity(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
-      Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
-    super(entityType, level, textureByVariant, companionItemByVariant);
+    super(entityType, level, companionItemByVariant);
 
     // Set Reference to this object for easier sync and other tasks.
     this.setSyncReference(this);
@@ -118,7 +116,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     // Distribute Ticks along several entities.
     this.ticker = this.random.nextInt(0, INACTIVE_TICK / 2);
     this.glowTicker = this.random.nextInt(0, GLOW_TICK / 2);
-    this.textureCacheTicker = this.random.nextInt(0, TEXTURE_CACHE_TICK / 2);
 
     // Force data sync.
     setDataSyncNeeded();
@@ -512,7 +509,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         spawnGroupData, compoundTag);
 
     // Set random texture variants, if available.
-    if (!hasCustomTextureSkin() && this.getVariant() == PlayerCompanionVariant.NONE) {
+    if (SkinType.DEFAULT.equals(getSkinType())
+        && this.getVariant() == PlayerCompanionVariant.NONE) {
       this.setVariant(this.getRandomVariant());
     }
 
@@ -547,15 +545,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         LightBlock.place(level, lightBlockPos);
       }
       this.glowTicker = 0;
-    }
-
-    // ClientSide: Re-validated Texture cache if needed.
-    if (this.level.isClientSide && this.hasTextureCache() && this.hasChangedCustomTextureSkin()
-        && textureCacheTicker++ >= TEXTURE_CACHE_TICK) {
-      log.debug("Re-validated texture cache for {}", this);
-      setCustomTextureSkin(this.getCustomTextureSkin());
-      setTextureCache(null);
-      textureCacheTicker = 0;
     }
 
     // Shows particle and play sound after jump or fall.

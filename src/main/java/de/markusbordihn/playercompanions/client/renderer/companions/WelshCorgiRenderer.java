@@ -19,6 +19,10 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
+import java.util.EnumMap;
+import java.util.Map;
+
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -26,19 +30,35 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.WelshCorgiModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.WelshCorgi;
 
 @OnlyIn(Dist.CLIENT)
 public class WelshCorgiRenderer extends MobRenderer<WelshCorgi, WelshCorgiModel<WelshCorgi>> {
 
+  // Variant Textures
+  protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/welsh_corgi/welsh_corgi_default.png"));
+        hashMap.put(PlayerCompanionVariant.MIXED, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/welsh_corgi/welsh_corgi_mixed.png"));
+        hashMap.put(PlayerCompanionVariant.BLACK, new ResourceLocation(Constants.MOD_ID,
+            "textures/entity/welsh_corgi/welsh_corgi_black.png"));
+      });
+  protected static final ResourceLocation DEFAULT_TEXTURE =
+      TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
+
   public WelshCorgiRenderer(EntityRendererProvider.Context context) {
     super(context, new WelshCorgiModel<>(context.bakeLayer(ClientRenderer.WELSH_CORGI)), 0.5F);
   }
 
+  @Override
   public ResourceLocation getTextureLocation(WelshCorgi entity) {
-    return entity.getTextureLocation();
+    return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
 
 }

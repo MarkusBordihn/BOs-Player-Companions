@@ -45,14 +45,15 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
 import de.markusbordihn.playercompanions.network.message.MessageCommandPlayerCompanion;
 import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionData;
 import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionsData;
-import de.markusbordihn.playercompanions.network.message.MessageSkinChangePlayerCompanion;
+import de.markusbordihn.playercompanions.network.message.MessageSkinChange;
+import de.markusbordihn.playercompanions.skin.SkinType;
 
 @EventBusSubscriber
 public class NetworkHandler {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private static final String PROTOCOL_VERSION = "2";
+  private static final String PROTOCOL_VERSION = "3";
   public static final SimpleChannel INSTANCE =
       NetworkRegistry.newSimpleChannel(new ResourceLocation(Constants.MOD_ID, "network"),
           () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
@@ -92,12 +93,15 @@ public class NetworkHandler {
       }, buffer -> new MessageCommandPlayerCompanion(buffer.readUtf(), buffer.readUtf()),
           MessageCommandPlayerCompanion::handle);
 
-      // Send Player Companion Skin Change: Client -> Server
-      INSTANCE.registerMessage(id++, MessageSkinChangePlayerCompanion.class, (message, buffer) -> {
-        buffer.writeUtf(message.getPlayerCompanionUUID());
+      // Skin Change: Client -> Server
+      INSTANCE.registerMessage(id++, MessageSkinChange.class, (message, buffer) -> {
+        buffer.writeUUID(message.getUUID());
         buffer.writeUtf(message.getSkin());
-      }, buffer -> new MessageSkinChangePlayerCompanion(buffer.readUtf(), buffer.readUtf()),
-          MessageSkinChangePlayerCompanion::handle);
+        buffer.writeUtf(message.getSkinURL());
+        buffer.writeUUID(message.getSkinUUID());
+        buffer.writeUtf(message.getSkinType());
+      }, buffer -> new MessageSkinChange(buffer.readUUID(), buffer.readUtf(), buffer.readUtf(),
+          buffer.readUUID(), buffer.readUtf()), MessageSkinChange::handle);
 
       // Sync full Player Companion Data: Server -> Client
       INSTANCE.registerMessage(id++, MessagePlayerCompanionsData.class,
@@ -124,11 +128,25 @@ public class NetworkHandler {
     }
   }
 
-  /** Send player companion skin change. */
-  public static void skinChangePlayerCompanion(String playerCompanionUUID, String skin) {
-    if (playerCompanionUUID != null && skin != null) {
-      log.debug("skinChangePlayerCompanion {} {}", playerCompanionUUID, skin);
-      INSTANCE.sendToServer(new MessageSkinChangePlayerCompanion(playerCompanionUUID, skin));
+  /** Send skin change. */
+  public static void skinChange(UUID uuid, Enum<SkinType> skinType) {
+    if (uuid != null && skinType != null) {
+      INSTANCE
+          .sendToServer(new MessageSkinChange(uuid, "", "", Constants.BLANK_UUID, skinType.name()));
+    }
+  }
+
+  public static void skinChange(UUID uuid, String skin, Enum<SkinType> skinType) {
+    if (uuid != null && skin != null && skinType != null) {
+      INSTANCE.sendToServer(
+          new MessageSkinChange(uuid, skin, "", Constants.BLANK_UUID, skinType.name()));
+    }
+  }
+
+  public static void skinChange(UUID uuid, String skin, String skinURL, UUID skinUUID,
+      Enum<SkinType> skinType) {
+    if (uuid != null && skin != null && skinType != null) {
+      INSTANCE.sendToServer(new MessageSkinChange(uuid, skin, skinURL, skinUUID, skinType.name()));
     }
   }
 

@@ -23,7 +23,6 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,9 +45,8 @@ public class GuardEntityWalking extends PlayerCompanionEntityWalking {
           AggressionLevel.AGGRESSIVE_ANIMALS, AggressionLevel.AGGRESSIVE_PLAYERS);
 
   public GuardEntityWalking(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
-      Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
-    super(entityType, level, textureByVariant, companionItemByVariant);
+    super(entityType, level, companionItemByVariant);
     this.setAggressionLevel(getDefaultAggressionLevel());
 
     // Shared Guard Features

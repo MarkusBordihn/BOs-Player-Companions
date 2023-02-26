@@ -19,6 +19,8 @@
 
 package de.markusbordihn.playercompanions;
 
+import java.util.UUID;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 
@@ -40,6 +42,7 @@ public final class Constants {
       "https://www.curseforge.com/minecraft/mc-mods/player-companions";
 
   // Prefixes
+  public static final String MINECRAFT_PREFIX = "minecraft";
   public static final String ENTITY_TEXT_PREFIX = "entity";
   public static final String TEXT_PREFIX = "text.player_companions.";
   public static final String AGGRESSION_LEVEL_PREFIX = TEXT_PREFIX + "aggression_level.";
@@ -55,6 +58,15 @@ public final class Constants {
   public static final int FONT_COLOR_RED = 16733525;
   public static final int FONT_COLOR_WHITE = 16777215;
   public static final int FONT_COLOR_YELLOW = 16777045;
+
+  // Textures
+  public static final UUID BLANK_UUID = new UUID(0L, 0L);
+  public static final ResourceLocation BLANK_ENTITY_TEXTURE =
+      new ResourceLocation(Constants.MOD_ID, "textures/entity/blank.png");
+  public static final ResourceLocation TEXTURE_INVENTORY =
+      new ResourceLocation(MINECRAFT_PREFIX, "textures/gui/container/inventory.png");
+  public static final ResourceLocation TEXTURE_CHECKBOX =
+      new ResourceLocation(MINECRAFT_PREFIX, "textures/gui/checkbox.png");
 
   // 3rd Party Mods
   public static final String NEAT_MOD = "neat";

@@ -19,11 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
-import com.google.common.collect.Maps;
 
 import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -44,7 +44,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
@@ -60,19 +59,16 @@ public class Firefly extends FollowerEntityFlying {
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.HONEYCOMB);
 
   // Variants
-
-  // Entity texture by variant
-  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT,
-          new ResourceLocation(Constants.MOD_ID, "textures/entity/firefly/firefly.png")));
+  public static final List<PlayerCompanionVariant> VARIANTS =
+      List.of(PlayerCompanionVariant.DEFAULT);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(Maps.newHashMap(),
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class),
           hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.FIREFLY_DEFAULT.get()));
 
   public Firefly(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
+    super(entityType, level, COMPANION_ITEM_BY_VARIANT);
     setGlowInTheDark(true);
   }
 
@@ -105,6 +101,14 @@ public class Firefly extends FollowerEntityFlying {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
+  }
+
+  @Override
+  public PlayerCompanionVariant getRandomVariant() {
+    if (VARIANTS.size() > 1 && this.random.nextInt(2) == 0) {
+      return VARIANTS.get(this.random.nextInt(VARIANTS.size()));
+    }
+    return PlayerCompanionVariant.DEFAULT;
   }
 
   @Override

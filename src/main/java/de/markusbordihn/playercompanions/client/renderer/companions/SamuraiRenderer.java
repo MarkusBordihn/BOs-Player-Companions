@@ -19,8 +19,12 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.core.BlockPos;
@@ -29,15 +33,35 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.SamuraiModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.Samurai;
 
 @OnlyIn(Dist.CLIENT)
 public class SamuraiRenderer extends HumanoidMobRenderer<Samurai, SamuraiModel<Samurai>> {
 
+  // Variant Textures
+  protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_default.png"));
+        hashMap.put(PlayerCompanionVariant.BLUE,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_blue.png"));
+        hashMap.put(PlayerCompanionVariant.BLACK,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_black.png"));
+      });
+  protected static final ResourceLocation DEFAULT_TEXTURE =
+      TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
+
   public SamuraiRenderer(EntityRendererProvider.Context context) {
     super(context, new SamuraiModel<>(context.bakeLayer(ClientRenderer.SAMURAI)), 0.3F);
+  }
+
+  @Override
+  public ResourceLocation getTextureLocation(Samurai entity) {
+    return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
 
   @Override
@@ -48,11 +72,6 @@ public class SamuraiRenderer extends HumanoidMobRenderer<Samurai, SamuraiModel<S
   @Override
   protected void scale(Samurai entity, PoseStack poseStack, float unused) {
     poseStack.scale(0.7F, 0.7F, 0.7F);
-  }
-
-  @Override
-  public ResourceLocation getTextureLocation(Samurai entity) {
-    return entity.getTextureLocation();
   }
 
 }

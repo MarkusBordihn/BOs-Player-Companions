@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.02.24
+
+- Moved texture related operations to client side.
+- Improved overall server and network performance by 10%.
+
 ### 2023.02.02
 
 - Refactored code for version 1.19.3-44.1.8

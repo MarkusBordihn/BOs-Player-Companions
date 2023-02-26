@@ -19,11 +19,12 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.EnumMap;
+import java.util.Map;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -35,12 +36,25 @@ import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.DobutsuModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.renderer.layers.HandItemLayer;
+import de.markusbordihn.playercompanions.client.textures.PlayerTextureManager;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 
 @OnlyIn(Dist.CLIENT)
 public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>> {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  // Variant Textures
+  protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
+        hashMap.put(PlayerCompanionVariant.DEFAULT,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
+        hashMap.put(PlayerCompanionVariant.CREEPER,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
+        hashMap.put(PlayerCompanionVariant.ENDERMAN,
+            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_enderman.png"));
+      });
+  protected static final ResourceLocation DEFAULT_TEXTURE =
+      TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
   public DobutsuRenderer(EntityRendererProvider.Context context) {
     super(context, new DobutsuModel<>(context.bakeLayer(ClientRenderer.DOBUTSU)), 0.3F);
@@ -48,13 +62,20 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
   }
 
   @Override
-  protected void scale(Dobutsu entity, PoseStack poseStack, float unused) {
-    poseStack.scale(0.8F, 0.8F, 0.8F);
+  public ResourceLocation getTextureLocation(Dobutsu entity) {
+    switch (entity.getSkinType()) {
+      case PLAYER_SKIN:
+      case SECURE_REMOTE_URL:
+      case INSECURE_REMOTE_URL:
+        return PlayerTextureManager.getOrCreateTextureWithDefault(entity, DEFAULT_TEXTURE);
+      default:
+        return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
+    }
   }
 
   @Override
-  public ResourceLocation getTextureLocation(Dobutsu entity) {
-    return entity.getTextureLocation();
+  protected void scale(Dobutsu entity, PoseStack poseStack, float unused) {
+    poseStack.scale(0.8F, 0.8F, 0.8F);
   }
 
 }

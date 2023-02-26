@@ -23,7 +23,6 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -44,9 +43,9 @@ public class HealerEntityFlyingAround extends PlayerCompanionEntityFlying {
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
 
   public HealerEntityFlyingAround(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
+      Level level,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
-    super(entityType, level, textureByVariant, companionItemByVariant);
+    super(entityType, level, companionItemByVariant);
     this.setAggressionLevel(getDefaultAggressionLevel());
 
     // Shared Healer Features

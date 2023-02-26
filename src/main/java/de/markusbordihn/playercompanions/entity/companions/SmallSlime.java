@@ -19,13 +19,13 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
-import com.google.common.collect.Maps;
 
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -49,7 +49,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
@@ -64,48 +63,19 @@ public class SmallSlime extends FollowerEntityJumping {
   public static final String NAME = "Small Slime";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
 
-  // Entity texture by variant
-  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_green.png"));
-        hashMap.put(PlayerCompanionVariant.BLACK, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_black.png"));
-        hashMap.put(PlayerCompanionVariant.BLUE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_blue.png"));
-        hashMap.put(PlayerCompanionVariant.BROWN, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_brown.png"));
-        hashMap.put(PlayerCompanionVariant.CYAN, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_cyan.png"));
-        hashMap.put(PlayerCompanionVariant.GRAY, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_gray.png"));
-        hashMap.put(PlayerCompanionVariant.GREEN, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_green.png"));
-        hashMap.put(PlayerCompanionVariant.LIGHT_BLUE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_light_blue.png"));
-        hashMap.put(PlayerCompanionVariant.LIGHT_GRAY, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_light_gray.png"));
-        hashMap.put(PlayerCompanionVariant.LIME, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_lime.png"));
-        hashMap.put(PlayerCompanionVariant.MAGENTA, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_magenta.png"));
-        hashMap.put(PlayerCompanionVariant.ORANGE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_orange.png"));
-        hashMap.put(PlayerCompanionVariant.PINK, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_pink.png"));
-        hashMap.put(PlayerCompanionVariant.PURPLE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_purple.png"));
-        hashMap.put(PlayerCompanionVariant.RED, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_red.png"));
-        hashMap.put(PlayerCompanionVariant.WHITE, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_white.png"));
-        hashMap.put(PlayerCompanionVariant.YELLOW, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/small_slime/small_slime_yellow.png"));
-      });
+  // Variants
+  public static final List<PlayerCompanionVariant> VARIANTS =
+      List.of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.BLACK,
+          PlayerCompanionVariant.BLUE, PlayerCompanionVariant.BROWN, PlayerCompanionVariant.CYAN,
+          PlayerCompanionVariant.GRAY, PlayerCompanionVariant.GREEN,
+          PlayerCompanionVariant.LIGHT_BLUE, PlayerCompanionVariant.LIGHT_GRAY,
+          PlayerCompanionVariant.LIME, PlayerCompanionVariant.MAGENTA,
+          PlayerCompanionVariant.ORANGE, PlayerCompanionVariant.PINK, PlayerCompanionVariant.PURPLE,
+          PlayerCompanionVariant.RED, PlayerCompanionVariant.WHITE, PlayerCompanionVariant.YELLOW);
 
   // Companion Item by color
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_SLIME_GREEN.get());
         hashMap.put(PlayerCompanionVariant.BLACK, ModItems.SMALL_SLIME_BLACK.get());
         hashMap.put(PlayerCompanionVariant.BLUE, ModItems.SMALL_SLIME_BLUE.get());
@@ -126,7 +96,7 @@ public class SmallSlime extends FollowerEntityJumping {
       });
 
   public SmallSlime(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
+    super(entityType, level, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
@@ -157,6 +127,14 @@ public class SmallSlime extends FollowerEntityJumping {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
+  }
+
+  @Override
+  public PlayerCompanionVariant getRandomVariant() {
+    if (VARIANTS.size() > 1 && this.random.nextInt(2) == 0) {
+      return VARIANTS.get(this.random.nextInt(VARIANTS.size()));
+    }
+    return PlayerCompanionVariant.DEFAULT;
   }
 
   @Override

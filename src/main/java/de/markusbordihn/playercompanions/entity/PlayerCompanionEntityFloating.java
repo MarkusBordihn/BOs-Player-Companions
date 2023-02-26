@@ -22,7 +22,6 @@ package de.markusbordihn.playercompanions.entity;
 import java.util.Map;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -34,9 +33,8 @@ import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntity
 public class PlayerCompanionEntityFloating extends PlayerCompanionEntity {
 
   public PlayerCompanionEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
-      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
-    super(entityType, level, textureByVariant, companionItemByVariant);
+      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+    super(entityType, level, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityFloatingControl(this);
   }
 

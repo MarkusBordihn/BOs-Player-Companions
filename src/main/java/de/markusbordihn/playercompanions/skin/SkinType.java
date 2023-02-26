@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Markus Bordihn
+ * Copyright 2023 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,22 +17,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.entity;
+package de.markusbordihn.playercompanions.skin;
 
-import java.util.Map;
+public enum SkinType {
+  // @formatter:off
+  DEFAULT,
+  CUSTOM,
+  PLAYER_SKIN,
+  INSECURE_REMOTE_URL,
+  SECURE_REMOTE_URL;
+  // @formatter:on
 
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
-
-import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntityWalkControl;
-
-public class PlayerCompanionEntityWalking extends PlayerCompanionEntity {
-
-  public PlayerCompanionEntityWalking(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
-    super(entityType, level, companionItemByVariant);
-    this.moveControl = new PlayerCompanionEntityWalkControl(this);
+  public static SkinType get(String skinType) {
+    if (skinType == null || skinType.isEmpty()) {
+      return SkinType.DEFAULT;
+    }
+    try {
+      return SkinType.valueOf(skinType);
+    } catch (IllegalArgumentException e) {
+      return SkinType.DEFAULT;
+    }
   }
-
 }

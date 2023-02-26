@@ -19,8 +19,12 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -28,25 +32,35 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.FireflyModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.Firefly;
 
 @OnlyIn(Dist.CLIENT)
 public class FireflyRenderer extends MobRenderer<Firefly, FireflyModel<Firefly>> {
+
+  // Variant Textures
+  protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT,
+              new ResourceLocation(Constants.MOD_ID, "textures/entity/firefly/firefly.png")));
+  protected static final ResourceLocation DEFAULT_TEXTURE =
+      TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
   public FireflyRenderer(EntityRendererProvider.Context context) {
     super(context, new FireflyModel<>(context.bakeLayer(ClientRenderer.FIREFLY)), 0.2F);
   }
 
   @Override
-  protected void scale(Firefly entity, PoseStack poseStack, float unused) {
-    poseStack.scale(0.25F, 0.25F, 0.25F);
+  public ResourceLocation getTextureLocation(Firefly entity) {
+    return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
 
   @Override
-  public ResourceLocation getTextureLocation(Firefly entity) {
-    return entity.getTextureLocation();
+  protected void scale(Firefly entity, PoseStack poseStack, float unused) {
+    poseStack.scale(0.25F, 0.25F, 0.25F);
   }
 
 }

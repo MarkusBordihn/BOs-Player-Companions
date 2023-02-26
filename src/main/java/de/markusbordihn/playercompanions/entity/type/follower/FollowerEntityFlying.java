@@ -23,7 +23,6 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -44,9 +43,8 @@ public class FollowerEntityFlying extends PlayerCompanionEntityFlying {
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
 
   public FollowerEntityFlying(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
-      Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
-    super(entityType, level, textureByVariant, companionItemByVariant);
+    super(entityType, level, companionItemByVariant);
     this.setAggressionLevel(getDefaultAggressionLevel());
 
     // Shared Follower Features

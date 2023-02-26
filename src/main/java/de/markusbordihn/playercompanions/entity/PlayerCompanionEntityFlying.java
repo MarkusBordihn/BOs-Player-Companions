@@ -22,7 +22,6 @@ package de.markusbordihn.playercompanions.entity;
 import java.util.Map;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -39,9 +38,8 @@ import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntity
 public class PlayerCompanionEntityFlying extends PlayerCompanionEntity {
 
   public PlayerCompanionEntityFlying(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, ResourceLocation> textureByVariant,
-      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
-    super(entityType, level, textureByVariant, companionItemByVariant);
+      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+    super(entityType, level, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityFlyControl(this, 10, true);
     this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
     this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);

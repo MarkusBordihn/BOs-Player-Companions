@@ -19,14 +19,14 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
-import com.google.common.collect.Maps;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -65,30 +65,20 @@ public class WelshCorgi extends SupporterWalking {
   public static final String NAME = "Welsh Corgi";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
 
-  // Entity texture by variant
-  private static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/welsh_corgi/welsh_corgi_default.png"));
-        hashMap.put(PlayerCompanionVariant.MIXED, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/welsh_corgi/welsh_corgi_mixed.png"));
-        hashMap.put(PlayerCompanionVariant.BLACK, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/welsh_corgi/welsh_corgi_black.png"));
-      });
+  // Variants
+  public static final List<PlayerCompanionVariant> VARIANTS = List.of(
+      PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.MIXED, PlayerCompanionVariant.BLACK);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(Maps.newHashMap(), hashMap -> {
+      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
         hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.WELSH_CORGI_DEFAULT.get());
         hashMap.put(PlayerCompanionVariant.MIXED, ModItems.WELSH_CORGI_MIXED.get());
         hashMap.put(PlayerCompanionVariant.BLACK, ModItems.WELSH_CORGI_BLACK.get());
       });
 
-  // Aggression Levels
-
-
   public WelshCorgi(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
-    super(entityType, level, TEXTURE_BY_VARIANT, COMPANION_ITEM_BY_VARIANT);
+    super(entityType, level, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
@@ -120,6 +110,14 @@ public class WelshCorgi extends SupporterWalking {
   @Override
   public Ingredient getFoodItems() {
     return FOOD_ITEMS;
+  }
+
+  @Override
+  public PlayerCompanionVariant getRandomVariant() {
+    if (VARIANTS.size() > 1 && this.random.nextInt(2) == 0) {
+      return VARIANTS.get(this.random.nextInt(VARIANTS.size()));
+    }
+    return PlayerCompanionVariant.DEFAULT;
   }
 
   @Override

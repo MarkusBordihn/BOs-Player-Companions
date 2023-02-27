@@ -134,20 +134,16 @@ dependencies {
   compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-71.1:api")
   runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.2-71.1")
 
-  // Testing
+  // Compability tests
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
-
-  // Compability tests for other npc / custom mods
   runtimeOnly fg.deobf("curse.maven:human-companions-570319:3847959")
   runtimeOnly fg.deobf("curse.maven:guard-villagers-360203:3823106")
   // runtimeOnly fg.deobf("curse.maven:carry-on-274259:3601938")
-
-  // Compability tests for other health mods
   // runtimeOnly fg.deobf("curse.maven:silent-lib-242998:3661417")
   // runtimeOnly fg.deobf("curse.maven:scaling-health-248027:3580899")
-
-  // Compability tests for armor mods
   runtimeOnly fg.deobf("curse.maven:morevanillaarmor-350955:3824460")
+  runtimeOnly fg.deobf("curse.maven:true-darkness-337243:3815313")
+  runtimeOnly fg.deobf("curse.maven:rubidium-574856:4024781")
 
   // Additional helpful Mods for development (dev depenedency)
   runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3749454")

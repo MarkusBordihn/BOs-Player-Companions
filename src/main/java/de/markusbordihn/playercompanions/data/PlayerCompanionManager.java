@@ -85,7 +85,11 @@ public class PlayerCompanionManager {
 
   @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleEntityLeaveWorldEvent(EntityLeaveWorldEvent event) {
-    updateCompanionData(event.getEntity());
+    if (event.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && (playerCompanionEntity.canRespawnOnDeath()
+            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
+      updateCompanionData(event.getEntity());
+    }
   }
 
   @SubscribeEvent(priority = EventPriority.LOW)
@@ -105,7 +109,10 @@ public class PlayerCompanionManager {
 
   @SubscribeEvent(priority = EventPriority.LOW)
   public static void handleLivingDeathEvent(LivingDeathEvent event) {
-    updateCompanionData(event.getEntity());
+    if (event.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.canRespawnOnDeath()) {
+      updateCompanionData(event.getEntity());
+    }
   }
 
   @SubscribeEvent
@@ -138,7 +145,7 @@ public class PlayerCompanionManager {
     if (entitySet.isEmpty()) {
       return;
     }
-    log.debug("Sync date for {} companions with: {}", entitySet.size(), entitySet);
+    log.debug("Sync data for {} companions with: {}", entitySet.size(), entitySet);
     Iterator<Entity> entityIterator = entitySet.iterator();
     while (entityIterator.hasNext()) {
       Entity entity = entityIterator.next();
@@ -157,7 +164,9 @@ public class PlayerCompanionManager {
 
   private static void updateOrRegisterCompanion(Entity entity) {
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
-        && !playerCompanionEntity.getLevel().isClientSide && playerCompanionEntity.hasOwner()) {
+        && !playerCompanionEntity.getLevel().isClientSide && playerCompanionEntity.hasOwner()
+        && (playerCompanionEntity.canRespawnOnDeath()
+            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       log.debug("Update or register Companion {}", entity);
       PlayerCompanionsServerData.get().updateOrRegisterCompanion(playerCompanionEntity);
     }
@@ -165,7 +174,9 @@ public class PlayerCompanionManager {
 
   private static void updateCompanionData(Entity entity) {
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
-        && !playerCompanionEntity.getLevel().isClientSide && playerCompanionEntity.hasOwner()) {
+        && !playerCompanionEntity.getLevel().isClientSide && playerCompanionEntity.hasOwner()
+        && (playerCompanionEntity.canRespawnOnDeath()
+            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       log.debug("Update Companion Data {}", entity);
       PlayerCompanionsServerData.get().updatePlayerCompanionData(playerCompanionEntity);
     }

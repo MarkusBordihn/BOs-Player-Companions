@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -45,27 +46,49 @@ public class LightBlock extends Block {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
+  // Block state properties.
   public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED;
+  public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
 
   protected static final VoxelShape SHAPE_AABB = Block.box(7.5D, 7.5D, 7.5D, 8.5D, 8.5D, 8.5D);
 
-  private static final int TICK_TTL = 40;
+  public static final int TICK_TTL = 30;
+  public static final int UPDATE_TICK_TTL = 20;
+  public static final int VERIFY_TICK_TTL = 100;
 
   public LightBlock(Properties properties) {
     super(properties);
-    this.registerDefaultState(this.stateDefinition.any().setValue(EXTENDED, false));
+    this.registerDefaultState(
+        this.stateDefinition.any().setValue(AGE, 0).setValue(EXTENDED, false));
+  }
+
+  public static int getLightLevel(BlockState blockState) {
+    int age = blockState.getValue(AGE);
+    return 15 - age;
   }
 
   public void rescheduleTick(Level level, BlockState blockState, BlockPos blockPos) {
     if (level.getBlockTicks().hasScheduledTick(blockPos, this)
         && Boolean.FALSE.equals(blockState.getValue(EXTENDED))) {
-      level.setBlockAndUpdate(blockPos, blockState.setValue(EXTENDED, true));
+      level.setBlock(blockPos, blockState.setValue(EXTENDED, true).setValue(AGE, 0), 3);
     }
   }
 
   public void scheduleTick(Level level, BlockPos blockPos) {
     if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
       level.scheduleTick(blockPos, this, TICK_TTL);
+    }
+  }
+
+  public void scheduleUpdateTick(Level level, BlockPos blockPos) {
+    if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
+      level.scheduleTick(blockPos, this, UPDATE_TICK_TTL);
+    }
+  }
+
+  public void scheduleVerifyTick(Level level, BlockPos blockPos) {
+    if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
+      level.scheduleTick(blockPos, this, VERIFY_TICK_TTL);
     }
   }
 
@@ -99,7 +122,7 @@ public class LightBlock extends Block {
     // Final check, before we give up.
     blockState = level.getBlockState(blockPos);
     if (blockState.isAir()) {
-      level.setBlockAndUpdate(blockPos, ModBlocks.LIGHT_BLOCK.get().defaultBlockState());
+      level.setBlock(blockPos, ModBlocks.LIGHT_BLOCK.get().defaultBlockState(), 3);
       if (level.getBlockState(blockPos).getBlock() instanceof LightBlock lightBlock) {
         lightBlock.scheduleTick(level, blockPos);
       }
@@ -124,7 +147,7 @@ public class LightBlock extends Block {
 
   @Override
   protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> blockState) {
-    blockState.add(EXTENDED);
+    blockState.add(AGE, EXTENDED);
   }
 
   @Override
@@ -137,18 +160,42 @@ public class LightBlock extends Block {
   @Deprecated
   @Override
   public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos, Random random) {
+    // Ignore client side.
     if (level.isClientSide) {
       return;
     }
+
+    // Ignore other blocks than LightBlock.
     Block block = blockState.getBlock();
     if (!(block instanceof LightBlock)) {
       return;
     }
+
     if (Boolean.TRUE.equals(blockState.getValue(EXTENDED))) {
+      // Extend block removal tick, if block is on the same position.
+      level.setBlock(blockPos, blockState.setValue(EXTENDED, false), 3);
       scheduleTick(level, blockPos);
-      level.setBlockAndUpdate(blockPos, blockState.setValue(EXTENDED, false));
     } else {
-      level.removeBlock(blockPos, true);
+      // Fade out block and remove it, if it is not extended.
+      int age = blockState.getValue(AGE);
+      if (age >= 15) {
+        level.removeBlock(blockPos, true);
+      } else {
+        level.setBlock(blockPos, blockState.setValue(AGE, age + 1), 3);
+        scheduleUpdateTick(level, blockPos);
+      }
+    }
+  }
+
+  /** @deprecated */
+  @Deprecated
+  @Override
+  public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos,
+      Random random) {
+    // Makes sure that the blocks is removed after a while, if it is not extended.
+    int age = blockState.getValue(AGE);
+    if (age <= 15 && !serverLevel.getBlockTicks().hasScheduledTick(blockPos, this)) {
+      scheduleVerifyTick(serverLevel, blockPos);
     }
   }
 

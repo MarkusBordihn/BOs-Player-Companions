@@ -75,12 +75,6 @@ public class CommonConfig {
     public final ForgeConfigSpec.IntValue guiOffsetX;
     public final ForgeConfigSpec.IntValue guiOffsetY;
 
-    public final ForgeConfigSpec.BooleanValue hudEnabled;
-    public final ForgeConfigSpec.BooleanValue hudNameTagEnabled;
-    public final ForgeConfigSpec.BooleanValue hudOwnerEnabled;
-    public final ForgeConfigSpec.BooleanValue hudStatusEnabled;
-    public final ForgeConfigSpec.IntValue hudDisplayRadius;
-
     public final ForgeConfigSpec.BooleanValue dataBackupEnabled;
     public final ForgeConfigSpec.IntValue dataBackupInterval;
 
@@ -109,8 +103,10 @@ public class CommonConfig {
       builder.comment("Player Companion's (General configuration)");
 
       builder.push("General");
-      respawnOnDeath =
-          builder.comment("Respawn companion on death.").define("respawnOnDeath", true);
+      respawnOnDeath = builder
+          .comment(
+              "Respawn companion on death, if set to false the companion could not be respawned!")
+          .define("respawnOnDeath", true);
       respawnDelay = builder.comment("Respawn delay in seconds (1200 secs = in-game day).")
           .defineInRange("respawnDelay", 1200, 1, 8400);
       friendlyFire = builder
@@ -133,17 +129,6 @@ public class CommonConfig {
           .defineInRange("guiOffsetX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
       guiOffsetY = builder.comment("The offset on X axis from chosen position.")
           .defineInRange("guiOffsetY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
-      builder.pop();
-
-      builder.push("Hud");
-      hudEnabled = builder.comment("Enable hud.").define("hudEnabled", false);
-      hudNameTagEnabled = builder.comment("Enable additional display of name tag.")
-          .define("hudNameTagEnabled", false);
-      hudOwnerEnabled = builder.comment("Enable display of owner.").define("hudOwnerEnabled", true);
-      hudStatusEnabled = builder.comment("Enable display of status like sitting.")
-          .define("hudStatusEnabled", true);
-      hudDisplayRadius = builder.comment("Radius in which hud is displayed.")
-          .defineInRange("hudDisplayRadius", 32, 0, 256);
       builder.pop();
 
       builder.push("Backup");

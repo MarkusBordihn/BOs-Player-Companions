@@ -259,6 +259,26 @@ public class PlayerCompanionsServerData extends SavedData {
     return playerCompanion;
   }
 
+  public void unregisterCompanion(PlayerCompanionEntity companionEntity) {
+    PlayerCompanionData playerCompanion = playerCompanionsMap.remove(companionEntity.getUUID());
+    if (playerCompanion != null) {
+      log.info("Unregister Player Companion {} ...", playerCompanion.getUUID());
+      UUID ownerUUID = playerCompanion.getOwnerUUID();
+      if (ownerUUID != null) {
+        Set<PlayerCompanionData> playerCompanions = companionsPerPlayerMap.get(ownerUUID);
+        if (playerCompanions != null) {
+          log.info("Unregister Player Companion {} from owner {} ...", playerCompanion.getUUID(),
+              ownerUUID);
+          playerCompanions.remove(playerCompanion);
+        }
+
+        // Sync data (server -> client-side) with player companion owner.
+        syncPlayerCompanionsData(ownerUUID);
+      }
+      this.setDirty();
+    }
+  }
+
   private static void addPlayerCompanion(PlayerCompanionData playerCompanion) {
     playerCompanionsMap.put(playerCompanion.getUUID(), playerCompanion);
     UUID ownerUUID = playerCompanion.getOwnerUUID();

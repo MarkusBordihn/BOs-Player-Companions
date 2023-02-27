@@ -140,16 +140,12 @@ dependencies {
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
 
-  // Compability tests for other npc / custom mods
+  // Compability tests
   // runtimeOnly fg.deobf("curse.maven:human-companions-570319:3734505")
   // runtimeOnly fg.deobf("curse.maven:guard-villagers-360203:3823108")
   // runtimeOnly fg.deobf("curse.maven:carry-on-274259:3601938")
-
-  // Compability tests for other health mods
   // runtimeOnly fg.deobf("curse.maven:silent-lib-242998:3661417")
   // runtimeOnly fg.deobf("curse.maven:scaling-health-248027:3580899")
-
-  // Compability tests for armor mods
   // runtimeOnly fg.deobf("curse.maven:morevanillaarmor-350955:3826362")
 
   // Additional helpful Mods for development (dev depenedency)

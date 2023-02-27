@@ -42,6 +42,6 @@ public class ModBlocks {
   @TemplateEntryPoint("Register Blocks")
 
   public static final RegistryObject<Block> LIGHT_BLOCK =
-      BLOCKS.register("light_block", () -> new LightBlock(
-          BlockBehaviour.Properties.of(Material.AIR).noCollission().lightLevel(blockState -> 15)));
+      BLOCKS.register("light_block", () -> new LightBlock(BlockBehaviour.Properties.of(Material.AIR)
+          .noCollission().lightLevel(LightBlock::getLightLevel).randomTicks()));
 }

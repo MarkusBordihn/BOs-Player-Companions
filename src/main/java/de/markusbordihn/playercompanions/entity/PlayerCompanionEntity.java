@@ -69,6 +69,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.block.LightBlock;
 import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
@@ -99,7 +100,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
-  private static final int GLOW_TICK = 30;
+  private static final int GLOW_TICK = LightBlock.TICK_TTL / 2;
   private int ticker = 0;
   private int glowTicker = 0;
 
@@ -290,6 +291,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     if (component != null && owner != null) {
       owner.sendSystemMessage(component);
     }
+  }
+
+  public boolean canRespawnOnDeath() {
+    return Boolean.TRUE.equals(COMMON.respawnOnDeath.get());
   }
 
   @Override
@@ -571,18 +576,22 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     super.die(damageSource);
 
     // Remove fire, effects and items before dying but before we are storing the data.
-    clearFire();
-    dropLeash(true, true);
-    removeAllEffects();
-    setNoGravity(false);
+    if (canRespawnOnDeath()) {
+      clearFire();
+      dropLeash(true, true);
+      removeAllEffects();
+      setNoGravity(false);
+    }
 
     if (isTame() && !this.level.isClientSide()) {
 
-      // Decrease Experience Level
-      decreaseExperienceLevel();
+
 
       // Inform owner about dead of companion and possible respawn.
-      if (Boolean.TRUE.equals(COMMON.respawnOnDeath.get())) {
+      if (canRespawnOnDeath()) {
+        // Decrease Experience Level
+        decreaseExperienceLevel();
+
         if (COMMON.respawnDelay.get() > 1) {
           setRespawnTimer(
               (int) java.time.Instant.now().getEpochSecond() + COMMON.respawnDelay.get());
@@ -591,10 +600,15 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
             Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_RESPAWN_MESSAGE),
             getCustomName(), COMMON.respawnDelay.get()));
       } else {
+        // Inform owner about dead of companion and possible respawn.
         sendOwnerMessage(Component.translatable(
             Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_NOT_RESPAWN_MESSAGE),
             getCustomName()));
         setActive(false);
+
+        // Unregister companion from server data and remove entity.
+        PlayerCompanionsServerData.get().unregisterCompanion(this);
+        this.remove(RemovalReason.KILLED);
       }
     }
 

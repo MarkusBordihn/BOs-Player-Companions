@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.02.27
+
+- Improved lighting logic for player companions to avoid flickering and garbage collection issues.
+- Fixed issue with `respawnOnDeath=false` option.
+
 ### 2023.02.24
 
 - Moved texture related operations to client side.

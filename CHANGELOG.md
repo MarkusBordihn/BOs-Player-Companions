@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.06.26
+
+- Refactored code for version 1.19.4-45.1.2
+
 ### 2023.02.27
 
 - Improved lighting logic for player companions to avoid flickering and garbage collection issues.

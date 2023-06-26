@@ -34,6 +34,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import de.markusbordihn.playercompanions.Constants;
@@ -67,13 +68,13 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
 
     if (rightHand != null) {
       this.renderRightHandItem(entity, itemStackMainHand,
-          ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HumanoidArm.RIGHT, poseStack,
-          buffer, lightLevel);
+          ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, HumanoidArm.RIGHT, poseStack, buffer,
+          lightLevel);
     }
   }
 
   protected void renderRightHandItem(LivingEntity livingEntity, ItemStack itemStack,
-      ItemTransforms.TransformType transformType, HumanoidArm humanoidArm, PoseStack poseStack,
+      ItemDisplayContext transformType, HumanoidArm humanoidArm, PoseStack poseStack,
       MultiBufferSource buffer, int lightLevel) {
     if (!itemStack.isEmpty()) {
       poseStack.pushPose();

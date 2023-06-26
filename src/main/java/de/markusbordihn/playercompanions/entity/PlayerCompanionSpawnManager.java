@@ -107,7 +107,7 @@ public class PlayerCompanionSpawnManager {
       if (playerCompanion.closerThan(serverPlayer, 16)) {
         if (playerCompanion instanceof PlayerCompanionEntity playerCompanionEntity) {
           playerCompanionEntity.setOrderedToPosition(
-              new BlockPos(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5));
+              new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
         } else {
           serverPlayer.sendSystemMessage(Component.translatable(
               Constants.TEXT_PREFIX + "companion_is_near_you", playerCompanion.getName()));

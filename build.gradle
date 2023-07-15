@@ -150,7 +150,7 @@ dependencies {
 
   // Additional helpful Mods for development (dev depenedency)
   // runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3749454")
-  runtimeOnly fg.deobf("curse.maven:jei-238222:4581323")
+  runtimeOnly fg.deobf("curse.maven:jei-238222:4644453")
   runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:4593190")
 }
 

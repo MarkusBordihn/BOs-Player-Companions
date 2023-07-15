@@ -22,12 +22,12 @@ package de.markusbordihn.playercompanions.tabs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.item.ModItems;
@@ -38,36 +38,27 @@ public class PlayerCompanionsTab {
 
   protected PlayerCompanionsTab() {}
 
-  public static CreativeModeTab TAB_SPAWN_EGGS;
+  public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
+      DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Constants.MOD_ID);
 
-  public static CreativeModeTab TAB_COMPANIONS;
-
-  public static CreativeModeTab TAB_TAME_ITEMS;
-
-  public static void handleCreativeModeTabRegister(CreativeModeTabEvent.Register event) {
-
-    log.info("{} creative mod tabs ...", Constants.LOG_REGISTER_PREFIX);
-
-    TAB_SPAWN_EGGS = event
-        .registerCreativeModeTab(new ResourceLocation(Constants.MOD_ID, "spawn_eggs"), builder -> {
-          builder.icon(() -> new ItemStack(ModItems.SMALL_SLIME_SPAWN_EGG.get()))
+  public static final RegistryObject<CreativeModeTab> TAB_SPAWN_EGGS =
+      CREATIVE_TABS.register("spawn_eggs",
+          () -> CreativeModeTab.builder()
+              .icon(() -> ModItems.SMALL_SLIME_SPAWN_EGG.get().getDefaultInstance())
               .displayItems(new SpawnEggsItems())
-              .title(Component.translatable("itemGroup.player_companions.spawn_eggs")).build();
-        });
+              .title(Component.translatable("itemGroup.player_companions.spawn_eggs")).build());
 
-    TAB_COMPANIONS = event.registerCreativeModeTab(
-        new ResourceLocation(Constants.MOD_ID, "player_companions"), builder -> {
-          builder.icon(() -> new ItemStack(ModItems.SMALL_SLIME_GREEN.get()))
+  public static final RegistryObject<CreativeModeTab> TAB_COMPANIONS =
+      CREATIVE_TABS.register("player_companions",
+          () -> CreativeModeTab.builder()
+              .icon(() -> ModItems.SMALL_SLIME_GREEN.get().getDefaultInstance())
               .displayItems(new PlayerCompanionsItems())
-              .title(Component.translatable("itemGroup.player_companions")).build();
-        });
+              .title(Component.translatable("itemGroup.player_companions")).build());
 
-    TAB_TAME_ITEMS = event
-        .registerCreativeModeTab(new ResourceLocation(Constants.MOD_ID, "tame_items"), builder -> {
-          builder.icon(() -> new ItemStack(ModItems.TAME_APPLE.get())).displayItems(new TameItems())
-              .title(Component.translatable("itemGroup.player_companions.tame_items")).build();
-        });
-
-  }
+  public static final RegistryObject<CreativeModeTab> TAB_TAME_ITEMS =
+      CREATIVE_TABS.register("tame_items",
+          () -> CreativeModeTab.builder().icon(() -> ModItems.TAME_APPLE.get().getDefaultInstance())
+              .displayItems(new TameItems())
+              .title(Component.translatable("itemGroup.player_companions.tame_items")).build());
 
 }

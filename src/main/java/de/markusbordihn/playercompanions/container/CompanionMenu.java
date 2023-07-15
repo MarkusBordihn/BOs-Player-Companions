@@ -111,7 +111,7 @@ public class CompanionMenu extends AbstractContainerMenu {
     // Other
     this.player = playerInventory.player;
     this.playerCompanionUUID = playerCompanionUUID;
-    this.level = this.player.getLevel();
+    this.level = this.player.level();
 
     // Getting relevant data from client or server side.
     if (this.level.isClientSide) {

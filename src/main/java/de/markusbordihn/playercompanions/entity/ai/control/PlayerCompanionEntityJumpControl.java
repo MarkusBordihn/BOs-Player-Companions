@@ -76,7 +76,7 @@ public class PlayerCompanionEntityJumpControl extends MoveControl {
       }
 
       // Jump during moving
-      if (this.mob.isOnGround() && this.jumpMoveDelay-- <= 0) {
+      if (this.mob.onGround() && this.jumpMoveDelay-- <= 0) {
         this.jumpMoveDelay = companionEntity.getJumpMoveDelay();
         this.mob.getJumpControl().jump();
         if (companionEntity.doPlayJumpSound()) {
@@ -93,8 +93,8 @@ public class PlayerCompanionEntityJumpControl extends MoveControl {
         this.mob.setSpeed(
             (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
         BlockPos blockPos = this.mob.blockPosition();
-        BlockState blockState = this.mob.level.getBlockState(blockPos);
-        VoxelShape voxelShape = blockState.getCollisionShape(this.mob.level, blockPos);
+        BlockState blockState = this.mob.level().getBlockState(blockPos);
+        VoxelShape voxelShape = blockState.getCollisionShape(this.mob.level(), blockPos);
         if (newY > this.mob.getStepHeight()
             && newX * newX + newZ * newZ < Math.max(1.0F, this.mob.getBbWidth())
             || !voxelShape.isEmpty()
@@ -124,7 +124,7 @@ public class PlayerCompanionEntityJumpControl extends MoveControl {
     else if (this.operation == MoveControl.Operation.WAIT) {
 
       // Keep jumping if not ordered to sit.
-      if (this.mob.isOnGround() && this.jumpDelay-- <= 0) {
+      if (this.mob.onGround() && this.jumpDelay-- <= 0) {
         this.jumpDelay = companionEntity.getJumpDelay();
         this.mob.getJumpControl().jump();
         if (companionEntity.doPlayJumpSound()) {

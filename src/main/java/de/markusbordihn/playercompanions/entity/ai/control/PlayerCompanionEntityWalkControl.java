@@ -78,8 +78,8 @@ public class PlayerCompanionEntityWalkControl extends MoveControl {
       this.mob.setSpeed(
           (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
       BlockPos blockPos = this.mob.blockPosition();
-      BlockState blockState = this.mob.level.getBlockState(blockPos);
-      VoxelShape voxelShape = blockState.getCollisionShape(this.mob.level, blockPos);
+      BlockState blockState = this.mob.level().getBlockState(blockPos);
+      VoxelShape voxelShape = blockState.getCollisionShape(this.mob.level(), blockPos);
       if (newY > this.mob.getStepHeight()
           && newX * newX + newZ * newZ < Math.max(1.0F, this.mob.getBbWidth())
           || !voxelShape.isEmpty()

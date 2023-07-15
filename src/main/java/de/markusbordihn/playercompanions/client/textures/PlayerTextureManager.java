@@ -19,6 +19,7 @@
 
 package de.markusbordihn.playercompanions.client.textures;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -32,8 +33,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.resources.ResourceLocation;
-
-import net.minecraftforge.fml.loading.FileUtils;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
@@ -170,7 +169,12 @@ public class PlayerTextureManager {
           Paths.get(TextureManager.getTextureCacheDirectory().toString(), "player");
       if (!cacheDirectory.toFile().exists()) {
         log.info("{} Creating player texture cache directory at {}", LOG_PREFIX, cacheDirectory);
-        FileUtils.getOrCreateDirectory(cacheDirectory, Constants.MOD_ID);
+        try {
+          Files.createDirectories(cacheDirectory);
+        } catch (Exception exception) {
+          log.error("{} Failed to create player texture cache directory at {}", LOG_PREFIX,
+              cacheDirectory, exception);
+        }
       }
       textureCachePath = cacheDirectory;
     }
@@ -180,7 +184,12 @@ public class PlayerTextureManager {
     if (!cacheDirectory.toFile().exists()) {
       log.info("{} Creating player texture model cache directory at {}", LOG_PREFIX,
           cacheDirectory);
-      FileUtils.getOrCreateDirectory(cacheDirectory, Constants.MOD_ID);
+      try {
+        Files.createDirectories(cacheDirectory);
+      } catch (Exception exception) {
+        log.error("{} Failed to create player texture model cache directory at {}", LOG_PREFIX,
+            cacheDirectory, exception);
+      }
     }
     return cacheDirectory;
   }

@@ -22,15 +22,11 @@ package de.markusbordihn.playercompanions.client.screen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -110,30 +106,33 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     }
   }
 
-  private void renderEntityActions(PlayerCompanionData playerCompanionData, PoseStack poseStack,
+  private void renderEntityActions(PlayerCompanionData playerCompanionData, GuiGraphics guiGraphics,
       int x, int y) {
-    poseStack.pushPose();
-    font.drawShadow(poseStack, Component.literal("Infos and Control"), x + 25f, y,
+    guiGraphics.pose().pushPose();
+    guiGraphics.drawString(this.font, Component.literal("Infos and Control"), x + 25, y,
         Constants.FONT_COLOR_WHITE);
     y += 15;
-    font.draw(poseStack, Component.literal("Action: " + playerCompanionData.getEntityActionType()),
-        x, y, Constants.FONT_COLOR_DEFAULT);
+    guiGraphics.drawString(this.font,
+        Component.literal("Action: " + playerCompanionData.getEntityActionType()), x, y,
+        Constants.FONT_COLOR_DEFAULT, false);
     y += 15;
     if (playerCompanionEntity != null) {
-      font.draw(poseStack, Component.literal("Type: " + playerCompanionEntity.getCompanionType()),
-          x, y, Constants.FONT_COLOR_DEFAULT);
+      guiGraphics.drawString(this.font,
+          Component.literal("Type: " + playerCompanionEntity.getCompanionType()), x, y,
+          Constants.FONT_COLOR_DEFAULT, false);
       y += 15;
-      font.draw(poseStack, Component.literal("Variant: " + playerCompanionEntity.getVariant()), x,
-          y, Constants.FONT_COLOR_DEFAULT);
+      guiGraphics.drawString(this.font,
+          Component.literal("Variant: " + playerCompanionEntity.getVariant()), x, y,
+          Constants.FONT_COLOR_DEFAULT, false);
       y += 15;
-      font.draw(poseStack,
+      guiGraphics.drawString(this.font,
           Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_level",
               playerCompanionEntity.getExperienceLevel(), playerCompanionEntity.getExperience(),
               Experience.getExperienceForNextLevel(playerCompanionEntity.getExperienceLevel())),
-          x, y, Constants.FONT_COLOR_DEFAULT);
+          x, y, Constants.FONT_COLOR_DEFAULT, false);
       y += 15;
     }
-    poseStack.popPose();
+    guiGraphics.pose().popPose();
 
     // Actions like order to sit, follow, patrol, attack, ...
     this.actionTypeFollowButton.setX(x);
@@ -151,10 +150,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     y += 30;
 
     // Aggression Level
-    poseStack.pushPose();
-    font.draw(poseStack, Component.literal("Aggression Level (WIP)"), x, y,
-        Constants.FONT_COLOR_DEFAULT);
-    poseStack.popPose();
+    guiGraphics.pose().pushPose();
+    guiGraphics.drawString(this.font, Component.literal("Aggression Level (WIP)"), x, y,
+        Constants.FONT_COLOR_DEFAULT, false);
+    guiGraphics.pose().popPose();
     y += 12;
 
     AggressionLevel aggressionLevel = playerCompanionData.getEntityAggressionLevel();
@@ -164,11 +163,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       this.aggressiveLevelPreviousButton.setY(y - 1);
       this.aggressiveLevelPreviousButton.visible = true;
     } else {
-      RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
-      poseStack.pushPose();
-      this.blit(poseStack, x, y + -1, 18, 19, 7, 9);
+      guiGraphics.pose().pushPose();
+      guiGraphics.blit(SYMBOLS_TEXTURE, x, y + -1, 18, 19, 7, 9);
       this.aggressiveLevelNextButton.visible = false;
-      poseStack.popPose();
+      guiGraphics.pose().popPose();
       this.aggressiveLevelPreviousButton.visible = false;
     }
 
@@ -178,21 +176,20 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       this.aggressiveLevelNextButton.setY(y - 1);
       this.aggressiveLevelNextButton.visible = true;
     } else {
-      RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
-      poseStack.pushPose();
-      this.blit(poseStack, x + 125, y + -1, 25, 19, 7, 9);
+      guiGraphics.pose().pushPose();
+      guiGraphics.blit(SYMBOLS_TEXTURE, x + 125, y + -1, 25, 19, 7, 9);
       this.aggressiveLevelNextButton.visible = false;
-      poseStack.popPose();
+      guiGraphics.pose().popPose();
     }
 
-    poseStack.pushPose();
-    fill(poseStack, x, y - 2, x + 132, y - 1, 0xFF000000);
-    fill(poseStack, x + 7, y - 1, x + 125, y + 8, 0xFF6F6F6F);
-    fill(poseStack, x, y + 8, x + 132, y + 9, 0xFF333333);
-    font.drawShadow(poseStack,
-        Component.translatable(Constants.AGGRESSION_LEVEL_PREFIX + aggressionLevel.name()), x + 9f,
+    guiGraphics.pose().pushPose();
+    guiGraphics.fill(x, y - 2, x + 132, y - 1, 0xFF000000);
+    guiGraphics.fill(x + 7, y - 1, x + 125, y + 8, 0xFF6F6F6F);
+    guiGraphics.fill(x, y + 8, x + 132, y + 9, 0xFF333333);
+    guiGraphics.drawString(this.font,
+        Component.translatable(Constants.AGGRESSION_LEVEL_PREFIX + aggressionLevel.name()), x + 9,
         y, Constants.FONT_COLOR_WHITE);
-    poseStack.popPose();
+    guiGraphics.pose().popPose();
     y += 10;
 
     aggressionLevelDefaultButton.setX(x);
@@ -200,77 +197,73 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     aggressionLevelDefaultButton.visible = true;
   }
 
-  private void renderEntityStats(PlayerCompanionEntity playerCompanionEntity, PoseStack poseStack,
-      int x, int y) {
-    RenderSystem.setShaderTexture(0, this.backgroundTexture);
-
+  private void renderEntityStats(PlayerCompanionEntity playerCompanionEntity,
+      GuiGraphics guiGraphics, int x, int y) {
     // Background
-    fill(poseStack, x + 24, y + 17, x + 50, y + 105, 1325400064);
+    guiGraphics.fill(x + 24, y + 17, x + 50, y + 105, 1325400064);
 
     // Stats Icons
     int leftPos = x + 23;
-    RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
-    poseStack.pushPose();
-    poseStack.translate(0, 0, 100);
-    this.blit(poseStack, leftPos, y + 19, 1, 1, 16, 16); // Health
-    this.blit(poseStack, leftPos, y + 36, 1, 18, 16, 16); // Armor
-    this.blit(poseStack, leftPos, y + 53, 1, 35, 16, 16); // Attack Damage
-    this.blit(poseStack, leftPos, y + 90, 1, 69, 16, 16); // Experience Level
-    poseStack.popPose();
+    guiGraphics.pose().pushPose();
+    guiGraphics.pose().translate(0, 0, 100);
+    guiGraphics.blit(SYMBOLS_TEXTURE, leftPos, y + 19, 1, 1, 16, 16); // Health
+    guiGraphics.blit(SYMBOLS_TEXTURE, leftPos, y + 36, 1, 18, 16, 16); // Armor
+    guiGraphics.blit(SYMBOLS_TEXTURE, leftPos, y + 53, 1, 35, 16, 16); // Attack Damage
+    guiGraphics.blit(SYMBOLS_TEXTURE, leftPos, y + 90, 1, 69, 16, 16); // Experience Level
+    guiGraphics.pose().popPose();
 
     // Stats
-    poseStack.pushPose();
-    poseStack.translate(0, 0, 100);
-    poseStack.scale(STATES_SCALE, STATES_SCALE, STATES_SCALE);
+    guiGraphics.pose().pushPose();
+    guiGraphics.pose().translate(0, 0, 100);
+    guiGraphics.pose().scale(STATES_SCALE, STATES_SCALE, STATES_SCALE);
     leftPos = (int) ((x + 38) / STATES_SCALE);
-    font.drawShadow(poseStack,
+    guiGraphics.drawString(this.font,
         Component.literal("" + (int) playerCompanionEntity.getHealth() + " / "
             + (int) playerCompanionEntity.getMaxHealth()),
         leftPos, (int) ((y + 23) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
-    font.drawShadow(poseStack, Component.literal("" + playerCompanionEntity.getArmorValue()),
+    guiGraphics.drawString(this.font, Component.literal("" + playerCompanionEntity.getArmorValue()),
         leftPos, (int) ((y + 41) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
-    font.drawShadow(poseStack, Component.literal("" + playerCompanionEntity.getAttackDamage()),
-        leftPos, (int) ((y + 58) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
-    font.drawShadow(poseStack, Component.literal("" + playerCompanionEntity.getExperienceLevel()),
-        leftPos, (int) ((y + 95) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
-    poseStack.popPose();
+    guiGraphics.drawString(this.font,
+        Component.literal("" + playerCompanionEntity.getAttackDamage()), leftPos,
+        (int) ((y + 58) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
+    guiGraphics.drawString(this.font,
+        Component.literal("" + playerCompanionEntity.getExperienceLevel()), leftPos,
+        (int) ((y + 95) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
+    guiGraphics.pose().popPose();
   }
 
-  private void renderTextureSettings(PoseStack poseStack, int x, int y, float partialTicks) {
+  private void renderTextureSettings(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
     // Make sure to render above everything else
-    poseStack.pushPose();
-    poseStack.translate(0, 0, 900);
+    guiGraphics.pose().pushPose();
+    guiGraphics.pose().translate(0, 0, 900);
 
     // Render Dialog
-    renderDialogBg(poseStack, leftPosDialog, topPosDialog,
+    renderDialogBg(guiGraphics, leftPosDialog, topPosDialog,
         Component.literal("Change Player Companion Skin"));
 
     // Render Options
-    font.draw(poseStack, Component.literal("Use a Player Name / Skin URL"), leftPosDialog + 10F,
-        topPosDialog + 25F, Constants.FONT_COLOR_DEFAULT);
+    guiGraphics.drawString(this.font, Component.literal("Use a Player Name / Skin URL"),
+        leftPosDialog + 10, topPosDialog + 25, Constants.FONT_COLOR_DEFAULT, false);
 
-    this.textureSkinLocationBox.render(poseStack, x, y, partialTicks);
-    this.clearTextureSettingsButton.render(poseStack, x, y, partialTicks);
-    this.saveTextureSettingsButton.render(poseStack, x, y, partialTicks);
-    this.closeTextureSettingsButton.render(poseStack, x, y, partialTicks);
+    this.textureSkinLocationBox.render(guiGraphics, x, y, partialTicks);
+    this.clearTextureSettingsButton.render(guiGraphics, x, y, partialTicks);
+    this.saveTextureSettingsButton.render(guiGraphics, x, y, partialTicks);
+    this.closeTextureSettingsButton.render(guiGraphics, x, y, partialTicks);
 
     // Render Status Symbol, if needed.
     if (!this.canTextureSkinLocationChange) {
-      RenderSystem.setShaderTexture(0, DIALOG_TEXTURE);
-      poseStack.translate(0, 0, 100);
-      this.blit(poseStack, this.leftPosDialog + 78, this.topPosDialog + 73, 236, 17, 7, 10);
+      guiGraphics.pose().translate(0, 0, 100);
+      guiGraphics.blit(DIALOG_TEXTURE, this.leftPosDialog + 78, this.topPosDialog + 73, 236, 17, 7,
+          10);
 
     }
 
-    poseStack.popPose();
+    guiGraphics.pose().popPose();
   }
 
-  protected void renderDialogBg(PoseStack poseStack, int x, int y, Component title) {
-    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    RenderSystem.setShaderTexture(0, DIALOG_TEXTURE);
-    this.blit(poseStack, x, y, 0, 0, 230, 95);
-    font.draw(poseStack, title, x + 10F, y + 10F, Constants.FONT_COLOR_DEFAULT);
+  protected void renderDialogBg(GuiGraphics guiGraphics, int x, int y, Component title) {
+    guiGraphics.blit(DIALOG_TEXTURE, x, y, 0, 0, 230, 95);
+    guiGraphics.drawString(this.font, title, x + 10, y + 10, Constants.FONT_COLOR_DEFAULT, false);
   }
 
   protected void showTextureSettings(boolean visible) {
@@ -430,36 +423,32 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   }
 
   @Override
-  public void render(PoseStack poseStack, int x, int y, float partialTicks) {
-    this.renderBackground(poseStack);
-    super.render(poseStack, x, y, partialTicks);
+  public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
+    this.renderBackground(guiGraphics);
+    super.render(guiGraphics, x, y, partialTicks);
     this.xMouse = x;
     this.yMouse = y;
     boolean renderTooltip = true;
     if (playerCompanionEntity != null) {
       PlayerCompanionData playerCompanionData =
           PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
-      renderEntityStats(playerCompanionEntity, poseStack, this.leftPos, this.topPos);
-      renderEntityActions(playerCompanionData, poseStack, this.leftPos + 204, this.topPos + 6);
+      renderEntityStats(playerCompanionEntity, guiGraphics, this.leftPos, this.topPos);
+      renderEntityActions(playerCompanionData, guiGraphics, this.leftPos + 204, this.topPos + 6);
       if (this.showTextureSettings) {
-        renderTextureSettings(poseStack, x, y, partialTicks);
+        renderTextureSettings(guiGraphics, x, y, partialTicks);
         renderTooltip = false;
       }
     }
     if (renderTooltip) {
-      this.renderTooltip(poseStack, x, y);
+      this.renderTooltip(guiGraphics, x, y);
     }
   }
 
   @Override
-  protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
-    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-    RenderSystem.setShaderTexture(0, this.backgroundTexture);
-
+  protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
     // Main screen
-    GuiComponent.blit(poseStack, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight, 512,
-        256);
+    guiGraphics.blit(this.backgroundTexture, leftPos, topPos, 0, 0, this.imageWidth,
+        this.imageHeight, 512, 256);
 
     // Entity Overview
     if (playerCompanionEntity != null) {

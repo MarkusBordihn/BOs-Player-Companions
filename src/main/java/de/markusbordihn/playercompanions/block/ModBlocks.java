@@ -21,7 +21,7 @@ package de.markusbordihn.playercompanions.block;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -41,7 +41,7 @@ public class ModBlocks {
 
   @TemplateEntryPoint("Register Blocks")
 
-  public static final RegistryObject<Block> LIGHT_BLOCK =
-      BLOCKS.register("light_block", () -> new LightBlock(BlockBehaviour.Properties.of(Material.AIR)
-          .noCollission().lightLevel(LightBlock::getLightLevel).randomTicks()));
+  public static final RegistryObject<Block> LIGHT_BLOCK = BLOCKS.register("light_block",
+      () -> new LightBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE).noCollission()
+          .lightLevel(LightBlock::getLightLevel).randomTicks()));
 }

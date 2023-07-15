@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -44,7 +45,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.loading.FileUtils;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
@@ -145,7 +145,7 @@ public class ModTextureManager {
   }
 
   public static String getFileName(String name) {
-    return String.format("%s.png", getId(name)).replace("-","0");
+    return String.format("%s.png", getId(name)).replace("-", "0");
   }
 
   public static boolean hasTexture(String name) {
@@ -166,7 +166,12 @@ public class ModTextureManager {
           Paths.get(FMLPaths.GAMEDIR.get().resolve(Constants.MOD_ID).toString(), "texture_cache");
       if (!cacheDirectory.toFile().exists()) {
         log.info("Creating texture cache directory at {}", cacheDirectory);
-        FileUtils.getOrCreateDirectory(cacheDirectory, Constants.MOD_ID);
+        try {
+          Files.createDirectories(cacheDirectory);
+        } catch (Exception exception) {
+          log.error("Unable to create texture cache directory at {} because of:", cacheDirectory,
+              exception);
+        }
       }
       textureCachePath = cacheDirectory;
     }

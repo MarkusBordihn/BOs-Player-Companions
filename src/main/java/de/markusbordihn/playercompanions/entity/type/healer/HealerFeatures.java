@@ -94,7 +94,7 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
       // 4. Priority: Heal owned tamed animals regardless of type.
       if (!hasHealthSomething && this.getOwner() != null) {
-        List<TamableAnimal> tamableAnimals = playerCompanionEntity.level.getEntitiesOfClass(
+        List<TamableAnimal> tamableAnimals = playerCompanionEntity.level().getEntitiesOfClass(
             TamableAnimal.class,
             new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.healerTypeRadius.get()),
             entity -> true);

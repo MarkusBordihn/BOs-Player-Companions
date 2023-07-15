@@ -120,7 +120,7 @@ public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
   @Override
   public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
     if (entity.isInSittingPose()
-        || (entity.isOnGround() && entity.getDeltaMovement().lengthSqr() < 1.0E-7D)) {
+        || (entity.onGround() && entity.getDeltaMovement().lengthSqr() < 1.0E-7D)) {
       this.body.xRot = 0.0F;
       this.head.setPos(0.0F, 20.0019F, -3.0865F);
       this.frontLeg.setPos(2.0F, 22.0F, -2.0F);
@@ -141,7 +141,7 @@ public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
       return;
     }
 
-    if ((entity.isOnGround() && entity.getDeltaMovement().lengthSqr() < 1.0E-7D)
+    if ((entity.onGround() && entity.getDeltaMovement().lengthSqr() < 1.0E-7D)
         || entity.isInSittingPose()) {
       this.rightWing.setPos(-1.0F, 15.001F, -3.0F);
       this.rightWing.xRot = 0.0F;

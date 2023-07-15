@@ -39,18 +39,19 @@ public abstract class CustomCommand implements Command<CommandSourceStack> {
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();
-    commandSource.sendSuccess(Component.literal(feedback), false);
+    commandSource.sendSuccess(() -> Component.literal(feedback), false);
   }
 
   public static void sendErrorFeedback(CommandContext<CommandSourceStack> context,
       String feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(
-        Component.literal(feedback).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), false);
+        () -> Component.literal(feedback).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)),
+        false);
   }
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, Component component) {
     CommandSourceStack commandSource = context.getSource();
-    commandSource.sendSuccess(component, false);
+    commandSource.sendSuccess(() -> component, false);
   }
 }

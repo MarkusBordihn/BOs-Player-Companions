@@ -203,7 +203,7 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
   @Override
   public void readAdditionalSaveData(CompoundTag compoundTag) {
     super.readAdditionalSaveData(compoundTag);
-    this.readPersistentAngerSaveData(this.level, compoundTag);
+    this.readPersistentAngerSaveData(this.level(), compoundTag);
   }
 
   @Override

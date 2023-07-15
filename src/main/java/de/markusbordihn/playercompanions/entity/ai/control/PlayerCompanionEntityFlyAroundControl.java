@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.entity.ai.control;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.phys.Vec3;
@@ -42,14 +43,15 @@ public class PlayerCompanionEntityFlyAroundControl extends PlayerCompanionEntity
       } else {
         this.companionEntity.setDeltaMovement(this.companionEntity.getDeltaMovement()
             .add(vec3.scale(this.speedModifier * 0.05D / d0)));
-        if (this.companionEntity.getTarget() == null) {
+        LivingEntity target = this.companionEntity.getTarget();
+        if (target == null) {
           Vec3 vec31 = this.companionEntity.getDeltaMovement();
           this.companionEntity
               .setYRot(-((float) Mth.atan2(vec31.x, vec31.z)) * (180F / (float) Math.PI));
           this.companionEntity.yBodyRot = this.companionEntity.getYRot();
         } else {
-          double d2 = this.companionEntity.getTarget().getX() - this.companionEntity.getX();
-          double d1 = this.companionEntity.getTarget().getZ() - this.companionEntity.getZ();
+          double d2 = target.getX() - this.companionEntity.getX();
+          double d1 = target.getZ() - this.companionEntity.getZ();
           this.companionEntity.setYRot(-((float) Mth.atan2(d2, d1)) * (180F / (float) Math.PI));
           this.companionEntity.yBodyRot = this.companionEntity.getYRot();
         }

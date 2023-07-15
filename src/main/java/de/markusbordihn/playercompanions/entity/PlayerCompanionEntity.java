@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.entity;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.annotation.Nullable;
 
 import com.mojang.datafixers.util.Pair;
@@ -146,7 +147,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       float randomOffset = this.random.nextFloat() * 0.5F + 0.5F;
       float randomOffsetX = Mth.sin(randomCircleDistance) * 0.5F * randomOffset;
       float randomOffsetZ = Mth.cos(randomCircleDistance) * 0.5F * randomOffset;
-      this.level.addParticle(particleOptions, this.getX() + randomOffsetX, this.getY() + 0.5,
+      this.level().addParticle(particleOptions, this.getX() + randomOffsetX, this.getY() + 0.5,
           this.getZ() + randomOffsetZ, 0.0D, 0.0D, 0.0D);
     }
   }
@@ -156,7 +157,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   protected void playSound(Player player, SoundEvent sound, float volume, float pitch) {
-    if (player.level.isClientSide) {
+    Level level = player.level();
+    if (level.isClientSide) {
       player.playSound(sound, volume, pitch);
     }
   }
@@ -195,8 +197,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     this.heal(foodProperties != null ? foodProperties.getNutrition() : 0.5F);
     if (foodProperties != null) {
       for (Pair<MobEffectInstance, Float> pair : foodProperties.getEffects()) {
-        if (!this.level.isClientSide && pair.getFirst() != null
-            && this.level.random.nextFloat() < pair.getSecond()) {
+        Level level = this.level();
+        if (!level.isClientSide && pair.getFirst() != null
+            && level.random.nextFloat() < pair.getSecond()) {
           this.addEffect(new MobEffectInstance(pair.getFirst()));
         }
       }
@@ -377,10 +380,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
       this.tame(player);
       this.follow();
-      this.level.broadcastEntityEvent(this, (byte) 7);
+      this.level().broadcastEntityEvent(this, (byte) 7);
       return InteractionResult.SUCCESS;
     } else {
-      this.level.broadcastEntityEvent(this, (byte) 6);
+      this.level().broadcastEntityEvent(this, (byte) 6);
       return InteractionResult.CONSUME;
     }
   }
@@ -424,7 +427,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     // Most of the events will be client -> server side to make sure we have most of the flexibility
     // like additional keys and client-side animations.
-    if (this.level.isClientSide) {
+    Level level = this.level();
+    if (level.isClientSide) {
 
       if (isOwner) {
 
@@ -477,7 +481,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       if (this.canEat(itemStack)) {
         if (this.eat(itemStack, player)) {
           this.addParticle(ParticleTypes.HEART);
-          return InteractionResult.sidedSuccess(this.level.isClientSide);
+          return InteractionResult.sidedSuccess(level.isClientSide);
         }
       } else {
         log.debug("{} is fully staffed ...", this);
@@ -543,24 +547,25 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
 
     // ServerSide: Place light block, if companion should glow in the dark.
-    if (!this.level.isClientSide && this.shouldGlowInTheDark() && this.glowTicker++ >= GLOW_TICK) {
+    Level level = this.level();
+    if (!level.isClientSide && this.shouldGlowInTheDark() && this.glowTicker++ >= GLOW_TICK) {
       BlockPos lightBlockPos = this.getOnPos();
-      if (this.level.isNight() || this.level.isRaining() || this.level.isThundering()
-          || !this.level.canSeeSky(lightBlockPos)) {
+      if (level.isNight() || level.isRaining() || level.isThundering()
+          || !level.canSeeSky(lightBlockPos)) {
         LightBlock.place(level, lightBlockPos);
       }
       this.glowTicker = 0;
     }
 
     // Shows particle and play sound after jump or fall.
-    if (this.onGround && !this.wasOnGround) {
+    if (this.onGround() && !this.wasOnGround) {
       if (this.getParticleType() != null) {
         for (int j = 0; j < 4; ++j) {
           float f = this.random.nextFloat() * ((float) Math.PI * 2F);
           float f1 = this.random.nextFloat() * 0.5F + 0.5F;
           float f2 = Mth.sin(f) * 0.5F * f1;
           float f3 = Mth.cos(f) * 0.5F * f1;
-          this.level.addParticle(this.getParticleType(), this.getX() + f2, this.getY(),
+          level.addParticle(this.getParticleType(), this.getX() + f2, this.getY(),
               this.getZ() + f3, 0.0D, 0.0D, 0.0D);
         }
       }
@@ -568,7 +573,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         this.playSound(getJumpSound(), this.getSoundVolume(), this.getSoundPitch());
       }
     }
-    this.wasOnGround = this.onGround;
+    this.wasOnGround = this.onGround();
   }
 
   @Override
@@ -583,10 +588,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       setNoGravity(false);
     }
 
-    if (isTame() && !this.level.isClientSide()) {
-
-
-
+    Level level = this.level();
+    if (isTame() && !level.isClientSide()) {
       // Inform owner about dead of companion and possible respawn.
       if (canRespawnOnDeath()) {
         // Decrease Experience Level
@@ -625,7 +628,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public String toString() {
     RemovalReason removalReason = this.getRemovalReason();
-    String level = this.level == null ? "~NULL~" : this.level.toString();
+    String level = this.level() == null ? "~NULL~" : this.level().toString();
     UUID ownerUUID = this.getOwnerUUID();
     String owner = ownerUUID == null ? "~NULL~" : ownerUUID.toString();
     Boolean tamed = this.isTame();

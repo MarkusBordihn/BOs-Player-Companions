@@ -23,6 +23,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.Util;
@@ -165,7 +166,7 @@ public class Raptor extends GuardEntityWalking implements NeutralMob {
   @Override
   public void readAdditionalSaveData(CompoundTag compoundTag) {
     super.readAdditionalSaveData(compoundTag);
-    this.readPersistentAngerSaveData(this.level, compoundTag);
+    this.readPersistentAngerSaveData(this.level(), compoundTag);
   }
 
   @Override

@@ -22,6 +22,7 @@ package de.markusbordihn.playercompanions.item;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
 import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
@@ -111,9 +112,8 @@ public class CompanionTameItem extends Item {
         TitleUtils.setTitle(
             Component.translatable(Constants.TEXT_PREFIX + "captured_companion_title",
                 livingEntity.getName().getString()),
-            Component.translatable(
-                Constants.TEXT_PREFIX + "captured_companion_subtitle_ground")
-                    .withStyle(ChatFormatting.RED),
+            Component.translatable(Constants.TEXT_PREFIX + "captured_companion_subtitle_ground")
+                .withStyle(ChatFormatting.RED),
             serverPlayer);
       }
     }
@@ -152,7 +152,7 @@ public class CompanionTameItem extends Item {
 
     // Interact with entity if it is TameablePlayerCompanion compatible
     if (livingEntity instanceof TameablePlayerCompanion tameablePlayerCompanion) {
-      Level level = player.level;
+      Level level = player.level();
       if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
         if (tameablePlayerCompanion.canTamePlayerCompanion(itemStack, player, livingEntity, hand)) {
           InteractionResult result =

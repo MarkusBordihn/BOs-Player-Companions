@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Markus Bordihn
+ * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,39 +17,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.entity.ai.goal;
+package de.markusbordihn.playercompanions.item;
 
-import java.util.Random;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+
+import net.minecraftforge.common.ForgeSpawnEggItem;
 
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
-public class PlayerCompanionGoal extends Goal {
+public class CompanionSpawnEggItem extends ForgeSpawnEggItem {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected final Random random = new Random();
-
-  protected final Level level;
-  protected final PathNavigation navigation;
-  protected final PlayerCompanionEntity playerCompanionEntity;
-
-  public PlayerCompanionGoal(PlayerCompanionEntity playerCompanionEntity) {
-    this.playerCompanionEntity = playerCompanionEntity;
-    this.level = this.playerCompanionEntity.level();
-    this.navigation = this.playerCompanionEntity.getNavigation();
-  }
-
-  @Override
-  public boolean canUse() {
-    return playerCompanionEntity.hasOwnerAndIsAlive();
+  public CompanionSpawnEggItem(Supplier<? extends EntityType<? extends Mob>> type,
+      Properties props) {
+    super(type, Constants.FONT_COLOR_RED, Constants.FONT_COLOR_YELLOW, props);
   }
 
 }

@@ -66,7 +66,7 @@ public class ShootSmallFireballGoal extends PlayerCompanionGoal {
       // Only shot if we have a line of sight.
       if (livingEntity.distanceToSqr(this.playerCompanionEntity) < 4096.0D
           && this.playerCompanionEntity.hasLineOfSight(livingEntity)) {
-        Level level = this.playerCompanionEntity.level;
+        Level level = this.playerCompanionEntity.level();
         ++this.chargeTime;
         if (this.chargeTime == 10 && !this.playerCompanionEntity.isSilent()) {
           level.levelEvent((Player) null, 1015, this.playerCompanionEntity.blockPosition(), 0);

@@ -64,7 +64,14 @@ public class PlayerCompanionSpawnManager {
   }
 
   public static boolean spawn(UUID uuid, ServerPlayer serverPlayer) {
-    return spawn(uuid, serverPlayer, serverPlayer.getLevel());
+    return spawn(uuid, serverPlayer, serverPlayer.level());
+  }
+
+  public static boolean spawn(UUID uuid, ServerPlayer serverPlayer, Level level) {
+    if (level instanceof ServerLevel serverLevel) {
+      return spawn(uuid, serverPlayer, serverLevel, serverPlayer.getOnPos().above());
+    }
+    return false;
   }
 
   public static boolean spawn(UUID uuid, ServerPlayer serverPlayer, ServerLevel serverLevel) {

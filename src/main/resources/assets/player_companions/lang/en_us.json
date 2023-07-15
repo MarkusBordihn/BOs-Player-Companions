@@ -24,7 +24,7 @@
   "text.player_companions.commands.summon.list_entry": "\u25CB %1$s (%2$s) %3$s [%4$s]",
 
   "text.player_companions.tamed_companion_dimension": "Dimension: %1$s",
-  "text.player_companions.tamed_companion_food": "Food: %1$s",
+  "text.player_companions.tamed_companion_food": "Food: ",
   "text.player_companions.tamed_companion_health": "Health: %1$s (%2$s)",
   "text.player_companions.tamed_companion_level": "Level: %1$s (%2$s / %3$s exp)",
   "text.player_companions.tamed_companion_name": "Name: %1$s",
@@ -37,6 +37,7 @@
   "text.player_companions.tamed_companion_status_order_to_follow": "Status: Is order to follow",
   "text.player_companions.tamed_companion_status_order_to_position": "Status: Is order to position",
 
+  "text.player_companions.tamed_companion_warning_not_found": "Unable to spawn companion with UUID %1$s with item %2$s! Was it deleted?",
   "text.player_companions.tamed_companion_warning_not_owner": "Companion %1$s (%2$s) is owned by %3$s!",
   "text.player_companions.tamed_companion_warning_respawn_timer": "Unable to spawn companion %1$s (%2$s), because there is a active respawn timer for %3$s secs remaining!",
 

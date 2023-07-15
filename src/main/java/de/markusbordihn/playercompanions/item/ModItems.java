@@ -21,10 +21,8 @@ package de.markusbordihn.playercompanions.item;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.material.MaterialColor;
 
 import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -216,43 +214,39 @@ public class ModItems {
 
   @TemplateEntryPoint("Register Spawn Eggs")
   public static final RegistryObject<Item> DOBUTSU_SPAWN_EGG = ITEMS.register("dobutsu_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.DOBUTSU::get, MaterialColor.COLOR_PURPLE.col,
-          MaterialColor.COLOR_PURPLE.col, new Item.Properties().rarity(Rarity.EPIC)));
-  public static final RegistryObject<Item> FAIRY_SPAWN_EGG = ITEMS.register("fairy_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.FAIRY::get, MaterialColor.COLOR_PURPLE.col,
-          MaterialColor.COLOR_BLUE.col, new Item.Properties().rarity(Rarity.EPIC)));
+      () -> new CompanionSpawnEggItem(ModEntityType.DOBUTSU::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
+  public static final RegistryObject<Item> FAIRY_SPAWN_EGG =
+      ITEMS.register("fairy_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.FAIRY::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
   public static final RegistryObject<Item> FIREFLY_SPAWN_EGG = ITEMS.register("firefly_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.FIREFLY::get, MaterialColor.COLOR_YELLOW.col,
-          MaterialColor.COLOR_ORANGE.col, new Item.Properties().rarity(Rarity.EPIC)));
-  public static final RegistryObject<Item> LIZARD_SPAWN_EGG = ITEMS.register("lizard_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.LIZARD::get, MaterialColor.COLOR_ORANGE.col,
-          MaterialColor.COLOR_BROWN.col, new Item.Properties().rarity(Rarity.EPIC)));
-  public static final RegistryObject<Item> PIG_SPAWN_EGG = ITEMS.register("pig_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.PIG::get, MaterialColor.COLOR_PINK.col,
-          MaterialColor.COLOR_PINK.col, new Item.Properties().rarity(Rarity.EPIC)));
-  public static final RegistryObject<Item> RAPTOR_SPAWN_EGG = ITEMS.register("raptor_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.RAPTOR::get, MaterialColor.COLOR_BLACK.col,
-          MaterialColor.COLOR_GREEN.col, new Item.Properties().rarity(Rarity.EPIC)));
+      () -> new CompanionSpawnEggItem(ModEntityType.FIREFLY::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
+  public static final RegistryObject<Item> LIZARD_SPAWN_EGG =
+      ITEMS.register("lizard_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.LIZARD::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
+  public static final RegistryObject<Item> PIG_SPAWN_EGG =
+      ITEMS.register("pig_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.PIG::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
+  public static final RegistryObject<Item> RAPTOR_SPAWN_EGG =
+      ITEMS.register("raptor_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.RAPTOR::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
   public static final RegistryObject<Item> ROOSTER_SPAWN_EGG = ITEMS.register("rooster_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.ROOSTER::get, MaterialColor.COLOR_ORANGE.col,
-          MaterialColor.COLOR_RED.col, new Item.Properties().rarity(Rarity.EPIC)));
+      () -> new CompanionSpawnEggItem(ModEntityType.ROOSTER::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
   public static final RegistryObject<Item> SAMURAI_SPAWN_EGG = ITEMS.register("samurai_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.SAMURAI::get, MaterialColor.COLOR_BLACK.col,
-          MaterialColor.COLOR_RED.col, new Item.Properties().rarity(Rarity.EPIC)));
-  public static final RegistryObject<Item> SMALL_GHAST_SPAWN_EGG =
-      ITEMS.register("small_ghast_spawn_egg",
-          () -> new ForgeSpawnEggItem(ModEntityType.SMALL_GHAST::get, MaterialColor.SNOW.col,
-              MaterialColor.SNOW.col, new Item.Properties().rarity(Rarity.EPIC)));
-  public static final RegistryObject<Item> SMALL_SLIME_SPAWN_EGG =
-      ITEMS.register("small_slime_spawn_egg",
-          () -> new ForgeSpawnEggItem(ModEntityType.SMALL_SLIME::get, MaterialColor.COLOR_GREEN.col,
-              MaterialColor.COLOR_GREEN.col, new Item.Properties().rarity(Rarity.EPIC)));
-  public static final RegistryObject<Item> SNAIL_SPAWN_EGG = ITEMS.register("snail_spawn_egg",
-      () -> new ForgeSpawnEggItem(ModEntityType.SNAIL::get, MaterialColor.COLOR_ORANGE.col,
-          MaterialColor.COLOR_BLUE.col, new Item.Properties().rarity(Rarity.EPIC)));
-  public static final RegistryObject<Item> WELSH_CORGI_SPAWN_EGG =
-      ITEMS.register("welsh_corgi_spawn_egg",
-          () -> new ForgeSpawnEggItem(ModEntityType.WELSH_CORGI::get,
-              MaterialColor.COLOR_ORANGE.col, MaterialColor.COLOR_ORANGE.col,
-              new Item.Properties().rarity(Rarity.EPIC)));
+      () -> new CompanionSpawnEggItem(ModEntityType.SAMURAI::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
+  public static final RegistryObject<Item> SMALL_GHAST_SPAWN_EGG = ITEMS.register(
+      "small_ghast_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.SMALL_GHAST::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
+  public static final RegistryObject<Item> SMALL_SLIME_SPAWN_EGG = ITEMS.register(
+      "small_slime_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.SMALL_SLIME::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
+  public static final RegistryObject<Item> SNAIL_SPAWN_EGG =
+      ITEMS.register("snail_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.SNAIL::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
+  public static final RegistryObject<Item> WELSH_CORGI_SPAWN_EGG = ITEMS.register(
+      "welsh_corgi_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.WELSH_CORGI::get,
+          new Item.Properties().rarity(Rarity.EPIC)));
 }

@@ -164,7 +164,7 @@ public class PlayerCompanionManager {
 
   private static void updateOrRegisterCompanion(Entity entity) {
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
-        && !playerCompanionEntity.getLevel().isClientSide && playerCompanionEntity.hasOwner()
+        && !playerCompanionEntity.level().isClientSide && playerCompanionEntity.hasOwner()
         && (playerCompanionEntity.canRespawnOnDeath()
             || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       log.debug("Update or register Companion {}", entity);
@@ -174,7 +174,7 @@ public class PlayerCompanionManager {
 
   private static void updateCompanionData(Entity entity) {
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
-        && !playerCompanionEntity.getLevel().isClientSide && playerCompanionEntity.hasOwner()
+        && !playerCompanionEntity.level().isClientSide && playerCompanionEntity.hasOwner()
         && (playerCompanionEntity.canRespawnOnDeath()
             || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       log.debug("Update Companion Data {}", entity);
@@ -193,12 +193,12 @@ public class PlayerCompanionManager {
 
       // Get relevant entities from owners level.
       Set<Entity> playerCompanionsEntityInOwnersDimension =
-          data.getCompanionsEntity(player.getUUID(), serverPlayer.getLevel());
+          data.getCompanionsEntity(player.getUUID(), serverPlayer.level());
 
       // Check for duplicates from other levels.
       while (serverLevels.hasNext()) {
         ServerLevel serverLevel = serverLevels.next();
-        if (serverPlayer.getLevel() != serverLevel) {
+        if (serverPlayer.level() != serverLevel) {
           for (Entity playerCompanionEntity : playerCompanionsEntityInOwnersDimension) {
             Entity entity = serverLevel.getEntity(playerCompanionEntity.getUUID());
             if (entity != null) {

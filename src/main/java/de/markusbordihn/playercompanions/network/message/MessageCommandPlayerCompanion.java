@@ -69,7 +69,8 @@ public class MessageCommandPlayerCompanion {
       log.error("Unable to get server player for message {} from {}", message, context);
       return;
     }
-    ServerLevel serverLevel = serverPlayer.getLevel();
+
+    ServerLevel serverLevel = (ServerLevel) serverPlayer.level();
     UUID uuid = UUID.fromString(message.getPlayerCompanionUUID());
     Entity entity = serverLevel.getEntity(uuid);
 

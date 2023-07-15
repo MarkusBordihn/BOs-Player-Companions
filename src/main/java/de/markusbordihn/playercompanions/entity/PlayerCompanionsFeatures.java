@@ -125,15 +125,15 @@ public class PlayerCompanionsFeatures {
     this.oFlap = this.flap;
     this.oFlapSpeed = this.flapSpeed;
     this.flapSpeed =
-        (float) (this.flapSpeed + (this.playerCompanionEntity.isOnGround() ? -1 : 4) * 0.3D);
+        (float) (this.flapSpeed + (this.playerCompanionEntity.onGround() ? -1 : 4) * 0.3D);
     this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
-    if (!this.playerCompanionEntity.isOnGround() && this.flapping < 1.0F) {
+    if (!this.playerCompanionEntity.onGround() && this.flapping < 1.0F) {
       this.flapping = 1.0F;
     }
 
     this.flapping = (float) (this.flapping * 0.9D);
     Vec3 vec3 = this.playerCompanionEntity.getDeltaMovement();
-    if (!this.playerCompanionEntity.isOnGround() && vec3.y < 0.0D) {
+    if (!this.playerCompanionEntity.onGround() && vec3.y < 0.0D) {
       this.playerCompanionEntity.setDeltaMovement(vec3.multiply(1.0D, 0.6D, 1.0D));
     }
 

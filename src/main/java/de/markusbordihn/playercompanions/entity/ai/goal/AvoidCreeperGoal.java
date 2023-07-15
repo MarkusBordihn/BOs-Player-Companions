@@ -21,6 +21,7 @@ package de.markusbordihn.playercompanions.entity.ai.goal;
 
 import java.util.EnumSet;
 import java.util.function.Predicate;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.world.entity.EntitySelector;
@@ -72,8 +73,8 @@ public class AvoidCreeperGoal extends PlayerCompanionGoal {
       return false;
     }
     this.creeperToAvoid =
-        this.playerCompanionEntity.level.getNearestEntity(
-            this.playerCompanionEntity.level.getEntitiesOfClass(Creeper.class,
+        this.playerCompanionEntity.level().getNearestEntity(
+            this.playerCompanionEntity.level().getEntitiesOfClass(Creeper.class,
                 this.playerCompanionEntity.getBoundingBox().inflate(this.maxDist, 3.0D,
                     this.maxDist),
                 creeper -> true),

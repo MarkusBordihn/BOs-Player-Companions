@@ -93,7 +93,7 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       // 4. Priority: Buff owned healer.
       if (!hasBuffSomething && this.getOwner() != null) {
         List<PlayerCompanionEntity> playerCompanions =
-            playerCompanionEntity.level.getEntitiesOfClass(PlayerCompanionEntity.class,
+            playerCompanionEntity.level().getEntitiesOfClass(PlayerCompanionEntity.class,
                 new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.supporterTypeRadius.get()),
                 entity -> true);
         for (PlayerCompanionEntity playerCompanion : playerCompanions) {
@@ -110,7 +110,7 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       // 5. Priority: Buff owned tamed animals regardless of type.
       if (!hasBuffSomething && this.getOwner() != null) {
         List<TamableAnimal> tamableAnimals =
-            playerCompanionEntity.level.getEntitiesOfClass(TamableAnimal.class,
+            playerCompanionEntity.level().getEntitiesOfClass(TamableAnimal.class,
                 new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.supporterTypeRadius.get()),
                 entity -> true);
         for (TamableAnimal tamableAnimal : tamableAnimals) {

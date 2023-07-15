@@ -80,7 +80,7 @@ public class PlayerCompanions {
       modEventBus.addListener(ClientRenderer::registerEntityRenderers);
       modEventBus.addListener(ClientScreens::registerScreens);
       modEventBus.addListener(ModKeyMapping::registerKeyMapping);
-      modEventBus.addListener(PlayerCompanionsTab::handleCreativeModeTabRegister);
+      PlayerCompanionsTab.CREATIVE_TABS.register(modEventBus);
     });
   }
 

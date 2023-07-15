@@ -53,7 +53,7 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
 
   @Override
   public boolean canUse() {
-    long gameTime = this.playerCompanionEntity.level.getGameTime();
+    long gameTime = this.playerCompanionEntity.level().getGameTime();
     if (gameTime - this.lastCanUseCheck < COOLDOWN_BETWEEN_CAN_USE_CHECKS
         || !this.playerCompanionEntity.shouldAttack()) {
       return false;

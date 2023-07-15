@@ -86,7 +86,7 @@ public class MessageSkinChange {
       log.error("Unable to get server player for message {} from {}", message, context);
       return;
     }
-    ServerLevel serverLevel = serverPlayer.getLevel();
+    ServerLevel serverLevel = (ServerLevel) serverPlayer.level();
     UUID uuid = message.getUUID();
 
     // Validate skin.

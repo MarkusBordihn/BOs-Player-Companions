@@ -167,6 +167,13 @@ public class PlayerCompanionsServerData extends SavedData {
     return companionsPerPlayerMap.get(ownerUUID);
   }
 
+  public Set<Entity> getCompanionsEntity(UUID ownerUUID, Level level) {
+    if (level instanceof ServerLevel serverLevel) {
+      return getCompanionsEntity(ownerUUID, serverLevel);
+    }
+    return new HashSet<>();
+  }
+
   public Set<Entity> getCompanionsEntity(UUID ownerUUID, ServerLevel serverLevel) {
     Set<Entity> result = new HashSet<>();
     Set<PlayerCompanionData> playerCompanionsData = getCompanions(ownerUUID);

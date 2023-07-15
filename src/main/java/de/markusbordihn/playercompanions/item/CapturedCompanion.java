@@ -155,7 +155,7 @@ public class CapturedCompanion extends Item {
   public Component getName(ItemStack itemStack) {
     PlayerCompanionData playerCompanion = PlayerCompanionsClientData.getCompanion(itemStack);
     if (playerCompanion != null) {
-      Component.translatable(this.getDescriptionId(itemStack))
+      return Component.translatable(this.getDescriptionId(itemStack))
           .append(Component.literal(": " + playerCompanion.getName()));
     }
     return Component.translatable(this.getDescriptionId(itemStack));
@@ -164,7 +164,7 @@ public class CapturedCompanion extends Item {
   @Override
   public InteractionResult interactLivingEntity(ItemStack itemStack, Player player,
       LivingEntity livingEntity, InteractionHand hand) {
-    Level level = player.getLevel();
+    Level level = player.level();
 
     // Check if we have any captured companion.
     if (!hasCompanion(itemStack)) {
@@ -234,6 +234,10 @@ public class CapturedCompanion extends Item {
     if (!PlayerCompanionsServerData.get().hasCompanion(itemStack)) {
       log.error("Unable to find player companion with UUID {} for item {}",
           getCompanionUUID(itemStack), itemStack);
+      player.sendSystemMessage(Component
+          .translatable(Constants.TEXT_PREFIX + "tamed_companion_warning_not_found",
+              getCompanionUUID(itemStack), itemStack)
+          .setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
       return InteractionResult.FAIL;
     }
 

@@ -369,7 +369,7 @@ public class PlayerCompanionData {
       }
     }
     this.blockPos = companion.blockPosition();
-    this.level = companion.getLevel().dimension();
+    this.level = companion.level().dimension();
     this.levelName = this.level.registry() + "/" + this.level.location();
     this.entityId = companion.getId();
     this.entityActionType = companion.getActionType();
@@ -391,12 +391,12 @@ public class PlayerCompanionData {
     this.entityTarget = target == null || target.getEncodeId() == null ? "" : target.getEncodeId();
 
     // Handle level references (client and server)
-    Level companionLevel = companion.getLevel();
+    Level companionLevel = companion.level();
     if (companionLevel != null) {
       if (companionLevel.isClientSide) {
-        this.clientLevel = (ClientLevel) companion.getLevel();
+        this.clientLevel = (ClientLevel) companion.level();
       } else {
-        this.serverLevel = (ServerLevel) companion.getLevel();
+        this.serverLevel = (ServerLevel) companion.level();
       }
     }
 

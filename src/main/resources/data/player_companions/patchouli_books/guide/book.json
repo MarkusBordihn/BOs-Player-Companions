@@ -1,7 +1,9 @@
 {
-  "name": "Player Companions",
+  "name": "Player Companions Guide!",
   "landing_text": "Player Companions and You!",
   "book_texture": "patchouli:textures/gui/book_blue.png",
   "model": "patchouli:book_red",
-  "version": 1
+  "version": 1,
+  "creative_tab": "minecraft:tools_and_utilities",
+  "use_resource_pack": true
 }

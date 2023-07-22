@@ -134,8 +134,7 @@ dependencies {
   // Patchouli Integration
   // compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.19-74-SNAPSHOT:api")
   // runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19-74-SNAPSHOT")
-  // compileOnly fg.deobf("curse.maven:patchouli-306770:3729975")
-  // runtimeOnly fg.deobf("curse.maven:patchouli-306770:3729975")
+  runtimeOnly fg.deobf("curse.maven:patchouli-306770:4636277")
 
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")

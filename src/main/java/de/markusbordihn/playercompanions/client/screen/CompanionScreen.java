@@ -166,7 +166,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     } else {
       RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
       poseStack.pushPose();
-      this.blit(poseStack, x, y + -1, 18, 19, 7, 9);
+      GuiComponent.blit(poseStack, x, y + -1, 18, 19, 7, 9);
       this.aggressiveLevelNextButton.visible = false;
       poseStack.popPose();
       this.aggressiveLevelPreviousButton.visible = false;
@@ -180,7 +180,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     } else {
       RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
       poseStack.pushPose();
-      this.blit(poseStack, x + 125, y + -1, 25, 19, 7, 9);
+      GuiComponent.blit(poseStack, x + 125, y + -1, 25, 19, 7, 9);
       this.aggressiveLevelNextButton.visible = false;
       poseStack.popPose();
     }
@@ -212,10 +212,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
     poseStack.pushPose();
     poseStack.translate(0, 0, 100);
-    this.blit(poseStack, leftPos, y + 19, 1, 1, 16, 16); // Health
-    this.blit(poseStack, leftPos, y + 36, 1, 18, 16, 16); // Armor
-    this.blit(poseStack, leftPos, y + 53, 1, 35, 16, 16); // Attack Damage
-    this.blit(poseStack, leftPos, y + 90, 1, 69, 16, 16); // Experience Level
+    GuiComponent.blit(poseStack, leftPos, y + 19, 1, 1, 16, 16); // Health
+    GuiComponent.blit(poseStack, leftPos, y + 36, 1, 18, 16, 16); // Armor
+    GuiComponent.blit(poseStack, leftPos, y + 53, 1, 35, 16, 16); // Attack Damage
+    GuiComponent.blit(poseStack, leftPos, y + 90, 1, 69, 16, 16); // Experience Level
     poseStack.popPose();
 
     // Stats
@@ -258,7 +258,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     if (!this.canTextureSkinLocationChange) {
       RenderSystem.setShaderTexture(0, DIALOG_TEXTURE);
       poseStack.translate(0, 0, 100);
-      this.blit(poseStack, this.leftPosDialog + 78, this.topPosDialog + 73, 236, 17, 7, 10);
+      GuiComponent.blit(poseStack, this.leftPosDialog + 78, this.topPosDialog + 73, 236, 17, 7, 10);
 
     }
 
@@ -269,7 +269,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     RenderSystem.setShaderTexture(0, DIALOG_TEXTURE);
-    this.blit(poseStack, x, y, 0, 0, 230, 95);
+    GuiComponent.blit(poseStack, x, y, 0, 0, 230, 95);
     font.draw(poseStack, title, x + 10F, y + 10F, Constants.FONT_COLOR_DEFAULT);
   }
 

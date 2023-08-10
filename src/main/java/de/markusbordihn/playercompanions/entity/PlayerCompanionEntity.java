@@ -158,11 +158,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   protected void playSound(Player player, SoundEvent sound) {
-    playSound(player, sound, getSoundVolume(), getSoundPitch());
+    this.playSound(player, sound, getSoundVolume(), getSoundPitch());
   }
 
   protected void playSound(Player player, SoundEvent sound, float volume, float pitch) {
-    if (player.level.isClientSide) {
+    if (player.level.isClientSide && sound != null && sound.getLocation() != null && volume > 0) {
       player.playSound(sound, volume, pitch);
     }
   }
@@ -194,7 +194,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     this.gameEvent(GameEvent.MOB_INTERACT, this.eyeBlockPosition());
     SoundEvent eatingSound = this.getEatingSound(itemStack);
     if (eatingSound != null) {
-      playSound(eatingSound, this.getSoundVolume(), this.getSoundPitch());
+      this.playSound(eatingSound, this.getSoundVolume(), this.getSoundPitch());
     }
     Item item = itemStack.getItem();
     FoodProperties foodProperties = item.getFoodProperties(itemStack, this);
@@ -492,6 +492,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
 
     return super.mobInteract(player, hand);
+  }
+
+  @Override
+  public void playSound(SoundEvent sound, float volume, float pitch) {
+    if (sound != null && sound.getLocation() != null && volume > 0.0) {
+      super.playSound(sound, volume, pitch);
+    }
   }
 
   @Override

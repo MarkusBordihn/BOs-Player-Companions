@@ -142,7 +142,7 @@ dependencies {
   // runtimeOnly fg.deobf("curse.maven:silent-lib-242998:3661417")
   // runtimeOnly fg.deobf("curse.maven:scaling-health-248027:3580899")
   runtimeOnly fg.deobf("curse.maven:morevanillaarmor-350955:3824460")
-  runtimeOnly fg.deobf("curse.maven:true-darkness-337243:3815313")
+  // runtimeOnly fg.deobf("curse.maven:true-darkness-337243:3815313")
   runtimeOnly fg.deobf("curse.maven:rubidium-574856:4024781")
 
   // Additional helpful Mods for development (dev depenedency)

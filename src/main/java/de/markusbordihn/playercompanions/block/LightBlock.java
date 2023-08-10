@@ -64,7 +64,7 @@ public class LightBlock extends Block {
 
   public static int getLightLevel(BlockState blockState) {
     int age = blockState.getValue(AGE);
-    return 15 - age;
+    return Math.min(Math.max(15 - age, 0), 15);
   }
 
   public void rescheduleTick(Level level, BlockState blockState, BlockPos blockPos) {

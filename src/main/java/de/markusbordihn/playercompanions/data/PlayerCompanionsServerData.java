@@ -77,7 +77,7 @@ public class PlayerCompanionsServerData extends SavedData {
 
     if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get())) {
       nextBackupTime =
-          (int) java.time.Instant.now().getEpochSecond() + (60 * COMMON.dataBackupInterval.get());
+          java.time.Instant.now().getEpochSecond() + (60 * COMMON.dataBackupInterval.get());
       log.info("Enable automatic data backups every {} minutes, next backup will run at {} ...",
           COMMON.dataBackupInterval.get(), nextBackupTime);
     } else {

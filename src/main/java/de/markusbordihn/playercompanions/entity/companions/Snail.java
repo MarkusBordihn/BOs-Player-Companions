@@ -35,7 +35,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -88,10 +87,19 @@ public class Snail extends CollectorEntityFloating {
   }
 
   @Override
+  public boolean canBreatheUnderwater() {
+    return true;
+  }
+
+  @Override
+  public boolean isPushedByFluid() {
+    return false;
+  }
+
+  @Override
   protected void registerGoals() {
     super.registerGoals();
 
-    this.goalSelector.addGoal(1, new FloatGoal(this));
     this.goalSelector.addGoal(1, new FleeGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new PanicGoal(this, 1.0D));
     this.goalSelector.addGoal(1, new MoveToPositionGoal(this, 1.0D, 0.5F));

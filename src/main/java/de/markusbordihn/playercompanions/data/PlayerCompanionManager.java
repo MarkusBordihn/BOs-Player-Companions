@@ -189,6 +189,9 @@ public class PlayerCompanionManager {
         return;
       }
       MinecraftServer server = serverPlayer.getServer();
+      if (server == null) {
+        return;
+      }
       Iterator<ServerLevel> serverLevels = server.getAllLevels().iterator();
 
       // Get relevant entities from owners level.

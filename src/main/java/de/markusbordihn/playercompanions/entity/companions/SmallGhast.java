@@ -76,10 +76,10 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
 import de.markusbordihn.playercompanions.entity.ai.goal.ShootLargeFireballGoal;
-import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFloating;
+import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFlying;
 import de.markusbordihn.playercompanions.item.ModItems;
 
-public class SmallGhast extends GuardEntityFloating implements NeutralMob {
+public class SmallGhast extends GuardEntityFlying implements NeutralMob {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
@@ -135,7 +135,8 @@ public class SmallGhast extends GuardEntityFloating implements NeutralMob {
 
   public static AttributeSupplier.Builder createAttributes() {
     return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+        .add(Attributes.FLYING_SPEED, 0.4F).add(Attributes.MAX_HEALTH, 10.0D)
+        .add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
   public static boolean checkGhastSpawnRules(EntityType<SmallGhast> entityType, LevelAccessor level,

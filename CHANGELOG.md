@@ -5,6 +5,13 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.08.11
+
+- Added smaller bug fixes.
+- Fixed Small Ghast could not fly. #21
+- Fixed Snails spawn on the sea and stay on top. #23
+- Fixed Server crasher like #24
+
 ### 2023.07.22
 
 - Fixed Patchouli book integration for 1.20.1.

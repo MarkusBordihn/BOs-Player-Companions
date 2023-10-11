@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_apple",
+  "display": {
+    "icon": {
+      "item": "player_companions:samurai_blue"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.samurai_blue.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.samurai_blue.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_samurai_blue": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:samurai_blue"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_samurai_blue"]],
+  "rewards": {
+    "experience": 50
+  }
+}

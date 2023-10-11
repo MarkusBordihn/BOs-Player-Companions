@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_seagrass",
+  "display": {
+    "icon": {
+      "item": "player_companions:snail_brown"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.snail_brown.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.snail_brown.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_snail_brown": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:snail_brown"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_snail_brown"]],
+  "rewards": {
+    "experience": 50
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_bone",
+  "display": {
+    "icon": {
+      "item": "player_companions:small_ghast_default"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.small_ghast_default.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.small_ghast_default.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_small_ghast_default": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:small_ghast_default"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_small_ghast_default"]],
+  "rewards": {
+    "experience": 50
+  }
+}

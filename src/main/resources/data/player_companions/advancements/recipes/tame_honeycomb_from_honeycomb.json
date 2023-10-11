@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": ["player_companions:tame_honeycomb_from_honeycomb"]
+  },
+  "criteria": {
+    "has_honeycomb": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:honeycomb"]
+          }
+        ]
+      }
+    },
+    "has_lead": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:lead"]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "player_companions:tame_honeycomb_from_honeycomb"
+      }
+    }
+  },
+  "requirements": [["has_honeycomb", "has_lead", "has_the_recipe"]]
+}

@@ -1,0 +1,27 @@
+{
+  "parent": "player_companions:crafting/tame_items",
+  "display": {
+    "icon": {
+      "item": "player_companions:tame_cake"
+    },
+    "title": {
+      "translate": "advancements.player_companions.crafting.tame_cake.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.crafting.tame_cake.description"
+    }
+  },
+  "criteria": {
+    "has_tame_cake": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:tame_cake"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_tame_cake"]]
+}

@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_sweet_berries",
+  "display": {
+    "icon": {
+      "item": "player_companions:lizard_default"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.lizard_default.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.lizard_default.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_lizard_default": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:lizard_default"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_lizard_default"]],
+  "rewards": {
+    "experience": 50
+  }
+}

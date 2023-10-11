@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_cake",
+  "display": {
+    "icon": {
+      "item": "player_companions:fairy_blue"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.fairy_blue.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.fairy_blue.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_fairy_blue": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:fairy_blue"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_fairy_blue"]],
+  "rewards": {
+    "experience": 50
+  }
+}

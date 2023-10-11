@@ -92,7 +92,8 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
       return false;
     } else if (!this.followingTargetEvenIfNotSeen) {
       return !this.playerCompanionEntity.getNavigation().isDone();
-    } else if (livingEntity != null && !this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition())) {
+    } else if (livingEntity != null
+        && !this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition())) {
       return false;
     }
     return true;

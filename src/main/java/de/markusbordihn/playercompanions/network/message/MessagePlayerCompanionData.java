@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -53,11 +54,21 @@ public class MessagePlayerCompanionData {
     return this.playerCompanionUUID;
   }
 
+  public static MessagePlayerCompanionData decode(final FriendlyByteBuf buffer) {
+    return new MessagePlayerCompanionData(buffer.readUtf(), buffer.readNbt());
+  }
+
+  public static void encode(final MessagePlayerCompanionData message,
+      final FriendlyByteBuf buffer) {
+    buffer.writeUtf(message.getPlayerCompanionUUID());
+    buffer.writeNbt(message.getData());
+  }
+
   public static void handle(MessagePlayerCompanionData message,
       Supplier<NetworkEvent.Context> contextSupplier) {
     NetworkEvent.Context context = contextSupplier.get();
-    context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-        () -> () -> handlePacket(message)));
+    context.enqueueWork(
+        () -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> handlePacket(message)));
     context.setPacketHandled(true);
   }
 

@@ -1,0 +1,28 @@
+{
+  "parent": "player_companions:crafting/craft_lead",
+  "display": {
+    "icon": {
+      "item": "player_companions:tame_apple"
+    },
+    "title": {
+      "translate": "advancements.player_companions.crafting.tame_item.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.crafting.tame_item.description"
+    },
+    "show_toast": true
+  },
+  "criteria": {
+    "has_lead": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:lead"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_lead"]]
+}

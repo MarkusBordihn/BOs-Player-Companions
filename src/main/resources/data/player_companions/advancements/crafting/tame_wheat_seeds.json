@@ -1,0 +1,27 @@
+{
+  "parent": "player_companions:crafting/tame_items",
+  "display": {
+    "icon": {
+      "item": "player_companions:tame_wheat_seeds"
+    },
+    "title": {
+      "translate": "advancements.player_companions.crafting.tame_wheat_seeds.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.crafting.tame_wheat_seeds.description"
+    }
+  },
+  "criteria": {
+    "has_tame_wheat_seeds": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:tame_wheat_seeds"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_tame_wheat_seeds"]]
+}

@@ -51,7 +51,7 @@ public class AvoidCreeperGoal extends PlayerCompanionGoal {
   private final TargetingConditions avoidEntityTargeting;
 
   public AvoidCreeperGoal(PlayerCompanionEntity playerCompanionEntity) {
-    this(playerCompanionEntity,  5.0F, 1.0D, 1.0D);
+    this(playerCompanionEntity, 5.0F, 1.0D, 1.0D);
   }
 
   public AvoidCreeperGoal(PlayerCompanionEntity playerCompanionEntity, float maxDist,
@@ -83,8 +83,8 @@ public class AvoidCreeperGoal extends PlayerCompanionGoal {
     if (this.creeperToAvoid == null) {
       return false;
     } else {
-      Vec3 vec3 =
-          DefaultRandomPos.getPosAway(this.playerCompanionEntity, 16, 7, this.creeperToAvoid.position());
+      Vec3 vec3 = DefaultRandomPos.getPosAway(this.playerCompanionEntity, 16, 7,
+          this.creeperToAvoid.position());
       if (vec3 == null) {
         return false;
       } else if (this.creeperToAvoid.distanceToSqr(vec3.x, vec3.y, vec3.z) < this.creeperToAvoid

@@ -165,8 +165,7 @@ public class SpawnHandler {
     if (Boolean.TRUE.equals(COMMON.raptorSpawnEnable.get()) && isJungle) {
       event.getSpawns().getSpawner(PlayerCompanionEntity.CATEGORY)
           .add(new MobSpawnSettings.SpawnerData(ModEntityType.RAPTOR.get(),
-              COMMON.raptorWeight.get(), COMMON.raptorMinGroup.get(),
-              COMMON.raptorMaxGroup.get()));
+              COMMON.raptorWeight.get(), COMMON.raptorMinGroup.get(), COMMON.raptorMaxGroup.get()));
     }
 
     // Rooster Spawn

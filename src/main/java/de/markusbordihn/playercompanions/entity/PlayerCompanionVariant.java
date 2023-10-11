@@ -30,6 +30,7 @@ public enum PlayerCompanionVariant {
   BROWN,
   CREEPER,
   CYAN,
+  DARK_GREEN,
   DEFAULT,
   DEFAULT_ACTION,
   DESERT,

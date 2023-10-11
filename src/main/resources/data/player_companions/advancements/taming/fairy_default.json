@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_cake",
+  "display": {
+    "icon": {
+      "item": "player_companions:fairy_default"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.fairy_default.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.fairy_default.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_fairy_default": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:fairy_default"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_fairy_default"]],
+  "rewards": {
+    "experience": 50
+  }
+}

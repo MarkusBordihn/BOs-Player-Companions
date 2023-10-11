@@ -91,8 +91,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<String> DATA_SKIN_URL =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
-  private static final EntityDataAccessor<Optional<UUID>> DATA_SKIN_UUID =
-      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.OPTIONAL_UUID);
+  private static final EntityDataAccessor<Optional<UUID>> DATA_SKIN_UUID = SynchedEntityData
+      .defineId(PlayerCompanionEntityData.class, EntityDataSerializers.OPTIONAL_UUID);
   private static final EntityDataAccessor<String> DATA_SKIN_TYPE =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =

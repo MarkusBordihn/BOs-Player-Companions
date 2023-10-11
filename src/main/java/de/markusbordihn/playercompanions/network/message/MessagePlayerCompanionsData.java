@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -45,6 +46,14 @@ public class MessagePlayerCompanionsData {
 
   public CompoundTag getData() {
     return this.data;
+  }
+
+  public static MessagePlayerCompanionsData decode(final FriendlyByteBuf buffer) {
+    return new MessagePlayerCompanionsData(buffer.readNbt());
+  }
+
+  public static void encode(MessagePlayerCompanionsData message, FriendlyByteBuf buffer) {
+    buffer.writeNbt(message.getData());
   }
 
   public static void handle(MessagePlayerCompanionsData message,

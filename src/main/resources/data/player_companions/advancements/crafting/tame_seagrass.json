@@ -1,0 +1,27 @@
+{
+  "parent": "player_companions:crafting/tame_items",
+  "display": {
+    "icon": {
+      "item": "player_companions:tame_seagrass"
+    },
+    "title": {
+      "translate": "advancements.player_companions.crafting.tame_seagrass.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.crafting.tame_seagrass.description"
+    }
+  },
+  "criteria": {
+    "has_tame_seagrass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:tame_seagrass"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_tame_seagrass"]]
+}

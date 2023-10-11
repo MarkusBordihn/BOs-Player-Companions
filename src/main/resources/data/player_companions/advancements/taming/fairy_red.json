@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_cake",
+  "display": {
+    "icon": {
+      "item": "player_companions:fairy_red"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.fairy_red.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.fairy_red.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_fairy_red": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:fairy_red"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_fairy_red"]],
+  "rewards": {
+    "experience": 50
+  }
+}

@@ -25,7 +25,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import com.mojang.datafixers.util.Pair;
-
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -101,8 +101,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
   private static final int GLOW_TICK = LightBlock.TICK_TTL / 2;
+  private static final int ANNOYING_COUNTER_TICK = 20 * 60 * 5; // In ticks: 5 minutes
   private int ticker = 0;
   private int glowTicker = 0;
+  private int annoyingCounterTicker = 0;
+  private int annoyingCounter = 0;
 
   // Temporary states
   private boolean wasOnGround;
@@ -470,6 +473,22 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       } else if (getTameItem() != null && itemStack.is(getTameItem()) && !this.isTame()) {
         return InteractionResult.CONSUME;
       }
+
+      // Send player a hint how to tame any untamed companion.
+      else if (!this.isTame() && !this.isFood(itemStack) && getTameItem() != null) {
+        if (annoyingCounter < 10) {
+          player.sendSystemMessage(
+              Component.translatable(Constants.TEXT_PREFIX + "untamed_companion.interaction",
+                  this.getCustomName(), getTameItem()));
+          annoyingCounter++;
+        } else {
+          player.sendSystemMessage(Component
+              .translatable(Constants.TEXT_PREFIX + "untamed_companion.interaction.annoying",
+                  this.getCustomName())
+              .withStyle(ChatFormatting.RED));
+        }
+        return InteractionResult.SUCCESS;
+      }
     }
 
     // Health companion with food item, from any player.
@@ -547,6 +566,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       } else {
         return;
       }
+    }
+
+    // ClientSide: Annoying counter reset.
+    if (this.level.isClientSide && this.annoyingCounter > 0
+        && this.annoyingCounterTicker++ >= ANNOYING_COUNTER_TICK) {
+      this.annoyingCounter = 0;
+      this.annoyingCounterTicker = 0;
     }
 
     // ServerSide: Place light block, if companion should glow in the dark.

@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_raw_mutton",
+  "display": {
+    "icon": {
+      "item": "player_companions:raptor_pink"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.raptor_pink.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.raptor_pink.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_raptor_pink": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:raptor_pink"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_raptor_pink"]],
+  "rewards": {
+    "experience": 50
+  }
+}

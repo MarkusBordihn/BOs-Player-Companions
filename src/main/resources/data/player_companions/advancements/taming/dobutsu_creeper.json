@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_sweet_berries",
+  "display": {
+    "icon": {
+      "item": "player_companions:dobutsu_creeper"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.dobutsu_creeper.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.dobutsu_creeper.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_dobutsu_creeper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:dobutsu_creeper"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_dobutsu_creeper"]],
+  "rewards": {
+    "experience": 50
+  }
+}

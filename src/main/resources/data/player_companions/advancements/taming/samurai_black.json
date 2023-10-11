@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_apple",
+  "display": {
+    "icon": {
+      "item": "player_companions:samurai_black"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.samurai_black.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.samurai_black.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_samurai_black": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:samurai_black"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_samurai_black"]],
+  "rewards": {
+    "experience": 50
+  }
+}

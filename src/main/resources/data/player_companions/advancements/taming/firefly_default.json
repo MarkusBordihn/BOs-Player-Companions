@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_honeycomb",
+  "display": {
+    "icon": {
+      "item": "player_companions:firefly_default"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.firefly_default.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.firefly_default.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_firefly_default": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:firefly_default"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_firefly_default"]],
+  "rewards": {
+    "experience": 50
+  }
+}

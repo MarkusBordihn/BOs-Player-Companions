@@ -27,6 +27,7 @@ import javax.annotation.Nullable;
 
 import com.mojang.datafixers.util.Pair;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -102,8 +103,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
   private static final int GLOW_TICK = LightBlock.TICK_TTL / 2;
+  private static final int ANNOYING_COUNTER_TICK = 20 * 60 * 5; // In ticks: 5 minutes
   private int ticker = 0;
   private int glowTicker = 0;
+  private int annoyingCounterTicker = 0;
+  private int annoyingCounter = 0;
 
   // Temporary states
   private boolean wasOnGround;
@@ -474,6 +478,22 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       } else if (getTameItem() != null && itemStack.is(getTameItem()) && !this.isTame()) {
         return InteractionResult.CONSUME;
       }
+
+      // Send player a hint how to tame any untamed companion.
+      else if (!this.isTame() && !this.isFood(itemStack) && getTameItem() != null) {
+        if (annoyingCounter < 10) {
+          player.sendSystemMessage(
+              Component.translatable(Constants.TEXT_PREFIX + "untamed_companion.interaction",
+                  this.getCustomName(), getTameItem()));
+          annoyingCounter++;
+        } else {
+          player.sendSystemMessage(Component
+              .translatable(Constants.TEXT_PREFIX + "untamed_companion.interaction.annoying",
+                  this.getCustomName())
+              .withStyle(ChatFormatting.RED));
+        }
+        return InteractionResult.SUCCESS;
+      }
     }
 
     // Health companion with food item, from any player.
@@ -546,8 +566,15 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       }
     }
 
-    // ServerSide: Place light block, if companion should glow in the dark.
+    // ClientSide: Annoying counter reset.
     Level level = this.level();
+    if (level.isClientSide && this.annoyingCounter > 0
+        && this.annoyingCounterTicker++ >= ANNOYING_COUNTER_TICK) {
+      this.annoyingCounter = 0;
+      this.annoyingCounterTicker = 0;
+    }
+
+    // ServerSide: Place light block, if companion should glow in the dark.
     if (!level.isClientSide && this.shouldGlowInTheDark() && this.glowTicker++ >= GLOW_TICK) {
       BlockPos lightBlockPos = this.getOnPos();
       if (level.isNight() || level.isRaining() || level.isThundering()
@@ -565,8 +592,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           float f1 = this.random.nextFloat() * 0.5F + 0.5F;
           float f2 = Mth.sin(f) * 0.5F * f1;
           float f3 = Mth.cos(f) * 0.5F * f1;
-          level.addParticle(this.getParticleType(), this.getX() + f2, this.getY(),
-              this.getZ() + f3, 0.0D, 0.0D, 0.0D);
+          level.addParticle(this.getParticleType(), this.getX() + f2, this.getY(), this.getZ() + f3,
+              0.0D, 0.0D, 0.0D);
         }
       }
       if (doPlayJumpSound() && getJumpSound() != null) {

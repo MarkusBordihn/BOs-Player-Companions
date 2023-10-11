@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_sweet_berries",
+  "display": {
+    "icon": {
+      "item": "player_companions:lizard_desert"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.lizard_desert.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.lizard_desert.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_lizard_desert": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:lizard_desert"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_lizard_desert"]],
+  "rewards": {
+    "experience": 50
+  }
+}

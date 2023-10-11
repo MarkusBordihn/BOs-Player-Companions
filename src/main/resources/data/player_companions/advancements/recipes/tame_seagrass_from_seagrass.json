@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": ["player_companions:tame_seagrass_from_seagrass"]
+  },
+  "criteria": {
+    "has_seagrass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:seagrass"]
+          }
+        ]
+      }
+    },
+    "has_lead": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:lead"]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "player_companions:tame_seagrass_from_seagrass"
+      }
+    }
+  },
+  "requirements": [["has_seagrass", "has_lead", "has_the_recipe"]]
+}

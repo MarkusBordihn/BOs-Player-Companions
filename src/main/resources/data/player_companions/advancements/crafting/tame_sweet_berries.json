@@ -1,0 +1,27 @@
+{
+  "parent": "player_companions:crafting/tame_items",
+  "display": {
+    "icon": {
+      "item": "player_companions:tame_sweet_berries"
+    },
+    "title": {
+      "translate": "advancements.player_companions.crafting.tame_sweet_berries.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.crafting.tame_sweet_berries.description"
+    }
+  },
+  "criteria": {
+    "has_tame_sweet_berries": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:tame_sweet_berries"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_tame_sweet_berries"]]
+}

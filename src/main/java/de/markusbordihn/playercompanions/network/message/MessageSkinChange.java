@@ -25,9 +25,11 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+
 import net.minecraftforge.network.NetworkEvent;
 
 import de.markusbordihn.playercompanions.Constants;
@@ -43,9 +45,10 @@ public class MessageSkinChange {
   protected final String skin;
   protected final String skinURL;
   protected final UUID skinUUID;
-  protected final String skinType;
+  protected final SkinType skinType;
 
-  public MessageSkinChange(UUID uuid, String skin, String skinURL, UUID skinUUID, String skinType) {
+  public MessageSkinChange(UUID uuid, String skin, String skinURL, UUID skinUUID,
+      SkinType skinType) {
     this.uuid = uuid;
     this.skin = skin;
     this.skinURL = skinURL;
@@ -69,8 +72,21 @@ public class MessageSkinChange {
     return this.skinUUID;
   }
 
-  public String getSkinType() {
+  public SkinType getSkinType() {
     return this.skinType;
+  }
+
+  public static MessageSkinChange decode(final FriendlyByteBuf buffer) {
+    return new MessageSkinChange(buffer.readUUID(), buffer.readUtf(), buffer.readUtf(),
+        buffer.readUUID(), buffer.readEnum(SkinType.class));
+  }
+
+  public static void encode(final MessageSkinChange message, final FriendlyByteBuf buffer) {
+    buffer.writeUUID(message.uuid);
+    buffer.writeUtf(message.skin);
+    buffer.writeUtf(message.skinURL);
+    buffer.writeUUID(message.skinUUID);
+    buffer.writeEnum(message.getSkinType());
   }
 
   public static void handle(MessageSkinChange message,
@@ -106,12 +122,11 @@ public class MessageSkinChange {
     }
 
     // Validate skin type.
-    String skinTypeName = message.getSkinType();
-    if (skinTypeName == null || skinTypeName.isEmpty()) {
-      log.error("Invalid skin type name {} for {} from {}", skin, message, serverPlayer);
+    SkinType skinType = message.getSkinType();
+    if (skinType == null) {
+      log.error("Invalid skin type {} for {} from {}", skinType, message, serverPlayer);
       return;
     }
-    SkinType skinType = SkinType.get(skinTypeName);
 
     // Validate entity.
     PlayerCompanionEntity playerCompanionEntity = (PlayerCompanionEntity) entity;

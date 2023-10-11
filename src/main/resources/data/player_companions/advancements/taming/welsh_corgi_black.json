@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_bone",
+  "display": {
+    "icon": {
+      "item": "player_companions:welsh_corgi_black"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.welsh_corgi_black.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.welsh_corgi_black.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_welsh_corgi_black": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:welsh_corgi_black"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_welsh_corgi_black"]],
+  "rewards": {
+    "experience": 50
+  }
+}

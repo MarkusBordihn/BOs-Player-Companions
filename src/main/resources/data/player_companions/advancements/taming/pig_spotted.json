@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_carrot",
+  "display": {
+    "icon": {
+      "item": "player_companions:pig_spotted"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.pig_spotted.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.pig_spotted.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_pig_spotted": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:pig_spotted"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_pig_spotted"]],
+  "rewards": {
+    "experience": 50
+  }
+}

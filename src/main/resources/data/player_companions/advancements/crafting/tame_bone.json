@@ -1,0 +1,27 @@
+{
+  "parent": "player_companions:crafting/tame_items",
+  "display": {
+    "icon": {
+      "item": "player_companions:tame_bone"
+    },
+    "title": {
+      "translate": "advancements.player_companions.crafting.tame_bone.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.crafting.tame_bone.description"
+    }
+  },
+  "criteria": {
+    "has_tame_bone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:tame_bone"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_tame_bone"]]
+}

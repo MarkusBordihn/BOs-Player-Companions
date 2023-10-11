@@ -80,8 +80,8 @@ public class PlayerCompanionEntityJumpControl extends MoveControl {
         this.jumpMoveDelay = companionEntity.getJumpMoveDelay();
         this.mob.getJumpControl().jump();
         if (companionEntity.doPlayJumpSound()) {
-          this.mob.playSound(companionEntity.getJumpSound(), companionEntity.getSoundVolume(),
-              companionEntity.getSoundPitch());
+          this.companionEntity.playSound(companionEntity.getJumpSound(),
+              companionEntity.getSoundVolume(), companionEntity.getSoundPitch());
         }
         skipMovement = true;
       }
@@ -113,8 +113,8 @@ public class PlayerCompanionEntityJumpControl extends MoveControl {
 
         // Play wait sound in specific intervals.
         if (waitSoundDelay++ >= companionEntity.getAmbientSoundInterval()) {
-          this.mob.playSound(companionEntity.getWaitSound(), companionEntity.getSoundVolume(),
-              companionEntity.getSoundPitch());
+          this.companionEntity.playSound(companionEntity.getWaitSound(),
+              companionEntity.getSoundVolume(), companionEntity.getSoundPitch());
           waitSoundDelay = 0;
         }
       }
@@ -128,8 +128,8 @@ public class PlayerCompanionEntityJumpControl extends MoveControl {
         this.jumpDelay = companionEntity.getJumpDelay();
         this.mob.getJumpControl().jump();
         if (companionEntity.doPlayJumpSound()) {
-          this.mob.playSound(companionEntity.getJumpSound(), companionEntity.getSoundVolume(),
-              companionEntity.getSoundPitch());
+          this.companionEntity.playSound(companionEntity.getJumpSound(),
+              companionEntity.getSoundVolume(), companionEntity.getSoundPitch());
         }
       }
       this.mob.setZza(0.0F);

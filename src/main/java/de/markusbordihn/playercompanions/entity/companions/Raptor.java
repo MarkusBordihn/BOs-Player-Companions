@@ -76,7 +76,8 @@ public class Raptor extends GuardEntityWalking implements NeutralMob {
 
   // Variants
   public static final List<PlayerCompanionVariant> VARIANTS =
-      List.of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.PINK);
+      List.of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.PINK,
+          PlayerCompanionVariant.DARK_GREEN);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =

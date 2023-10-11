@@ -92,8 +92,8 @@ public class PlayerCompanionEntityFlyControl extends MoveControl {
 
         // Play wait sound in specific intervals.
         if (waitSoundDelay++ >= companionEntity.getAmbientSoundInterval()) {
-          this.mob.playSound(companionEntity.getWaitSound(), companionEntity.getSoundVolume(),
-              companionEntity.getSoundPitch());
+          this.companionEntity.playSound(companionEntity.getWaitSound(),
+              companionEntity.getSoundVolume(), companionEntity.getSoundPitch());
           waitSoundDelay = 0;
         }
       }

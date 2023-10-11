@@ -107,6 +107,7 @@ public class PlayerCompanionsTab {
     outputTab.accept(ModItems.PIG_SPOTTED.get());
     outputTab.accept(ModItems.RAPTOR_DEFAULT.get());
     outputTab.accept(ModItems.RAPTOR_PINK.get());
+    outputTab.accept(ModItems.RAPTOR_DARK_GREEN.get());
     outputTab.accept(ModItems.ROOSTER_DEFAULT.get());
     outputTab.accept(ModItems.ROOSTER_MIXED.get());
     outputTab.accept(ModItems.SMALL_GHAST_DEFAULT.get());

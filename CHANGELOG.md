@@ -5,6 +5,12 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.10.10
+
+- Added new raptor variants.
+- Fixed issue were missing sounds could cause a crash. #27
+- Fixed issue were baby Raptor looks decapitated when sitting. #27
+
 ### 2023.08.11
 
 - Added smaller bug fixes.

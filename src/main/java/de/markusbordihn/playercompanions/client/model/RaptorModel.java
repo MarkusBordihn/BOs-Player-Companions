@@ -224,15 +224,13 @@ public class RaptorModel<T extends TamableAnimal> extends AgeableListModel<T> {
   public void prepareMobModel(T entity, float limbSwing, float limbSwingAmount, float ageInTicks) {
     if (entity.isInSittingPose()) {
 
-      // Position y: -8
-
       // Body
       this.body.setPos(0.0F, 32.0F, 0.0F);
       this.bodyNeck.xRot = 0.4f;
 
       // Head
       if (this.young) {
-        this.head.setPos(0.0F, 18.25F, -10.0F);
+        this.head.setPos(0.0F, 14.0F, -10.0F);
       } else {
         this.head.setPos(0.0F, 12.75F, -15.4F);
       }
@@ -259,7 +257,7 @@ public class RaptorModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
       // Head
       if (this.young) {
-        this.head.setPos(0.0F, 8.25F, -9.0F);
+        this.head.setPos(0.0F, 8.75F, -9.0F);
       } else {
         this.head.setPos(0.0F, 2.75F, -14.4F);
       }

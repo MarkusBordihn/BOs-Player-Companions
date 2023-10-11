@@ -48,6 +48,7 @@ public class PlayerCompanionsItems implements DisplayItemsGenerator {
     output.accept(ModItems.PIG_SPOTTED.get());
     output.accept(ModItems.RAPTOR_DEFAULT.get());
     output.accept(ModItems.RAPTOR_PINK.get());
+    output.accept(ModItems.RAPTOR_DARK_GREEN.get());
     output.accept(ModItems.ROOSTER_DEFAULT.get());
     output.accept(ModItems.ROOSTER_MIXED.get());
     output.accept(ModItems.SMALL_GHAST_DEFAULT.get());

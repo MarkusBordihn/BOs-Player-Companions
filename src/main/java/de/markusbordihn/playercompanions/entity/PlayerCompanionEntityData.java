@@ -394,7 +394,9 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public float getSoundPitch() {
-    return ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
+    float randomSoundPitch =
+        ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
+    return randomSoundPitch >= 0.0F ? randomSoundPitch : 0.0F;
   }
 
   public boolean hasRideCooldown() {

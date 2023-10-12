@@ -159,7 +159,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   protected void playSound(Player player, SoundEvent sound, float volume, float pitch) {
-    if (player.level.isClientSide && sound != null && sound.getLocation() != null && volume > 0) {
+    if (player.level.isClientSide && sound != null && sound.getLocation() != null && volume > 0.0f
+        && pitch >= 0.0f) {
       player.playSound(sound, volume, pitch);
     }
   }

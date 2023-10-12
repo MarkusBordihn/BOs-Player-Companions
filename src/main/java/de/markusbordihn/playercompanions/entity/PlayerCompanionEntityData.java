@@ -95,8 +95,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.INT);
   private static final EntityDataAccessor<String> DATA_SKIN_URL =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
-  private static final EntityDataAccessor<Optional<UUID>> DATA_SKIN_UUID =
-      SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.OPTIONAL_UUID);
+  private static final EntityDataAccessor<Optional<UUID>> DATA_SKIN_UUID = SynchedEntityData
+      .defineId(PlayerCompanionEntityData.class, EntityDataSerializers.OPTIONAL_UUID);
   private static final EntityDataAccessor<String> DATA_SKIN_TYPE =
       SynchedEntityData.defineId(PlayerCompanionEntityData.class, EntityDataSerializers.STRING);
   private static final EntityDataAccessor<String> DATA_VARIANT =
@@ -395,7 +395,8 @@ public class PlayerCompanionEntityData extends TamableAnimal
   }
 
   public float getSoundPitch() {
-    return ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
+    float randomSoundPitch = ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
+    return randomSoundPitch >= 0.0F ? randomSoundPitch : 0.0F;
   }
 
   public boolean hasRideCooldown() {

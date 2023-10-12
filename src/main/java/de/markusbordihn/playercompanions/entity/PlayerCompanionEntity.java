@@ -514,6 +514,13 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   @Override
+  public void playSound(SoundEvent sound, float volume, float pitch) {
+    if (sound != null && sound.getLocation() != null && volume > 0.0f && pitch >= 0.0f) {
+      super.playSound(sound, volume, pitch);
+    }
+  }
+
+  @Override
   public boolean isFood(ItemStack itemStack) {
     if (this.getFoodItems() != null) {
       return this.getFoodItems().test(itemStack);

@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.10.12
+
+- Fixed issue with custom url skins not working correctly.
+
 ### 2023.10.11
 
 - Added advancements for player companions from crafting the tame items to taming the different companion.

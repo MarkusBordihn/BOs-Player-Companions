@@ -132,6 +132,13 @@
 
   "container.player_companions.companions_menu": "Player Companions",
 
+  "text.player_companions.save": "Save",
+  "text.player_companions.cancel": "Cancel",
+  "text.player_companions.follow": "Follow",
+  "text.player_companions.sit": "Sit",
+  "text.player_companions.default_aggression": "Default Aggression",
+  "text.player_companions.texture_url": "Texture URL",
+
   "text.player_companions.commands.summon.action": "summon",
   "text.player_companions.commands.summon.list_entry": "\u25CB %1$s (%2$s) %3$s [%4$s]",
 
@@ -164,8 +171,8 @@
   "text.player_companions.empty_captured_companion_usage": "Click on an empty place to create a new companion or click on an existing companion to link the existed companion instead.",
 
   "text.player_companions.captured_companion_title": "Captured %1$s",
-  "text.player_companions.captured_companion_subtitle_inventory": "Item was stored in your inventory!",
-  "text.player_companions.captured_companion_subtitle_ground": "Item was dropped to ground!",
+  "text.player_companions.captured_companion_subtitle_inventory": "Was stored in your inventory slot %1$s!",
+  "text.player_companions.captured_companion_subtitle_ground": "Was dropped to ground!",
 
   "text.player_companions.aggression_level.PASSIVE_FLEE": "Passive (flee)",
   "text.player_companions.aggression_level.PASSIVE": "Passive",

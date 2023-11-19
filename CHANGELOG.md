@@ -5,6 +5,11 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.11.19
+
+- Added additional checks for tamed player companions items to make sure they are not getting lost with specific inventory mods.
+- Added basic German translation.
+
 ### 2023.10.12
 
 - Fixed issue with custom url skins not working correctly.

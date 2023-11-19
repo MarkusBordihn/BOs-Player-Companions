@@ -152,8 +152,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     // Aggression Level
     poseStack.pushPose();
-    font.draw(poseStack, Component.literal("Aggression Level (WIP)"), x, y,
-        Constants.FONT_COLOR_DEFAULT);
+    font.draw(poseStack, Component.literal("Aggression Level"), x, y, Constants.FONT_COLOR_DEFAULT);
     poseStack.popPose();
     y += 12;
 
@@ -359,7 +358,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     // Texture Settings
     this.textureSkinLocationBox = new EditBox(this.font, leftPosDialog + 10, topPosDialog + 42, 190,
-        20, Component.literal("Texture URL"));
+        20, Component.translatable(Constants.TEXT_PREFIX + "texture_url"));
     this.textureSkinLocationBox.setMaxLength(256);
     this.textureSkinLocationBox.setValue(this.formerTextureSkinLocation);
     this.textureSkinLocationBox.setResponder(consumer -> this.validateTextureSkinLocation());
@@ -373,8 +372,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.clearTextureSettingsButton.visible = false;
 
     // Save Button
-    this.saveTextureSettingsButton =
-        this.addRenderableWidget(Button.builder(Component.translatable("Save"), onPress -> {
+    this.saveTextureSettingsButton = this.addRenderableWidget(
+        Button.builder(Component.translatable(Constants.TEXT_PREFIX + "save"), onPress -> {
           this.saveTextureSkinLocation();
           this.showTextureSettings(false);
         }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 80, 20).build());
@@ -382,23 +381,24 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.saveTextureSettingsButton.visible = false;
 
     // Close Button
-    this.closeTextureSettingsButton = this.addRenderableWidget(
-        Button.builder(Component.translatable("Cancel"), onPress -> this.showTextureSettings(false))
-            .bounds(this.leftPosDialog + 145, this.topPosDialog + 68, 80, 20).build());
+    this.closeTextureSettingsButton = this.addRenderableWidget(Button
+        .builder(Component.translatable(Constants.TEXT_PREFIX + "cancel"),
+            onPress -> this.showTextureSettings(false))
+        .bounds(this.leftPosDialog + 145, this.topPosDialog + 68, 80, 20).build());
     this.closeTextureSettingsButton.active = true;
     this.closeTextureSettingsButton.visible = false;
 
     // Action Type: Follow
-    this.actionTypeFollowButton =
-        this.addRenderableWidget(Button.builder(Component.translatable("Follow"), onPress -> {
+    this.actionTypeFollowButton = this.addRenderableWidget(
+        Button.builder(Component.translatable(Constants.TEXT_PREFIX + "follow"), onPress -> {
           NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
               PlayerCompanionCommand.FOLLOW);
         }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());
     this.actionTypeFollowButton.visible = false;
 
     // Action Type: Sit
-    this.actionTypeSitButton =
-        this.addRenderableWidget(Button.builder(Component.translatable("Sit"), onPress -> {
+    this.actionTypeSitButton = this.addRenderableWidget(
+        Button.builder(Component.translatable(Constants.TEXT_PREFIX + "sit"), onPress -> {
           NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
               PlayerCompanionCommand.SIT);
         }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());
@@ -421,8 +421,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.aggressiveLevelNextButton.visible = false;
 
     // Aggressive Level Default Button
-    this.aggressionLevelDefaultButton = this.addRenderableWidget(
-        Button.builder(Component.translatable("Default Aggression"), onPress -> {
+    this.aggressionLevelDefaultButton = this.addRenderableWidget(Button
+        .builder(Component.translatable(Constants.TEXT_PREFIX + "default_aggression"), onPress -> {
           NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
               PlayerCompanionCommand.AGGRESSION_LEVEL_DEFAULT);
         }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());

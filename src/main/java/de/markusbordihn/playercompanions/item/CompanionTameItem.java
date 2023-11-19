@@ -83,20 +83,27 @@ public class CompanionTameItem extends Item {
     }
 
     // Try to give Player new item in inventory.
+    ItemStack capturedCompanionItemStack = itemStack.copy();
     Inventory playerInventory = serverPlayer.getInventory();
-    boolean gavePlayerItemStack = playerInventory.add(itemStack.copy());
-    if (gavePlayerItemStack) {
+    int freeInventorySlot = playerInventory.getFreeSlot();
+    boolean gavePlayerItemStack = false;
+    if (freeInventorySlot != -1) {
+      gavePlayerItemStack = playerInventory.add(freeInventorySlot, capturedCompanionItemStack);
       playerInventory.setChanged();
     }
 
-    // Confirm that the item is in the players inventory or drop the item to the player.
-    if (gavePlayerItemStack && playerInventory.contains(itemStack)) {
-      log.info("Gave player {} captured companion item with {}.", serverPlayer, companionItem);
+    // Confirm that the item is in the players inventory or drop the item near the player.
+    if (gavePlayerItemStack && !playerInventory.getItem(freeInventorySlot).isEmpty()
+        && playerInventory.getItem(freeInventorySlot).getItem() instanceof CapturedCompanion
+        && CapturedCompanion.getCompanionUUID(playerInventory.getItem(freeInventorySlot))
+            .equals(livingEntity.getUUID())) {
+      log.info("Gave player {} captured companion item {} in slot {} with {}.", serverPlayer,
+          playerInventory.getItem(freeInventorySlot), freeInventorySlot, companionItem);
       TitleUtils.setTitle(
           Component.translatable(Constants.TEXT_PREFIX + "captured_companion_title",
               livingEntity.getName().getString()),
-          Component.translatable(Constants.TEXT_PREFIX + "captured_companion_subtitle_inventory")
-              .withStyle(ChatFormatting.GRAY),
+          Component.translatable(Constants.TEXT_PREFIX + "captured_companion_subtitle_inventory",
+              freeInventorySlot).withStyle(ChatFormatting.GRAY),
           serverPlayer);
     } else {
       BlockPos blockPos = livingEntity.blockPosition();
@@ -106,14 +113,29 @@ public class CompanionTameItem extends Item {
             serverPlayer, level);
         return;
       } else {
-        log.warn("Dropped captured companion item for {} with {}, because inventory is full!",
-            serverPlayer, itemStack);
+        // Log warning and the exact reason, if we are not able to give the item to the player.
+        log.warn("Dropped captured companion item for {} with {}.", serverPlayer, itemStack);
+        if (freeInventorySlot == -1) {
+          log.warn("Reason: Inventory is full!");
+        } else if (playerInventory.getItem(freeInventorySlot)
+            .getItem() instanceof CapturedCompanion) {
+          log.warn(
+              "Reason: Was not able to store it in the inventory slot {} found captured companion item {} with UUID {} instead!",
+              freeInventorySlot, playerInventory.getItem(freeInventorySlot).getItem(),
+              CapturedCompanion.getCompanionUUID(playerInventory.getItem(freeInventorySlot)));
+        } else {
+          log.warn(
+              "Reason: Was not able to store it in the inventory slot {} found item {} instead!",
+              freeInventorySlot, playerInventory.getItem(freeInventorySlot));
+        }
+
+        // Give player feedback that the item was dropped to the world and not added to the
+        // inventory.
         TitleUtils.setTitle(
             Component.translatable(Constants.TEXT_PREFIX + "captured_companion_title",
                 livingEntity.getName().getString()),
-            Component.translatable(
-                Constants.TEXT_PREFIX + "captured_companion_subtitle_ground")
-                    .withStyle(ChatFormatting.RED),
+            Component.translatable(Constants.TEXT_PREFIX + "captured_companion_subtitle_ground")
+                .withStyle(ChatFormatting.RED),
             serverPlayer);
       }
     }

@@ -37,8 +37,6 @@ public class ModItems {
   public static final DeferredRegister<Item> ITEMS =
       DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MOD_ID);
 
-  @TemplateEntryPoint("Register Items")
-
   // Dobutsu
   public static final RegistryObject<Item> DOBUTSU_DEFAULT =
       ITEMS.register(
@@ -242,7 +240,6 @@ public class ModItems {
   public static final RegistryObject<Item> TAME_WHEAT_SEEDS =
       ITEMS.register("tame_wheat_seeds", TameWheatSeeds::new);
 
-  @TemplateEntryPoint("Register Spawn Eggs")
   public static final RegistryObject<Item> DOBUTSU_SPAWN_EGG =
       ITEMS.register(
           "dobutsu_spawn_egg",

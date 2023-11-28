@@ -9,8 +9,9 @@ buildscript {
 plugins {
   id 'com.matthewprenger.cursegradle' version '1.4.0'
   id 'eclipse'
+  id 'idea'
   id 'maven-publish'
-  id 'net.minecraftforge.gradle' version '5.1.+'
+  id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
   id 'nu.studer.credentials' version '1.0.7'
 }
 
@@ -128,13 +129,13 @@ dependencies {
   minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
   // Integration:: Jade
-  compileOnly fg.deobf("curse.maven:jade-324717:4614153")
-  runtimeOnly fg.deobf("curse.maven:jade-324717:4614153")
+  compileOnly fg.deobf("curse.maven:jade-324717:4822578")
+  runtimeOnly fg.deobf("curse.maven:jade-324717:4822578")
 
   // Patchouli Integration
   // compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.19-74-SNAPSHOT:api")
   // runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.19-74-SNAPSHOT")
-  runtimeOnly fg.deobf("curse.maven:patchouli-306770:4636277")
+  // runtimeOnly fg.deobf("curse.maven:patchouli-306770:4636277")
 
   // Testing
   // runtimeOnly fg.deobf("curse.maven:neat-238372:3593906")
@@ -149,8 +150,8 @@ dependencies {
 
   // Additional helpful Mods for development (dev depenedency)
   // runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3749454")
-  runtimeOnly fg.deobf("curse.maven:jei-238222:4644453")
-  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:4593190")
+  runtimeOnly fg.deobf("curse.maven:jei-238222:4767571")
+  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:4768140")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -192,6 +193,7 @@ curseforge {
   project {
     id = "${curseforge_project_id}"
     changelog = file("CHANGELOG.md")
+    changelogType = 'markdown'
     releaseType = "${curseforge_release_type}"
     addGameVersion("${mc_version}")
     addGameVersion("Forge")

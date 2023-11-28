@@ -1,33 +1,32 @@
 /**
  * Copyright 2022 Markus Bordihn
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
+ * <p>The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package de.markusbordihn.playercompanions.item;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
+import de.markusbordihn.playercompanions.text.TranslatableText;
+import de.markusbordihn.playercompanions.utils.TitleUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -46,18 +45,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
-import de.markusbordihn.playercompanions.text.TranslatableText;
-import de.markusbordihn.playercompanions.utils.TitleUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CompanionTameItem extends Item {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   public static final Set<String> TAMEABLE_MOB_TYPES = Collections.emptySet();
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public CompanionTameItem() {
     this(new Item.Properties());
@@ -67,8 +61,8 @@ public class CompanionTameItem extends Item {
     super(properties);
   }
 
-  public void convertEntityToItem(Item companionItem, ServerPlayer serverPlayer,
-      LivingEntity livingEntity, Level level) {
+  public void convertEntityToItem(
+      Item companionItem, ServerPlayer serverPlayer, LivingEntity livingEntity, Level level) {
 
     // Capture mob inside item.
     log.debug("Capturing mob {} for {} with {}", livingEntity, serverPlayer, companionItem);
@@ -84,33 +78,70 @@ public class CompanionTameItem extends Item {
     }
 
     // Try to give Player new item in inventory.
+    ItemStack capturedCompanionItemStack = itemStack.copy();
     Inventory playerInventory = serverPlayer.getInventory();
-    boolean gavePlayerItemStack = playerInventory.add(itemStack.copy());
-    if (gavePlayerItemStack) {
+    int freeInventorySlot = playerInventory.getFreeSlot();
+    boolean gavePlayerItemStack = false;
+    if (freeInventorySlot != -1) {
+      gavePlayerItemStack = playerInventory.add(freeInventorySlot, capturedCompanionItemStack);
       playerInventory.setChanged();
     }
 
-    // Confirm that the item is in the players inventory or drop the item to the player.
-    if (gavePlayerItemStack && playerInventory.contains(itemStack)) {
-      log.info("Gave player {} captured companion item with {}.", serverPlayer, companionItem);
+    // Confirm that the item is in the players inventory or drop the item near the player.
+    if (gavePlayerItemStack
+        && !playerInventory.getItem(freeInventorySlot).isEmpty()
+        && playerInventory.getItem(freeInventorySlot).getItem() instanceof CapturedCompanion
+        && CapturedCompanion.getCompanionUUID(playerInventory.getItem(freeInventorySlot))
+            .equals(livingEntity.getUUID())) {
+      log.info(
+          "Gave player {} captured companion item {} in slot {} with {}.",
+          serverPlayer,
+          playerInventory.getItem(freeInventorySlot),
+          freeInventorySlot,
+          companionItem);
       TitleUtils.setTitle(
-          Component.translatable(Constants.TEXT_PREFIX + "captured_companion_title",
+          Component.translatable(
+              Constants.TEXT_PREFIX + "captured_companion_title",
               livingEntity.getName().getString()),
-          Component.translatable(Constants.TEXT_PREFIX + "captured_companion_subtitle_inventory")
+          Component.translatable(
+                  Constants.TEXT_PREFIX + "captured_companion_subtitle_inventory",
+                  freeInventorySlot)
               .withStyle(ChatFormatting.GRAY),
           serverPlayer);
     } else {
       BlockPos blockPos = livingEntity.blockPosition();
       if (!level.addFreshEntity(
           new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack))) {
-        log.error("Unable to give item {} to player {} or to drop it to the world {}!", itemStack,
-            serverPlayer, level);
+        log.error(
+            "Unable to give item {} to player {} or to drop it to the world {}!",
+            itemStack,
+            serverPlayer,
+            level);
         return;
       } else {
-        log.warn("Dropped captured companion item for {} with {}, because inventory is full!",
-            serverPlayer, itemStack);
+        // Log warning and the exact reason, if we are not able to give the item to the player.
+        log.warn("Dropped captured companion item for {} with {}.", serverPlayer, itemStack);
+        if (freeInventorySlot == -1) {
+          log.warn("Reason: Inventory is full!");
+        } else if (playerInventory.getItem(freeInventorySlot).getItem()
+            instanceof CapturedCompanion) {
+          log.warn(
+              "Reason: Was not able to store it in the inventory slot {} found captured companion item {} with UUID {} instead!",
+              freeInventorySlot,
+              playerInventory.getItem(freeInventorySlot).getItem(),
+              CapturedCompanion.getCompanionUUID(playerInventory.getItem(freeInventorySlot)));
+        } else {
+          log.warn(
+              "Reason: Was not able to store it in the inventory slot {} found item {} instead!",
+              freeInventorySlot,
+              playerInventory.getItem(freeInventorySlot));
+        }
+
+        // Give player feedback that the item was dropped to the world and not added to the
+        // inventory.
         TitleUtils.setTitle(
-            Component.translatable(Constants.TEXT_PREFIX + "captured_companion_title",
+            Component.translatable(
+                Constants.TEXT_PREFIX + "captured_companion_title",
                 livingEntity.getName().getString()),
             Component.translatable(Constants.TEXT_PREFIX + "captured_companion_subtitle_ground")
                 .withStyle(ChatFormatting.RED),
@@ -136,8 +167,8 @@ public class CompanionTameItem extends Item {
   }
 
   @Override
-  public InteractionResult interactLivingEntity(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand) {
+  public InteractionResult interactLivingEntity(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand) {
 
     // Ignore players and dead entities for capturing.
     if (livingEntity == null || livingEntity instanceof Player || livingEntity.isDeadOrDying()) {
@@ -163,7 +194,9 @@ public class CompanionTameItem extends Item {
               if (companionItem != null) {
                 convertEntityToItem(companionItem, serverPlayer, livingEntity, level);
               } else {
-                log.error("Unable to capture companion entity {} in item {}!", livingEntity,
+                log.error(
+                    "Unable to capture companion entity {} in item {}!",
+                    livingEntity,
                     companionItem);
               }
             } else {
@@ -185,8 +218,11 @@ public class CompanionTameItem extends Item {
   }
 
   @Override
-  public void appendHoverText(ItemStack itemStack, @Nullable Level level,
-      List<Component> tooltipList, TooltipFlag tooltipFlag) {
+  public void appendHoverText(
+      ItemStack itemStack,
+      @Nullable Level level,
+      List<Component> tooltipList,
+      TooltipFlag tooltipFlag) {
     // Display description.
     tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tame_companion"));
 
@@ -198,18 +234,20 @@ public class CompanionTameItem extends Item {
       for (String tamableMob : tameableMobTypes) {
         Component acceptedMobName = TranslatableText.getEntityName(tamableMob);
         if (acceptedMobName != null) {
-          tameableMobTypeOverview.append(acceptedMobName).append(", ")
+          tameableMobTypeOverview
+              .append(acceptedMobName)
+              .append(", ")
               .withStyle(ChatFormatting.DARK_GREEN);
         }
       }
       if (!tameableMobTypeOverview.getString().isBlank()) {
         MutableComponent tameableMobsOverview =
-            Component.translatable(Constants.TEXT_PREFIX + "tameable_companions").append(" ")
+            Component.translatable(Constants.TEXT_PREFIX + "tameable_companions")
+                .append(" ")
                 .withStyle(ChatFormatting.GREEN);
         tameableMobsOverview.append(tameableMobTypeOverview).append("...");
         tooltipList.add(tameableMobsOverview);
       }
     }
   }
-
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -32,8 +32,10 @@ import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntity
 
 public class PlayerCompanionEntityFloating extends PlayerCompanionEntity {
 
-  public PlayerCompanionEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+  public PlayerCompanionEntityFloating(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityFloatingControl(this);
   }
@@ -44,8 +46,8 @@ public class PlayerCompanionEntityFloating extends PlayerCompanionEntity {
   }
 
   @Override
-  protected void checkFallDamage(double height, boolean flag, BlockState blockState,
-      BlockPos blockPos) {
+  protected void checkFallDamage(
+      double height, boolean flag, BlockState blockState, BlockPos blockPos) {
     // Ignore damage
   }
 
@@ -53,5 +55,4 @@ public class PlayerCompanionEntityFloating extends PlayerCompanionEntity {
   public boolean onClimbable() {
     return false;
   }
-
 }

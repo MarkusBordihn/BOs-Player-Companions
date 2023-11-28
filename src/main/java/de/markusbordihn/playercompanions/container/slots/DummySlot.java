@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -39,5 +39,4 @@ public class DummySlot extends Slot {
   public boolean mayPickup(Player player) {
     return true;
   }
-
 }

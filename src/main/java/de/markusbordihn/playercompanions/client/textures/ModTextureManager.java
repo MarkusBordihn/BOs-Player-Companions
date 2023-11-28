@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,6 +19,9 @@
 
 package de.markusbordihn.playercompanions.client.textures;
 
+import com.mojang.blaze3d.platform.NativeImage;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.utils.PlayersUtils;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,25 +32,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-
 import javax.imageio.ImageIO;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.blaze3d.platform.NativeImage;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.loading.FMLPaths;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.utils.PlayersUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @OnlyIn(Dist.CLIENT)
 public class ModTextureManager {
@@ -57,14 +51,14 @@ public class ModTextureManager {
   private static final String TEXTURE_PREFIX = Constants.MOD_ID + "_client_texture_";
 
   private static Path textureCachePath = null;
-  private static HashMap<String, ResourceLocation> textureCache = new HashMap<>();
+  private static final HashMap<String, ResourceLocation> textureCache = new HashMap<>();
 
   protected ModTextureManager() {}
 
   private static ResourceLocation addTexture(String name, File file) {
     if (hasTexture(name)) {
-      log.warn("Texture with name {} already exists! Unable to add texture for file: {}", name,
-          file);
+      log.warn(
+          "Texture with name {} already exists! Unable to add texture for file: {}", name, file);
       return getTexture(name);
     }
     Minecraft client = Minecraft.getInstance();
@@ -83,8 +77,11 @@ public class ModTextureManager {
     // Register dynamic texture under resource location.
     String textureId = getId(name);
     ResourceLocation resourceLocation = textureManager.register(textureId, dynamicTexture);
-    log.debug("Registered image {} as texture {} with {} to texture Manager.", nativeImage,
-        dynamicTexture, resourceLocation);
+    log.debug(
+        "Registered image {} as texture {} with {} to texture Manager.",
+        nativeImage,
+        dynamicTexture,
+        resourceLocation);
 
     // Store resource location by id into cache.
     textureCache.put(textureId, resourceLocation);
@@ -121,9 +118,14 @@ public class ModTextureManager {
     if (image == null) {
       log.error("Unable to get any valid texture from {}!", remoteUrl);
       return null;
-    } else if (image.getWidth() < 32 || image.getHeight() < 32 || image.getWidth() % 32 != 0
+    } else if (image.getWidth() < 32
+        || image.getHeight() < 32
+        || image.getWidth() % 32 != 0
         || image.getHeight() % 32 != 0) {
-      log.error("Unable to get any valid texture from {}, got {}x{}!", remoteUrl, image.getWidth(),
+      log.error(
+          "Unable to get any valid texture from {}, got {}x{}!",
+          remoteUrl,
+          image.getWidth(),
           image.getHeight());
       return null;
     }
@@ -169,7 +171,9 @@ public class ModTextureManager {
         try {
           Files.createDirectories(cacheDirectory);
         } catch (Exception exception) {
-          log.error("Unable to create texture cache directory at {} because of:", cacheDirectory,
+          log.error(
+              "Unable to create texture cache directory at {} because of:",
+              cacheDirectory,
               exception);
         }
       }
@@ -216,5 +220,4 @@ public class ModTextureManager {
     nativeImage.copyRect(52, 20, -8, 32, 4, 12, true, false);
     return nativeImage;
   }
-
 }

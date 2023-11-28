@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,23 +20,19 @@
 package de.markusbordihn.playercompanions.level.biome;
 
 import com.mojang.serialization.Codec;
-
+import de.markusbordihn.playercompanions.Constants;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import de.markusbordihn.playercompanions.Constants;
-
 public class ModBiomeModifiers {
-
-  protected ModBiomeModifiers() {}
 
   public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS =
       DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Constants.MOD_ID);
-
   public static final RegistryObject<Codec<ModBiomeModifier>> ENTITY_MODIFIER_TYPE =
-      BIOME_MODIFIER_SERIALIZERS.register("player_companions_spawn_modifier",
-          ModBiomeModifier::makeCodec);
+      BIOME_MODIFIER_SERIALIZERS.register(
+          "player_companions_spawn_modifier", ModBiomeModifier::makeCodec);
 
+  protected ModBiomeModifiers() {}
 }

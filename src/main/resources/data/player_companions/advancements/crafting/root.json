@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "item": "player_companions:small_slime_default"
+    },
+    "title": {
+      "translate": "advancements.player_companions.crafting.root.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.crafting.root.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "player_companions:textures/gui/advancements/backgrounds/crafting.png"
+  },
+  "criteria": {
+    "crafting_table": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:crafting_table"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["crafting_table"]]
+}

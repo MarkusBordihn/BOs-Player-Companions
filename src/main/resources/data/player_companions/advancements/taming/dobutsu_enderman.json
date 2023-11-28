@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_sweet_berries",
+  "display": {
+    "icon": {
+      "item": "player_companions:dobutsu_enderman"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.dobutsu_enderman.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.dobutsu_enderman.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_dobutsu_enderman": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:dobutsu_enderman"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_dobutsu_enderman"]],
+  "rewards": {
+    "experience": 50
+  }
+}

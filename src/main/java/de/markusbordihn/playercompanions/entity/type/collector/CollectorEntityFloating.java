@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -37,13 +37,14 @@ import de.markusbordihn.playercompanions.entity.type.PlayerCompanionTypeIcon;
 
 public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
 
-  protected CollectorFeatures collectorFeatures;
-
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
+  protected CollectorFeatures collectorFeatures;
 
-  public CollectorEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+  public CollectorEntityFloating(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.setAggressionLevel(getDefaultAggressionLevel());
 
@@ -86,5 +87,4 @@ public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
     super.tick();
     this.collectorFeatures.tick();
   }
-
 }

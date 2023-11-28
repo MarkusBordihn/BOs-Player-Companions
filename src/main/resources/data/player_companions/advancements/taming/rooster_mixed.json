@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_wheat_seeds",
+  "display": {
+    "icon": {
+      "item": "player_companions:rooster_mixed"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.rooster_mixed.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.rooster_mixed.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_rooster_mixed": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:rooster_mixed"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_rooster_mixed"]],
+  "rewards": {
+    "experience": 50
+  }
+}

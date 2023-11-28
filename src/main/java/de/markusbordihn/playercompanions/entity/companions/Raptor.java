@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,13 +19,18 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
+import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MeleeAttackGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
+import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
+import de.markusbordihn.playercompanions.item.ModItems;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.annotation.Nullable;
-
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -58,14 +63,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.MeleeAttackGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
-import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
-import de.markusbordihn.playercompanions.item.ModItems;
-
 public class Raptor extends GuardEntityWalking implements NeutralMob {
 
   // General information
@@ -76,15 +73,19 @@ public class Raptor extends GuardEntityWalking implements NeutralMob {
 
   // Variants
   public static final List<PlayerCompanionVariant> VARIANTS =
-      List.of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.PINK,
+      List.of(
+          PlayerCompanionVariant.DEFAULT,
+          PlayerCompanionVariant.PINK,
           PlayerCompanionVariant.DARK_GREEN);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.RAPTOR_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.PINK, ModItems.RAPTOR_PINK.get());
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.RAPTOR_DEFAULT.get());
+            hashMap.put(PlayerCompanionVariant.PINK, ModItems.RAPTOR_PINK.get());
+          });
 
   public Raptor(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
@@ -92,8 +93,10 @@ public class Raptor extends GuardEntityWalking implements NeutralMob {
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.4F)
-        .add(Attributes.MAX_HEALTH, 14.0D).add(Attributes.ATTACK_DAMAGE, 4.0D)
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.4F)
+        .add(Attributes.MAX_HEALTH, 14.0D)
+        .add(Attributes.ATTACK_DAMAGE, 4.0D)
         .add(Attributes.JUMP_STRENGTH, 2.0D);
   }
 
@@ -134,10 +137,10 @@ public class Raptor extends GuardEntityWalking implements NeutralMob {
     this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
     this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
-    this.targetSelector.addGoal(4,
-        new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
-    this.targetSelector.addGoal(7,
-        new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
+    this.targetSelector.addGoal(
+        4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
+    this.targetSelector.addGoal(
+        7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
     this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
   }
 
@@ -172,7 +175,7 @@ public class Raptor extends GuardEntityWalking implements NeutralMob {
 
   @Override
   public Vec3 getLeashOffset() {
-    return new Vec3(0.0D, 0.8F * this.getEyeHeight(), this.getBbWidth() * 1F);
+    return new Vec3(0.0D, 0.8F * this.getEyeHeight(), this.getBbWidth());
   }
 
   @Override

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,12 +19,12 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
-
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -32,11 +32,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
-
 public interface PlayerCompanionAttributes {
 
-  static Set<AggressionLevel> aggressionDefaultLevels =
+  Set<AggressionLevel> aggressionDefaultLevels =
       Collections.unmodifiableSet(EnumSet.allOf(AggressionLevel.class));
 
   default Set<AggressionLevel> getAggressionLevels() {
@@ -137,5 +135,4 @@ public interface PlayerCompanionAttributes {
   default ItemStack getCompanionTypeIcon() {
     return null;
   }
-
 }

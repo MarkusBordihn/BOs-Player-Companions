@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_apple",
+  "display": {
+    "icon": {
+      "item": "player_companions:small_slime_lime"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.small_slime_lime.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.small_slime_lime.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_small_slime_lime": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:small_slime_lime"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_small_slime_lime"]],
+  "rewards": {
+    "experience": 50
+  }
+}

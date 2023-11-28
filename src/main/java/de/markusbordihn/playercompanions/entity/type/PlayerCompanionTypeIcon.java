@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -30,8 +30,5 @@ public class PlayerCompanionTypeIcon {
   public static final ItemStack HEALER = new ItemStack(Items.POTION);
   public static final ItemStack SUPPORTER = new ItemStack(Items.ENCHANTED_BOOK);
 
-  protected PlayerCompanionTypeIcon() {
-
-  }
-
+  protected PlayerCompanionTypeIcon() {}
 }

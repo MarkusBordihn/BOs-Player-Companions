@@ -1,4 +1,4 @@
-# 🐾 Player Companion's (1.19.2)
+# 🐾 Player Companion's (1.20.2)
 
 [![Player Companions Downloads](http://cf.way2muchnoise.eu/full_552456_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 [![Player Companions Versions](http://cf.way2muchnoise.eu/versions/Minecraft_552456_all.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
@@ -28,7 +28,7 @@ There are different types of companions which unique abilities.
 The collector collects automatic items in a specific radius in his own inventory.
 You can access the inventory like a normal chest.
 
-### Companion (wip)
+### Companion
 
 The companion is a combination of the collector, follower and guard and has some additional features like text lines.
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -21,7 +21,6 @@ package de.markusbordihn.playercompanions.client.model;
 
 import java.util.List;
 import java.util.Random;
-
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -31,7 +30,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -53,7 +51,8 @@ public class SmallGhastModel<T extends TamableAnimal> extends AgeableListModel<T
     PartDefinition partDefinition = meshDefinition.getRoot();
 
     // Body
-    partDefinition.addOrReplaceChild("body",
+    partDefinition.addOrReplaceChild(
+        "body",
         CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, -30.0F, -8.0F, 16.0F, 16.0F, 16.0F),
         PartPose.offset(0.0F, 17.6F, 0.0F));
     Random random = new Random(1660L);
@@ -63,7 +62,8 @@ public class SmallGhastModel<T extends TamableAnimal> extends AgeableListModel<T
       float f = (((i % 3) - (i / 3F % 2) * 0.5F + 0.25F) / 2.0F * 2.0F - 1.0F) * 5.0F;
       float f1 = ((i / 3F) / 2.0F * 2.0F - 1.3F) * 5.0F;
       int j = random.nextInt(7) + 8;
-      partDefinition.addOrReplaceChild("tentacle" + i,
+      partDefinition.addOrReplaceChild(
+          "tentacle" + i,
           CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, 0.0F, -1.0F, 2.0F, j, 2.0F),
           PartPose.offset(f, 2.6F, f1));
     }
@@ -72,8 +72,13 @@ public class SmallGhastModel<T extends TamableAnimal> extends AgeableListModel<T
   }
 
   @Override
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
+  public void setupAnim(
+      T entity,
+      float limbSwing,
+      float limbSwingAmount,
+      float ageInTicks,
+      float netHeadYaw,
+      float headPitch) {
 
     // Don't animate death entities
     if (entity.isDeadOrDying()) {
@@ -114,8 +119,16 @@ public class SmallGhastModel<T extends TamableAnimal> extends AgeableListModel<T
 
   @Override
   protected Iterable<ModelPart> bodyParts() {
-    return List.of(this.body, this.tentacles[0], this.tentacles[1], this.tentacles[2],
-        this.tentacles[3], this.tentacles[4], this.tentacles[5], this.tentacles[6],
-        this.tentacles[7], this.tentacles[8]);
+    return List.of(
+        this.body,
+        this.tentacles[0],
+        this.tentacles[1],
+        this.tentacles[2],
+        this.tentacles[3],
+        this.tentacles[4],
+        this.tentacles[5],
+        this.tentacles[6],
+        this.tentacles[7],
+        this.tentacles[8]);
   }
 }

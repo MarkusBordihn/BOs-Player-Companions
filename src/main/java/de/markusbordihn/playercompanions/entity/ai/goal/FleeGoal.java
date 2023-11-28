@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,14 +19,12 @@
 
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.EnumSet;
-
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.phys.Vec3;
-
-import de.markusbordihn.playercompanions.entity.AggressionLevel;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 public class FleeGoal extends PlayerCompanionGoal {
 
@@ -70,8 +68,9 @@ public class FleeGoal extends PlayerCompanionGoal {
 
   @Override
   public void start() {
-    this.playerCompanionEntity.getNavigation().moveTo(this.posX, this.posY, this.posZ,
-        this.speedModifier);
+    this.playerCompanionEntity
+        .getNavigation()
+        .moveTo(this.posX, this.posY, this.posZ, this.speedModifier);
     this.isRunning = true;
   }
 

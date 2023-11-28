@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,51 +19,49 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
-import java.util.UUID;
-import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-
-import net.minecraftforge.network.NetworkEvent;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import java.util.UUID;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MessageCommandPlayerCompanion {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected final String playerCompanionUUID;
-  protected final String command;
+  protected final PlayerCompanionCommand command;
 
-  public MessageCommandPlayerCompanion(String playerCompanionUUID, String command) {
+  public MessageCommandPlayerCompanion(String playerCompanionUUID, PlayerCompanionCommand command) {
     this.playerCompanionUUID = playerCompanionUUID;
     this.command = command;
   }
 
-  public String getCommand() {
-    return this.command;
+  public static MessageCommandPlayerCompanion decode(final FriendlyByteBuf buffer) {
+    return new MessageCommandPlayerCompanion(
+        buffer.readUtf(), buffer.readEnum(PlayerCompanionCommand.class));
   }
 
-  public String getPlayerCompanionUUID() {
-    return this.playerCompanionUUID;
+  public static void encode(
+      final MessageCommandPlayerCompanion message, final FriendlyByteBuf buffer) {
+    buffer.writeUtf(message.playerCompanionUUID);
+    buffer.writeEnum(message.command);
   }
 
-  public static void handle(MessageCommandPlayerCompanion message,
-      Supplier<NetworkEvent.Context> contextSupplier) {
-    NetworkEvent.Context context = contextSupplier.get();
+  public static void handle(
+      MessageCommandPlayerCompanion message, CustomPayloadEvent.Context context) {
     context.enqueueWork(() -> handlePacket(message, context));
     context.setPacketHandled(true);
   }
 
-  public static void handlePacket(MessageCommandPlayerCompanion message,
-      NetworkEvent.Context context) {
+  public static void handlePacket(
+      MessageCommandPlayerCompanion message, CustomPayloadEvent.Context context) {
     ServerPlayer serverPlayer = context.getSender();
     if (serverPlayer == null) {
       log.error("Unable to get server player for message {} from {}", message, context);
@@ -74,18 +72,37 @@ public class MessageCommandPlayerCompanion {
     UUID uuid = UUID.fromString(message.getPlayerCompanionUUID());
     Entity entity = serverLevel.getEntity(uuid);
 
+    // Verify command
+    PlayerCompanionCommand command = message.getCommand();
+    if (command == null) {
+      log.error("Unable to get command for message {} from {}", message, context);
+      return;
+    }
+
     // Only accepts commands from owner, log attempts.
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
-      PlayerCompanionCommand command = PlayerCompanionCommand.valueOf(message.getCommand());
       if (serverPlayer.getUUID().equals(playerCompanionEntity.getOwnerUUID())) {
-        log.debug("Player Companion command {} ({}) for {} from {}", command, message.getCommand(),
-            playerCompanionEntity, serverPlayer);
+        log.debug(
+            "Player Companion command {} for {} from {}",
+            command,
+            playerCompanionEntity,
+            serverPlayer);
         playerCompanionEntity.handleCommand(command);
       } else {
-        log.error("Player {} tried to execute command {} ({}) for unowned {}", serverPlayer,
-            command, message.getCommand(), playerCompanionEntity);
+        log.error(
+            "Player {} tried to execute command {} for unowned {}",
+            serverPlayer,
+            command,
+            playerCompanionEntity);
       }
     }
   }
 
+  public PlayerCompanionCommand getCommand() {
+    return this.command;
+  }
+
+  public String getPlayerCompanionUUID() {
+    return this.playerCompanionUUID;
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,22 +19,6 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Inventory;
-
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.CompanionMenu;
 import de.markusbordihn.playercompanions.data.Experience;
@@ -44,9 +28,23 @@ import de.markusbordihn.playercompanions.entity.ActionType;
 import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.network.NetworkHandler;
+import de.markusbordihn.playercompanions.network.NetworkMessageHandler;
 import de.markusbordihn.playercompanions.skin.SkinType;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @OnlyIn(Dist.CLIENT)
 public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerScreen<T> {
@@ -60,23 +58,31 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       new ResourceLocation(Constants.MOD_ID, "textures/container/dialog.png");
   private static final ResourceLocation SYMBOLS_TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/symbols.png");
-  private ResourceLocation backgroundTexture =
-      new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion.png");
-
+  private static final WidgetSprites BACK_BUTTON_SPRITES =
+      new WidgetSprites(
+          new ResourceLocation(Constants.MOD_ID, "buttons/back_enabled"),
+          new ResourceLocation(Constants.MOD_ID, "buttons/back_disabled"),
+          new ResourceLocation(Constants.MOD_ID, "buttons/back_focused"));
+  private static final WidgetSprites FORWARD_BUTTON_SPRITES =
+      new WidgetSprites(
+          new ResourceLocation(Constants.MOD_ID, "buttons/forward_enabled"),
+          new ResourceLocation(Constants.MOD_ID, "buttons/forward_disabled"),
+          new ResourceLocation(Constants.MOD_ID, "buttons/forward_focused"));
+  // Cache
+  protected static int nextTextureSkinLocationChange =
+      (int) java.time.Instant.now().getEpochSecond();
   protected final Entity entity;
   protected final PlayerCompanionEntity playerCompanionEntity;
-
+  private ResourceLocation backgroundTexture =
+      new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion.png");
   private Button clearTextureSettingsButton = null;
   private Button closeTextureSettingsButton = null;
   private Button saveTextureSettingsButton = null;
-
   private Button actionTypeFollowButton = null;
   private Button actionTypeSitButton = null;
-
   private Button aggressionLevelDefaultButton = null;
   private ImageButton aggressiveLevelPreviousButton = null;
   private ImageButton aggressiveLevelNextButton = null;
-
   private EditBox textureSkinLocationBox;
   private String formerTextureSkinLocation = "";
   private boolean showTextureSettings = false;
@@ -86,12 +92,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   private int leftPosDialog = this.leftPos - 18;
   private int topPosDialog = this.topPos + 90;
 
-  // Cache
-  protected static int nextTextureSkinLocationChange =
-      (int) java.time.Instant.now().getEpochSecond();
-
-  public CompanionScreen(T menu, Inventory inventory, Component component,
-      ResourceLocation backgroundTexture) {
+  public CompanionScreen(
+      T menu, Inventory inventory, Component component, ResourceLocation backgroundTexture) {
     this(menu, inventory, component);
     this.backgroundTexture = backgroundTexture;
   }
@@ -106,30 +108,53 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     }
   }
 
-  private void renderEntityActions(PlayerCompanionData playerCompanionData, GuiGraphics guiGraphics,
-      int x, int y) {
+  private static void updateNextTextureSkinLocationChange() {
+    CompanionScreen.nextTextureSkinLocationChange =
+        (int) java.time.Instant.now().getEpochSecond() + ADD_SKIN_DELAY;
+  }
+
+  private void renderEntityActions(
+      PlayerCompanionData playerCompanionData, GuiGraphics guiGraphics, int x, int y) {
     guiGraphics.pose().pushPose();
-    guiGraphics.drawString(this.font, Component.literal("Infos and Control"), x + 25, y,
-        Constants.FONT_COLOR_WHITE);
+    guiGraphics.drawString(
+        this.font, Component.literal("Infos and Control"), x + 25, y, Constants.FONT_COLOR_WHITE);
     y += 15;
-    guiGraphics.drawString(this.font,
-        Component.literal("Action: " + playerCompanionData.getEntityActionType()), x, y,
-        Constants.FONT_COLOR_DEFAULT, false);
+    guiGraphics.drawString(
+        this.font,
+        Component.literal("Action: " + playerCompanionData.getEntityActionType()),
+        x,
+        y,
+        Constants.FONT_COLOR_DEFAULT,
+        false);
     y += 15;
     if (playerCompanionEntity != null) {
-      guiGraphics.drawString(this.font,
-          Component.literal("Type: " + playerCompanionEntity.getCompanionType()), x, y,
-          Constants.FONT_COLOR_DEFAULT, false);
+      guiGraphics.drawString(
+          this.font,
+          Component.literal("Type: " + playerCompanionEntity.getCompanionType()),
+          x,
+          y,
+          Constants.FONT_COLOR_DEFAULT,
+          false);
       y += 15;
-      guiGraphics.drawString(this.font,
-          Component.literal("Variant: " + playerCompanionEntity.getVariant()), x, y,
-          Constants.FONT_COLOR_DEFAULT, false);
+      guiGraphics.drawString(
+          this.font,
+          Component.literal("Variant: " + playerCompanionEntity.getVariant()),
+          x,
+          y,
+          Constants.FONT_COLOR_DEFAULT,
+          false);
       y += 15;
-      guiGraphics.drawString(this.font,
-          Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_level",
-              playerCompanionEntity.getExperienceLevel(), playerCompanionEntity.getExperience(),
+      guiGraphics.drawString(
+          this.font,
+          Component.translatable(
+              Constants.TEXT_PREFIX + "tamed_companion_level",
+              playerCompanionEntity.getExperienceLevel(),
+              playerCompanionEntity.getExperience(),
               Experience.getExperienceForNextLevel(playerCompanionEntity.getExperienceLevel())),
-          x, y, Constants.FONT_COLOR_DEFAULT, false);
+          x,
+          y,
+          Constants.FONT_COLOR_DEFAULT,
+          false);
       y += 15;
     }
     guiGraphics.pose().popPose();
@@ -151,44 +176,33 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     // Aggression Level
     guiGraphics.pose().pushPose();
-    guiGraphics.drawString(this.font, Component.literal("Aggression Level (WIP)"), x, y,
-        Constants.FONT_COLOR_DEFAULT, false);
+    guiGraphics.drawString(
+        this.font,
+        Component.literal("Aggression Level"),
+        x,
+        y,
+        Constants.FONT_COLOR_DEFAULT,
+        false);
     guiGraphics.pose().popPose();
     y += 12;
 
+    // Aggression Level Buttons
     AggressionLevel aggressionLevel = playerCompanionData.getEntityAggressionLevel();
-    if (playerCompanionEntity != null
-        && aggressionLevel != playerCompanionEntity.getFirstAggressionLevel()) {
-      this.aggressiveLevelPreviousButton.setX(x);
-      this.aggressiveLevelPreviousButton.setY(y - 1);
-      this.aggressiveLevelPreviousButton.visible = true;
-    } else {
-      guiGraphics.pose().pushPose();
-      guiGraphics.blit(SYMBOLS_TEXTURE, x, y + -1, 18, 19, 7, 9);
-      this.aggressiveLevelNextButton.visible = false;
-      guiGraphics.pose().popPose();
-      this.aggressiveLevelPreviousButton.visible = false;
-    }
-
-    if (playerCompanionEntity != null
-        && aggressionLevel != playerCompanionEntity.getLastAggressionLevel()) {
-      this.aggressiveLevelNextButton.setX(x + 125);
-      this.aggressiveLevelNextButton.setY(y - 1);
-      this.aggressiveLevelNextButton.visible = true;
-    } else {
-      guiGraphics.pose().pushPose();
-      guiGraphics.blit(SYMBOLS_TEXTURE, x + 125, y + -1, 25, 19, 7, 9);
-      this.aggressiveLevelNextButton.visible = false;
-      guiGraphics.pose().popPose();
-    }
+    this.aggressiveLevelPreviousButton.active =
+        aggressionLevel != playerCompanionEntity.getFirstAggressionLevel();
+    this.aggressiveLevelNextButton.active =
+        aggressionLevel != playerCompanionEntity.getLastAggressionLevel();
 
     guiGraphics.pose().pushPose();
     guiGraphics.fill(x, y - 2, x + 132, y - 1, 0xFF000000);
     guiGraphics.fill(x + 7, y - 1, x + 125, y + 8, 0xFF6F6F6F);
     guiGraphics.fill(x, y + 8, x + 132, y + 9, 0xFF333333);
-    guiGraphics.drawString(this.font,
-        Component.translatable(Constants.AGGRESSION_LEVEL_PREFIX + aggressionLevel.name()), x + 9,
-        y, Constants.FONT_COLOR_WHITE);
+    guiGraphics.drawString(
+        this.font,
+        Component.translatable(Constants.AGGRESSION_LEVEL_PREFIX + aggressionLevel.name()),
+        x + 9,
+        y,
+        Constants.FONT_COLOR_WHITE);
     guiGraphics.pose().popPose();
     y += 10;
 
@@ -197,8 +211,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     aggressionLevelDefaultButton.visible = true;
   }
 
-  private void renderEntityStats(PlayerCompanionEntity playerCompanionEntity,
-      GuiGraphics guiGraphics, int x, int y) {
+  private void renderEntityStats(
+      PlayerCompanionEntity playerCompanionEntity, GuiGraphics guiGraphics, int x, int y) {
     // Background
     guiGraphics.fill(x + 24, y + 17, x + 50, y + 105, 1325400064);
 
@@ -217,18 +231,33 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     guiGraphics.pose().translate(0, 0, 100);
     guiGraphics.pose().scale(STATES_SCALE, STATES_SCALE, STATES_SCALE);
     leftPos = (int) ((x + 38) / STATES_SCALE);
-    guiGraphics.drawString(this.font,
-        Component.literal("" + (int) playerCompanionEntity.getHealth() + " / "
-            + (int) playerCompanionEntity.getMaxHealth()),
-        leftPos, (int) ((y + 23) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
-    guiGraphics.drawString(this.font, Component.literal("" + playerCompanionEntity.getArmorValue()),
-        leftPos, (int) ((y + 41) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
-    guiGraphics.drawString(this.font,
-        Component.literal("" + playerCompanionEntity.getAttackDamage()), leftPos,
-        (int) ((y + 58) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
-    guiGraphics.drawString(this.font,
-        Component.literal("" + playerCompanionEntity.getExperienceLevel()), leftPos,
-        (int) ((y + 95) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
+    guiGraphics.drawString(
+        this.font,
+        Component.literal(
+            (int) playerCompanionEntity.getHealth()
+                + " / "
+                + (int) playerCompanionEntity.getMaxHealth()),
+        leftPos,
+        (int) ((y + 23) / STATES_SCALE),
+        Constants.FONT_COLOR_WHITE);
+    guiGraphics.drawString(
+        this.font,
+        Component.literal("" + playerCompanionEntity.getArmorValue()),
+        leftPos,
+        (int) ((y + 41) / STATES_SCALE),
+        Constants.FONT_COLOR_WHITE);
+    guiGraphics.drawString(
+        this.font,
+        Component.literal("" + playerCompanionEntity.getAttackDamage()),
+        leftPos,
+        (int) ((y + 58) / STATES_SCALE),
+        Constants.FONT_COLOR_WHITE);
+    guiGraphics.drawString(
+        this.font,
+        Component.literal("" + playerCompanionEntity.getExperienceLevel()),
+        leftPos,
+        (int) ((y + 95) / STATES_SCALE),
+        Constants.FONT_COLOR_WHITE);
     guiGraphics.pose().popPose();
   }
 
@@ -238,12 +267,20 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     guiGraphics.pose().translate(0, 0, 900);
 
     // Render Dialog
-    renderDialogBg(guiGraphics, leftPosDialog, topPosDialog,
+    renderDialogBg(
+        guiGraphics,
+        leftPosDialog,
+        topPosDialog,
         Component.literal("Change Player Companion Skin"));
 
     // Render Options
-    guiGraphics.drawString(this.font, Component.literal("Use a Player Name / Skin URL"),
-        leftPosDialog + 10, topPosDialog + 25, Constants.FONT_COLOR_DEFAULT, false);
+    guiGraphics.drawString(
+        this.font,
+        Component.literal("Use a Player Name / Skin URL"),
+        leftPosDialog + 10,
+        topPosDialog + 25,
+        Constants.FONT_COLOR_DEFAULT,
+        false);
 
     this.textureSkinLocationBox.render(guiGraphics, x, y, partialTicks);
     this.clearTextureSettingsButton.render(guiGraphics, x, y, partialTicks);
@@ -253,9 +290,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     // Render Status Symbol, if needed.
     if (!this.canTextureSkinLocationChange) {
       guiGraphics.pose().translate(0, 0, 100);
-      guiGraphics.blit(DIALOG_TEXTURE, this.leftPosDialog + 78, this.topPosDialog + 73, 236, 17, 7,
-          10);
-
+      guiGraphics.blit(
+          DIALOG_TEXTURE, this.leftPosDialog + 78, this.topPosDialog + 73, 236, 17, 7, 10);
     }
 
     guiGraphics.pose().popPose();
@@ -294,21 +330,18 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
       if (PlayersUtils.isValidPlayerName(textureSkinLocationValue)) {
         log.debug("Settings player user texture to {}", textureSkinLocationValue);
-        NetworkHandler.skinChange(playerCompanionEntity.getUUID(), textureSkinLocationValue,
-            SkinType.PLAYER_SKIN);
+        NetworkMessageHandler.skinChange(
+            playerCompanionEntity.getUUID(), textureSkinLocationValue, SkinType.PLAYER_SKIN);
       } else if (PlayersUtils.isValidUrl(textureSkinLocationValue)) {
         log.debug("Setting remote user texture to {}", textureSkinLocationValue);
-        NetworkHandler.skinChange(playerCompanionEntity.getUUID(), textureSkinLocationValue,
+        NetworkMessageHandler.skinChange(
+            playerCompanionEntity.getUUID(),
+            textureSkinLocationValue,
             SkinType.INSECURE_REMOTE_URL);
       }
       this.formerTextureSkinLocation = textureSkinLocationValue;
       updateNextTextureSkinLocationChange();
     }
-  }
-
-  private static void updateNextTextureSkinLocationChange() {
-    CompanionScreen.nextTextureSkinLocationChange =
-        (int) java.time.Instant.now().getEpochSecond() + ADD_SKIN_DELAY;
   }
 
   private void validateTextureSkinLocation() {
@@ -318,16 +351,14 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
 
     // Additional check to make sure that the server is not spammed with requests.
     if (this.canTextureSkinLocationChange) {
-      this.saveTextureSettingsButton.active = textureSkinLocationValue != null
-          && !textureSkinLocationValue.equals(this.formerTextureSkinLocation)
-          && (textureSkinLocationValue.isEmpty()
-              || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
-              || PlayersUtils.isValidUrl(textureSkinLocationValue));
-    } else if (textureSkinLocationValue.isEmpty()) {
-      this.saveTextureSettingsButton.active = true;
-    } else {
-      this.saveTextureSettingsButton.active = false;
-    }
+      this.saveTextureSettingsButton.active =
+          textureSkinLocationValue != null
+              && !textureSkinLocationValue.equals(this.formerTextureSkinLocation)
+              && (textureSkinLocationValue.isEmpty()
+                  || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
+                  || PlayersUtils.isValidUrl(textureSkinLocationValue));
+    } else
+      this.saveTextureSettingsButton.active = textureSkinLocationValue.isEmpty();
     this.clearTextureSettingsButton.active =
         textureSkinLocationValue != null && !textureSkinLocationValue.isEmpty();
   }
@@ -351,8 +382,14 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.topPosDialog = this.topPos + 85;
 
     // Texture Settings
-    this.textureSkinLocationBox = new EditBox(this.font, leftPosDialog + 10, topPosDialog + 42, 190,
-        20, Component.literal("Texture URL"));
+    this.textureSkinLocationBox =
+        new EditBox(
+            this.font,
+            leftPosDialog + 10,
+            topPosDialog + 42,
+            190,
+            20,
+            Component.translatable(Constants.TEXT_PREFIX + "texture_url"));
     this.textureSkinLocationBox.setMaxLength(256);
     this.textureSkinLocationBox.setValue(this.formerTextureSkinLocation);
     this.textureSkinLocationBox.setResponder(consumer -> this.validateTextureSkinLocation());
@@ -360,71 +397,107 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.textureSkinLocationBox.visible = false;
 
     // Texture Settings Buttons
-    this.clearTextureSettingsButton = this.addRenderableWidget(
-        Button.builder(Component.literal("X"), onPress -> this.clearTextureSkinLocation())
-            .bounds(this.leftPosDialog + 205, this.topPosDialog + 42, 20, 20).build());
+    this.clearTextureSettingsButton =
+        this.addRenderableWidget(
+            Button.builder(Component.literal("X"), onPress -> this.clearTextureSkinLocation())
+                .bounds(this.leftPosDialog + 205, this.topPosDialog + 42, 20, 20)
+                .build());
     this.clearTextureSettingsButton.visible = false;
 
     // Save Button
     this.saveTextureSettingsButton =
-        this.addRenderableWidget(Button.builder(Component.translatable("Save"), onPress -> {
-          this.saveTextureSkinLocation();
-          this.showTextureSettings(false);
-        }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 80, 20).build());
+        this.addRenderableWidget(
+            Button.builder(
+                    Component.translatable(Constants.TEXT_PREFIX + "save"),
+                    onPress -> {
+                      this.saveTextureSkinLocation();
+                      this.showTextureSettings(false);
+                    })
+                .bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 80, 20)
+                .build());
     this.saveTextureSettingsButton.active = false;
     this.saveTextureSettingsButton.visible = false;
 
     // Close Button
-    this.closeTextureSettingsButton = this.addRenderableWidget(
-        Button.builder(Component.translatable("Cancel"), onPress -> this.showTextureSettings(false))
-            .bounds(this.leftPosDialog + 145, this.topPosDialog + 68, 80, 20).build());
+    this.closeTextureSettingsButton =
+        this.addRenderableWidget(
+            Button.builder(
+                    Component.translatable(Constants.TEXT_PREFIX + "cancel"),
+                    onPress -> this.showTextureSettings(false))
+                .bounds(this.leftPosDialog + 145, this.topPosDialog + 68, 80, 20)
+                .build());
     this.closeTextureSettingsButton.active = true;
     this.closeTextureSettingsButton.visible = false;
 
     // Action Type: Follow
     this.actionTypeFollowButton =
-        this.addRenderableWidget(Button.builder(Component.translatable("Follow"), onPress -> {
-          NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
-              PlayerCompanionCommand.FOLLOW);
-        }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());
+        this.addRenderableWidget(
+            Button.builder(
+                    Component.translatable(Constants.TEXT_PREFIX + "follow"),
+                    onPress ->
+                        NetworkMessageHandler.commandPlayerCompanion(
+                            playerCompanionEntity.getStringUUID(), PlayerCompanionCommand.FOLLOW))
+                .bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20)
+                .build());
     this.actionTypeFollowButton.visible = false;
 
     // Action Type: Sit
     this.actionTypeSitButton =
-        this.addRenderableWidget(Button.builder(Component.translatable("Sit"), onPress -> {
-          NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
-              PlayerCompanionCommand.SIT);
-        }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());
+        this.addRenderableWidget(
+            Button.builder(
+                    Component.translatable(Constants.TEXT_PREFIX + "sit"),
+                    onPress ->
+                        NetworkMessageHandler.commandPlayerCompanion(
+                            playerCompanionEntity.getStringUUID(), PlayerCompanionCommand.SIT))
+                .bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20)
+                .build());
     this.actionTypeSitButton.visible = false;
 
     // Aggressive Level Previous Button
     this.aggressiveLevelPreviousButton =
-        this.addRenderableWidget(new ImageButton(1, 1, 7, 9, 18, 1, 9, SYMBOLS_TEXTURE, onPress -> {
-          NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
-              PlayerCompanionCommand.AGGRESSION_LEVEL_PREVIOUS);
-        }));
-    this.aggressiveLevelPreviousButton.visible = false;
+        this.addRenderableWidget(
+            new ImageButton(
+                this.leftPos + 204,
+                this.topPos + 147,
+                7,
+                9,
+                BACK_BUTTON_SPRITES,
+                onPress ->
+                    NetworkMessageHandler.commandPlayerCompanion(
+                        playerCompanionEntity.getStringUUID(),
+                        PlayerCompanionCommand.AGGRESSION_LEVEL_PREVIOUS)));
 
     // Aggressive Level Next Button
     this.aggressiveLevelNextButton =
-        this.addRenderableWidget(new ImageButton(1, 1, 7, 9, 25, 1, 9, SYMBOLS_TEXTURE, onPress -> {
-          NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
-              PlayerCompanionCommand.AGGRESSION_LEVEL_NEXT);
-        }));
-    this.aggressiveLevelNextButton.visible = false;
+        this.addRenderableWidget(
+            new ImageButton(
+                this.leftPos + 329,
+                this.topPos + 147,
+                7,
+                9,
+                FORWARD_BUTTON_SPRITES,
+                onPress ->
+                    NetworkMessageHandler.commandPlayerCompanion(
+                        playerCompanionEntity.getStringUUID(),
+                        PlayerCompanionCommand.AGGRESSION_LEVEL_NEXT)));
 
     // Aggressive Level Default Button
-    this.aggressionLevelDefaultButton = this.addRenderableWidget(
-        Button.builder(Component.translatable("Default Aggression"), onPress -> {
-          NetworkHandler.commandPlayerCompanion(playerCompanionEntity.getStringUUID(),
-              PlayerCompanionCommand.AGGRESSION_LEVEL_DEFAULT);
-        }).bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20).build());
+    this.aggressionLevelDefaultButton =
+        this.addRenderableWidget(
+            Button.builder(
+                    Component.translatable("Default Aggression"),
+                    onPress ->
+                        NetworkMessageHandler.commandPlayerCompanion(
+                            playerCompanionEntity.getStringUUID(),
+                            PlayerCompanionCommand.AGGRESSION_LEVEL_DEFAULT))
+                .bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20)
+                .build());
     this.aggressionLevelDefaultButton.visible = false;
   }
 
   @Override
   public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-    this.renderBackground(guiGraphics);
+    this.renderBackground(guiGraphics, x, y, partialTicks);
     super.render(guiGraphics, x, y, partialTicks);
     this.xMouse = x;
     this.yMouse = y;
@@ -447,14 +520,17 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   @Override
   protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
     // Main screen
-    guiGraphics.blit(this.backgroundTexture, leftPos, topPos, 0, 0, this.imageWidth,
-        this.imageHeight, 512, 256);
+    guiGraphics.blit(
+        this.backgroundTexture, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight, 512, 256);
 
     // Entity Overview
     if (playerCompanionEntity != null) {
-      CompanionScreenHelper.renderEntity(this.leftPos + 59,
+      CompanionScreenHelper.renderEntity(
+          this.leftPos + 59,
           this.topPos + 70 + playerCompanionEntity.getEntityGuiTop(),
-          this.leftPos + 58 - this.xMouse, this.topPos + 40 - this.yMouse, playerCompanionEntity);
+          this.leftPos + 58 - this.xMouse,
+          this.topPos + 40 - this.yMouse,
+          playerCompanionEntity);
     }
   }
 
@@ -473,5 +549,4 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       return true;
     }
   }
-
 }

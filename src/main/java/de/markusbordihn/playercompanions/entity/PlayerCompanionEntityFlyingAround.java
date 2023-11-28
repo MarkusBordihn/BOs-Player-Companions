@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,8 +19,8 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntityFlyAroundControl;
 import java.util.Map;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -33,11 +33,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
-import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntityFlyAroundControl;
-
 public class PlayerCompanionEntityFlyingAround extends PlayerCompanionEntity {
 
-  public PlayerCompanionEntityFlyingAround(EntityType<? extends PlayerCompanionEntity> entityType,
+  public PlayerCompanionEntityFlyingAround(
+      EntityType<? extends PlayerCompanionEntity> entityType,
       Level level,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
@@ -52,8 +51,8 @@ public class PlayerCompanionEntityFlyingAround extends PlayerCompanionEntity {
   }
 
   @Override
-  protected void checkFallDamage(double height, boolean flag, BlockState blockState,
-      BlockPos blockPos) {
+  protected void checkFallDamage(
+      double height, boolean flag, BlockState blockState, BlockPos blockPos) {
     // Ignore damage
   }
 
@@ -70,5 +69,4 @@ public class PlayerCompanionEntityFlyingAround extends PlayerCompanionEntity {
   public SoundEvent getJumpSound() {
     return SoundEvents.PHANTOM_FLAP;
   }
-
 }

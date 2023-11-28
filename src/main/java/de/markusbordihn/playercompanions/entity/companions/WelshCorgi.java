@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,13 +19,17 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
+import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
+import de.markusbordihn.playercompanions.entity.type.supporter.SupporterWalking;
+import de.markusbordihn.playercompanions.item.ModItems;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.Util;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -46,44 +50,41 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
-import de.markusbordihn.playercompanions.entity.type.supporter.SupporterWalking;
-import de.markusbordihn.playercompanions.item.ModItems;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class WelshCorgi extends SupporterWalking {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // General Information
   public static final String ID = "welsh_corgi";
   public static final String NAME = "Welsh Corgi";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
-
   // Variants
-  public static final List<PlayerCompanionVariant> VARIANTS = List.of(
-      PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.MIXED, PlayerCompanionVariant.BLACK);
-
+  public static final List<PlayerCompanionVariant> VARIANTS =
+      List.of(
+          PlayerCompanionVariant.DEFAULT,
+          PlayerCompanionVariant.MIXED,
+          PlayerCompanionVariant.BLACK);
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.WELSH_CORGI_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.MIXED, ModItems.WELSH_CORGI_MIXED.get());
-        hashMap.put(PlayerCompanionVariant.BLACK, ModItems.WELSH_CORGI_BLACK.get());
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.WELSH_CORGI_DEFAULT.get());
+            hashMap.put(PlayerCompanionVariant.MIXED, ModItems.WELSH_CORGI_MIXED.get());
+            hashMap.put(PlayerCompanionVariant.BLACK, ModItems.WELSH_CORGI_BLACK.get());
+          });
 
   public WelshCorgi(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 1.0D);
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.MAX_HEALTH, 10.0D)
+        .add(Attributes.ATTACK_DAMAGE, 1.0D);
   }
 
   @Override
@@ -139,5 +140,4 @@ public class WelshCorgi extends SupporterWalking {
   public int getEntityGuiTop() {
     return 18;
   }
-
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,48 +19,40 @@
 
 package de.markusbordihn.playercompanions.network;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.network.message.MessageCommandPlayerCompanion;
+import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionData;
+import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionsData;
+import de.markusbordihn.playercompanions.network.message.MessageSkinChange;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.ChannelBuilder;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
-import de.markusbordihn.playercompanions.network.message.MessageCommandPlayerCompanion;
-import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionData;
-import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionsData;
-import de.markusbordihn.playercompanions.network.message.MessageSkinChange;
-import de.markusbordihn.playercompanions.skin.SkinType;
+import net.minecraftforge.network.SimpleChannel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber
 public class NetworkHandler {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
-  private static final String PROTOCOL_VERSION = "3";
-  public static final SimpleChannel INSTANCE =
-      NetworkRegistry.newSimpleChannel(new ResourceLocation(Constants.MOD_ID, "network"),
-          () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
-  private static ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
+  private static final int PROTOCOL_VERSION = 4;
+  private static final SimpleChannel SIMPLE_CHANNEL =
+      ChannelBuilder.named(new ResourceLocation(Constants.MOD_ID, "network"))
+          .networkProtocolVersion(PROTOCOL_VERSION)
+          .simpleChannel();
   private static int id = 0;
-  private static CompoundTag lastCompanionDataPackage;
-  private static CompoundTag lastCompanionsDataPackage;
+  private static final ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
 
   protected NetworkHandler() {}
 
@@ -81,104 +73,66 @@ public class NetworkHandler {
 
   public static void registerNetworkHandler(final FMLCommonSetupEvent event) {
 
-    log.info("{} Network Handler for {} with version {} ...", Constants.LOG_REGISTER_PREFIX,
-        INSTANCE, PROTOCOL_VERSION);
+    log.info(
+        "{} Network Handler for {} with version {} ...",
+        Constants.LOG_REGISTER_PREFIX,
+        SIMPLE_CHANNEL,
+        PROTOCOL_VERSION);
 
-    event.enqueueWork(() -> {
+    event.enqueueWork(
+        () -> {
 
-      // Send Player Companion Command: Client -> Server
-      INSTANCE.registerMessage(id++, MessageCommandPlayerCompanion.class, (message, buffer) -> {
-        buffer.writeUtf(message.getPlayerCompanionUUID());
-        buffer.writeUtf(message.getCommand());
-      }, buffer -> new MessageCommandPlayerCompanion(buffer.readUtf(), buffer.readUtf()),
-          MessageCommandPlayerCompanion::handle);
+          // Send Player Companion Command: Client -> Server
+          SIMPLE_CHANNEL
+              .messageBuilder(
+                  MessageCommandPlayerCompanion.class, id++, NetworkDirection.PLAY_TO_SERVER)
+              .encoder(MessageCommandPlayerCompanion::encode)
+              .decoder(MessageCommandPlayerCompanion::decode)
+              .consumerNetworkThread(MessageCommandPlayerCompanion::handle)
+              .add();
 
-      // Skin Change: Client -> Server
-      INSTANCE.registerMessage(id++, MessageSkinChange.class, (message, buffer) -> {
-        buffer.writeUUID(message.getUUID());
-        buffer.writeUtf(message.getSkin());
-        buffer.writeUtf(message.getSkinURL());
-        buffer.writeUUID(message.getSkinUUID());
-        buffer.writeUtf(message.getSkinType());
-      }, buffer -> new MessageSkinChange(buffer.readUUID(), buffer.readUtf(), buffer.readUtf(),
-          buffer.readUUID(), buffer.readUtf()), MessageSkinChange::handle);
+          // Sync single Player Companion Data: Server -> Client
+          SIMPLE_CHANNEL
+              .messageBuilder(
+                  MessagePlayerCompanionData.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+              .encoder(MessagePlayerCompanionData::encode)
+              .decoder(MessagePlayerCompanionData::decode)
+              .consumerNetworkThread(MessagePlayerCompanionData::handle)
+              .add();
 
-      // Sync full Player Companion Data: Server -> Client
-      INSTANCE.registerMessage(id++, MessagePlayerCompanionsData.class,
-          (message, buffer) -> buffer.writeNbt(message.getData()),
-          buffer -> new MessagePlayerCompanionsData(buffer.readNbt()),
-          MessagePlayerCompanionsData::handle);
+          // Sync full Player Companion Data: Server -> Client
+          SIMPLE_CHANNEL
+              .messageBuilder(
+                  MessagePlayerCompanionsData.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+              .encoder(MessagePlayerCompanionsData::encode)
+              .decoder(MessagePlayerCompanionsData::decode)
+              .consumerNetworkThread(MessagePlayerCompanionsData::handle)
+              .add();
 
-      // Sync single Player Companion Data: Server -> Client
-      INSTANCE.registerMessage(id++, MessagePlayerCompanionData.class, (message, buffer) -> {
-        buffer.writeUtf(message.getPlayerCompanionUUID());
-        buffer.writeNbt(message.getData());
-      }, buffer -> new MessagePlayerCompanionData(buffer.readUtf(), buffer.readNbt()),
-          MessagePlayerCompanionData::handle);
-    });
+          // Skin Change: Client -> Server
+          SIMPLE_CHANNEL
+              .messageBuilder(MessageSkinChange.class, id++, NetworkDirection.PLAY_TO_SERVER)
+              .encoder(MessageSkinChange::encode)
+              .decoder(MessageSkinChange::decode)
+              .consumerNetworkThread(MessageSkinChange::handle)
+              .add();
+        });
   }
 
-  /** Send player companion commands. */
-  public static void commandPlayerCompanion(String playerCompanionUUID,
-      PlayerCompanionCommand command) {
-    if (playerCompanionUUID != null && command != null) {
-      log.debug("commandPlayerCompanion {} {}", playerCompanionUUID, command);
-      INSTANCE
-          .sendToServer(new MessageCommandPlayerCompanion(playerCompanionUUID, command.toString()));
+  public static <M> void sendToServer(M message) {
+    try {
+      SIMPLE_CHANNEL.send(message, PacketDistributor.SERVER.noArg());
+    } catch (Exception e) {
+      log.error("Failed to send {} to server, got error: {}", message, e.getMessage());
     }
   }
 
-  /** Send skin change. */
-  public static void skinChange(UUID uuid, Enum<SkinType> skinType) {
-    if (uuid != null && skinType != null) {
-      INSTANCE
-          .sendToServer(new MessageSkinChange(uuid, "", "", Constants.BLANK_UUID, skinType.name()));
-    }
-  }
-
-  public static void skinChange(UUID uuid, String skin, Enum<SkinType> skinType) {
-    if (uuid != null && skin != null && skinType != null) {
-      INSTANCE.sendToServer(
-          new MessageSkinChange(uuid, skin, "", Constants.BLANK_UUID, skinType.name()));
-    }
-  }
-
-  public static void skinChange(UUID uuid, String skin, String skinURL, UUID skinUUID,
-      Enum<SkinType> skinType) {
-    if (uuid != null && skin != null && skinType != null) {
-      INSTANCE.sendToServer(new MessageSkinChange(uuid, skin, skinURL, skinUUID, skinType.name()));
-    }
-  }
-
-  /** Send full companion data to the owner, if data has changed. */
-  public static void updatePlayerCompanionsData(UUID ownerUUID, CompoundTag companionsData) {
-    if (ownerUUID != null && companionsData != null && !companionsData.isEmpty()
-        && !companionsData.equals(lastCompanionsDataPackage)) {
-      ServerPlayer serverPlayer = getServerPlayer(ownerUUID);
-      if (serverPlayer == null) {
-        return;
-      }
-      log.debug("Sending Player Companions data to {}: {}", serverPlayer, companionsData);
-      INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-          new MessagePlayerCompanionsData(companionsData));
-      lastCompanionsDataPackage = companionsData;
-    }
-  }
-
-  /** Send specific player companion data to the owner, if data has changed. */
-  public static void updatePlayerCompanionData(UUID playerCompanionUUID, UUID ownerUUID,
-      CompoundTag companionData) {
-    if (playerCompanionUUID != null && ownerUUID != null && companionData != null
-        && !companionData.isEmpty() && !companionData.equals(lastCompanionDataPackage)) {
-      ServerPlayer serverPlayer = getServerPlayer(ownerUUID);
-      if (serverPlayer == null) {
-        return;
-      }
-      log.debug("Sending Player Companions data for {} to {}: {}", playerCompanionUUID,
-          serverPlayer, companionData);
-      INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-          new MessagePlayerCompanionData(playerCompanionUUID.toString(), companionData));
-      lastCompanionDataPackage = companionData;
+  public static <M> void sendToPlayer(ServerPlayer serverPlayer, M message) {
+    try {
+      SIMPLE_CHANNEL.send(message, PacketDistributor.PLAYER.with(serverPlayer));
+    } catch (Exception e) {
+      log.error(
+          "Failed to send {} to player {}, got error: {}", message, serverPlayer, e.getMessage());
     }
   }
 
@@ -205,5 +159,4 @@ public class NetworkHandler {
   public static ServerPlayer getServerPlayer(UUID uuid) {
     return serverPlayerMap.get(uuid);
   }
-
 }

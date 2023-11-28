@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,25 +19,20 @@
 
 package de.markusbordihn.playercompanions.item;
 
+import de.markusbordihn.playercompanions.Constants;
 import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-
 import net.minecraftforge.common.ForgeSpawnEggItem;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CompanionSpawnEggItem extends ForgeSpawnEggItem {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public CompanionSpawnEggItem(Supplier<? extends EntityType<? extends Mob>> type,
-      Properties props) {
+  public CompanionSpawnEggItem(
+      Supplier<? extends EntityType<? extends Mob>> type, Properties props) {
     super(type, Constants.FONT_COLOR_RED, Constants.FONT_COLOR_YELLOW, props);
   }
-
 }

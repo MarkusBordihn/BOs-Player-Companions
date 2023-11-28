@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,17 +19,14 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.client.gui.screens.MenuScreens;
-
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.ModMenuTypes;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientScreens {
@@ -41,16 +38,19 @@ public class ClientScreens {
   public static void registerScreens(final FMLClientSetupEvent event) {
     log.info("{} Client Screens ...", Constants.LOG_REGISTER_PREFIX);
 
-    event.enqueueWork(() -> {
-      MenuScreens.register(ModMenuTypes.DEFAULT_COMPANION_MENU.get(), DefaultCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.COLLECTOR_COMPANION_MENU.get(),
-          CollectorCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.FOLLOWER_COMPANION_MENU.get(),
-          FollowerCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.GUARD_COMPANION_MENU.get(), GuardCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.HEALER_COMPANION_MENU.get(), HealerCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.SUPPORTER_COMPANION_MENU.get(),
-          SupporterCompanionScreen::new);
-    });
+    event.enqueueWork(
+        () -> {
+          MenuScreens.register(
+              ModMenuTypes.DEFAULT_COMPANION_MENU.get(), DefaultCompanionScreen::new);
+          MenuScreens.register(
+              ModMenuTypes.COLLECTOR_COMPANION_MENU.get(), CollectorCompanionScreen::new);
+          MenuScreens.register(
+              ModMenuTypes.FOLLOWER_COMPANION_MENU.get(), FollowerCompanionScreen::new);
+          MenuScreens.register(ModMenuTypes.GUARD_COMPANION_MENU.get(), GuardCompanionScreen::new);
+          MenuScreens.register(
+              ModMenuTypes.HEALER_COMPANION_MENU.get(), HealerCompanionScreen::new);
+          MenuScreens.register(
+              ModMenuTypes.SUPPORTER_COMPANION_MENU.get(), SupporterCompanionScreen::new);
+        });
   }
 }

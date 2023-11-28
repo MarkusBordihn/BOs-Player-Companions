@@ -1,0 +1,31 @@
+{
+  "parent": "player_companions:crafting/tame_wheat_seeds",
+  "display": {
+    "icon": {
+      "item": "player_companions:rooster_default"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.rooster_default.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.rooster_default.description"
+    },
+    "frame": "challenge"
+  },
+  "criteria": {
+    "has_rooster_default": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["player_companions:rooster_default"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["has_rooster_default"]],
+  "rewards": {
+    "experience": 50
+  }
+}

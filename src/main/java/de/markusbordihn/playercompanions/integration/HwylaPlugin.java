@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -35,18 +35,17 @@ public class HwylaPlugin implements IWailaPlugin {
   @Override
   public void registerClient(IWailaClientRegistration registration) {
     // General provider
-    registration.registerEntityIcon(PlayerCompanionEntityProvider.INSTANCE,
-        PlayerCompanionEntity.class);
-    registration.registerEntityComponent(PlayerCompanionEntityProvider.INSTANCE,
-        PlayerCompanionEntity.class);
+    registration.registerEntityIcon(
+        PlayerCompanionEntityProvider.INSTANCE, PlayerCompanionEntity.class);
+    registration.registerEntityComponent(
+        PlayerCompanionEntityProvider.INSTANCE, PlayerCompanionEntity.class);
 
     // Type specific provider
-    registration.registerEntityComponent(CollectorEntityProvider.INSTANCE,
-        CollectorEntityFloating.class);
-    registration.registerEntityComponent(CollectorEntityProvider.INSTANCE,
-        CollectorEntityWalking.class);
+    registration.registerEntityComponent(
+        CollectorEntityProvider.INSTANCE, CollectorEntityFloating.class);
+    registration.registerEntityComponent(
+        CollectorEntityProvider.INSTANCE, CollectorEntityWalking.class);
     registration.registerEntityComponent(GuardEntityProvider.INSTANCE, GuardEntityFloating.class);
     registration.registerEntityComponent(GuardEntityProvider.INSTANCE, GuardEntityWalking.class);
   }
-
 }

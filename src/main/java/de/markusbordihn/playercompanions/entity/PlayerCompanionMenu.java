@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -17,27 +17,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 package de.markusbordihn.playercompanions.entity;
-
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
-
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-
-import net.minecraftforge.network.NetworkHooks;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.CollectorCompanionMenu;
@@ -47,6 +27,18 @@ import de.markusbordihn.playercompanions.container.GuardCompanionMenu;
 import de.markusbordihn.playercompanions.container.HealerCompanionMenu;
 import de.markusbordihn.playercompanions.container.SupporterCompanionMenu;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import java.util.UUID;
+import javax.annotation.Nullable;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionMenu {
 
@@ -85,20 +77,21 @@ public class PlayerCompanionMenu {
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
-        MenuProvider provider = new MenuProvider() {
-          @Override
-          public Component getDisplayName() {
-            return playerCompanionName;
-          }
+        MenuProvider provider =
+            new MenuProvider() {
+              @Override
+              public Component getDisplayName() {
+                return playerCompanionName;
+              }
 
-          @Nullable
-          @Override
-          public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-              Player player) {
-            return new DefaultCompanionMenu(windowId, inventory, playerCompanionUUID);
-          }
-        };
-        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+              @Nullable
+              @Override
+              public AbstractContainerMenu createMenu(
+                  int windowId, Inventory inventory, Player player) {
+                return new DefaultCompanionMenu(windowId, inventory, playerCompanionUUID);
+              }
+            };
+        player.openMenu(provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -112,20 +105,21 @@ public class PlayerCompanionMenu {
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
-        MenuProvider provider = new MenuProvider() {
-          @Override
-          public Component getDisplayName() {
-            return playerCompanionName;
-          }
+        MenuProvider provider =
+            new MenuProvider() {
+              @Override
+              public Component getDisplayName() {
+                return playerCompanionName;
+              }
 
-          @Nullable
-          @Override
-          public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-              Player player) {
-            return new CollectorCompanionMenu(windowId, inventory, playerCompanionUUID);
-          }
-        };
-        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+              @Nullable
+              @Override
+              public AbstractContainerMenu createMenu(
+                  int windowId, Inventory inventory, Player player) {
+                return new CollectorCompanionMenu(windowId, inventory, playerCompanionUUID);
+              }
+            };
+        player.openMenu(provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -139,20 +133,21 @@ public class PlayerCompanionMenu {
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
-        MenuProvider provider = new MenuProvider() {
-          @Override
-          public Component getDisplayName() {
-            return playerCompanionName;
-          }
+        MenuProvider provider =
+            new MenuProvider() {
+              @Override
+              public Component getDisplayName() {
+                return playerCompanionName;
+              }
 
-          @Nullable
-          @Override
-          public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-              Player player) {
-            return new FollowerCompanionMenu(windowId, inventory, playerCompanionUUID);
-          }
-        };
-        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+              @Nullable
+              @Override
+              public AbstractContainerMenu createMenu(
+                  int windowId, Inventory inventory, Player player) {
+                return new FollowerCompanionMenu(windowId, inventory, playerCompanionUUID);
+              }
+            };
+        player.openMenu(provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -166,20 +161,21 @@ public class PlayerCompanionMenu {
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
-        MenuProvider provider = new MenuProvider() {
-          @Override
-          public Component getDisplayName() {
-            return playerCompanionName;
-          }
+        MenuProvider provider =
+            new MenuProvider() {
+              @Override
+              public Component getDisplayName() {
+                return playerCompanionName;
+              }
 
-          @Nullable
-          @Override
-          public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-              Player player) {
-            return new GuardCompanionMenu(windowId, inventory, playerCompanionUUID);
-          }
-        };
-        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+              @Nullable
+              @Override
+              public AbstractContainerMenu createMenu(
+                  int windowId, Inventory inventory, Player player) {
+                return new GuardCompanionMenu(windowId, inventory, playerCompanionUUID);
+              }
+            };
+        player.openMenu(provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -193,20 +189,21 @@ public class PlayerCompanionMenu {
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
-        MenuProvider provider = new MenuProvider() {
-          @Override
-          public Component getDisplayName() {
-            return playerCompanionName;
-          }
+        MenuProvider provider =
+            new MenuProvider() {
+              @Override
+              public Component getDisplayName() {
+                return playerCompanionName;
+              }
 
-          @Nullable
-          @Override
-          public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-              Player player) {
-            return new HealerCompanionMenu(windowId, inventory, playerCompanionUUID);
-          }
-        };
-        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+              @Nullable
+              @Override
+              public AbstractContainerMenu createMenu(
+                  int windowId, Inventory inventory, Player player) {
+                return new HealerCompanionMenu(windowId, inventory, playerCompanionUUID);
+              }
+            };
+        player.openMenu(provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
@@ -220,22 +217,22 @@ public class PlayerCompanionMenu {
       if (player instanceof ServerPlayer) {
         UUID playerCompanionUUID = playerCompanionEntity.getUUID();
         Component playerCompanionName = playerCompanionEntity.getCustomName();
-        MenuProvider provider = new MenuProvider() {
-          @Override
-          public Component getDisplayName() {
-            return playerCompanionName;
-          }
+        MenuProvider provider =
+            new MenuProvider() {
+              @Override
+              public Component getDisplayName() {
+                return playerCompanionName;
+              }
 
-          @Nullable
-          @Override
-          public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-              Player player) {
-            return new SupporterCompanionMenu(windowId, inventory, playerCompanionUUID);
-          }
-        };
-        NetworkHooks.openScreen(player, provider, buffer -> buffer.writeUUID(playerCompanionUUID));
+              @Nullable
+              @Override
+              public AbstractContainerMenu createMenu(
+                  int windowId, Inventory inventory, Player player) {
+                return new SupporterCompanionMenu(windowId, inventory, playerCompanionUUID);
+              }
+            };
+        player.openMenu(provider, buffer -> buffer.writeUUID(playerCompanionUUID));
       }
     }
   }
-
 }

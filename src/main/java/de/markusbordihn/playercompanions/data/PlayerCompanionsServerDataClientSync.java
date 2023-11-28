@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,14 +19,12 @@
 
 package de.markusbordihn.playercompanions.data;
 
+import de.markusbordihn.playercompanions.network.NetworkMessageHandler;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-
-import de.markusbordihn.playercompanions.network.NetworkHandler;
 
 public class PlayerCompanionsServerDataClientSync {
 
@@ -42,17 +40,17 @@ public class PlayerCompanionsServerDataClientSync {
     UUID playerCompanionUUID = playerCompanionData.getUUID();
     UUID ownerUUID = playerCompanionData.getOwnerUUID();
 
-    NetworkHandler.updatePlayerCompanionData(playerCompanionUUID, ownerUUID, data);
+    NetworkMessageHandler.updatePlayerCompanionData(playerCompanionUUID, ownerUUID, data);
   }
 
-  public static void syncPlayerCompanionData(UUID ownerUUID,
-      Set<PlayerCompanionData> playerCompanionsData) {
+  public static void syncPlayerCompanionData(
+      UUID ownerUUID, Set<PlayerCompanionData> playerCompanionsData) {
     // Only sync player companions, if we have a valid owner.
     if (ownerUUID == null || playerCompanionsData == null || playerCompanionsData.isEmpty()) {
       return;
     }
     CompoundTag data = exportPlayerCompanionsData(playerCompanionsData);
-    NetworkHandler.updatePlayerCompanionsData(ownerUUID, data);
+    NetworkMessageHandler.updatePlayerCompanionsData(ownerUUID, data);
   }
 
   public static String exportPlayerCompanionDataString(PlayerCompanionData playerCompanionData) {
@@ -63,7 +61,8 @@ public class PlayerCompanionsServerDataClientSync {
   public static CompoundTag exportPlayerCompanionData(PlayerCompanionData playerCompanionData) {
 
     // Pre-checks to avoid errors or edge conditions like server start.
-    if (playerCompanionData == null || playerCompanionData.getUUID() == null
+    if (playerCompanionData == null
+        || playerCompanionData.getUUID() == null
         || playerCompanionData.getOwnerUUID() == null) {
       return null;
     }
@@ -76,12 +75,14 @@ public class PlayerCompanionsServerDataClientSync {
     return compoundTag;
   }
 
-  public static String exportPlayerCompanionsDataString(Set<PlayerCompanionData> playerCompanionsData) {
+  public static String exportPlayerCompanionsDataString(
+      Set<PlayerCompanionData> playerCompanionsData) {
     CompoundTag compoundTag = exportPlayerCompanionsData(playerCompanionsData);
     return compoundTag != null && !compoundTag.isEmpty() ? compoundTag.getAsString() : "";
   }
 
-  public static CompoundTag exportPlayerCompanionsData(Set<PlayerCompanionData> playerCompanionsData) {
+  public static CompoundTag exportPlayerCompanionsData(
+      Set<PlayerCompanionData> playerCompanionsData) {
     // Pre-checks to avoid errors or edge conditions like server start.
     if (playerCompanionsData == null || playerCompanionsData.isEmpty()) {
       return null;
@@ -105,5 +106,4 @@ public class PlayerCompanionsServerDataClientSync {
 
     return compoundTag;
   }
-
 }

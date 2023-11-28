@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -29,12 +29,11 @@ import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
 public interface TameablePlayerCompanion {
 
-  InteractionResult tamePlayerCompanion(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand);
+  InteractionResult tamePlayerCompanion(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand);
 
-  default boolean canTamePlayerCompanion(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand) {
+  default boolean canTamePlayerCompanion(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand) {
     return itemStack.getItem() instanceof CompanionTameItem;
   }
-
 }

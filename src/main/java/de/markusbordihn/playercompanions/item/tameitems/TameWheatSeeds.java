@@ -20,15 +20,15 @@
 package de.markusbordihn.playercompanions.item.tameitems;
 
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TameWheatSeeds extends CompanionTameItem {
 
   private static final Set<String> tameableMobTypes =
       new HashSet<>(
-          Arrays.asList(
+          List.of(
               // @formatter:off
               "player_companions:rooster"
               // @formatter:on
@@ -36,10 +36,6 @@ public class TameWheatSeeds extends CompanionTameItem {
 
   public TameWheatSeeds() {
     super();
-  }
-
-  public TameWheatSeeds(Properties properties) {
-    super(properties);
   }
 
   @Override

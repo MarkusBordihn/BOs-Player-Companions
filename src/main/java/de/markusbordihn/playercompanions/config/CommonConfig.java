@@ -70,6 +70,7 @@ public class CommonConfig {
     public final ForgeConfigSpec.BooleanValue respawnOnDeath;
     public final ForgeConfigSpec.IntValue respawnDelay;
     public final ForgeConfigSpec.BooleanValue friendlyFire;
+    public final ForgeConfigSpec.IntValue companionLimitPerPlayer;
 
     public final ForgeConfigSpec.IntValue maxHealth;
     public final ForgeConfigSpec.IntValue maxAttackDamage;
@@ -120,6 +121,10 @@ public class CommonConfig {
               .comment(
                   "Allow's damage to an owned companion by the owner or their owned companions.")
               .define("friendlyFire", false);
+      companionLimitPerPlayer =
+          builder
+              .comment("The max. number of companions per player. (0 = disabled)")
+              .defineInRange("companionLimitPerPlayer", 0, 0, 64);
       builder.pop();
 
       builder.push("Level scaling");
@@ -163,7 +168,7 @@ public class CommonConfig {
               .comment("List of female NPC names.")
               .define(
                   "namesNPCFemale",
-                  new ArrayList<String>(
+                  new ArrayList<>(
                       Arrays.asList(
                           "Aika",
                           "Amy",
@@ -187,14 +192,14 @@ public class CommonConfig {
               .comment("List of male NPC names.")
               .define(
                   "namesNPCMale",
-                  new ArrayList<String>(
+                  new ArrayList<>(
                       Arrays.asList(
                           "Adam", "Aron", "Beowulf", "Bob", "Cain", "Ethan", "Guy", "Jack", "Jason",
                           "John", "Julian", "Kawo", "Luca", "Markus", "Miso", "Parn", "Romolo")));
       namesNPCMisc =
           builder
               .comment("List of misc NPC names.")
-              .define("namesNPCMisc", new ArrayList<String>(Arrays.asList("Alexis", "Quinn")));
+              .define("namesNPCMisc", new ArrayList<>(Arrays.asList("Alexis", "Quinn")));
       builder.pop();
 
       builder.push("Player Companion Names");
@@ -203,7 +208,7 @@ public class CommonConfig {
               .comment("List of female player companion names.")
               .define(
                   "namesCompanionFemale",
-                  new ArrayList<String>(
+                  new ArrayList<>(
                       Arrays.asList(
                           "Alice",
                           "Alina",
@@ -263,7 +268,7 @@ public class CommonConfig {
               .comment("List of male player companion names.")
               .define(
                   "namesCompanionMale",
-                  new ArrayList<String>(
+                  new ArrayList<>(
                       Arrays.asList(
                           "Alex",
                           "Andrew",
@@ -317,7 +322,7 @@ public class CommonConfig {
               .comment("List of misc player companion names.")
               .define(
                   "namesCompanionMisc",
-                  new ArrayList<String>(
+                  new ArrayList<>(
                       Arrays.asList(
                           "Alex", "Angel", "Buddy", "Cato", "Charlie", "Cheddar", "Creamy", "Curly",
                           "Dakota", "Elisa", "Foxy", "Frana", "Inky", "Isa", "Jesse", "Jona",

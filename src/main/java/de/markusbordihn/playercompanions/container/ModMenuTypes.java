@@ -30,6 +30,9 @@ public class ModMenuTypes {
 
   public static final DeferredRegister<MenuType<?>> MENU_TYPES =
       DeferredRegister.create(ForgeRegistries.MENU_TYPES, Constants.MOD_ID);
+
+  protected ModMenuTypes() {}
+
   public static final RegistryObject<MenuType<CompanionMenu>> DEFAULT_COMPANION_MENU =
       MENU_TYPES.register(
           "default_companion_menu", () -> IForgeMenuType.create(DefaultCompanionMenu::new));
@@ -48,5 +51,4 @@ public class ModMenuTypes {
   public static final RegistryObject<MenuType<SupporterCompanionMenu>> SUPPORTER_COMPANION_MENU =
       MENU_TYPES.register(
           "supporter_companion_menu", () -> IForgeMenuType.create(SupporterCompanionMenu::new));
-  protected ModMenuTypes() {}
 }

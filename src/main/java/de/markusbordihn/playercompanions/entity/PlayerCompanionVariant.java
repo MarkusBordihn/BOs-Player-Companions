@@ -50,7 +50,7 @@ public enum PlayerCompanionVariant {
   WHITE,
   YELLOW;
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static PlayerCompanionVariant getOrDefault(String value) {
     if (value != null && !value.isEmpty()) {

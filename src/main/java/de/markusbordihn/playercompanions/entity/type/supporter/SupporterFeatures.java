@@ -64,12 +64,9 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
 
     // Automatic buff entities in the defined radius.
     if (!level.isClientSide && COMMON.supporterTypeRadius.get() > 0 && ticker++ >= SUPPORTER_TICK) {
-      boolean hasBuffSomething = false;
+      boolean hasBuffSomething = this.getOwner() != null && buffLivingEntity(this.getOwner());
 
       // 1. Priority: Buff owner.
-      if (this.getOwner() != null && buffLivingEntity(this.getOwner())) {
-        hasBuffSomething = true;
-      }
 
       // 2. Priority: Buff self.
       if (!hasBuffSomething && buffLivingEntity(this.playerCompanionEntity)) {

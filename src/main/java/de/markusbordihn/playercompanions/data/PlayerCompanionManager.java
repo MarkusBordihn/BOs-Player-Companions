@@ -21,6 +21,7 @@ package de.markusbordihn.playercompanions.data;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,7 +54,7 @@ public class PlayerCompanionManager {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private static final short SYNC_TICK = 25;
-  private static Set<Entity> entitySet = ConcurrentHashMap.newKeySet();
+  private static final Set<Entity> entitySet = ConcurrentHashMap.newKeySet();
   private static short ticks = 0;
 
   protected PlayerCompanionManager() {}
@@ -197,14 +198,17 @@ public class PlayerCompanionManager {
 
       // Check for duplicates from other levels.
       while (serverLevels.hasNext()) {
-        ServerLevel serverLevel = serverLevels.next();
-        if (serverPlayer.getLevel() != serverLevel) {
-          for (Entity playerCompanionEntity : playerCompanionsEntityInOwnersDimension) {
-            Entity entity = serverLevel.getEntity(playerCompanionEntity.getUUID());
-            if (entity != null) {
-              entity.remove(RemovalReason.CHANGED_DIMENSION);
+        try (ServerLevel serverLevel = serverLevels.next()) {
+          if (serverPlayer.getLevel() != serverLevel) {
+            for (Entity playerCompanionEntity : playerCompanionsEntityInOwnersDimension) {
+              Entity entity = serverLevel.getEntity(playerCompanionEntity.getUUID());
+              if (entity != null) {
+                entity.remove(RemovalReason.CHANGED_DIMENSION);
+              }
             }
           }
+        } catch (IOException e) {
+          log.error("Failed to close server level {}", serverLevels, e);
         }
       }
     }

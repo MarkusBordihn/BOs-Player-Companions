@@ -40,11 +40,10 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
       Util.make(
           new EnumMap<>(PlayerCompanionVariant.class),
-          hashMap -> {
-            hashMap.put(
-                PlayerCompanionVariant.DEFAULT,
-                new ResourceLocation("textures/entity/ghast/ghast.png"));
-          });
+          hashMap ->
+              hashMap.put(
+                  PlayerCompanionVariant.DEFAULT,
+                  new ResourceLocation("textures/entity/ghast/ghast.png")));
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -52,11 +51,10 @@ public class SmallGhastRenderer extends MobRenderer<SmallGhast, SmallGhastModel<
   protected static final Map<PlayerCompanionVariant, ResourceLocation> SHOOTING_TEXTURE_BY_VARIANT =
       Util.make(
           new EnumMap<>(PlayerCompanionVariant.class),
-          hashMap -> {
-            hashMap.put(
-                PlayerCompanionVariant.DEFAULT,
-                new ResourceLocation("textures/entity/ghast/ghast_shooting.png"));
-          });
+          hashMap ->
+              hashMap.put(
+                  PlayerCompanionVariant.DEFAULT,
+                  new ResourceLocation("textures/entity/ghast/ghast_shooting.png")));
   private static final ResourceLocation DEFAULT_SHOOTING_TEXTURE =
       SHOOTING_TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 

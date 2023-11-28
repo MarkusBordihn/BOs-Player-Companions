@@ -26,13 +26,13 @@ import org.apache.logging.log4j.Logger;
 
 public interface PlayerCompanionModel {
 
-  static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public default ModelPart rightHand() {
+  default ModelPart rightHand() {
     return null;
   }
 
-  public default ModelPart leftHand() {
+  default ModelPart leftHand() {
     return null;
   }
 }

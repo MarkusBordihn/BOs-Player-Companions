@@ -67,5 +67,6 @@ public class ModSoundEvents {
           () ->
               SoundEvent.createVariableRangeEvent(
                   new ResourceLocation(Constants.MOD_ID, "companion.fairy.no")));
+
   protected ModSoundEvents() {}
 }

@@ -31,6 +31,7 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   private static final long COOLDOWN_BETWEEN_CAN_USE_CHECKS = 20L;
   private final double speedModifier;
   private final boolean followingTargetEvenIfNotSeen;
+  private final boolean canPenalize = false;
   private Path path;
   private double pathTargetX;
   private double pathTargetY;
@@ -39,7 +40,6 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   private int ticksUntilNextAttack;
   private long lastCanUseCheck;
   private int failedPathFindingPenalty = 0;
-  private boolean canPenalize = false;
 
   public MeleeAttackGoal(
       PlayerCompanionEntity playerCompanionEntity,
@@ -93,11 +93,9 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
       return false;
     } else if (!this.followingTargetEvenIfNotSeen) {
       return !this.playerCompanionEntity.getNavigation().isDone();
-    } else if (livingEntity != null
-        && !this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition())) {
-      return false;
-    }
-    return true;
+    } else
+      return livingEntity == null
+          || this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition());
   }
 
   @Override
@@ -112,7 +110,7 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   public void stop() {
     LivingEntity livingEntity = this.playerCompanionEntity.getTarget();
     if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity)) {
-      this.playerCompanionEntity.setTarget((LivingEntity) null);
+      this.playerCompanionEntity.setTarget(null);
     }
     this.playerCompanionEntity.setAggressive(false);
     this.playerCompanionEntity.getNavigation().stop();

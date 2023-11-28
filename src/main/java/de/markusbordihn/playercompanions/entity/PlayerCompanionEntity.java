@@ -419,7 +419,7 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   protected void registerGoals() {
     super.registerGoals();
 
-    // It not tamed, the companion will react to tame items and stroll around.
+    // Is not tamed, the companion will react to tame items and stroll around.
     if (this.isTamable() && this.getTameItem() != null) {
       this.goalSelector.addGoal(3, new TameItemGoal(this, 0.8D));
       this.goalSelector.addGoal(10, new RandomStrollGoal(this, 0.8D));

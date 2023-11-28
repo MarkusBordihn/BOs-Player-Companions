@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.data;
 
 import de.markusbordihn.playercompanions.network.NetworkHandler;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.nbt.CompoundTag;
@@ -93,9 +92,7 @@ public class PlayerCompanionsServerDataClientSync {
     ListTag companionListTag = new ListTag();
 
     // Iterate over all known player companions for the owner and get their meta data.
-    Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanionsData.iterator();
-    while (playerCompanionIterator.hasNext()) {
-      PlayerCompanionData playerCompanion = playerCompanionIterator.next();
+    for (PlayerCompanionData playerCompanion : playerCompanionsData) {
       if (playerCompanion != null) {
         CompoundTag playerCompanionCompoundTag = new CompoundTag();
         playerCompanion.saveMetaData(playerCompanionCompoundTag);

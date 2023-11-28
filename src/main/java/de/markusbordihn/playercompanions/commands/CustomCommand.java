@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,31 +19,28 @@
 
 package de.markusbordihn.playercompanions.commands;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
-
+import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class CustomCommand implements Command<CommandSourceStack> {
-  protected CustomCommand() {}
-
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+
+  protected CustomCommand() {}
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(Component.literal(feedback), false);
   }
 
-  public static void sendErrorFeedback(CommandContext<CommandSourceStack> context,
-      String feedback) {
+  public static void sendErrorFeedback(
+      CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(
         Component.literal(feedback).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)), false);

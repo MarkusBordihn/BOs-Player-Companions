@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -17,7 +17,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 package de.markusbordihn.playercompanions.client.model;
 
 import net.minecraft.client.model.HumanoidModel;
@@ -29,7 +28,6 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -46,51 +44,76 @@ public class SamuraiModel<T extends TamableAnimal> extends HumanoidModel<T> {
     PartDefinition partDefinition = meshDefinition.getRoot();
 
     // Body
-    partDefinition.addOrReplaceChild("body",
-        CubeListBuilder.create().texOffs(26, 33)
-            .addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 17)
+    partDefinition.addOrReplaceChild(
+        "body",
+        CubeListBuilder.create()
+            .texOffs(26, 33)
+            .addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 17)
             .addBox(-4.0F, 0.0F, -2.5F, 8.0F, 18.0F, 5.0F, new CubeDeformation(0.5F)),
         PartPose.offset(0.0F, 0.0F, 0.0F));
 
     // Head with Overlay
-    partDefinition.addOrReplaceChild("head",
-        CubeListBuilder.create().texOffs(26, 17)
-            .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
+    partDefinition.addOrReplaceChild(
+        "head",
+        CubeListBuilder.create()
+            .texOffs(26, 17)
+            .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 0)
             .addBox(-4.5F, -8.5F, -4.5F, 9.0F, 8.0F, 9.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 0.0F, 0.0F));
-    partDefinition.addOrReplaceChild("hat", CubeListBuilder.create(),
-        PartPose.offset(-6.0F, 11.0F, 0.0F));
+    partDefinition.addOrReplaceChild(
+        "hat", CubeListBuilder.create(), PartPose.offset(-6.0F, 11.0F, 0.0F));
 
     // Arms
-    partDefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(34, 53)
-        .addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(45, 44)
-        .addBox(-1.0F, -2.5F, -2.5F, 4.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)),
+    partDefinition.addOrReplaceChild(
+        "left_arm",
+        CubeListBuilder.create()
+            .texOffs(34, 53)
+            .addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+            .texOffs(45, 44)
+            .addBox(-1.0F, -2.5F, -2.5F, 4.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)),
         PartPose.offset(5.0F, 2.0F, 0.0F));
-    partDefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(52, 0)
-        .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(16, 49)
-        .addBox(-3.0F, -2.5F, -2.5F, 4.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)),
+    partDefinition.addOrReplaceChild(
+        "right_arm",
+        CubeListBuilder.create()
+            .texOffs(52, 0)
+            .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+            .texOffs(16, 49)
+            .addBox(-3.0F, -2.5F, -2.5F, 4.0F, 8.0F, 5.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-5.0F, 2.0F, 0.0F));
 
     // Legs
-    partDefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 40)
-        .addBox(-2.1F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)),
+    partDefinition.addOrReplaceChild(
+        "left_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 40)
+            .addBox(-2.1F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-1.9F, 12.0F, 0.0F));
-    partDefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(36, 0)
-        .addBox(-2.1F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)),
+    partDefinition.addOrReplaceChild(
+        "right_leg",
+        CubeListBuilder.create()
+            .texOffs(36, 0)
+            .addBox(-2.1F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)),
         PartPose.offset(2.1F, 12.0F, 0.0F));
 
     // Hands
-    partDefinition.addOrReplaceChild("leftHand", CubeListBuilder.create(),
-        PartPose.offset(6.0F, 11.0F, 0.0F));
-    partDefinition.addOrReplaceChild("rightHand", CubeListBuilder.create(),
-        PartPose.offset(-6.0F, 11.0F, 0.0F));
+    partDefinition.addOrReplaceChild(
+        "leftHand", CubeListBuilder.create(), PartPose.offset(6.0F, 11.0F, 0.0F));
+    partDefinition.addOrReplaceChild(
+        "rightHand", CubeListBuilder.create(), PartPose.offset(-6.0F, 11.0F, 0.0F));
 
     return LayerDefinition.create(meshDefinition, 128, 128);
   }
 
   @Override
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
+  public void setupAnim(
+      T entity,
+      float limbSwing,
+      float limbSwingAmount,
+      float ageInTicks,
+      float netHeadYaw,
+      float headPitch) {
 
     // Don't animate death entities
     if (entity.isDeadOrDying()) {
@@ -112,5 +135,4 @@ public class SamuraiModel<T extends TamableAnimal> extends HumanoidModel<T> {
       super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
     }
   }
-
 }

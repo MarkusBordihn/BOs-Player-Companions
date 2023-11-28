@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,11 +19,8 @@
 
 package de.markusbordihn.playercompanions.block;
 
+import de.markusbordihn.playercompanions.Constants;
 import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -39,22 +36,19 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class LightBlock extends Block {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // Block state properties.
   public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED;
   public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
-
-  protected static final VoxelShape SHAPE_AABB = Block.box(7.5D, 7.5D, 7.5D, 8.5D, 8.5D, 8.5D);
-
   public static final int TICK_TTL = 30;
   public static final int UPDATE_TICK_TTL = 20;
   public static final int VERIFY_TICK_TTL = 100;
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final VoxelShape SHAPE_AABB = Block.box(7.5D, 7.5D, 7.5D, 8.5D, 8.5D, 8.5D);
 
   public LightBlock(Properties properties) {
     super(properties);
@@ -65,31 +59,6 @@ public class LightBlock extends Block {
   public static int getLightLevel(BlockState blockState) {
     int age = blockState.getValue(AGE);
     return Math.min(Math.max(15 - age, 0), 15);
-  }
-
-  public void rescheduleTick(Level level, BlockState blockState, BlockPos blockPos) {
-    if (level.getBlockTicks().hasScheduledTick(blockPos, this)
-        && Boolean.FALSE.equals(blockState.getValue(EXTENDED))) {
-      level.setBlock(blockPos, blockState.setValue(EXTENDED, true).setValue(AGE, 0), 3);
-    }
-  }
-
-  public void scheduleTick(Level level, BlockPos blockPos) {
-    if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
-      level.scheduleTick(blockPos, this, TICK_TTL);
-    }
-  }
-
-  public void scheduleUpdateTick(Level level, BlockPos blockPos) {
-    if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
-      level.scheduleTick(blockPos, this, UPDATE_TICK_TTL);
-    }
-  }
-
-  public void scheduleVerifyTick(Level level, BlockPos blockPos) {
-    if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
-      level.scheduleTick(blockPos, this, VERIFY_TICK_TTL);
-    }
   }
 
   public static void place(Level level, BlockPos blockPos) {
@@ -137,10 +106,40 @@ public class LightBlock extends Block {
     return blockState.isAir() || blockState.getBlock() instanceof LightBlock;
   }
 
-  /** @deprecated */
+  public void rescheduleTick(Level level, BlockState blockState, BlockPos blockPos) {
+    if (level.getBlockTicks().hasScheduledTick(blockPos, this)
+        && Boolean.FALSE.equals(blockState.getValue(EXTENDED))) {
+      level.setBlock(blockPos, blockState.setValue(EXTENDED, true).setValue(AGE, 0), 3);
+    }
+  }
+
+  public void scheduleTick(Level level, BlockPos blockPos) {
+    if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
+      level.scheduleTick(blockPos, this, TICK_TTL);
+    }
+  }
+
+  public void scheduleUpdateTick(Level level, BlockPos blockPos) {
+    if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
+      level.scheduleTick(blockPos, this, UPDATE_TICK_TTL);
+    }
+  }
+
+  public void scheduleVerifyTick(Level level, BlockPos blockPos) {
+    if (!level.getBlockTicks().hasScheduledTick(blockPos, this)) {
+      level.scheduleTick(blockPos, this, VERIFY_TICK_TTL);
+    }
+  }
+
+  /**
+   * @deprecated
+   */
   @Deprecated
   @Override
-  public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos,
+  public VoxelShape getShape(
+      BlockState blockState,
+      BlockGetter blockGetter,
+      BlockPos blockPos,
       CollisionContext collisionContext) {
     return SHAPE_AABB;
   }
@@ -151,16 +150,22 @@ public class LightBlock extends Block {
   }
 
   @Override
-  public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState,
-      @Nullable LivingEntity placer, ItemStack itemStack) {
+  public void setPlacedBy(
+      Level level,
+      BlockPos blockPos,
+      BlockState blockState,
+      @Nullable LivingEntity placer,
+      ItemStack itemStack) {
     scheduleTick(level, blockPos);
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Deprecated
   @Override
-  public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos,
-      RandomSource random) {
+  public void tick(
+      BlockState blockState, ServerLevel level, BlockPos blockPos, RandomSource random) {
     // Ignore client side.
     if (level.isClientSide) {
       return;
@@ -188,16 +193,17 @@ public class LightBlock extends Block {
     }
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Deprecated
   @Override
-  public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos,
-      RandomSource random) {
+  public void randomTick(
+      BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource random) {
     // Makes sure that the blocks is removed after a while, if it is not extended.
     int age = blockState.getValue(AGE);
     if (age <= 15 && !serverLevel.getBlockTicks().hasScheduledTick(blockPos, this)) {
       scheduleVerifyTick(serverLevel, blockPos);
     }
   }
-
 }

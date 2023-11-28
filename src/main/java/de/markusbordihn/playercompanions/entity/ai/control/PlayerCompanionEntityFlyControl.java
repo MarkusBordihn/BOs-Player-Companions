@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,16 +19,14 @@
 
 package de.markusbordihn.playercompanions.entity.ai.control;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionEntityFlyControl extends MoveControl {
 
@@ -36,9 +34,9 @@ public class PlayerCompanionEntityFlyControl extends MoveControl {
 
   private final boolean hoversInPlace;
   private final int maxTurn;
+  protected PlayerCompanionEntity companionEntity;
   private int waitDelay;
   private int waitSoundDelay;
-  protected PlayerCompanionEntity companionEntity;
 
   public PlayerCompanionEntityFlyControl(Mob mob, int maxTurn, boolean hovers) {
     super(mob);
@@ -92,7 +90,9 @@ public class PlayerCompanionEntityFlyControl extends MoveControl {
 
         // Play wait sound in specific intervals.
         if (waitSoundDelay++ >= companionEntity.getAmbientSoundInterval()) {
-          this.companionEntity.playSound(companionEntity.getWaitSound(), companionEntity.getSoundVolume(),
+          this.companionEntity.playSound(
+              companionEntity.getWaitSound(),
+              companionEntity.getSoundVolume(),
               companionEntity.getSoundPitch());
           waitSoundDelay = 0;
         }
@@ -102,9 +102,7 @@ public class PlayerCompanionEntityFlyControl extends MoveControl {
       }
       this.mob.setYya(0.0F);
       this.mob.setZza(0.0F);
-    }
-
-    else {
+    } else {
       if (!this.hoversInPlace || !this.mob.isAlive()) {
         this.mob.setNoGravity(false);
       }

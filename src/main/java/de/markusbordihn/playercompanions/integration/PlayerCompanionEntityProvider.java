@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,31 +19,27 @@
 
 package de.markusbordihn.playercompanions.integration;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.Experience;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.UUID;
-
-import snownee.jade.api.EntityAccessor;
-import snownee.jade.api.IEntityComponentProvider;
-import snownee.jade.api.ITooltip;
-import snownee.jade.api.config.IPluginConfig;
-import snownee.jade.api.ui.IElement;
-import snownee.jade.impl.ui.ElementHelper;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.item.ItemStack;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.UsernameCache;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.Experience;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import snownee.jade.api.EntityAccessor;
+import snownee.jade.api.IEntityComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.IElement;
+import snownee.jade.impl.ui.ElementHelper;
 
 public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
 
@@ -73,9 +69,12 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
           }
           tooltip.add(Component.literal("Owner: " + ownerName));
         }
-        tooltip.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_level",
-            playerCompanionEntity.getExperienceLevel(), playerCompanionEntity.getExperience(),
-            Experience.getExperienceForNextLevel(playerCompanionEntity.getExperienceLevel())));
+        tooltip.add(
+            Component.translatable(
+                Constants.TEXT_PREFIX + "tamed_companion_level",
+                playerCompanionEntity.getExperienceLevel(),
+                playerCompanionEntity.getExperience(),
+                Experience.getExperienceForNextLevel(playerCompanionEntity.getExperienceLevel())));
         if (data != null) {
           long respawnTimer =
               data.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
@@ -92,9 +91,10 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
           }
           // Display respawn timer, if any.
           if (respawnTimer >= 0) {
-            tooltip.add(Component
-                .translatable(Constants.TEXT_PREFIX + "tamed_companion_respawn", respawnTimer)
-                .withStyle(ChatFormatting.RED));
+            tooltip.add(
+                Component.translatable(
+                        Constants.TEXT_PREFIX + "tamed_companion_respawn", respawnTimer)
+                    .withStyle(ChatFormatting.RED));
           }
 
           // Aggression Level
@@ -121,5 +121,4 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   public ResourceLocation getUid() {
     return UID;
   }
-
 }

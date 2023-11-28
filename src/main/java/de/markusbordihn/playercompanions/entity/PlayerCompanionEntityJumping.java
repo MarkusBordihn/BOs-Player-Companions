@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -29,10 +29,11 @@ import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntity
 
 public class PlayerCompanionEntityJumping extends PlayerCompanionEntity {
 
-  public PlayerCompanionEntityJumping(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+  public PlayerCompanionEntityJumping(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityJumpControl(this);
   }
-
 }

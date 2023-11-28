@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,17 +19,16 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import java.util.UUID;
-
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import java.util.UUID;
 
 public interface PlayerCompanionsDataSync {
 
   public PlayerCompanionEntity getSyncReference();
 
-  public void setDataSyncNeeded(boolean dirty);
-
   public boolean getDataSyncNeeded();
+
+  public void setDataSyncNeeded(boolean dirty);
 
   public default boolean hasSyncReference() {
     return getSyncReference() != null;
@@ -82,5 +81,4 @@ public interface PlayerCompanionsDataSync {
   public default PlayerCompanionsServerData getServerData() {
     return PlayerCompanionsServerData.get();
   }
-
 }

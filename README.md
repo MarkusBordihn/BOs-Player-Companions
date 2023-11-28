@@ -1,4 +1,4 @@
-# 🐾 Player Companion's (1.19.2)
+# 🐾 Player Companion's (1.19.3)
 
 [![Player Companions Downloads](http://cf.way2muchnoise.eu/full_552456_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 [![Player Companions Versions](http://cf.way2muchnoise.eu/versions/Minecraft_552456_all.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)

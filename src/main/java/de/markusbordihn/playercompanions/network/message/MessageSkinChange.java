@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2023 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,23 +19,19 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
-import java.util.UUID;
-import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-
-import net.minecraftforge.network.NetworkEvent;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.skin.SkinType;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
+import java.util.UUID;
+import java.util.function.Supplier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.NetworkEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MessageSkinChange {
 
@@ -47,8 +43,8 @@ public class MessageSkinChange {
   protected final UUID skinUUID;
   protected final SkinType skinType;
 
-  public MessageSkinChange(UUID uuid, String skin, String skinURL, UUID skinUUID,
-      SkinType skinType) {
+  public MessageSkinChange(
+      UUID uuid, String skin, String skinURL, UUID skinUUID, SkinType skinType) {
     this.uuid = uuid;
     this.skin = skin;
     this.skinURL = skinURL;
@@ -56,29 +52,13 @@ public class MessageSkinChange {
     this.skinType = skinType;
   }
 
-  public UUID getUUID() {
-    return this.uuid;
-  }
-
-  public String getSkin() {
-    return this.skin;
-  }
-
-  public String getSkinURL() {
-    return this.skinURL;
-  }
-
-  public UUID getSkinUUID() {
-    return this.skinUUID;
-  }
-
-  public SkinType getSkinType() {
-    return this.skinType;
-  }
-
   public static MessageSkinChange decode(final FriendlyByteBuf buffer) {
-    return new MessageSkinChange(buffer.readUUID(), buffer.readUtf(), buffer.readUtf(),
-        buffer.readUUID(), buffer.readEnum(SkinType.class));
+    return new MessageSkinChange(
+        buffer.readUUID(),
+        buffer.readUtf(),
+        buffer.readUtf(),
+        buffer.readUUID(),
+        buffer.readEnum(SkinType.class));
   }
 
   public static void encode(final MessageSkinChange message, final FriendlyByteBuf buffer) {
@@ -89,8 +69,8 @@ public class MessageSkinChange {
     buffer.writeEnum(message.getSkinType());
   }
 
-  public static void handle(MessageSkinChange message,
-      Supplier<NetworkEvent.Context> contextSupplier) {
+  public static void handle(
+      MessageSkinChange message, Supplier<NetworkEvent.Context> contextSupplier) {
     NetworkEvent.Context context = contextSupplier.get();
     context.enqueueWork(() -> handlePacket(message, context));
     context.setPacketHandled(true);
@@ -116,8 +96,12 @@ public class MessageSkinChange {
     Entity entity = serverLevel.getEntity(uuid);
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
         && !serverPlayer.getUUID().equals(playerCompanionEntity.getOwnerUUID())) {
-      log.error("Player {} tried to change skin {} ({}) for unowned {}", serverPlayer, skin,
-          message.getSkin(), playerCompanionEntity);
+      log.error(
+          "Player {} tried to change skin {} ({}) for unowned {}",
+          serverPlayer,
+          skin,
+          message.getSkin(),
+          playerCompanionEntity);
       return;
     }
 
@@ -140,8 +124,14 @@ public class MessageSkinChange {
     UUID skinUUID = message.getSkinUUID();
 
     // Pre-process skin information, if needed.
-    log.debug("Processing skin:{} uuid:{} url:{} type:{} model:{} for {} from {}", skin, skinUUID,
-        skinURL, skinType, playerCompanionEntity.getSkinModel(), playerCompanionEntity,
+    log.debug(
+        "Processing skin:{} uuid:{} url:{} type:{} model:{} for {} from {}",
+        skin,
+        skinUUID,
+        skinURL,
+        skinType,
+        playerCompanionEntity.getSkinModel(),
+        playerCompanionEntity,
         serverPlayer);
 
     switch (skinType) {
@@ -162,14 +152,40 @@ public class MessageSkinChange {
       case SECURE_REMOTE_URL:
         playerCompanionEntity.setSkinType(skinType);
         playerCompanionEntity.setSkinURL(skinURL != null && !skinURL.isBlank() ? skinURL : skin);
-        playerCompanionEntity
-            .setSkinUUID(skinUUID != null && !Constants.BLANK_UUID.equals(skinUUID) ? skinUUID
+        playerCompanionEntity.setSkinUUID(
+            skinUUID != null && !Constants.BLANK_UUID.equals(skinUUID)
+                ? skinUUID
                 : UUID.nameUUIDFromBytes(skin.getBytes()));
         break;
       default:
-        log.error("Failed processing skin:{} uuid:{} url:{} type:{} for {} from {}", skin, skinUUID,
-            skinURL, skinType, playerCompanionEntity, serverPlayer);
+        log.error(
+            "Failed processing skin:{} uuid:{} url:{} type:{} for {} from {}",
+            skin,
+            skinUUID,
+            skinURL,
+            skinType,
+            playerCompanionEntity,
+            serverPlayer);
     }
   }
 
+  public UUID getUUID() {
+    return this.uuid;
+  }
+
+  public String getSkin() {
+    return this.skin;
+  }
+
+  public String getSkinURL() {
+    return this.skinURL;
+  }
+
+  public UUID getSkinUUID() {
+    return this.skinUUID;
+  }
+
+  public SkinType getSkinType() {
+    return this.skinType;
+  }
 }

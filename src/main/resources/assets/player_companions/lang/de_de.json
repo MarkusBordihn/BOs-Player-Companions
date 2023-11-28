@@ -219,6 +219,8 @@
   "text.player_companions.default_aggression": "Standard-Aggression",
   "text.player_companions.empty_captured_companion_usage": "Klicke auf einen leeren Platz, um einen neuen Begleiter zu erstellen, oder klicke auf einen vorhandenen Begleiter, um stattdessen den vorhandenen Begleiter zu verknüpfen.",
   "text.player_companions.follow": "Folgen",
+  "text.player_companions.max_number_of_companions.subtitle": "Du hast %1$s von max. %2$s Begleitern!",
+  "text.player_companions.max_number_of_companions.title": "Zähm Limit!",
   "text.player_companions.save": "Speichern",
   "text.player_companions.sit": "Sitzen",
   "text.player_companions.tame_companion": "Der Gegenstand wird verwendet, um die verschiedenen Arten von Spielerbegleitern zu zähmen.",

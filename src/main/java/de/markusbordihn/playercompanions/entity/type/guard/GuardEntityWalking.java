@@ -44,7 +44,7 @@ public class GuardEntityWalking extends PlayerCompanionEntityWalking {
           AggressionLevel.AGGRESSIVE_MONSTER,
           AggressionLevel.AGGRESSIVE_ANIMALS,
           AggressionLevel.AGGRESSIVE_PLAYERS);
-  protected GuardFeatures guardFeatures;
+  protected final GuardFeatures guardFeatures;
 
   public GuardEntityWalking(
       EntityType<? extends PlayerCompanionEntity> entityType,

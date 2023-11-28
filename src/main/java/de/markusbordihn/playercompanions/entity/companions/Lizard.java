@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
@@ -50,8 +49,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class Lizard extends FollowerEntityWalking {
 
@@ -65,7 +62,6 @@ public class Lizard extends FollowerEntityWalking {
           PlayerCompanionVariant.DEFAULT,
           PlayerCompanionVariant.DESERT,
           PlayerCompanionVariant.GREEN);
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(

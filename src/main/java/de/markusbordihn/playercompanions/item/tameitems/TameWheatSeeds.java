@@ -38,10 +38,6 @@ public class TameWheatSeeds extends CompanionTameItem {
     super();
   }
 
-  public TameWheatSeeds(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Set<String> getTameableMobTypes() {
     return tameableMobTypes;

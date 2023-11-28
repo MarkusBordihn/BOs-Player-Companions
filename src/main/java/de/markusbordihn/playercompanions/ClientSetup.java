@@ -36,9 +36,8 @@ public class ClientSetup {
     log.info("{} Client setup ...", Constants.LOG_REGISTER_PREFIX);
 
     event.enqueueWork(
-        () -> {
-          ItemBlockRenderTypes.setRenderLayer(
-              ModBlocks.LIGHT_BLOCK.get(), RenderType.cutoutMipped());
-        });
+        () ->
+            ItemBlockRenderTypes.setRenderLayer(
+                ModBlocks.LIGHT_BLOCK.get(), RenderType.cutoutMipped()));
   }
 }

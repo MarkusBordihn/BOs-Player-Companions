@@ -38,10 +38,6 @@ public class TameRawMutton extends CompanionTameItem {
     super();
   }
 
-  public TameRawMutton(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Set<String> getTameableMobTypes() {
     return tameableMobTypes;

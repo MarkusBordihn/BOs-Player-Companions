@@ -140,7 +140,7 @@ public class ModEntityType {
   protected ModEntityType() {}
 
   @SubscribeEvent
-  public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
+  public static void entityAttributCreation(EntityAttributeCreationEvent event) {
     // Create Attributes for Entities
     event.put(DOBUTSU.get(), Dobutsu.createAttributes().build());
     event.put(FAIRY.get(), Fairy.createAttributes().build());

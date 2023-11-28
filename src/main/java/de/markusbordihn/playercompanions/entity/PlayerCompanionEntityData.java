@@ -26,7 +26,6 @@ import de.markusbordihn.playercompanions.data.PlayerCompanionsDataSync;
 import de.markusbordihn.playercompanions.skin.SkinModel;
 import de.markusbordihn.playercompanions.skin.SkinType;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -388,7 +387,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public float getSoundPitch() {
     float randomSoundPitch =
         ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
-    return randomSoundPitch >= 0.0F ? randomSoundPitch : 0.0F;
+    return Math.max(randomSoundPitch, 0.0F);
   }
 
   public boolean hasRideCooldown() {
@@ -578,9 +577,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
       Set<AttributeModifier> attributeModifiers =
           getAttribute(Attributes.MAX_HEALTH).getModifiers();
       if (!attributeModifiers.isEmpty()) {
-        Iterator<AttributeModifier> attributeModifierIterator = attributeModifiers.iterator();
-        while (attributeModifierIterator.hasNext()) {
-          AttributeModifier attributeModifier = attributeModifierIterator.next();
+        for (AttributeModifier attributeModifier : attributeModifiers) {
           if (attributeModifier != null
               && attributeModifier.getName().equals(ATTRIBUTE_MAX_HEALTH)) {
             getAttribute(Attributes.MAX_HEALTH).removeModifier(attributeModifier);
@@ -611,9 +608,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
       Set<AttributeModifier> attributeModifiers =
           getAttribute(Attributes.ATTACK_DAMAGE).getModifiers();
       if (!attributeModifiers.isEmpty()) {
-        Iterator<AttributeModifier> attributeModifierIterator = attributeModifiers.iterator();
-        while (attributeModifierIterator.hasNext()) {
-          AttributeModifier attributeModifier = attributeModifierIterator.next();
+        for (AttributeModifier attributeModifier : attributeModifiers) {
           if (attributeModifier != null
               && attributeModifier.getName().equals(ATTRIBUTE_ATTACK_DAMAGE)) {
             getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(attributeModifier);
@@ -637,10 +632,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
       Collection<AttributeModifier> attributeModifierCollection =
           mainHandItem.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE);
       if (attributeModifierCollection != null && !attributeModifierCollection.isEmpty()) {
-        Iterator<AttributeModifier> attributeModifierIterator =
-            attributeModifierCollection.iterator();
-        while (attributeModifierIterator.hasNext()) {
-          AttributeModifier attributeModifier = attributeModifierIterator.next();
+        for (AttributeModifier attributeModifier : attributeModifierCollection) {
           if (attributeModifier != null) {
             baseAttackDamage += attributeModifier.getAmount();
           }

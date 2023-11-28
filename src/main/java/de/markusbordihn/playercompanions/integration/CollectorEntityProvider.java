@@ -35,7 +35,8 @@ public class CollectorEntityProvider implements IEntityComponentProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-    if (accessor.getEntity() instanceof PlayerCompanionEntity) {
+    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.isAlive()) {
       tooltip.add(new TextComponent("Collector"));
     }
   }

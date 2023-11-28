@@ -38,10 +38,6 @@ public class TameCarrot extends CompanionTameItem {
     super();
   }
 
-  public TameCarrot(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Set<String> getTameableMobTypes() {
     return tameableMobTypes;

@@ -38,10 +38,6 @@ public class TameHoneycomp extends CompanionTameItem {
     super();
   }
 
-  public TameHoneycomp(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Set<String> getTameableMobTypes() {
     return tameableMobTypes;

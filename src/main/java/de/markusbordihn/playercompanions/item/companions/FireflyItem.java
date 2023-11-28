@@ -38,10 +38,6 @@ public class FireflyItem extends CapturedCompanion {
     super(variant);
   }
 
-  public FireflyItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Firefly.FOOD_ITEMS;

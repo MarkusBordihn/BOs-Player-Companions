@@ -38,10 +38,6 @@ public class RoosterItem extends CapturedCompanion {
     super(variant);
   }
 
-  public RoosterItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Rooster.FOOD_ITEMS;

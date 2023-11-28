@@ -38,10 +38,6 @@ public class TameSweetBerries extends CompanionTameItem {
     super();
   }
 
-  public TameSweetBerries(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Set<String> getTameableMobTypes() {
     return tameableMobTypes;

@@ -48,7 +48,8 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
+    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.isAlive()) {
       tooltip.add(new TextComponent("Type: " + playerCompanionEntity.getCompanionType()));
       tooltip.add(new TextComponent("Variant: " + playerCompanionEntity.getVariant()));
       if (playerCompanionEntity.getOwner() != null) {
@@ -63,6 +64,8 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
               ownerName = owner.getName().getString();
             } else if (ownerUUID != null) {
               ownerName = ownerUUID.toString();
+            } else {
+              ownerName = "Unknown";
             }
           }
           tooltip.add(new TextComponent("Owner: " + ownerName));
@@ -106,7 +109,8 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public IElement getIcon(EntityAccessor accessor, IPluginConfig config, IElement currentIcon) {
-    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
+    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.isAlive()) {
       ItemStack itemStack = new ItemStack(playerCompanionEntity.getCompanionItem());
       return new ElementHelper().item(itemStack, 2F);
     }

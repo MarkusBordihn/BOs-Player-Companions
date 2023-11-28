@@ -38,10 +38,6 @@ public class WelshCorgiItem extends CapturedCompanion {
     super(variant);
   }
 
-  public WelshCorgiItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return WelshCorgi.FOOD_ITEMS;

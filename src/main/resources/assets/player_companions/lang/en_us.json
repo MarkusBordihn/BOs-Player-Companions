@@ -219,6 +219,8 @@
   "text.player_companions.default_aggression": "Default Aggression",
   "text.player_companions.empty_captured_companion_usage": "Click on an empty place to create a new companion or click on an existing companion to link the existed companion instead.",
   "text.player_companions.follow": "Follow",
+  "text.player_companions.max_number_of_companions.subtitle": "You have %1$s of max. %2$s companions!",
+  "text.player_companions.max_number_of_companions.title": "Tame Limit!",
   "text.player_companions.save": "Save",
   "text.player_companions.sit": "Sit",
   "text.player_companions.tame_companion": "The item is used to tame the different type of player companions.",

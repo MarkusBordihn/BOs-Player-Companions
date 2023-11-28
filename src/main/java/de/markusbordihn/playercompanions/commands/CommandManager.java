@@ -22,11 +22,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,28 +49,5 @@ public class CommandManager {
             .then(VersionCommand.register())
         // @formatter:on
         );
-  }
-
-  public static void executeServerCommand(String command) {
-    MinecraftServer minecraftServer = ServerLifecycleHooks.getCurrentServer();
-    if (minecraftServer == null) {
-      return;
-    }
-    log.debug("Execute Server Command: {}", command);
-    Commands commands = minecraftServer.getCommands();
-    CommandSourceStack commandSourceStack =
-        minecraftServer.createCommandSourceStack().withSuppressedOutput();
-    commands.performCommand(commandSourceStack, command);
-  }
-
-  public static void executeUserCommand(String command) {
-    MinecraftServer minecraftServer = ServerLifecycleHooks.getCurrentServer();
-    if (minecraftServer == null) {
-      return;
-    }
-    log.debug("Execute User Command: {}", command);
-    Commands commands = minecraftServer.getCommands();
-    CommandSourceStack commandSourceStack = minecraftServer.createCommandSourceStack();
-    commands.performCommand(commandSourceStack, command);
   }
 }

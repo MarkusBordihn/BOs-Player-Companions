@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.text;
 
-import de.markusbordihn.playercompanions.Constants;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -27,13 +26,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber
 public class TranslatableText {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private static Map<String, TranslatableComponent> entityNameCache = new ConcurrentHashMap<>();
   private static Map<String, TranslatableComponent> itemNameCache = new ConcurrentHashMap<>();
 

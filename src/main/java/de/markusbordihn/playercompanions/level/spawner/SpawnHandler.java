@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,15 +19,6 @@
 
 package de.markusbordihn.playercompanions.level.spawner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.level.levelgen.Heightmap;
-
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
@@ -37,6 +28,12 @@ import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SpawnHandler {
 
@@ -46,32 +43,68 @@ public class SpawnHandler {
 
   public static void registerSpawnPlacements(final FMLCommonSetupEvent event) {
     log.info("{} Spawn Placements ...", Constants.LOG_REGISTER_PREFIX);
-    event.enqueueWork(() -> {
-      SpawnPlacements.register(ModEntityType.DOBUTSU.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dobutsu::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.FAIRY.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.FIREFLY.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Firefly::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.LIZARD.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Lizard::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.RAPTOR.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.ROOSTER.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.SAMURAI.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.SMALL_GHAST.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SmallGhast::checkGhastSpawnRules);
-      SpawnPlacements.register(ModEntityType.SMALL_SLIME.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SmallSlime::checkMobSpawnRules);
-      SpawnPlacements.register(ModEntityType.SNAIL.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Snail::checkAnimalSpawnRules);
-      SpawnPlacements.register(ModEntityType.WELSH_CORGI.get(), SpawnPlacements.Type.ON_GROUND,
-          Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Snail::checkAnimalSpawnRules);
-    });
+    event.enqueueWork(
+        () -> {
+          SpawnPlacements.register(
+              ModEntityType.DOBUTSU.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Dobutsu::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.FAIRY.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Fairy::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.FIREFLY.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Firefly::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.LIZARD.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Lizard::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.PIG.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Animal::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.RAPTOR.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Animal::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.ROOSTER.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Animal::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.SAMURAI.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Animal::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.SMALL_GHAST.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              SmallGhast::checkGhastSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.SMALL_SLIME.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              SmallSlime::checkMobSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.SNAIL.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Snail::checkAnimalSpawnRules);
+          SpawnPlacements.register(
+              ModEntityType.WELSH_CORGI.get(),
+              SpawnPlacements.Type.ON_GROUND,
+              Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+              Snail::checkAnimalSpawnRules);
+        });
   }
-
 }

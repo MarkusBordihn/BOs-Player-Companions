@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,14 +19,11 @@
 
 package de.markusbordihn.playercompanions.tabs;
 
+import de.markusbordihn.playercompanions.item.ModItems;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 
-import de.markusbordihn.playercompanions.item.ModItems;
-
 public class PlayerCompanionsTab {
-
-  protected PlayerCompanionsTab() {}
 
   public static final CreativeModeTab TAB_SPAWN_EGGS =
       new CreativeModeTab("player_companions.spawn_eggs") {
@@ -34,13 +31,12 @@ public class PlayerCompanionsTab {
           return new ItemStack(ModItems.SMALL_SLIME_SPAWN_EGG.get());
         }
       };
-
-  public static final CreativeModeTab TAB_COMPANIONS = new CreativeModeTab("player_companions") {
-    public ItemStack makeIcon() {
-      return new ItemStack(ModItems.SMALL_SLIME_GREEN.get());
-    }
-  };
-
+  public static final CreativeModeTab TAB_COMPANIONS =
+      new CreativeModeTab("player_companions") {
+        public ItemStack makeIcon() {
+          return new ItemStack(ModItems.SMALL_SLIME_GREEN.get());
+        }
+      };
   public static final CreativeModeTab TAB_TAME_ITEMS =
       new CreativeModeTab("player_companions.tame_items") {
         public ItemStack makeIcon() {
@@ -48,4 +44,5 @@ public class PlayerCompanionsTab {
         }
       };
 
+  protected PlayerCompanionsTab() {}
 }

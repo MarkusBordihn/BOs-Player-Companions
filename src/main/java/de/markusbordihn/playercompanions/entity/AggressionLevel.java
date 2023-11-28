@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -30,6 +30,7 @@ public enum AggressionLevel {
   AGGRESSIVE_PLAYERS,
   AGGRESSIVE_ALL,
   UNKNOWN;
+
   // @formatter:on
 
   public static AggressionLevel get(String aggressionLevel) {

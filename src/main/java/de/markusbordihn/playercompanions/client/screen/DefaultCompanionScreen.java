@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,13 +19,11 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
+import de.markusbordihn.playercompanions.container.CompanionMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
-
-import de.markusbordihn.playercompanions.container.CompanionMenu;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DefaultCompanionScreen extends CompanionScreen<CompanionMenu> {
@@ -33,5 +31,4 @@ public class DefaultCompanionScreen extends CompanionScreen<CompanionMenu> {
   public DefaultCompanionScreen(CompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component);
   }
-
 }

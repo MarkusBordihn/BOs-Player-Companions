@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,18 +19,16 @@
 
 package de.markusbordihn.playercompanions.container.slots;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.world.Container;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.CompanionMenu;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class InventorySlot extends Slot {
 
@@ -56,5 +54,4 @@ public class InventorySlot extends Slot {
     Item item = itemStack.getItem();
     return (!(item instanceof CapturedCompanion) && !(item instanceof CompanionTameItem));
   }
-
 }

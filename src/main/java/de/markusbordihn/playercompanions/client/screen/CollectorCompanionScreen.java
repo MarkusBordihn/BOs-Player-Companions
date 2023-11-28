@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,15 +19,13 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.container.CollectorCompanionMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.CollectorCompanionMenu;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class CollectorCompanionScreen extends CompanionScreen<CollectorCompanionMenu> {
@@ -35,9 +33,8 @@ public class CollectorCompanionScreen extends CompanionScreen<CollectorCompanion
   private static final ResourceLocation TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion_collector.png");
 
-  public CollectorCompanionScreen(CollectorCompanionMenu menu, Inventory inventory,
-      Component component) {
+  public CollectorCompanionScreen(
+      CollectorCompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component, TEXTURE);
   }
-
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,34 +19,35 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
-import java.util.EnumMap;
-import java.util.Map;
-
-import net.minecraft.Util;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.PigModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.Pig;
+import java.util.EnumMap;
+import java.util.Map;
+import net.minecraft.Util;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class PigRenderer extends MobRenderer<Pig, PigModel<Pig>> {
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig_default.png"));
-        hashMap.put(PlayerCompanionVariant.SPOTTED,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig_spotted.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.SPOTTED,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/pig/pig_spotted.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -58,5 +59,4 @@ public class PigRenderer extends MobRenderer<Pig, PigModel<Pig>> {
   public ResourceLocation getTextureLocation(Pig entity) {
     return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
-
 }

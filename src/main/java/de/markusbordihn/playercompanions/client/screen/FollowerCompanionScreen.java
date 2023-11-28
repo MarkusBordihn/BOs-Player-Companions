@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,17 +19,15 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.container.FollowerCompanionMenu;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.FollowerCompanionMenu;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMenu> {
@@ -37,8 +35,8 @@ public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMe
   private static final ResourceLocation TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion_follower.png");
 
-  public FollowerCompanionScreen(FollowerCompanionMenu menu, Inventory inventory,
-      Component component) {
+  public FollowerCompanionScreen(
+      FollowerCompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component, TEXTURE);
   }
 
@@ -48,12 +46,17 @@ public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMe
 
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
         && playerCompanionEntity.enableCustomTextureSkin()) {
-      this.addRenderableWidget(new Button(this.leftPos + 5, this.topPos + 107, 108, 20,
-          Component.literal("Texture Settings"), event -> {
-            this.showTextureSettings(true);
-            this.setFocused(null);
-          }));
+      this.addRenderableWidget(
+          new Button(
+              this.leftPos + 5,
+              this.topPos + 107,
+              108,
+              20,
+              Component.literal("Texture Settings"),
+              event -> {
+                this.showTextureSettings(true);
+                this.setFocused(null);
+              }));
     }
   }
-
 }

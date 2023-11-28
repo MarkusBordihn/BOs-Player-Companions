@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.data;
 
 import de.markusbordihn.playercompanions.Constants;
+import java.util.Collections;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -122,8 +123,6 @@ public class PlayerCompanionDataHelper {
   }
 
   private static void resetNonNullList(NonNullList<ItemStack> list) {
-    for (int index = 0; index < list.size(); ++index) {
-      list.set(index, ItemStack.EMPTY);
-    }
+    Collections.fill(list, ItemStack.EMPTY);
   }
 }

@@ -23,7 +23,6 @@ import com.google.common.collect.Sets;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;

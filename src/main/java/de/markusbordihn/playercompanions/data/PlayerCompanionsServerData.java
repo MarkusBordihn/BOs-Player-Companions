@@ -24,7 +24,6 @@ import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -33,6 +32,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -222,6 +222,18 @@ public class PlayerCompanionsServerData extends SavedData {
     return companionsPerPlayerMap.get(ownerUUID);
   }
 
+  public int getNumberOfCompanions(ServerPlayer serverPlayer) {
+    return getNumberOfCompanions(serverPlayer.getUUID());
+  }
+
+  public int getNumberOfCompanions(UUID ownerUUID) {
+    Set<PlayerCompanionData> playerCompanions = getCompanions(ownerUUID);
+    if (playerCompanions != null) {
+      return playerCompanions.size();
+    }
+    return 0;
+  }
+
   public Set<Entity> getCompanionsEntity(UUID ownerUUID, Level level) {
     if (level instanceof ServerLevel serverLevel) {
       return getCompanionsEntity(ownerUUID, serverLevel);
@@ -359,9 +371,7 @@ public class PlayerCompanionsServerData extends SavedData {
 
     // Iterate throw all companions and store their full data (meta + entity data).
     ListTag companionListTag = new ListTag();
-    Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanionsMap.values().iterator();
-    while (playerCompanionIterator.hasNext()) {
-      PlayerCompanionData playerCompanion = playerCompanionIterator.next();
+    for (PlayerCompanionData playerCompanion : playerCompanionsMap.values()) {
       if (playerCompanion != null) {
         CompoundTag playerCompanionCompoundTag = new CompoundTag();
         playerCompanion.save(playerCompanionCompoundTag);

@@ -28,7 +28,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class FleeGoal extends PlayerCompanionGoal {
 
-  public static final int WATER_CHECK_DISTANCE_VERTICAL = 1;
   protected final double speedModifier;
   protected double posX;
   protected double posY;

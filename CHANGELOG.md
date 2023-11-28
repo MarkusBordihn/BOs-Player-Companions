@@ -7,6 +7,7 @@ For the full changelog, please go to the [Git Hub History][history] instead.
 
 ### 2023.11.28
 
+- Added `companionLimitPerPlayer` option to limit the number of tamed companions per player on multiplayer servers.
 - Refactored code for version 1.20.2-48.0.42
 
 ### 2023.10.12

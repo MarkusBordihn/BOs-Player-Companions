@@ -51,8 +51,9 @@ public class NetworkHandler {
       ChannelBuilder.named(new ResourceLocation(Constants.MOD_ID, "network"))
           .networkProtocolVersion(PROTOCOL_VERSION)
           .simpleChannel();
+  private static final ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap =
+      new ConcurrentHashMap<>();
   private static int id = 0;
-  private static final ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
 
   protected NetworkHandler() {}
 

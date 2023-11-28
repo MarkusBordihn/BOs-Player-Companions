@@ -113,12 +113,12 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private static final int JUMP_MOVE_DELAY = 10;
   // Additional ticker
   private static final int DATA_SYNC_TICK = 10;
+  // Variants
+  private final Map<PlayerCompanionVariant, Item> companionItemByVariant;
   protected UUID persistentAngerTarget;
   protected int rideCooldownCounter;
   // Default values
   private int explosionPower = 0;
-  // Variants
-  private final Map<PlayerCompanionVariant, Item> companionItemByVariant;
   // Temporary stats
   private ActionType actionType = ActionType.UNKNOWN;
   private AggressionLevel aggressionLevel = AggressionLevel.UNKNOWN;
@@ -386,7 +386,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
   public float getSoundPitch() {
     float randomSoundPitch =
         ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.4F;
-    return randomSoundPitch >= 0.0F ? randomSoundPitch : 0.0F;
+    return Math.max(randomSoundPitch, 0.0F);
   }
 
   public boolean hasRideCooldown() {
@@ -639,10 +639,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
       Collection<AttributeModifier> attributeModifierCollection =
           mainHandItem.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE);
       if (attributeModifierCollection != null && !attributeModifierCollection.isEmpty()) {
-        Iterator<AttributeModifier> attributeModifierIterator =
-            attributeModifierCollection.iterator();
-        while (attributeModifierIterator.hasNext()) {
-          AttributeModifier attributeModifier = attributeModifierIterator.next();
+        for (AttributeModifier attributeModifier : attributeModifierCollection) {
           if (attributeModifier != null) {
             baseAttackDamage += attributeModifier.getAmount();
           }

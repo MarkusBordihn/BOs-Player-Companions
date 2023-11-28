@@ -31,6 +31,7 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   private static final long COOLDOWN_BETWEEN_CAN_USE_CHECKS = 20L;
   private final double speedModifier;
   private final boolean followingTargetEvenIfNotSeen;
+  private final boolean canPenalize = false;
   private Path path;
   private double pathTargetX;
   private double pathTargetY;
@@ -39,7 +40,6 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   private int ticksUntilNextAttack;
   private long lastCanUseCheck;
   private int failedPathFindingPenalty = 0;
-  private final boolean canPenalize = false;
 
   public MeleeAttackGoal(
       PlayerCompanionEntity playerCompanionEntity,
@@ -93,9 +93,10 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
       return false;
     } else if (!this.followingTargetEvenIfNotSeen) {
       return !this.playerCompanionEntity.getNavigation().isDone();
-    } else
+    } else {
       return livingEntity == null
           || this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition());
+    }
   }
 
   @Override

@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.container;
 
 import java.util.UUID;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;

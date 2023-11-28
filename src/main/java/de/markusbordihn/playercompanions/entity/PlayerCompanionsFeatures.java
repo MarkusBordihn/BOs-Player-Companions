@@ -40,16 +40,14 @@ public class PlayerCompanionsFeatures {
   protected static final int EXPERIENCE_TICKER = 20 * 60;
   protected static final int EXPERIENCE_OWNER_BONUS_TICKER = 20 * 60 * 5;
   protected final Random random = new Random();
+  // References
+  protected final Level level;
+  protected final PlayerCompanionEntity playerCompanionEntity;
   protected short ticker = 0;
   protected short experienceDistributeTicker = 0;
   protected short experienceOwnerBonusTicker = 0;
-
   // Internal states
   protected int distributedExperience = 0;
-
-  // References
-  protected Level level;
-  protected PlayerCompanionEntity playerCompanionEntity;
   protected NeutralMob neutralMob;
 
   // Animation related information

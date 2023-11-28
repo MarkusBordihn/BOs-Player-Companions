@@ -22,7 +22,6 @@ package de.markusbordihn.playercompanions.entity;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import java.util.Iterator;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -150,7 +149,6 @@ public class PlayerCompanionSpawnManager {
         // Add entity to the world.
         log.debug("Spawn player companion {} ...", entity);
         if (serverLevel.addFreshEntity(entity)) {
-          playerCompanion = entity;
           if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
             playerCompanionEntity.finalizeSpawn();
           }
@@ -202,9 +200,7 @@ public class PlayerCompanionSpawnManager {
 
   public static void despawnCompanionExcept(UUID uuid, ServerLevel serverLevel) {
     MinecraftServer server = serverLevel.getServer();
-    Iterator<ServerLevel> serverLevels = server.getAllLevels().iterator();
-    while (serverLevels.hasNext()) {
-      ServerLevel serverLevelToCheck = serverLevels.next();
+    for (ServerLevel serverLevelToCheck : server.getAllLevels()) {
       if (serverLevelToCheck != serverLevel) {
         Entity playerCompanion = getCompanionEntity(uuid, serverLevelToCheck);
         if (playerCompanion != null) {

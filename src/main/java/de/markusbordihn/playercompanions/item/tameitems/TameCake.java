@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.item.tameitems;
 
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,14 +32,10 @@ public class TameCake extends CompanionTameItem {
               // @formatter:off
               "player_companions:fairy"
               // @formatter:on
-          ));
+              ));
 
   public TameCake() {
     super();
-  }
-
-  public TameCake(Properties properties) {
-    super(properties);
   }
 
   @Override

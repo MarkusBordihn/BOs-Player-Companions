@@ -307,5 +307,6 @@ public class ModItems {
           () ->
               new CompanionSpawnEggItem(
                   ModEntityType.WELSH_CORGI::get, new Item.Properties().rarity(Rarity.EPIC)));
+
   protected ModItems() {}
 }

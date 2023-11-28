@@ -44,7 +44,7 @@ public class GuardEntityFloating extends PlayerCompanionEntityFloating {
           AggressionLevel.AGGRESSIVE_MONSTER,
           AggressionLevel.AGGRESSIVE_ANIMALS,
           AggressionLevel.AGGRESSIVE_PLAYERS);
-  protected GuardFeatures guardFeatures;
+  protected final GuardFeatures guardFeatures;
 
   public GuardEntityFloating(
       EntityType<? extends PlayerCompanionEntity> entityType,

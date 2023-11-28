@@ -19,22 +19,14 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
-
 public class MessagePlayerCompanionsData {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected final CompoundTag data;
 

@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.item.tameitems;
 
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,14 +32,10 @@ public class TameSeagrass extends CompanionTameItem {
               // @formatter:off
               "player_companions:snail"
               // @formatter:on
-          ));
+              ));
 
   public TameSeagrass() {
     super();
-  }
-
-  public TameSeagrass(Properties properties) {
-    super(properties);
   }
 
   @Override

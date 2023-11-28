@@ -19,15 +19,14 @@
 
 package de.markusbordihn.playercompanions.integration;
 
-import snownee.jade.api.IWailaClientRegistration;
-import snownee.jade.api.IWailaPlugin;
-import snownee.jade.api.WailaPlugin;
-
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityFloating;
 import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityWalking;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFloating;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 
 @WailaPlugin
 public class HwylaPlugin implements IWailaPlugin {

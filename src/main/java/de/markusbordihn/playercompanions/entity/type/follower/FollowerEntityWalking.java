@@ -37,7 +37,7 @@ public class FollowerEntityWalking extends PlayerCompanionEntityWalking {
 
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
-  protected FollowerFeatures followerFeatures;
+  protected final FollowerFeatures followerFeatures;
 
   public FollowerEntityWalking(
       EntityType<? extends PlayerCompanionEntity> entityType, Level level) {

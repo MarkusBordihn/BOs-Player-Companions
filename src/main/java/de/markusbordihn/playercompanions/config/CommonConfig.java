@@ -70,6 +70,7 @@ public class CommonConfig {
     public final ForgeConfigSpec.BooleanValue respawnOnDeath;
     public final ForgeConfigSpec.IntValue respawnDelay;
     public final ForgeConfigSpec.BooleanValue friendlyFire;
+    public final ForgeConfigSpec.IntValue companionLimitPerPlayer;
 
     public final ForgeConfigSpec.IntValue maxHealth;
     public final ForgeConfigSpec.IntValue maxAttackDamage;
@@ -118,8 +119,12 @@ public class CommonConfig {
       friendlyFire =
           builder
               .comment(
-                  "Allow's damage to an owned companion by the owner or their owned companions.")
+                  "Allows damage to an owned companion by the owner or their owned companions.")
               .define("friendlyFire", false);
+      companionLimitPerPlayer =
+          builder
+              .comment("The max. number of companions per player. (0 = disabled)")
+              .defineInRange("companionLimitPerPlayer", 0, 0, 64);
       builder.pop();
 
       builder.push("Level scaling");

@@ -21,7 +21,6 @@ package de.markusbordihn.playercompanions.entity.type.guard;
 
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
-
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 

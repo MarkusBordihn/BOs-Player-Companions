@@ -19,13 +19,12 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.item.CompanionTameItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
-import de.markusbordihn.playercompanions.item.CompanionTameItem;
 
 public interface TameablePlayerCompanion {
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,11 +19,8 @@
 
 package de.markusbordihn.playercompanions.client.model;
 
+import de.markusbordihn.playercompanions.Constants;
 import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -34,11 +31,10 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @OnlyIn(Dist.CLIENT)
 public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
@@ -84,11 +80,11 @@ public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
         PartPose.offsetAndRotation(-1.975F, -2.9991F, -2.4182F, -0.3927F, 0.0F, 0.0F));
 
     partDefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-2.5F,
-        -1.0F, -3.0F, 4.0F, 4.0F, 10.0F, new CubeDeformation(0.0F)),
+            -1.0F, -3.0F, 4.0F, 4.0F, 10.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.5F, 19.0F, 0.0F));
 
     partDefinition.addOrReplaceChild("right_wing", CubeListBuilder.create().texOffs(12, 0)
-        .addBox(-8.5F, 2.998F, 0.5F, 9.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)),
+            .addBox(-8.5F, 2.998F, 0.5F, 9.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-1.0F, 15.0F, -3.0F));
 
     partDefinition.addOrReplaceChild("left_wing",
@@ -97,11 +93,11 @@ public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
         PartPose.offset(2.0F, 15.0F, -3.0F));
 
     partDefinition.addOrReplaceChild("front_leg", CubeListBuilder.create().texOffs(0, 2)
-        .addBox(-4.0F, 0.0F, 0.0F, 4.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
+            .addBox(-4.0F, 0.0F, 0.0F, 4.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
         PartPose.offset(2.0F, 22.0F, -2.0F));
 
     partDefinition.addOrReplaceChild("back_leg", CubeListBuilder.create().texOffs(0, 0)
-        .addBox(-4.0F, 0.0F, 1.0F, 4.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
+            .addBox(-4.0F, 0.0F, 1.0F, 4.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
         PartPose.offset(2.0F, 22.0F, 2.0F));
 
     return LayerDefinition.create(meshDefinition, 64, 64);

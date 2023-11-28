@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2023 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,6 +19,11 @@
 
 package de.markusbordihn.playercompanions.client.textures;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.skin.SkinModel;
+import de.markusbordihn.playercompanions.skin.SkinType;
+import de.markusbordihn.playercompanions.utils.PlayersUtils;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,17 +33,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import net.minecraft.resources.ResourceLocation;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.skin.SkinModel;
-import de.markusbordihn.playercompanions.skin.SkinType;
-import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
 public class PlayerTextureManager {
 
@@ -47,12 +44,13 @@ public class PlayerTextureManager {
   private static final String LOG_PREFIX = "[Player Texture Manager]";
 
   private static Path textureCachePath = null;
-  private static HashMap<TextureModelKey, ResourceLocation> playerTextureCache = new HashMap<>();
-  private static HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache = new HashMap<>();
-  private static HashMap<TextureModelKey, String> playerTextureSkinURLCache = new HashMap<>();
-  private static HashSet<UUID> playerTextureReloadProtection = new HashSet<>();
+  private static final HashMap<TextureModelKey, ResourceLocation> playerTextureCache = new HashMap<>();
+  private static final HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache = new HashMap<>();
+  private static final HashMap<TextureModelKey, String> playerTextureSkinURLCache = new HashMap<>();
+  private static final HashSet<UUID> playerTextureReloadProtection = new HashSet<>();
 
-  protected PlayerTextureManager() {}
+  protected PlayerTextureManager() {
+  }
 
   public static Map<TextureModelKey, ResourceLocation> getPlayerTextureCache() {
     return playerTextureCache;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,15 +19,17 @@
 
 package de.markusbordihn.playercompanions.commands;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
-
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionSpawnManager;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -37,12 +39,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionSpawnManager;
-
 public class SummonCommand extends CustomCommand {
+
   private static final SummonCommand command = new SummonCommand();
 
   public static ArgumentBuilder<CommandSourceStack, ?> register() {

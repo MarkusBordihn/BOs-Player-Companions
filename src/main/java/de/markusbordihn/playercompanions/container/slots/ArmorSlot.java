@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,11 +19,9 @@
 
 package de.markusbordihn.playercompanions.container.slots;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mojang.datafixers.util.Pair;
-
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.container.CompanionMenu;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -33,13 +31,10 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.CompanionMenu;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ArmorSlot extends Slot {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final ResourceLocation BLOCK_ATLAS =
       new ResourceLocation(Constants.MOD_ID, "textures/atlas/blocks.png");
@@ -51,10 +46,11 @@ public class ArmorSlot extends Slot {
       new ResourceLocation(Constants.MOD_ID, "item/empty_armor/empty_armor_slot_leggings");
   public static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS =
       new ResourceLocation(Constants.MOD_ID, "item/empty_armor/empty_armor_slot_boots");
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   static final ResourceLocation[] TEXTURE_EMPTY_SLOTS =
-      new ResourceLocation[] {EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS,
+      new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS,
           EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
-  private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[] {EquipmentSlot.FEET,
+  private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.FEET,
       EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD};
 
   final EquipmentSlot equipmentSlot;

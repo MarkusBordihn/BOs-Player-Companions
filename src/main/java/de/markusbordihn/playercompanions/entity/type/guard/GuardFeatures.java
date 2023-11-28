@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -21,7 +21,6 @@ package de.markusbordihn.playercompanions.entity.type.guard;
 
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
-
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 

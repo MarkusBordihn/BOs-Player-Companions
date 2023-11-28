@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,22 +19,18 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.UUID;
 import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-
 import net.minecraftforge.network.NetworkEvent;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MessageCommandPlayerCompanion {
 
@@ -46,14 +42,6 @@ public class MessageCommandPlayerCompanion {
   public MessageCommandPlayerCompanion(String playerCompanionUUID, PlayerCompanionCommand command) {
     this.playerCompanionUUID = playerCompanionUUID;
     this.command = command;
-  }
-
-  public PlayerCompanionCommand getCommand() {
-    return this.command;
-  }
-
-  public String getPlayerCompanionUUID() {
-    return this.playerCompanionUUID;
   }
 
   public static MessageCommandPlayerCompanion decode(final FriendlyByteBuf buffer) {
@@ -104,6 +92,14 @@ public class MessageCommandPlayerCompanion {
             playerCompanionEntity);
       }
     }
+  }
+
+  public PlayerCompanionCommand getCommand() {
+    return this.command;
+  }
+
+  public String getPlayerCompanionUUID() {
+    return this.playerCompanionUUID;
   }
 
 }

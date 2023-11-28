@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,17 +19,17 @@
 
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.EnumSet;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-
 public class MeleeAttackGoal extends PlayerCompanionGoal {
+
+  private static final long COOLDOWN_BETWEEN_CAN_USE_CHECKS = 20L;
   private final double speedModifier;
   private final boolean followingTargetEvenIfNotSeen;
   private Path path;
@@ -39,9 +39,8 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   private int ticksUntilNextPathRecalculation;
   private int ticksUntilNextAttack;
   private long lastCanUseCheck;
-  private static final long COOLDOWN_BETWEEN_CAN_USE_CHECKS = 20L;
   private int failedPathFindingPenalty = 0;
-  private boolean canPenalize = false;
+  private final boolean canPenalize = false;
 
   public MeleeAttackGoal(PlayerCompanionEntity playerCompanionEntity, double speedModifier,
       boolean followingTargetEvenIfNotSeen) {
@@ -92,11 +91,9 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
       return false;
     } else if (!this.followingTargetEvenIfNotSeen) {
       return !this.playerCompanionEntity.getNavigation().isDone();
-    } else if (livingEntity != null
-        && !this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition())) {
-      return false;
-    }
-    return true;
+    } else
+      return livingEntity == null
+          || this.playerCompanionEntity.isWithinRestriction(livingEntity.blockPosition());
   }
 
   @Override
@@ -111,7 +108,7 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   public void stop() {
     LivingEntity livingEntity = this.playerCompanionEntity.getTarget();
     if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity)) {
-      this.playerCompanionEntity.setTarget((LivingEntity) null);
+      this.playerCompanionEntity.setTarget(null);
     }
     this.playerCompanionEntity.setAggressive(false);
     this.playerCompanionEntity.getNavigation().stop();
@@ -134,9 +131,9 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
           || this.playerCompanionEntity.getSensing().hasLineOfSight(livingEntity))
           && this.ticksUntilNextPathRecalculation <= 0
           && (this.pathTargetX == 0.0D && this.pathTargetY == 0.0D && this.pathTargetZ == 0.0D
-              || livingEntity.distanceToSqr(this.pathTargetX, this.pathTargetY,
-                  this.pathTargetZ) >= 1.0D
-              || this.playerCompanionEntity.getRandom().nextFloat() < 0.05F)) {
+          || livingEntity.distanceToSqr(this.pathTargetX, this.pathTargetY,
+          this.pathTargetZ) >= 1.0D
+          || this.playerCompanionEntity.getRandom().nextFloat() < 0.05F)) {
         this.pathTargetX = livingEntity.getX();
         this.pathTargetY = livingEntity.getY();
         this.pathTargetZ = livingEntity.getZ();
@@ -148,10 +145,11 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
           if (navigationPath != null) {
             net.minecraft.world.level.pathfinder.Node finalPathPoint = navigationPath.getEndNode();
             if (finalPathPoint != null && livingEntity.distanceToSqr(finalPathPoint.x,
-                finalPathPoint.y, finalPathPoint.z) < 1)
+                finalPathPoint.y, finalPathPoint.z) < 1) {
               failedPathFindingPenalty = 0;
-            else
+            } else {
               failedPathFindingPenalty += 10;
+            }
           } else {
             failedPathFindingPenalty += 10;
           }

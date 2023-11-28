@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,20 +19,17 @@
 
 package de.markusbordihn.playercompanions.data;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.player.Player;
-
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
@@ -48,20 +45,19 @@ import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber
 public class PlayerCompanionManager {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
-  private static Set<Entity> entitySet = ConcurrentHashMap.newKeySet();
   private static final short SYNC_TICK = 25;
+  private static final Set<Entity> entitySet = ConcurrentHashMap.newKeySet();
   private static short ticks = 0;
 
-  protected PlayerCompanionManager() {}
+  protected PlayerCompanionManager() {
+  }
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
@@ -87,7 +83,7 @@ public class PlayerCompanionManager {
   public static void handleEntityLeaveLevelEvent(EntityLeaveLevelEvent event) {
     if (event.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
         && (playerCompanionEntity.canRespawnOnDeath()
-            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
+        || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       updateCompanionData(event.getEntity());
     }
   }
@@ -166,7 +162,7 @@ public class PlayerCompanionManager {
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
         && !playerCompanionEntity.level().isClientSide && playerCompanionEntity.hasOwner()
         && (playerCompanionEntity.canRespawnOnDeath()
-            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
+        || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       log.debug("Update or register Companion {}", entity);
       PlayerCompanionsServerData.get().updateOrRegisterCompanion(playerCompanionEntity);
     }
@@ -176,7 +172,7 @@ public class PlayerCompanionManager {
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
         && !playerCompanionEntity.level().isClientSide && playerCompanionEntity.hasOwner()
         && (playerCompanionEntity.canRespawnOnDeath()
-            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
+        || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       log.debug("Update Companion Data {}", entity);
       PlayerCompanionsServerData.get().updatePlayerCompanionData(playerCompanionEntity);
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,10 +19,9 @@
 
 package de.markusbordihn.playercompanions.entity.type.follower;
 
-import net.minecraft.world.level.Level;
-
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
+import net.minecraft.world.level.Level;
 
 public class FollowerFeatures extends PlayerCompanionsFeatures {
 

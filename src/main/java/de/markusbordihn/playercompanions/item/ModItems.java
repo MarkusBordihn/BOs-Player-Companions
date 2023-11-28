@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,31 +19,40 @@
 
 package de.markusbordihn.playercompanions.item;
 
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.entity.companions.*;
-import de.markusbordihn.playercompanions.item.companions.*;
-import de.markusbordihn.playercompanions.item.tameitems.*;
-import de.markusbordihn.playercompanions.Annotations.TemplateEntryPoint;
+import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
+import de.markusbordihn.playercompanions.item.companions.DobutsuItem;
+import de.markusbordihn.playercompanions.item.companions.FairyItem;
+import de.markusbordihn.playercompanions.item.companions.FireflyItem;
+import de.markusbordihn.playercompanions.item.companions.LizardItem;
+import de.markusbordihn.playercompanions.item.companions.PigItem;
+import de.markusbordihn.playercompanions.item.companions.RaptorItem;
+import de.markusbordihn.playercompanions.item.companions.RoosterItem;
+import de.markusbordihn.playercompanions.item.companions.SamuraiItem;
+import de.markusbordihn.playercompanions.item.companions.SmallGhastItem;
+import de.markusbordihn.playercompanions.item.companions.SmallSlimeItem;
+import de.markusbordihn.playercompanions.item.companions.SnailItem;
+import de.markusbordihn.playercompanions.item.companions.WelshCorgiItem;
+import de.markusbordihn.playercompanions.item.tameitems.TameApple;
+import de.markusbordihn.playercompanions.item.tameitems.TameBone;
+import de.markusbordihn.playercompanions.item.tameitems.TameCake;
+import de.markusbordihn.playercompanions.item.tameitems.TameCarrot;
+import de.markusbordihn.playercompanions.item.tameitems.TameHoneycomp;
+import de.markusbordihn.playercompanions.item.tameitems.TameRawMutton;
+import de.markusbordihn.playercompanions.item.tameitems.TameSeagrass;
+import de.markusbordihn.playercompanions.item.tameitems.TameSweetBerries;
+import de.markusbordihn.playercompanions.item.tameitems.TameWheatSeeds;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
 
-  protected ModItems() {
-
-  }
-
   public static final DeferredRegister<Item> ITEMS =
       DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MOD_ID);
-
-  @TemplateEntryPoint("Register Items")
-
   // Dobutsu
   public static final RegistryObject<Item> DOBUTSU_DEFAULT =
       ITEMS.register(DobutsuItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -54,7 +63,6 @@ public class ModItems {
   public static final RegistryObject<Item> DOBUTSU_ENDERMAN =
       ITEMS.register(DobutsuItem.ID + PlayerCompanionVariant.ENDERMAN.getSuffix(),
           () -> new DobutsuItem(PlayerCompanionVariant.ENDERMAN));
-
   // Fairies
   public static final RegistryObject<Item> FAIRY_DEFAULT =
       ITEMS.register(FairyItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -65,12 +73,10 @@ public class ModItems {
   public static final RegistryObject<Item> FAIRY_RED =
       ITEMS.register(FairyItem.ID + PlayerCompanionVariant.RED.getSuffix(),
           () -> new FairyItem(PlayerCompanionVariant.RED));
-
   // Firefly
   public static final RegistryObject<Item> FIREFLY_DEFAULT =
       ITEMS.register(FireflyItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
           () -> new FireflyItem(PlayerCompanionVariant.DEFAULT));
-
   // Lizard
   public static final RegistryObject<Item> LIZARD_DEFAULT =
       ITEMS.register(LizardItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -81,7 +87,6 @@ public class ModItems {
   public static final RegistryObject<Item> LIZARD_GREEN =
       ITEMS.register(LizardItem.ID + PlayerCompanionVariant.GREEN.getSuffix(),
           () -> new LizardItem(PlayerCompanionVariant.GREEN));
-
   // Samurai
   public static final RegistryObject<Item> SAMURAI_DEFAULT =
       ITEMS.register(SamuraiItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -92,7 +97,6 @@ public class ModItems {
   public static final RegistryObject<Item> SAMURAI_BLACK =
       ITEMS.register(SamuraiItem.ID + PlayerCompanionVariant.BLACK.getSuffix(),
           () -> new SamuraiItem(PlayerCompanionVariant.BLACK));
-
   // Pigs
   public static final RegistryObject<Item> PIG_DEFAULT =
       ITEMS.register(PigItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -100,7 +104,6 @@ public class ModItems {
   public static final RegistryObject<Item> PIG_SPOTTED =
       ITEMS.register(PigItem.ID + PlayerCompanionVariant.SPOTTED.getSuffix(),
           () -> new PigItem(PlayerCompanionVariant.SPOTTED));
-
   // Raptor
   public static final RegistryObject<Item> RAPTOR_DEFAULT =
       ITEMS.register(RaptorItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -111,7 +114,6 @@ public class ModItems {
   public static final RegistryObject<Item> RAPTOR_DARK_GREEN =
       ITEMS.register(RaptorItem.ID + PlayerCompanionVariant.DARK_GREEN.getSuffix(),
           () -> new RaptorItem(PlayerCompanionVariant.DARK_GREEN));
-
   // Rooster
   public static final RegistryObject<Item> ROOSTER_DEFAULT =
       ITEMS.register(RoosterItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -119,12 +121,10 @@ public class ModItems {
   public static final RegistryObject<Item> ROOSTER_MIXED =
       ITEMS.register(RoosterItem.ID + PlayerCompanionVariant.MIXED.getSuffix(),
           () -> new RoosterItem(PlayerCompanionVariant.MIXED));
-
   // Small Ghast
   public static final RegistryObject<Item> SMALL_GHAST_DEFAULT =
       ITEMS.register(SmallGhastItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
           () -> new SmallGhastItem(PlayerCompanionVariant.DEFAULT));
-
   // Slimes
   public static final RegistryObject<Item> SMALL_SLIME_DEFAULT =
       ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -177,7 +177,6 @@ public class ModItems {
   public static final RegistryObject<Item> SMALL_SLIME_YELLOW =
       ITEMS.register(SmallSlimeItem.ID + PlayerCompanionVariant.YELLOW.getSuffix(),
           () -> new SmallSlimeItem(PlayerCompanionVariant.YELLOW));
-
   // Snail
   public static final RegistryObject<Item> SNAIL_DEFAULT =
       ITEMS.register(SnailItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -185,7 +184,6 @@ public class ModItems {
   public static final RegistryObject<Item> SNAIL_BROWN =
       ITEMS.register(SnailItem.ID + PlayerCompanionVariant.BROWN.getSuffix(),
           () -> new SnailItem(PlayerCompanionVariant.BROWN));
-
   // Welsh Corgi
   public static final RegistryObject<Item> WELSH_CORGI_DEFAULT =
       ITEMS.register(WelshCorgiItem.ID + PlayerCompanionVariant.DEFAULT.getSuffix(),
@@ -196,7 +194,6 @@ public class ModItems {
   public static final RegistryObject<Item> WELSH_CORGI_BLACK =
       ITEMS.register(WelshCorgiItem.ID + PlayerCompanionVariant.BLACK.getSuffix(),
           () -> new WelshCorgiItem(PlayerCompanionVariant.BLACK));
-
   // Tame Items
   public static final RegistryObject<Item> TAME_APPLE =
       ITEMS.register("tame_apple", TameApple::new);
@@ -214,8 +211,6 @@ public class ModItems {
       ITEMS.register("tame_sweet_berries", TameSweetBerries::new);
   public static final RegistryObject<Item> TAME_WHEAT_SEEDS =
       ITEMS.register("tame_wheat_seeds", TameWheatSeeds::new);
-
-  @TemplateEntryPoint("Register Spawn Eggs")
   public static final RegistryObject<Item> DOBUTSU_SPAWN_EGG = ITEMS.register("dobutsu_spawn_egg",
       () -> new CompanionSpawnEggItem(ModEntityType.DOBUTSU::get,
           new Item.Properties().rarity(Rarity.EPIC)));
@@ -252,4 +247,7 @@ public class ModItems {
   public static final RegistryObject<Item> WELSH_CORGI_SPAWN_EGG = ITEMS.register(
       "welsh_corgi_spawn_egg", () -> new CompanionSpawnEggItem(ModEntityType.WELSH_CORGI::get,
           new Item.Properties().rarity(Rarity.EPIC)));
+  protected ModItems() {
+
+  }
 }

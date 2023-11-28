@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,31 +19,27 @@
 
 package de.markusbordihn.playercompanions.integration;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.Experience;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.UUID;
-
-import snownee.jade.api.EntityAccessor;
-import snownee.jade.api.IEntityComponentProvider;
-import snownee.jade.api.ITooltip;
-import snownee.jade.api.config.IPluginConfig;
-import snownee.jade.api.ui.IElement;
-import snownee.jade.impl.ui.ElementHelper;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.item.ItemStack;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.UsernameCache;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.Experience;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import snownee.jade.api.EntityAccessor;
+import snownee.jade.api.IEntityComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.ui.IElement;
+import snownee.jade.impl.ui.ElementHelper;
 
 public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
 

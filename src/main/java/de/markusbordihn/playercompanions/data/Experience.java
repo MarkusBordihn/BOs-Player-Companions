@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,10 +19,8 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
-
+import java.util.Map;
 import net.minecraft.Util;
 
 public class Experience {
@@ -94,7 +92,8 @@ public class Experience {
         hashMap.put(60, 7080);
       });
 
-  protected Experience() {}
+  protected Experience() {
+  }
 
   public static int getExperienceForLevel(int level) {
     return LevelExperienceMap.getOrDefault(level, null);

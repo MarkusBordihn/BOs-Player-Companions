@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,6 +19,10 @@
 
 package de.markusbordihn.playercompanions.client.textures;
 
+import com.mojang.blaze3d.platform.NativeImage;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.skin.SkinModel;
+import de.markusbordihn.playercompanions.utils.PlayersUtils;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,25 +34,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-
 import javax.imageio.ImageIO;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.blaze3d.platform.NativeImage;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.loading.FMLPaths;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.skin.SkinModel;
-import de.markusbordihn.playercompanions.utils.PlayersUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @OnlyIn(Dist.CLIENT)
 public class TextureManager {
@@ -60,7 +54,8 @@ public class TextureManager {
 
   private static Path textureCachePath = null;
 
-  protected TextureManager() {}
+  protected TextureManager() {
+  }
 
   private static ResourceLocation registerTexture(TextureModelKey textureModelKey, File file) {
     // Using client Texture Manager
@@ -71,7 +66,7 @@ public class TextureManager {
     // Creative native image from file.
     NativeImage nativeImage = textureModelKey.getSkinModel() == SkinModel.HUMANOID
         || textureModelKey.getSkinModel() == SkinModel.HUMANOID_SLIM ? getNativePlayerImage(file)
-            : getNativeImage(file);
+        : getNativeImage(file);
     if (nativeImage == null) {
       log.error("{} Unable to create native image for file {}.", LOG_PREFIX, file);
       return null;

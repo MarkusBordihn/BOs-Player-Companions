@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,21 +19,20 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionDataHelper {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected PlayerCompanionDataHelper() {}
+  protected PlayerCompanionDataHelper() {
+  }
 
   public static CompoundTag saveArmorItems(CompoundTag compoundTag, NonNullList<ItemStack> armor) {
     ListTag listTag = new ListTag();

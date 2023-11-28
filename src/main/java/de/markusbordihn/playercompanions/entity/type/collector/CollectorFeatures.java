@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,23 +19,20 @@
 
 package de.markusbordihn.playercompanions.entity.type.collector;
 
-import java.util.List;
-
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Entity.RemovalReason;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
+import java.util.List;
+import net.minecraft.world.entity.Entity.RemovalReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
 public class CollectorFeatures extends PlayerCompanionsFeatures {
@@ -60,7 +57,8 @@ public class CollectorFeatures extends PlayerCompanionsFeatures {
 
   private void collectorTick() {
     // Automatic collect items in the defined radius
-    if (!this.level.isClientSide && COMMON.collectorTypeRadius.get() > 0 && ticker++ >= COLLECT_TICK) {
+    if (!this.level.isClientSide && COMMON.collectorTypeRadius.get() > 0
+        && ticker++ >= COLLECT_TICK) {
       List<ItemEntity> itemEntities = this.level.getEntities(EntityType.ITEM,
           new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.collectorTypeRadius.get()),
           entity -> true);

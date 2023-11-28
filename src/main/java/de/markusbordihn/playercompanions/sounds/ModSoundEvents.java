@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,21 +20,16 @@
 package de.markusbordihn.playercompanions.sounds;
 
 import de.markusbordihn.playercompanions.Constants;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModSoundEvents {
 
-  protected ModSoundEvents() {}
-
   public static final DeferredRegister<SoundEvent> SOUNDS =
       DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Constants.MOD_ID);
-
   // Fairy Sound Events
   public static final RegistryObject<SoundEvent> COMPANION_FAIRY_DEATH =
       SOUNDS.register("companion.fairy.death", () -> SoundEvent.createVariableRangeEvent(
@@ -54,4 +49,6 @@ public class ModSoundEvents {
   public static final RegistryObject<SoundEvent> COMPANION_FAIRY_NO =
       SOUNDS.register("companion.fairy.no", () -> SoundEvent
           .createVariableRangeEvent(new ResourceLocation(Constants.MOD_ID, "companion.fairy.no")));
+  protected ModSoundEvents() {
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,7 +20,7 @@
 package de.markusbordihn.playercompanions.client.model;
 
 import com.google.common.collect.Iterables;
-
+import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -31,11 +31,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import de.markusbordihn.playercompanions.Constants;
 
 @OnlyIn(Dist.CLIENT)
 public class FairyModel<T extends TamableAnimal> extends HumanoidModel<T> {
@@ -72,19 +69,19 @@ public class FairyModel<T extends TamableAnimal> extends HumanoidModel<T> {
 
     // Smaller arms
     partDefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(56, 14)
-        .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 60)
-        .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 8.0F, 4.0F, new CubeDeformation(0.5F)),
+            .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 60)
+            .addBox(-2.0F, -2.0F, -2.0F, 3.0F, 8.0F, 4.0F, new CubeDeformation(0.5F)),
         PartPose.offset(-5.0F, 2.0F, 0.0F));
     partDefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(56, 14).mirror()
-        .addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false)
-        .texOffs(20, 57).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 8.0F, 4.0F, new CubeDeformation(0.5F)),
+            .addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false)
+            .texOffs(20, 57).addBox(-1.0F, -2.0F, -2.0F, 3.0F, 8.0F, 4.0F, new CubeDeformation(0.5F)),
         PartPose.offset(5.0F, 2.0F, 0.0F));
 
     // Combined legs like Vex
     partDefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(44, 55)
-        .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(48, 41)
-        .addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(42, 0)
-        .addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F, new CubeDeformation(0.5F)),
+            .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(48, 41)
+            .addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(42, 0)
+            .addBox(-1.0F, -1.0F, -2.0F, 6.0F, 10.0F, 4.0F, new CubeDeformation(0.5F)),
         PartPose.offset(-1.9F, 12.0F, 0.0F));
 
     // Adding Wings
@@ -93,7 +90,7 @@ public class FairyModel<T extends TamableAnimal> extends HumanoidModel<T> {
             .addBox(0.0F, -8.0F, 0.0F, 20.0F, 24.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false),
         PartPose.offset(0.0F, 0.0F, 0.0F));
     partDefinition.addOrReplaceChild("right_wing", CubeListBuilder.create().texOffs(0, 0)
-        .addBox(-20.0F, -8.0F, 0.0F, 20.0F, 24.0F, 1.0F, new CubeDeformation(0.0F)),
+            .addBox(-20.0F, -8.0F, 0.0F, 20.0F, 24.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 0.0F, 0.0F));
 
     return LayerDefinition.create(meshDefinition, 128, 128);

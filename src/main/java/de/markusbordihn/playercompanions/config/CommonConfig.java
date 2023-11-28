@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,38 +19,30 @@
 
 package de.markusbordihn.playercompanions.config;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.client.gui.GuiPosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.client.gui.GuiPosition;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class CommonConfig {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   public static final ForgeConfigSpec commonSpec;
   public static final Config COMMON;
-
   public static final String MIN_GROUP_SIZE_TEXT = "Min group size.";
   public static final String MAX_GROUP_SIZE_TEXT = "Max group size.";
   public static final String SPAWN_WEIGHT_TEXT = "Spawn weight.";
-
-  protected CommonConfig() {}
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   static {
     com.electronwill.nightconfig.core.Config.setInsertionOrderPreserved(true);
@@ -60,6 +52,18 @@ public class CommonConfig {
     COMMON = specPair.getLeft();
     log.info("{} Common config ...", Constants.LOG_REGISTER_PREFIX);
     ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, commonSpec);
+  }
+
+  protected CommonConfig() {
+  }
+
+  @SubscribeEvent
+  public static void handleModConfigReloadEvent(ModConfigEvent.Reloading event) {
+    ModConfig config = event.getConfig();
+    if (config.getSpec() != commonSpec) {
+      return;
+    }
+    log.info("Reload common config file {} ...", config.getFileName());
   }
 
   public static class Config {
@@ -218,15 +222,6 @@ public class CommonConfig {
           builder.comment("Explosion power").defineInRange("smallGhastExplosionPower", 0, 0, 16);
       builder.pop();
     }
-  }
-
-  @SubscribeEvent
-  public static void handleModConfigReloadEvent(ModConfigEvent.Reloading event) {
-    ModConfig config = event.getConfig();
-    if (config.getSpec() != commonSpec) {
-      return;
-    }
-    log.info("Reload common config file {} ...", config.getFileName());
   }
 
 }

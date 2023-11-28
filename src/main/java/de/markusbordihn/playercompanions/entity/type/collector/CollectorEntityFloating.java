@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,28 +19,25 @@
 
 package de.markusbordihn.playercompanions.entity.type.collector;
 
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
-
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-
 import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntityFloating;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import de.markusbordihn.playercompanions.entity.type.PlayerCompanionTypeIcon;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
 
-  protected CollectorFeatures collectorFeatures;
-
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
+  protected CollectorFeatures collectorFeatures;
 
   public CollectorEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType,
       Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {

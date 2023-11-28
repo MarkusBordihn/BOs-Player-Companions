@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,11 +19,12 @@
 
 package de.markusbordihn.playercompanions.data;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.ActionType;
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -39,17 +40,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.ActionType;
-import de.markusbordihn.playercompanions.entity.AggressionLevel;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionData {
 
+  public static final String UUID_TAG = "UUID";
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   private static final String ACTIVE_TAG = "Active";
   private static final String ENTITY_ACTION_TYPE = "EntityActionType";
   private static final String ENTITY_AGGRESSION_LEVEL = "EntityAggressionLevel";
@@ -73,8 +70,6 @@ public class PlayerCompanionData {
   private static final String POSITION_TAG = "Position";
   private static final String REMOVED_TAG = "Removed";
   private static final String TYPE_TAG = "Type";
-  public static final String UUID_TAG = "UUID";
-
   private ActionType entityActionType = ActionType.UNKNOWN;
   private AggressionLevel entityAggressionLevel = AggressionLevel.UNKNOWN;
   private BlockPos blockPos;
@@ -610,11 +605,10 @@ public class PlayerCompanionData {
       return true;
     }
 
-    if (!(object instanceof PlayerCompanionData)) {
+    if (!(object instanceof PlayerCompanionData playerCompanion)) {
       return false;
     }
 
-    PlayerCompanionData playerCompanion = (PlayerCompanionData) object;
     return playerCompanion.getUUID().equals(this.companionUUID);
   }
 

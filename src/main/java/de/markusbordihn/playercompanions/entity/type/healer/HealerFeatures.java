@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,8 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity.type.healer;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
 import java.util.List;
-
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,15 +31,9 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
 
 @EventBusSubscriber
 public class HealerFeatures extends PlayerCompanionsFeatures {
@@ -67,12 +64,9 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
     // Automatic heal entities in the defined radius.
     if (COMMON.healerTypeRadius.get() > 0 && ticker++ >= HEALER_TICK) {
-      boolean hasHealthSomething = false;
+      boolean hasHealthSomething = this.getOwner() != null && healEntity(level, this.getOwner());
 
       // 1. Priority: Heal owner
-      if (this.getOwner() != null && healEntity(level, this.getOwner())) {
-        hasHealthSomething = true;
-      }
 
       // 2. Priority: Heal self
       if (!hasHealthSomething && healEntity(level, this.playerCompanionEntity)) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,12 +19,10 @@
 
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.EnumSet;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
-
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 public class RandomFlyAroundGoal extends PlayerCompanionGoal {
 

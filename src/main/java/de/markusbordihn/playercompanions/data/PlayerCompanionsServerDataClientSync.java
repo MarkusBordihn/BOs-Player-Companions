@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,18 +19,17 @@
 
 package de.markusbordihn.playercompanions.data;
 
+import de.markusbordihn.playercompanions.network.NetworkHandler;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 
-import de.markusbordihn.playercompanions.network.NetworkHandler;
-
 public class PlayerCompanionsServerDataClientSync {
 
-  protected PlayerCompanionsServerDataClientSync() {}
+  protected PlayerCompanionsServerDataClientSync() {
+  }
 
   public static void syncPlayerCompanionData(PlayerCompanionData playerCompanionData) {
     // Only sync player companions, if we have a valid owner.
@@ -76,12 +75,14 @@ public class PlayerCompanionsServerDataClientSync {
     return compoundTag;
   }
 
-  public static String exportPlayerCompanionsDataString(Set<PlayerCompanionData> playerCompanionsData) {
+  public static String exportPlayerCompanionsDataString(
+      Set<PlayerCompanionData> playerCompanionsData) {
     CompoundTag compoundTag = exportPlayerCompanionsData(playerCompanionsData);
     return compoundTag != null && !compoundTag.isEmpty() ? compoundTag.getAsString() : "";
   }
 
-  public static CompoundTag exportPlayerCompanionsData(Set<PlayerCompanionData> playerCompanionsData) {
+  public static CompoundTag exportPlayerCompanionsData(
+      Set<PlayerCompanionData> playerCompanionsData) {
     // Pre-checks to avoid errors or edge conditions like server start.
     if (playerCompanionsData == null || playerCompanionsData.isEmpty()) {
       return null;

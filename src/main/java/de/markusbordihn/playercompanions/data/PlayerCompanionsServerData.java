@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,16 +19,16 @@
 
 package de.markusbordihn.playercompanions.data;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.MinecraftServer;
@@ -37,38 +37,32 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.server.ServerLifecycleHooks;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber
 public class PlayerCompanionsServerData extends SavedData {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
-  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-
   public static final String COMPANIONS_TAG = "Companions";
   public static final String NPC_TAG = "NPCs";
-
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
+  private static final String PLAYER_COMPANIONS_FILE_ID = Constants.MOD_ID;
   private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
       new ConcurrentHashMap<>();
   private static ConcurrentHashMap<UUID, Set<PlayerCompanionData>> companionsPerPlayerMap =
       new ConcurrentHashMap<>();
-
   private static MinecraftServer server;
   private static PlayerCompanionsServerData data;
-
-  private static final String PLAYER_COMPANIONS_FILE_ID = Constants.MOD_ID;
-
   private static long nextBackupTime = 0;
+
+  public PlayerCompanionsServerData() {
+    this.setDirty();
+  }
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
@@ -77,17 +71,13 @@ public class PlayerCompanionsServerData extends SavedData {
 
     if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get())) {
       nextBackupTime =
-          java.time.Instant.now().getEpochSecond() + (60 * COMMON.dataBackupInterval.get());
+          java.time.Instant.now().getEpochSecond() + (60L * COMMON.dataBackupInterval.get());
       log.info("Enable automatic data backups every {} minutes, next backup will run at {} ...",
           COMMON.dataBackupInterval.get(), nextBackupTime);
     } else {
       log.warn(
           "Automatic Data backups are deactivated, please make sure to create regular backups!");
     }
-  }
-
-  public PlayerCompanionsServerData() {
-    this.setDirty();
   }
 
   public static void prepare(MinecraftServer server) {
@@ -125,6 +115,58 @@ public class PlayerCompanionsServerData extends SavedData {
 
   public static String getFileId() {
     return PLAYER_COMPANIONS_FILE_ID;
+  }
+
+  private static void addPlayerCompanion(PlayerCompanionData playerCompanion) {
+    playerCompanionsMap.put(playerCompanion.getUUID(), playerCompanion);
+    UUID ownerUUID = playerCompanion.getOwnerUUID();
+    if (ownerUUID != null) {
+      Set<PlayerCompanionData> playerCompanions =
+          companionsPerPlayerMap.computeIfAbsent(ownerUUID, key -> ConcurrentHashMap.newKeySet());
+      // Make sure to remove existing entries with the same id, because Set's not supporting forced
+      // adds like Maps and always relies on the equal function.
+      playerCompanions.remove(playerCompanion);
+      playerCompanions.add(playerCompanion);
+    }
+  }
+
+  private static void addPlayerCompanion(CompoundTag compoundTag) {
+    addPlayerCompanion(new PlayerCompanionData(compoundTag));
+  }
+
+  public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
+    // Create a backup before we loading anything!
+    if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get())) {
+      PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
+      if (COMMON.dataBackupInterval.get() > 0) {
+        updateBackupTime(
+            java.time.Instant.now().getEpochSecond() + (60L * COMMON.dataBackupInterval.get()));
+      }
+    }
+
+    // Create a new data instance and set last update field.
+    PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
+    log.info("{} loading data ...", Constants.LOG_ICON_NAME);
+
+    // Restoring companions data
+    if (compoundTag.contains(COMPANIONS_TAG)) {
+      ListTag companionListTag = compoundTag.getList(COMPANIONS_TAG, 10);
+      for (int i = 0; i < companionListTag.size(); ++i) {
+        addPlayerCompanion(companionListTag.getCompound(i));
+      }
+    }
+
+    return playerCompanionsData;
+  }
+
+  private static void updateBackupTime(long backupTime) {
+    if (nextBackupTime != backupTime && backupTime > 0
+        && backupTime >= java.time.Instant.now().getEpochSecond()) {
+      log.info("{} next planned backup is scheduled for {} in about {} min.",
+          Constants.LOG_ICON_NAME, backupTime,
+          (backupTime - java.time.Instant.now().getEpochSecond()) / 60);
+      nextBackupTime = backupTime;
+    }
   }
 
   public PlayerCompanionData getCompanion(ItemStack itemStack) {
@@ -215,9 +257,7 @@ public class PlayerCompanionsServerData extends SavedData {
           companionsPerPlayerMap.computeIfAbsent(ownerUUID, key -> ConcurrentHashMap.newKeySet());
       // Make sure to remove existing entries with the same id, because Set's not supporting forced
       // adds like Maps and always relies on the equal function.
-      if (playerCompanions.contains(playerCompanion)) {
-        playerCompanions.remove(playerCompanion);
-      }
+      playerCompanions.remove(playerCompanion);
       playerCompanions.add(playerCompanion);
     }
 
@@ -286,25 +326,6 @@ public class PlayerCompanionsServerData extends SavedData {
     }
   }
 
-  private static void addPlayerCompanion(PlayerCompanionData playerCompanion) {
-    playerCompanionsMap.put(playerCompanion.getUUID(), playerCompanion);
-    UUID ownerUUID = playerCompanion.getOwnerUUID();
-    if (ownerUUID != null) {
-      Set<PlayerCompanionData> playerCompanions =
-          companionsPerPlayerMap.computeIfAbsent(ownerUUID, key -> ConcurrentHashMap.newKeySet());
-      // Make sure to remove existing entries with the same id, because Set's not supporting forced
-      // adds like Maps and always relies on the equal function.
-      if (playerCompanions.contains(playerCompanion)) {
-        playerCompanions.remove(playerCompanion);
-      }
-      playerCompanions.add(playerCompanion);
-    }
-  }
-
-  private static void addPlayerCompanion(CompoundTag compoundTag) {
-    addPlayerCompanion(new PlayerCompanionData(compoundTag));
-  }
-
   public void syncPlayerCompanionsData(UUID ownerUUID) {
     if (ownerUUID == null) {
       return;
@@ -315,31 +336,6 @@ public class PlayerCompanionsServerData extends SavedData {
 
   public void syncPlayerCompanionData(PlayerCompanionData playerCompanionData) {
     PlayerCompanionsServerDataClientSync.syncPlayerCompanionData(playerCompanionData);
-  }
-
-  public static PlayerCompanionsServerData load(CompoundTag compoundTag) {
-    // Create a backup before we loading anything!
-    if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get())) {
-      PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
-      if (COMMON.dataBackupInterval.get() > 0) {
-        updateBackupTime(
-            java.time.Instant.now().getEpochSecond() + (60 * COMMON.dataBackupInterval.get()));
-      }
-    }
-
-    // Create a new data instance and set last update field.
-    PlayerCompanionsServerData playerCompanionsData = new PlayerCompanionsServerData();
-    log.info("{} loading data ...", Constants.LOG_ICON_NAME);
-
-    // Restoring companions data
-    if (compoundTag.contains(COMPANIONS_TAG)) {
-      ListTag companionListTag = compoundTag.getList(COMPANIONS_TAG, 10);
-      for (int i = 0; i < companionListTag.size(); ++i) {
-        addPlayerCompanion(companionListTag.getCompound(i));
-      }
-    }
-
-    return playerCompanionsData;
   }
 
   @Override
@@ -368,20 +364,10 @@ public class PlayerCompanionsServerData extends SavedData {
         && java.time.Instant.now().getEpochSecond() >= nextBackupTime) {
       PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
       updateBackupTime(
-          java.time.Instant.now().getEpochSecond() + (60 * COMMON.dataBackupInterval.get()));
+          java.time.Instant.now().getEpochSecond() + (60L * COMMON.dataBackupInterval.get()));
     }
 
     return compoundTag;
-  }
-
-  private static void updateBackupTime(long backupTime) {
-    if (nextBackupTime != backupTime && backupTime > 0
-        && backupTime >= java.time.Instant.now().getEpochSecond()) {
-      log.info("{} next planned backup is scheduled for {} in about {} min.",
-          Constants.LOG_ICON_NAME, backupTime,
-          (backupTime - java.time.Instant.now().getEpochSecond()) / 60);
-      nextBackupTime = backupTime;
-    }
   }
 
 }

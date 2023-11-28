@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,15 +19,15 @@
 
 package de.markusbordihn.playercompanions.item;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
+import de.markusbordihn.playercompanions.text.TranslatableText;
+import de.markusbordihn.playercompanions.utils.TitleUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -46,18 +46,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
-import de.markusbordihn.playercompanions.text.TranslatableText;
-import de.markusbordihn.playercompanions.utils.TitleUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CompanionTameItem extends Item {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   public static final Set<String> TAMEABLE_MOB_TYPES = Collections.emptySet();
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public CompanionTameItem() {
     this(new Item.Properties());
@@ -97,7 +92,7 @@ public class CompanionTameItem extends Item {
     if (gavePlayerItemStack && !playerInventory.getItem(freeInventorySlot).isEmpty()
         && playerInventory.getItem(freeInventorySlot).getItem() instanceof CapturedCompanion
         && CapturedCompanion.getCompanionUUID(playerInventory.getItem(freeInventorySlot))
-            .equals(livingEntity.getUUID())) {
+        .equals(livingEntity.getUUID())) {
       log.info("Gave player {} captured companion item {} in slot {} with {}.", serverPlayer,
           playerInventory.getItem(freeInventorySlot), freeInventorySlot, companionItem);
       TitleUtils.setTitle(

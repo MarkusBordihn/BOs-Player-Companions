@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -29,7 +29,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -62,16 +61,16 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
     // Body
     PartDefinition body = partDefinition.addOrReplaceChild("body", CubeListBuilder.create()
-        .texOffs(0, 0).addBox(-1.5F, 4.0F, -4.0F, 3.0F, 2.0F, 7.0F, new CubeDeformation(0.0F)),
+            .texOffs(0, 0).addBox(-1.5F, 4.0F, -4.0F, 3.0F, 2.0F, 7.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 16.0F, 0.0F));
     body.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(10, 12)
-        .addBox(-1.0F, -0.25F, -0.75F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
-        .addBox(-0.5F, -0.25F, 3.25F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)),
+            .addBox(-1.0F, -0.25F, -0.75F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
+            .addBox(-0.5F, -0.25F, 3.25F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 4.75F, 3.0F));
 
     // Head with trill
     PartDefinition head = partDefinition.addOrReplaceChild("head", CubeListBuilder.create()
-        .texOffs(0, 9).addBox(-1.5F, 2.0F, -5.0F, 3.0F, 3.0F, 4.0F, new CubeDeformation(0.01F)),
+            .texOffs(0, 9).addBox(-1.5F, 2.0F, -5.0F, 3.0F, 3.0F, 4.0F, new CubeDeformation(0.01F)),
         PartPose.offset(0.0F, 16.0F, -2.0F));
     head.addOrReplaceChild("tongue", CubeListBuilder.create().texOffs(2, 0).addBox(-0.5F, -3.5F,
         -8.0F, 1.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 8.0F, 2.0F));
@@ -96,16 +95,16 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
     // Legs
     partDefinition.addOrReplaceChild("right_hind_leg", CubeListBuilder.create().texOffs(0, 9)
-        .addBox(1.5F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
+            .addBox(1.5F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-3.0F, 18.0F, 6.0F));
     partDefinition.addOrReplaceChild("left_hind_leg", CubeListBuilder.create().texOffs(0, 9)
-        .addBox(-0.5F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
+            .addBox(-0.5F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(1.0F, 18.0F, 6.0F));
     partDefinition.addOrReplaceChild("right_front_leg", CubeListBuilder.create().texOffs(0, 9)
-        .addBox(1.5F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
+            .addBox(1.5F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-3.0F, 18.0F, -1.0F));
     partDefinition.addOrReplaceChild("left_front_leg", CubeListBuilder.create().texOffs(0, 9)
-        .addBox(-0.5F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
+            .addBox(-0.5F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(1.0F, 18.0F, -1.0F));
 
     return LayerDefinition.create(meshDefinition, 32, 32);

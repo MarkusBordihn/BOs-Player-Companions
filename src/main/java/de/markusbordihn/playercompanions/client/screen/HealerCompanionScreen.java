@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,12 +19,11 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.container.HealerCompanionMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.HealerCompanionMenu;
 
 public class HealerCompanionScreen extends CompanionScreen<HealerCompanionMenu> {
 

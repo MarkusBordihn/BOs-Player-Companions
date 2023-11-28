@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,17 +19,19 @@
 
 package de.markusbordihn.playercompanions.network;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
+import de.markusbordihn.playercompanions.network.message.MessageCommandPlayerCompanion;
+import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionData;
+import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionsData;
+import de.markusbordihn.playercompanions.network.message.MessageSkinChange;
+import de.markusbordihn.playercompanions.skin.SkinType;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -39,14 +41,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionCommand;
-import de.markusbordihn.playercompanions.network.message.MessageCommandPlayerCompanion;
-import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionData;
-import de.markusbordihn.playercompanions.network.message.MessagePlayerCompanionsData;
-import de.markusbordihn.playercompanions.network.message.MessageSkinChange;
-import de.markusbordihn.playercompanions.skin.SkinType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber
 public class NetworkHandler {
@@ -57,12 +53,13 @@ public class NetworkHandler {
   public static final SimpleChannel INSTANCE =
       NetworkRegistry.newSimpleChannel(new ResourceLocation(Constants.MOD_ID, "network"),
           () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
-  private static ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
   private static int id = 0;
   private static CompoundTag lastCompanionDataPackage;
   private static CompoundTag lastCompanionsDataPackage;
 
-  protected NetworkHandler() {}
+  protected NetworkHandler() {
+  }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void handlePlayerChangedDimensionEvent(PlayerChangedDimensionEvent event) {
@@ -107,7 +104,9 @@ public class NetworkHandler {
     });
   }
 
-  /** Send player companion commands. */
+  /**
+   * Send player companion commands.
+   */
   public static void commandPlayerCompanion(String playerCompanionUUID,
       PlayerCompanionCommand command) {
     if (playerCompanionUUID != null && command != null) {
@@ -115,7 +114,9 @@ public class NetworkHandler {
     }
   }
 
-  /** Send skin change. */
+  /**
+   * Send skin change.
+   */
   public static void skinChange(UUID uuid, SkinType skinType) {
     if (uuid != null && skinType != null) {
       INSTANCE.sendToServer(new MessageSkinChange(uuid, "", "", Constants.BLANK_UUID, skinType));
@@ -135,7 +136,9 @@ public class NetworkHandler {
     }
   }
 
-  /** Send full companion data to the owner, if data has changed. */
+  /**
+   * Send full companion data to the owner, if data has changed.
+   */
   public static void updatePlayerCompanionsData(UUID ownerUUID, CompoundTag companionsData) {
     if (ownerUUID != null && companionsData != null && !companionsData.isEmpty()
         && !companionsData.equals(lastCompanionsDataPackage)) {
@@ -149,7 +152,9 @@ public class NetworkHandler {
     }
   }
 
-  /** Send specific player companion data to the owner, if data has changed. */
+  /**
+   * Send specific player companion data to the owner, if data has changed.
+   */
   public static void updatePlayerCompanionData(UUID playerCompanionUUID, UUID ownerUUID,
       CompoundTag companionData) {
     if (playerCompanionUUID != null && ownerUUID != null && companionData != null

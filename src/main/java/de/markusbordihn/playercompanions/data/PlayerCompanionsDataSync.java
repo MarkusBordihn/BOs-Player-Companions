@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,37 +19,36 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import java.util.UUID;
-
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import java.util.UUID;
 
 public interface PlayerCompanionsDataSync {
 
-  public PlayerCompanionEntity getSyncReference();
+  PlayerCompanionEntity getSyncReference();
 
-  public void setDataSyncNeeded(boolean dirty);
+  boolean getDataSyncNeeded();
 
-  public boolean getDataSyncNeeded();
+  void setDataSyncNeeded(boolean dirty);
 
-  public default boolean hasSyncReference() {
+  default boolean hasSyncReference() {
     return getSyncReference() != null;
   }
 
-  public default void syncData() {
+  default void syncData() {
     if (hasSyncReference()) {
       syncData(getSyncReference());
       setDataSyncNeeded(false);
     }
   }
 
-  public default void registerData() {
+  default void registerData() {
     if (hasSyncReference()) {
       registerData(getSyncReference());
       setDataSyncNeeded(false);
     }
   }
 
-  public default boolean syncDataIfNeeded() {
+  default boolean syncDataIfNeeded() {
     if (getDataSyncNeeded()) {
       syncData();
       return true;
@@ -57,21 +56,21 @@ public interface PlayerCompanionsDataSync {
     return false;
   }
 
-  public default void syncData(PlayerCompanionEntity playerCompanionEntity) {
+  default void syncData(PlayerCompanionEntity playerCompanionEntity) {
     PlayerCompanionsServerData serverData = getServerData();
     if (serverData != null) {
       serverData.updateOrRegisterCompanion(playerCompanionEntity);
     }
   }
 
-  public default void registerData(PlayerCompanionEntity playerCompanionEntity) {
+  default void registerData(PlayerCompanionEntity playerCompanionEntity) {
     PlayerCompanionsServerData serverData = getServerData();
     if (serverData != null) {
       serverData.registerCompanion(playerCompanionEntity);
     }
   }
 
-  public default PlayerCompanionData getData(UUID uuid) {
+  default PlayerCompanionData getData(UUID uuid) {
     PlayerCompanionsServerData serverData = getServerData();
     if (serverData == null || uuid == null) {
       return null;
@@ -79,7 +78,7 @@ public interface PlayerCompanionsDataSync {
     return serverData.getCompanion(uuid);
   }
 
-  public default PlayerCompanionsServerData getServerData() {
+  default PlayerCompanionsServerData getServerData() {
     return PlayerCompanionsServerData.get();
   }
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,11 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import net.minecraft.server.level.ServerPlayer;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-
 public class LandOnOwnersShoulderGoal extends PlayerCompanionGoal {
+
   private ServerPlayer owner;
   private boolean isSittingOnShoulder;
 

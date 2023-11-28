@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -21,7 +21,8 @@ package de.markusbordihn.playercompanions.client.renderer.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
+import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
+import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -31,12 +32,8 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
-import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 
 @OnlyIn(Dist.CLIENT)
 public class SmallSlimeOuterLayer<T extends TamableAnimal>

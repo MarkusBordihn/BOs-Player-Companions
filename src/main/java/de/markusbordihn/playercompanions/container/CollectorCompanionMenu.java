@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,13 +19,11 @@
 
 package de.markusbordihn.playercompanions.container;
 
+import de.markusbordihn.playercompanions.container.slots.InventorySlot;
 import java.util.UUID;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
-
-import de.markusbordihn.playercompanions.container.slots.InventorySlot;
 
 public class CollectorCompanionMenu extends CompanionMenu {
 

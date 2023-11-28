@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,14 +19,18 @@
 
 package de.markusbordihn.playercompanions.item;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.Experience;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionSpawnManager;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
+import de.markusbordihn.playercompanions.text.TranslatableText;
 import java.util.List;
 import java.util.UUID;
-
 import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -48,23 +52,13 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.Experience;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionSpawnManager;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.text.TranslatableText;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CapturedCompanion extends Item {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   public static final String COMPANION_UUID_TAG = "CompanionUUID";
-
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private PlayerCompanionVariant variant = PlayerCompanionVariant.DEFAULT;
 
   public CapturedCompanion() {
@@ -80,20 +74,20 @@ public class CapturedCompanion extends Item {
     super(properties);
   }
 
-  public boolean hasCompanion(ItemStack itemStack) {
-    return getCompanionUUID(itemStack) != null;
-  }
-
-  public boolean hasValidCompanion(ItemStack itemStack) {
-    return PlayerCompanionsServerData.get().hasCompanion(itemStack);
-  }
-
   public static UUID getCompanionUUID(ItemStack itemStack) {
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     if (compoundTag.hasUUID(COMPANION_UUID_TAG)) {
       return compoundTag.getUUID(COMPANION_UUID_TAG);
     }
     return null;
+  }
+
+  public boolean hasCompanion(ItemStack itemStack) {
+    return getCompanionUUID(itemStack) != null;
+  }
+
+  public boolean hasValidCompanion(ItemStack itemStack) {
+    return PlayerCompanionsServerData.get().hasCompanion(itemStack);
   }
 
   private CompoundTag setCompanionUUID(ItemStack itemStack, UUID uuid) {
@@ -178,8 +172,8 @@ public class CapturedCompanion extends Item {
         // Compare companion type and variant with item type and variant.
         if (playerCompanionEntity.getType().equals(this.getEntityType())
             && (playerCompanionEntity.getVariant().equals(this.getVariant())
-                || (playerCompanionEntity.getVariant() == PlayerCompanionVariant.NONE
-                    && this.getVariant() == PlayerCompanionVariant.DEFAULT))) {
+            || (playerCompanionEntity.getVariant() == PlayerCompanionVariant.NONE
+            && this.getVariant() == PlayerCompanionVariant.DEFAULT))) {
           log.info("Player {} linked {} with {}", player, itemStack, playerCompanionEntity);
           ItemStack handItemStack = player.getItemInHand(hand);
           setCompanionUUID(handItemStack, playerCompanionEntity.getUUID());
@@ -311,7 +305,6 @@ public class CapturedCompanion extends Item {
   @Override
   public void appendHoverText(ItemStack itemStack, @Nullable Level level,
       List<Component> tooltipList, TooltipFlag tooltipFlag) {
-
 
     if (itemStack.getItem() instanceof CapturedCompanion capturedCompanion) {
       PlayerCompanionData playerCompanionData = PlayerCompanionsClientData.getCompanion(itemStack);

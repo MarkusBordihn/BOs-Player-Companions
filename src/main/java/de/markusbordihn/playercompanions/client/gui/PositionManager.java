@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.client.gui;
 
 import com.mojang.blaze3d.platform.Window;
-
 import net.minecraft.client.Minecraft;
 
 public class PositionManager {
@@ -35,7 +34,8 @@ public class PositionManager {
   private int height = 100;
   private PositionPoint position = new PositionPoint(0, 0);
 
-  protected PositionManager() {}
+  protected PositionManager() {
+  }
 
   public void setInstance(Minecraft minecraft) {
     this.window = minecraft.getWindow();
@@ -88,16 +88,16 @@ public class PositionManager {
     return position;
   }
 
+  public void setPosition(PositionPoint position) {
+    this.position = position;
+  }
+
   public int getPositionX() {
     return position.getX();
   }
 
   public int getPositionY() {
     return position.getY();
-  }
-
-  public void setPosition(PositionPoint position) {
-    this.position = position;
   }
 
   public void updateWindow() {

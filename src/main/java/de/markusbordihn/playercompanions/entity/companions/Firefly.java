@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,10 +19,15 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
+import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
+import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityFlying;
+import de.markusbordihn.playercompanions.item.ModItems;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
 import net.minecraft.Util;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -43,13 +48,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
-import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityFlying;
-import de.markusbordihn.playercompanions.item.ModItems;
 
 public class Firefly extends FollowerEntityFlying {
 

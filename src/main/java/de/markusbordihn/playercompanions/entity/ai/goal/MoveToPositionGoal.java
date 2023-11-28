@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,13 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.EnumSet;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 public class MoveToPositionGoal extends PlayerCompanionGoal {
 
@@ -52,7 +50,7 @@ public class MoveToPositionGoal extends PlayerCompanionGoal {
     BlockPos blockPos = this.playerCompanionEntity.getOrderedToPosition();
     if (blockPos == null || !this.playerCompanionEntity.isOrderedToPosition()
         || this.playerCompanionEntity.distanceToSqr(blockPos.getX(), blockPos.getY(),
-            blockPos.getZ()) < this.stopDistance * this.stopDistance) {
+        blockPos.getZ()) < this.stopDistance * this.stopDistance) {
       return false;
     }
     this.targetPosition = blockPos;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,12 +19,10 @@
 
 package de.markusbordihn.playercompanions;
 
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import net.minecraftforge.event.server.ServerStartingEvent;
-
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 
 public class ServerSetup {
 
@@ -36,5 +34,4 @@ public class ServerSetup {
     log.info("{} Server Starting setup ...", Constants.LOG_REGISTER_PREFIX);
     PlayerCompanionsServerData.prepare(event.getServer());
   }
-
 }

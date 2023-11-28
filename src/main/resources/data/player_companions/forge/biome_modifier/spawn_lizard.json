@@ -1,6 +1,6 @@
 {
   "type": "player_companions:player_companions_spawn_modifier",
-  "biomes": ["minecraft:desert", "minecraft:jungle", "minecraft:swamp","minecraft:badlands"],
+  "biomes": ["minecraft:desert", "minecraft:jungle", "minecraft:swamp", "minecraft:badlands"],
   "denylist_biomes": [],
   "spawn": {
     "type": "player_companions:lizard",

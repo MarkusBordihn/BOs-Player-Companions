@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,14 +19,12 @@
 
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import javax.annotation.Nullable;
-
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Ingredient;
-
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 
 public class FoodItemGoal extends PlayerCompanionGoal {
 
@@ -34,18 +32,16 @@ public class FoodItemGoal extends PlayerCompanionGoal {
       TargetingConditions.forNonCombat().range(10.0D).ignoreLineOfSight();
   private final TargetingConditions targetingConditions;
   private final double speedModifier;
+  private final Ingredient items;
+  private final boolean canScare;
+  @Nullable protected Player player;
   private double px;
   private double py;
   private double pz;
   private double pRotX;
   private double pRotY;
-
-  @Nullable
-  protected Player player;
   private int calmDown;
   private boolean isRunning;
-  private final Ingredient items;
-  private final boolean canScare;
 
   public FoodItemGoal(PlayerCompanionEntity playerCompanionEntity, double speedModifier) {
     super(playerCompanionEntity);
@@ -125,19 +121,20 @@ public class FoodItemGoal extends PlayerCompanionGoal {
 
   @Override
   public void tick() {
-    this.playerCompanionEntity.getLookControl().setLookAt(this.player,
-        this.playerCompanionEntity.getMaxHeadYRot() + 20.0F,
-        this.playerCompanionEntity.getMaxHeadXRot());
+    this.playerCompanionEntity
+        .getLookControl()
+        .setLookAt(
+            this.player,
+            this.playerCompanionEntity.getMaxHeadYRot() + 20.0F,
+            this.playerCompanionEntity.getMaxHeadXRot());
     if (this.playerCompanionEntity.distanceToSqr(this.player) < 6.25D) {
       this.playerCompanionEntity.getNavigation().stop();
     } else {
       this.playerCompanionEntity.getNavigation().moveTo(this.player, this.speedModifier);
     }
-
   }
 
   public boolean isRunning() {
     return this.isRunning;
   }
-
 }

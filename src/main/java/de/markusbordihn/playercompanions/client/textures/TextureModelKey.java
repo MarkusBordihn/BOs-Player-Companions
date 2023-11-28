@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2023 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -17,13 +17,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 package de.markusbordihn.playercompanions.client.textures;
 
+import de.markusbordihn.playercompanions.skin.SkinModel;
 import java.util.Objects;
 import java.util.UUID;
-
-import de.markusbordihn.playercompanions.skin.SkinModel;
 
 public class TextureModelKey {
 
@@ -76,5 +74,4 @@ public class TextureModelKey {
     TextureModelKey textureModelKey = (TextureModelKey) object;
     return this.uuid.equals(textureModelKey.uuid) && this.subType.equals(textureModelKey.subType);
   }
-
 }

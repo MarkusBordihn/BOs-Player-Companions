@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.client.gui;
 
 import com.mojang.blaze3d.platform.Window;
-
 import net.minecraft.client.Minecraft;
 
 public class PositionManager {
@@ -59,13 +58,13 @@ public class PositionManager {
   }
 
   public PositionPoint getHotbarLeft() {
-    return new PositionPoint(this.guiScaledWidth / 2 + HOTBAR_LEFT - this.width,
-        this.guiScaledHeight - this.height);
+    return new PositionPoint(
+        this.guiScaledWidth / 2 + HOTBAR_LEFT - this.width, this.guiScaledHeight - this.height);
   }
 
   public PositionPoint getHotbarRight() {
-    return new PositionPoint(this.guiScaledWidth / 2 + HOTBAR_RIGHT,
-        this.guiScaledHeight - this.height);
+    return new PositionPoint(
+        this.guiScaledWidth / 2 + HOTBAR_RIGHT, this.guiScaledHeight - this.height);
   }
 
   public int getWidth() {
@@ -88,16 +87,16 @@ public class PositionManager {
     return position;
   }
 
+  public void setPosition(PositionPoint position) {
+    this.position = position;
+  }
+
   public int getPositionX() {
     return position.getX();
   }
 
   public int getPositionY() {
     return position.getY();
-  }
-
-  public void setPosition(PositionPoint position) {
-    this.position = position;
   }
 
   public void updateWindow() {
@@ -112,5 +111,4 @@ public class PositionManager {
     guiScaledWidth = currentGuiScaledWidth;
     guiScaledHeight = currentGuiScaleHeight;
   }
-
 }

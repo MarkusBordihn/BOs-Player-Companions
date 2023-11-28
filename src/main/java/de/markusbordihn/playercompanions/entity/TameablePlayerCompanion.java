@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,22 +19,20 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.item.CompanionTameItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import de.markusbordihn.playercompanions.item.CompanionTameItem;
-
 public interface TameablePlayerCompanion {
 
-  InteractionResult tamePlayerCompanion(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand);
+  InteractionResult tamePlayerCompanion(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand);
 
-  default boolean canTamePlayerCompanion(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand) {
+  default boolean canTamePlayerCompanion(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand) {
     return itemStack.getItem() instanceof CompanionTameItem;
   }
-
 }

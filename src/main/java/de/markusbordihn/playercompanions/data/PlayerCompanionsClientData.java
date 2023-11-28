@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,27 +19,22 @@
 
 package de.markusbordihn.playercompanions.data;
 
+import com.google.gson.JsonSyntaxException;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.google.gson.JsonSyntaxException;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionsClientData {
 
@@ -48,9 +43,7 @@ public class PlayerCompanionsClientData {
   private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
       new ConcurrentHashMap<>();
 
-  protected PlayerCompanionsClientData() {
-
-  }
+  protected PlayerCompanionsClientData() {}
 
   public static PlayerCompanionData getCompanion(ItemStack itemStack) {
     UUID companionUUID = null;
@@ -128,7 +121,8 @@ public class PlayerCompanionsClientData {
         log.debug("Update client player companion data for {} with {}", companionUUID, compoundTag);
         playerCompanionData.load(compoundTag);
       } else {
-        log.debug("Register client player companion data for {} with {}", companionUUID, compoundTag);
+        log.debug(
+            "Register client player companion data for {} with {}", companionUUID, compoundTag);
         PlayerCompanionData playerCompanion = new PlayerCompanionData(compoundTag);
         loadPlayerCompanionData(playerCompanion);
       }
@@ -140,5 +134,4 @@ public class PlayerCompanionsClientData {
       playerCompanionsMap.put(playerCompanion.getUUID(), playerCompanion);
     }
   }
-
 }

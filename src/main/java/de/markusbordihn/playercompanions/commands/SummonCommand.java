@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,15 +19,17 @@
 
 package de.markusbordihn.playercompanions.commands;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.UUID;
-
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionSpawnManager;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -37,18 +39,17 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionSpawnManager;
-
 public class SummonCommand extends CustomCommand {
+
   private static final SummonCommand command = new SummonCommand();
 
   public static ArgumentBuilder<CommandSourceStack, ?> register() {
-    return Commands.literal("summon").requires(cs -> cs.hasPermission(0)).executes(command)
-        .then(Commands.argument("UUID", StringArgumentType.string())
-            .executes(command::runSummonCompanion));
+    return Commands.literal("summon")
+        .requires(cs -> cs.hasPermission(0))
+        .executes(command)
+        .then(
+            Commands.argument("UUID", StringArgumentType.string())
+                .executes(command::runSummonCompanion));
   }
 
   @Override
@@ -67,14 +68,24 @@ public class SummonCommand extends CustomCommand {
       if (playerCompanion != null) {
         MutableComponent summonCommand =
             Component.translatable(Constants.COMMAND_PREFIX + "summon.action")
-                .setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
-                        "/" + Constants.MOD_COMMAND + " summon " + playerCompanion.getUUID())));
-        sendFeedback(context,
-            Component.translatable(Constants.COMMAND_PREFIX + "summon.list_entry",
+                .setStyle(
+                    Style.EMPTY
+                        .withColor(ChatFormatting.GREEN)
+                        .withClickEvent(
+                            new ClickEvent(
+                                ClickEvent.Action.SUGGEST_COMMAND,
+                                "/"
+                                    + Constants.MOD_COMMAND
+                                    + " summon "
+                                    + playerCompanion.getUUID())));
+        sendFeedback(
+            context,
+            Component.translatable(
+                Constants.COMMAND_PREFIX + "summon.list_entry",
                 Component.literal(playerCompanion.getName())
                     .setStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)),
-                playerCompanion.getType(), Component.literal("UUID:" + playerCompanion.getUUID())
+                playerCompanion.getType(),
+                Component.literal("UUID:" + playerCompanion.getUUID())
                     .setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)),
                 summonCommand));
       }
@@ -112,24 +123,39 @@ public class SummonCommand extends CustomCommand {
 
     // Check if player is owner of companion.
     if (!playerCompanionData.getOwnerUUID().equals(serverPlayer.getUUID())) {
-      sendErrorFeedback(context,
-          "Player " + serverPlayer.getName().getString() + " is not owning player companion "
-              + playerCompanionData.getName() + " with UUID " + companionUUID);
+      sendErrorFeedback(
+          context,
+          "Player "
+              + serverPlayer.getName().getString()
+              + " is not owning player companion "
+              + playerCompanionData.getName()
+              + " with UUID "
+              + companionUUID);
       return 0;
     }
 
     // Check if there is any active respawn timer.
     if (playerCompanionData.hasEntityRespawnTimer()
         && playerCompanionData.getEntityRespawnTimer() > java.time.Instant.now().getEpochSecond()) {
-      sendErrorFeedback(context, "Unable summon player companion with UUID " + companionUUID
-          + " because there is a active respawn timer for "
-          + (playerCompanionData.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond())
-          + " secs remaining!");
+      sendErrorFeedback(
+          context,
+          "Unable summon player companion with UUID "
+              + companionUUID
+              + " because there is a active respawn timer for "
+              + (playerCompanionData.getEntityRespawnTimer()
+                  - java.time.Instant.now().getEpochSecond())
+              + " secs remaining!");
       return 0;
     }
 
-    sendFeedback(context, "Try to summon " + companionUUID + " for "
-        + serverPlayer.getName().getString() + " with " + playerCompanionData);
+    sendFeedback(
+        context,
+        "Try to summon "
+            + companionUUID
+            + " for "
+            + serverPlayer.getName().getString()
+            + " with "
+            + playerCompanionData);
     PlayerCompanionSpawnManager.spawn(uuid, serverPlayer);
     return 0;
   }

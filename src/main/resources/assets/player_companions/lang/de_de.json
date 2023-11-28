@@ -23,7 +23,6 @@
   "advancements.player_companions.crafting.tame_sweet_berries.description": "Zähme die süßen Beeren als Zähmungsgegenstand für den Dobutsu und den Echsenbegleiter.",
   "advancements.player_companions.crafting.tame_wheat_seeds.title": "Weizensamen zähmen",
   "advancements.player_companions.crafting.tame_wheat_seeds.description": "Weizensamen als Zähmungsgegenstand für den Hahn-Begleiter herstellen",
-
   "advancements.player_companions.taming.dobutsu_default.title": "Dobutsu zähmen (Standard)",
   "advancements.player_companions.taming.dobutsu_default.description": "Zähme das Standard-Dobutsu mit einer süßen Beere.",
   "advancements.player_companions.taming.dobutsu_creeper.title": "Dobutsu zähmen (Schleicher)",
@@ -110,11 +109,10 @@
   "advancements.player_companions.taming.welsh_corgi_default.description": "Zähme den Standard-Welsh Corgi mit einem Knochen",
   "advancements.player_companions.taming.welsh_corgi_mixed.title": "Zähme Welsh Corgi (Gemischt)",
   "advancements.player_companions.taming.welsh_corgi_mixed.description": "Zähme den gemischten Welsh Corgi mit einem Knochen",
-
   "entity.player_companions.dobutsu": "Dobutsu",
   "entity.player_companions.fairy": "Fee",
   "entity.player_companions.firefly": "Glühwürmchen",
-  "entity.player_companions.eidechse": "Eidechse",
+  "entity.player_companions.lizard": "Eidechse",
   "entity.player_companions.pig": "Schwein",
   "entity.player_companions.raptor": "Raubvogel",
   "entity.player_companions.rooster": "Hahn",
@@ -123,28 +121,22 @@
   "entity.player_companions.small_slime": "Kleiner Schleim",
   "entity.player_companions.snail": "Schnecke",
   "entity.player_companions.welsh_corgi": "Welsh Corgi",
-
   "entity.player_companions.companion_level_up_message": "Herzlichen Glückwunsch. Dein Begleiter %1$s hat Level %2$s erreicht!",
   "entity.player_companions.companion_level_down_message": "Dein Begleiter %1$s hat eine Stufe verloren und ist jetzt Stufe %2$s!",
   "entity.player_companions.companion_respawn_message": "Dein Begleiter %1$s wurde neu gespawnt!",
   "entity.player_companions.companion_will_not_respawn_message": "Dein Begleiter %1$s ist tot und konnte nicht wiederbelebt werden!",
   "entity.player_companions.companion_will_respawn_message": "%1$s könnte in %2$s Sekunden respawnt werden!",
-
   "container.player_companions.companions_menu": "Spieler-Begleiter",
-
   "text.player_companions.save": "Speichern",
   "text.player_companions.cancel": "Abbrechen",
   "text.player_companions.follow": "Folgen",
   "text.player_companions.sit": "Sitzen",
   "text.player_companions.default_aggression": "Standard-Aggression",
   "text.player_companions.texture_url": "Textur-URL",
-
   "text.player_companions.commands.summon.action": "beschwören",
   "text.player_companions.commands.summon.list_entry": "\u25CB %1$s (%2$s) %3$s [%4$s]",
-
   "text.player_companions.untamed_companion.interaction": "Es scheint, dass %1$s nicht in der Lage ist, deine Sprache zu verstehen.\nDoch hast du beobachtet, dass es auf den Duft von %2$s reagiert.\nVielleicht kannst du %2$s benutzen, um %1$s zu zähmen und mit ihm zu kommunizieren.",
   "text.player_companions.untamed_companion.interaction.annoying": "Du solltest %1$s nicht ärgern. Es könnte wütend werden und dich angreifen!",
-
   "text.player_companions.tamed_companion_dimension": "Dimension: %1$s",
   "text.player_companions.tamed_companion_food": "Nahrung: %1$s",
   "text.player_companions.tamed_companion_health": "Gesundheit: %1$s (%2$s)",
@@ -153,26 +145,20 @@
   "text.player_companions.tamed_companion_owner": "Besitzer: %1$s",
   "text.player_companions.tamed_companion_respawn": "Respawn-Timer: %1$s Sek. verbleibend",
   "text.player_companions.tamed_companion_type": "Typ: %1$s",
-
   "text.player_companions.tamed_companion_status_dead": "Status: Tot",
   "text.player_companions.tamed_companion_status_order_to_sit": "Status: Ist Befehl zum Sitzen",
   "text.player_companions.tamed_companion_status_order_to_follow": "Status: Ist Befehl zu folgen",
   "text.player_companions.tamed_companion_status_order_to_position": "Status: Ist Auftrag zu positionieren",
-
   "text.player_companions.tamed_companion_warning_not_owner": "Gefährte %1$s (%2$s) ist im Besitz von %3$s!",
   "text.player_companions.tamed_companion_warning_respawn_timer": "Begleiter %1$s (%2$s) kann nicht gespawnt werden, da ein aktiver Respawn-Timer für %3$s Sekunden verbleibt!",
-
   "text.player_companions.tame_companion": "Der Gegenstand wird verwendet, um die verschiedenen Arten von Spielerbegleitern zu zähmen.",
   "text.player_companions.tameable_companions": "Zähmbare Gefährten:",
-
   "text.player_companions.companion_is_near_you": "Begleiter %1$s ist bereits innerhalb von 16 Blöcken von deiner Position gespawnt!",
   "text.player_companions.captured_companion_usage": "Mit diesem Gegenstand in der Hand kannst du deinen Begleiter %1$s spawnen / an eine Position befehlen (Klick auf leeren Platz) oder despawnen (Klick auf den Begleiter).",
   "text.player_companions.empty_captured_companion_usage": "Klicke auf einen leeren Platz, um einen neuen Begleiter zu erstellen, oder klicke auf einen vorhandenen Begleiter, um stattdessen den vorhandenen Begleiter zu verknüpfen.",
-
   "text.player_companions.captured_companion_title": "Gefange %1$s",
   "text.player_companions.captured_companion_subtitle_inventory": "Wurde in Inventar Slot %1$s gespeichert!",
   "text.player_companions.captured_companion_subtitle_ground": "Wurde auf den Boden geworfen!",
-
   "text.player_companions.aggression_level.PASSIVE_FLEE": "Passiv (fliehen)",
   "text.player_companions.aggression_level.PASSIVE": "Passiv",
   "text.player_companions.aggression_level.NEUTRAL": "Neutral",
@@ -182,13 +168,11 @@
   "text.player_companions.aggression_level.AGGRESSIVE_PLAYERS": "Aggressiv (Spieler)",
   "text.player_companions.aggression_level.AGGRESSIVE_ALL": "Aggressiv (alle)",
   "text.player_companions.aggression_level.UNKNOWN": "Unbekannt",
-
   "key.player_companions.category": "Spieler-Begleiter-Schlüssel",
   "key.player_companions.player_companions": "Bildschirm Spielerbegleiter öffnen",
   "key.player_companions.control": "Spielerbegleiter befehligen",
   "key.player_companions.aggression": "Aggressionslevel für Spielerbegleiter festlegen",
   "key.player_companions.open_menu": "Menü des Spielerbegleiters öffnen",
-
   "item.player_companions.dobutsu_spawn_egg": "Dobutsu-Spawn-Ei",
   "item.player_companions.fairy_spawn_egg": "Feen-Spawn-Ei",
   "item.player_companions.firefly_spawn_egg": "Glühwürmchen-Spawn-Ei",
@@ -201,7 +185,6 @@
   "item.player_companions.small_slime_spawn_egg": "Kleines Schleim-Spawn-Ei",
   "item.player_companions.snail_spawn_egg": "Schnecken-Spawn-Ei",
   "item.player_companions.welsh_corgi_spawn_egg": "Welsh Corgi Spawn-Ei",
-
   "item.player_companions.dobutsu_default": "Dobutsu",
   "item.player_companions.dobutsu_creeper": "Dobutsu (Creeper)",
   "item.player_companions.dobutsu_enderman": "Dobutsu (Enderman)",
@@ -245,7 +228,6 @@
   "item.player_companions.welsh_corgi_default": "Welsh Corgi (Standard)",
   "item.player_companions.welsh_corgi_black": "Welsh Corgi (schwarz)",
   "item.player_companions.welsh_corgi_mixed": "Welsh Corgi (gemischt)",
-
   "item.player_companions.tame_apple": "Apfel (Zähmungsgegenstand)",
   "item.player_companions.tame_bone": "Knochen (Zähmungsgegenstand)",
   "item.player_companions.tame_cake": "Kuchen (Zähmungsgegenstand)",
@@ -255,7 +237,6 @@
   "item.player_companions.tame_seagrass": "Seegras (Zähmungsgegenstand)",
   "item.player_companions.tame_sweet_berries": "Süße Beeren (Zähmungsgegenstand)",
   "item.player_companions.tame_wheat_seeds": "Weizensamen (Zähmungsgegenstand)",
-
   "itemGroup.player_companions": "Spieler-Begleiter",
   "itemGroup.player_companions.spawn_eggs": "Spieler-Begleiter: Spawn-Eier",
   "itemGroup.player_companions.tame_items": "Spieler-Begleiter: Zähmbare Gegenstände"

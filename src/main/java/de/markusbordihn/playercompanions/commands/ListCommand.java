@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,21 +19,19 @@
 
 package de.markusbordihn.playercompanions.commands;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
-
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-
 public class ListCommand extends CustomCommand {
+
   private static final ListCommand command = new ListCommand();
 
   public static ArgumentBuilder<CommandSourceStack, ?> register() {
@@ -49,8 +47,13 @@ public class ListCommand extends CustomCommand {
     while (playerCompanionIterator.hasNext()) {
       PlayerCompanionData playerCompanion = playerCompanionIterator.next();
       if (playerCompanion != null) {
-        sendFeedback(context, String.format("\u25CB %s : %s (%s)", playerCompanion.getOwnerName(),
-            playerCompanion.getName(), playerCompanion.getType()));
+        sendFeedback(
+            context,
+            String.format(
+                "\u25CB %s : %s (%s)",
+                playerCompanion.getOwnerName(),
+                playerCompanion.getName(),
+                playerCompanion.getType()));
         log.info("{}", playerCompanion);
       }
     }

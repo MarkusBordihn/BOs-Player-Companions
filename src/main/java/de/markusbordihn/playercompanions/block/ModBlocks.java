@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,29 +19,28 @@
 
 package de.markusbordihn.playercompanions.block;
 
+import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
-
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.Annotations.TemplateEntryPoint;
-
 public class ModBlocks {
-
-  protected ModBlocks() {
-
-  }
 
   public static final DeferredRegister<Block> BLOCKS =
       DeferredRegister.create(ForgeRegistries.BLOCKS, Constants.MOD_ID);
 
-  @TemplateEntryPoint("Register Blocks")
-
   public static final RegistryObject<Block> LIGHT_BLOCK =
-      BLOCKS.register("light_block", () -> new LightBlock(BlockBehaviour.Properties.of(Material.AIR)
-          .noCollission().lightLevel(LightBlock::getLightLevel).randomTicks()));
+      BLOCKS.register(
+          "light_block",
+          () ->
+              new LightBlock(
+                  BlockBehaviour.Properties.of(Material.AIR)
+                      .noCollission()
+                      .lightLevel(LightBlock::getLightLevel)
+                      .randomTicks()));
+
+  protected ModBlocks() {}
 }

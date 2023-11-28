@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,12 +19,10 @@
 
 package de.markusbordihn.playercompanions.client.renderer.layers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.client.model.PlayerCompanionModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.ItemInHandRenderer;
@@ -35,9 +33,8 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.client.model.PlayerCompanionModel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
     extends RenderLayer<T, M> {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.client.model;
 
 import java.util.List;
-
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -30,19 +29,17 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class SmallSlimeModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
+  private static final PartPose partPoseOffset = PartPose.offset(0.1F, 19.9F, -1.6F);
   private final ModelPart body;
   private final ModelPart mouth;
   private final ModelPart rightEye;
   private final ModelPart leftEye;
-
-  private static final PartPose partPoseOffset = PartPose.offset(0.1F, 19.9F, -1.6F);
 
   public SmallSlimeModel(ModelPart modelPart) {
     this.body = modelPart.getChild("body");
@@ -57,10 +54,11 @@ public class SmallSlimeModel<T extends TamableAnimal> extends AgeableListModel<T
     partDefinition.addOrReplaceChild("body",
         CubeListBuilder.create().texOffs(0, 0).addBox(-4.1F, -3.9F, -2.4F, 8.0F, 8.0F, 8.0F),
         partPoseOffset);
-    partDefinition.addOrReplaceChild("mouth", CubeListBuilder.create(), PartPose.offset(0.0F,0.0F,0.0F));
+    partDefinition.addOrReplaceChild("mouth", CubeListBuilder.create(),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
     partDefinition.addOrReplaceChild("right_eye", CubeListBuilder.create(),
         PartPose.offset(0.0F, 0.0F, 0.0F));
-        partDefinition.addOrReplaceChild("left_eye", CubeListBuilder.create(),
+    partDefinition.addOrReplaceChild("left_eye", CubeListBuilder.create(),
         PartPose.offset(0.0F, 0.0F, 0.0F));
     return LayerDefinition.create(meshDefinition, 32, 32);
   }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,6 +19,13 @@
 
 package de.markusbordihn.playercompanions.utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
+import de.markusbordihn.playercompanions.Constants;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -27,24 +34,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-
-import com.mojang.authlib.GameProfile;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.GameProfileCache;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayersUtils {
 
@@ -56,7 +51,8 @@ public class PlayersUtils {
   // Internal Cache
   private static UUID lastUserUUIDForUserTexture;
 
-  protected PlayersUtils() {}
+  protected PlayersUtils() {
+  }
 
   public static Optional<GameProfile> getGameProfile(MinecraftServer server, Component component) {
     return getGameProfile(server, component.getString());

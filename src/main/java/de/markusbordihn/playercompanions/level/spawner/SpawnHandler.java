@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,17 +19,6 @@
 
 package de.markusbordihn.playercompanions.level.spawner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.level.levelgen.Heightmap;
-
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
 import de.markusbordihn.playercompanions.entity.companions.Fairy;
@@ -39,13 +28,22 @@ import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.SmallGhast;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
 import de.markusbordihn.playercompanions.entity.companions.Snail;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber
 public class SpawnHandler {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected SpawnHandler() {}
+  protected SpawnHandler() {
+  }
 
   @SubscribeEvent
   public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {

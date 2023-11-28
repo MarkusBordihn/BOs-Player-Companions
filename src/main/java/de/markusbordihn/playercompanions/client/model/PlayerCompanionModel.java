@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,22 +19,20 @@
 
 package de.markusbordihn.playercompanions.client.model;
 
+import de.markusbordihn.playercompanions.Constants;
+import net.minecraft.client.model.geom.ModelPart;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.model.geom.ModelPart;
-
-import de.markusbordihn.playercompanions.Constants;
-
 public interface PlayerCompanionModel {
 
-  static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public default ModelPart rightHand() {
+  default ModelPart rightHand() {
     return null;
   }
 
-  public default ModelPart leftHand() {
+  default ModelPart leftHand() {
     return null;
   }
 

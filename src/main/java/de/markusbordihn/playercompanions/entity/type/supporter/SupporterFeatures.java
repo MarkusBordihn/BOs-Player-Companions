@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,8 +19,12 @@
 
 package de.markusbordihn.playercompanions.entity.type.supporter;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import java.util.List;
-
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -29,16 +33,9 @@ import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionsFeatures;
-import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 
 @EventBusSubscriber
 public class SupporterFeatures extends PlayerCompanionsFeatures {
@@ -65,12 +62,9 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
 
     // Automatic buff entities in the defined radius.
     if (!level.isClientSide && COMMON.supporterTypeRadius.get() > 0 && ticker++ >= SUPPORTER_TICK) {
-      boolean hasBuffSomething = false;
+      boolean hasBuffSomething = this.getOwner() != null && buffLivingEntity(this.getOwner());
 
       // 1. Priority: Buff owner.
-      if (this.getOwner() != null && buffLivingEntity(this.getOwner())) {
-        hasBuffSomething = true;
-      }
 
       // 2. Priority: Buff self.
       if (!hasBuffSomething && buffLivingEntity(this.playerCompanionEntity)) {
@@ -80,7 +74,8 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       // 3. Priority: Buff other players in radius.
       if (!hasBuffSomething) {
         List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
-            new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.supporterTypeRadius.get()),
+            new AABB(playerCompanionEntity.blockPosition()).inflate(
+                COMMON.supporterTypeRadius.get()),
             entity -> true);
         for (Player player : playerEntities) {
           if (player != this.getOwner() && buffLivingEntity(player)) {
@@ -94,7 +89,8 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       if (!hasBuffSomething && this.getOwner() != null) {
         List<PlayerCompanionEntity> playerCompanions =
             playerCompanionEntity.level().getEntitiesOfClass(PlayerCompanionEntity.class,
-                new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.supporterTypeRadius.get()),
+                new AABB(playerCompanionEntity.blockPosition()).inflate(
+                    COMMON.supporterTypeRadius.get()),
                 entity -> true);
         for (PlayerCompanionEntity playerCompanion : playerCompanions) {
           if (playerCompanion != this.playerCompanionEntity
@@ -111,7 +107,8 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       if (!hasBuffSomething && this.getOwner() != null) {
         List<TamableAnimal> tamableAnimals =
             playerCompanionEntity.level().getEntitiesOfClass(TamableAnimal.class,
-                new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.supporterTypeRadius.get()),
+                new AABB(playerCompanionEntity.blockPosition()).inflate(
+                    COMMON.supporterTypeRadius.get()),
                 entity -> true);
         for (TamableAnimal tamableAnimal : tamableAnimals) {
           if (tamableAnimal != this.playerCompanionEntity
@@ -168,7 +165,8 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
   }
 
   public boolean buffLivingEntityDamageBoost(LivingEntity livingEntity) {
-    if (COMMON.supporterTypeDamageBoostDuration.get() > 0 && !livingEntity.hasEffect(MobEffects.DAMAGE_BOOST)) {
+    if (COMMON.supporterTypeDamageBoostDuration.get() > 0 && !livingEntity.hasEffect(
+        MobEffects.DAMAGE_BOOST)) {
       livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,
           COMMON.supporterTypeDamageBoostDuration.get(), 0, false, false, true));
       return true;

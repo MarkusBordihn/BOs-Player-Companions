@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,13 +19,18 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
+import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MeleeAttackGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
+import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
+import de.markusbordihn.playercompanions.item.ModItems;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.annotation.Nullable;
-
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -54,14 +59,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.Vec3;
-
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.MeleeAttackGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
-import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
-import de.markusbordihn.playercompanions.item.ModItems;
 
 public class Rooster extends GuardEntityWalking implements NeutralMob {
 

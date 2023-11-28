@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -23,49 +23,49 @@ import de.markusbordihn.playercompanions.data.Experience;
 
 public interface PlayerCompanionExperience {
 
-  public int getExperience();
+  int getExperience();
 
-  public int setExperience(int experience);
+  int setExperience(int experience);
 
-  public int getExperienceLevel();
+  int getExperienceLevel();
 
-  public int setExperienceLevel(int level);
+  int setExperienceLevel(int level);
 
-  public void onLevelUp(int level);
+  void onLevelUp(int level);
 
-  public void onLevelDown(int level);
+  void onLevelDown(int level);
 
-  public void onExperienceChange(int experience);
+  void onExperienceChange(int experience);
 
-  public default boolean isMaxExperienceLevel() {
+  default boolean isMaxExperienceLevel() {
     return getExperienceLevel() >= getMaxExperienceLevel();
   }
 
-  public default boolean isMinExperienceLevel() {
+  default boolean isMinExperienceLevel() {
     return getExperienceLevel() == getMinExperienceLevel();
   }
 
-  public default int getMaxExperienceLevel() {
+  default int getMaxExperienceLevel() {
     return Experience.MAX_LEVEL;
   }
 
-  public default int getMinExperienceLevel() {
+  default int getMinExperienceLevel() {
     return Experience.MIN_LEVEL;
   }
 
-  public default int increaseExperienceLevel(int level) {
+  default int increaseExperienceLevel(int level) {
     return setExperienceLevel(getExperienceLevel() + level);
   }
 
-  public default void decreaseExperienceLevel(int level) {
+  default void decreaseExperienceLevel(int level) {
     setExperienceLevel(getExperienceLevel() - level);
   }
 
-  public default void decreaseExperienceAndExperienceLevel() {
+  default void decreaseExperienceAndExperienceLevel() {
     decreaseExperience(Experience.getExperienceDifferenceForLevel(getExperienceLevel()));
   }
 
-  public default void increaseExperience(int experience) {
+  default void increaseExperience(int experience) {
     int levelUp = setExperience(getExperience() + experience);
     if (levelUp > getMinExperienceLevel()) {
       this.onLevelUp(levelUp);
@@ -73,24 +73,24 @@ public interface PlayerCompanionExperience {
     onExperienceChange(getExperience());
   }
 
-  public default void decreaseExperience(int experience) {
+  default void decreaseExperience(int experience) {
     setExperience(getExperience() - experience);
   }
 
-  public default void decreaseExperienceLevel() {
+  default void decreaseExperienceLevel() {
     decreaseExperienceAndExperienceLevel();
     this.onLevelDown(getExperienceLevel());
   }
 
-  public default int getExperienceForNextLevel() {
+  default int getExperienceForNextLevel() {
     return Experience.getExperienceForNextLevel(getExperienceLevel());
   }
 
-  public default int getExperienceForLevel() {
+  default int getExperienceForLevel() {
     return Experience.getExperienceForLevel(getExperienceLevel());
   }
 
-  public default int getHealthAdjustmentFromExperienceLevel(int level, int maxHealth,
+  default int getHealthAdjustmentFromExperienceLevel(int level, int maxHealth,
       int baseHealth) {
     // Early return if we don't need to calculate anything.
     if (level == 1 || maxHealth == 0 || baseHealth >= maxHealth) {
@@ -103,7 +103,7 @@ public interface PlayerCompanionExperience {
     return 0;
   }
 
-  public default int getAttackDamageAdjustmentFromExperienceLevel(int level, int maxAttackDamage,
+  default int getAttackDamageAdjustmentFromExperienceLevel(int level, int maxAttackDamage,
       int baseAttackDamage) {
     // Early return if we don't need to calculate anything.
     if (level == 1 || maxAttackDamage == 0 || baseAttackDamage >= maxAttackDamage) {
@@ -117,7 +117,7 @@ public interface PlayerCompanionExperience {
     return 0;
   }
 
-  public default int getHealingAmountFromExperienceLevel(int level, int minHealing,
+  default int getHealingAmountFromExperienceLevel(int level, int minHealing,
       int maxHealing) {
     if (level == 1 || minHealing >= maxHealing) {
       return minHealing;

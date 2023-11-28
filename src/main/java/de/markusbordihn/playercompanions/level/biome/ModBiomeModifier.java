@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,29 +19,26 @@
 
 package de.markusbordihn.playercompanions.level.biome;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
+import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
-
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.common.world.ModifiableBiomeInfo;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public record ModBiomeModifier(HolderSet<Biome> biomes, HolderSet<Biome> denylistBiomes,
-    MobSpawnSettings.SpawnerData spawnerData, MobCategory mobCategory) implements BiomeModifier {
+                               MobSpawnSettings.SpawnerData spawnerData,
+                               MobCategory mobCategory) implements BiomeModifier {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static Codec<ModBiomeModifier> makeCodec() {
     return RecordCodecBuilder.create(builder -> builder

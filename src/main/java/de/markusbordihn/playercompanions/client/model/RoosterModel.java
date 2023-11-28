@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.client.model;
 
 import java.util.List;
-
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -31,7 +30,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -64,15 +62,15 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
     PartDefinition partDefinition = meshDefinition.getRoot();
 
     PartDefinition body = partDefinition.addOrReplaceChild("body", CubeListBuilder.create()
-        .texOffs(24, 0).addBox(-3.0F, -3.0F, -6.0F, 6.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)),
+            .texOffs(24, 0).addBox(-3.0F, -3.0F, -6.0F, 6.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 16.0F, 0.0F));
 
     body.addOrReplaceChild("body_r1", CubeListBuilder.create().texOffs(10, 14)
-        .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(24, 7)
-        .addBox(-2.0F, 4.0F, 0.0F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(0, 27)
-        .addBox(-3.0F, -2.0F, -5.0F, 6.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(18, 24)
-        .addBox(-3.0F, -3.0F, -4.0F, 6.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
-        .addBox(-3.0F, -4.0F, -3.0F, 6.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)),
+            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(24, 7)
+            .addBox(-2.0F, 4.0F, 0.0F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(0, 27)
+            .addBox(-3.0F, -2.0F, -5.0F, 6.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(18, 24)
+            .addBox(-3.0F, -3.0F, -4.0F, 6.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
+            .addBox(-3.0F, -4.0F, -3.0F, 6.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
 
     PartDefinition tail =
@@ -112,11 +110,11 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
         -4.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
     partDefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(29, 27)
-        .addBox(-1.0F, 2.0F, -3.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)),
+            .addBox(-1.0F, 2.0F, -3.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-2.0F, 19.0F, 1.0F));
 
     partDefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(29, 27)
-        .addBox(-1.0F, 2.0F, -3.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)),
+            .addBox(-1.0F, 2.0F, -3.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)),
         PartPose.offset(1.0F, 19.0F, 1.0F));
 
     PartDefinition rightWing = partDefinition.addOrReplaceChild("right_wing",
@@ -128,7 +126,7 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
         PartPose.offsetAndRotation(-0.5F, 2.5F, 1.0F, 3.1416F, 3.1416F, 0.0F));
 
     partDefinition.addOrReplaceChild("left_wing", CubeListBuilder.create().texOffs(0, 14)
-        .addBox(0.0F, 0.0F, -3.0F, 1.0F, 5.0F, 8.0F, new CubeDeformation(0.0F)),
+            .addBox(0.0F, 0.0F, -3.0F, 1.0F, 5.0F, 8.0F, new CubeDeformation(0.0F)),
         PartPose.offset(3.0F, 13.0F, 0.0F));
 
     partDefinition.addOrReplaceChild("right_hand", CubeListBuilder.create(),

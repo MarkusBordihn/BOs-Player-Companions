@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.client.model;
 
 import java.util.List;
-
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -30,7 +29,6 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -56,8 +54,8 @@ public class SnailModel<T extends TamableAnimal> extends AgeableListModel<T> {
     PartDefinition partDefinition = meshDefinition.getRoot();
 
     partDefinition.addOrReplaceChild("body", CubeListBuilder.create()
-        .texOffs(32, 15).addBox(-2.0F, -4.0F, -6.0F, 4.0F, 3.0F, 12.0F, new CubeDeformation(0.0F))
-        .texOffs(24, 0).addBox(-3.0F, -1.0F, -7.0F, 6.0F, 1.0F, 14.0F, new CubeDeformation(0.0F)),
+            .texOffs(32, 15).addBox(-2.0F, -4.0F, -6.0F, 4.0F, 3.0F, 12.0F, new CubeDeformation(0.0F))
+            .texOffs(24, 0).addBox(-3.0F, -1.0F, -7.0F, 6.0F, 1.0F, 14.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 24.0F, 0.0F));
 
     PartDefinition eyes = partDefinition.addOrReplaceChild("eyes", CubeListBuilder.create(),

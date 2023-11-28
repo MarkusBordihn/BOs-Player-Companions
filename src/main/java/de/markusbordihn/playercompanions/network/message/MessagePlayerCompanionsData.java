@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,20 +19,16 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MessagePlayerCompanionsData {
 
@@ -42,10 +38,6 @@ public class MessagePlayerCompanionsData {
 
   public MessagePlayerCompanionsData(CompoundTag data) {
     this.data = data;
-  }
-
-  public CompoundTag getData() {
-    return this.data;
   }
 
   public static MessagePlayerCompanionsData decode(final FriendlyByteBuf buffer) {
@@ -66,6 +58,10 @@ public class MessagePlayerCompanionsData {
 
   public static void handlePacket(MessagePlayerCompanionsData message) {
     PlayerCompanionsClientData.load(message.getData());
+  }
+
+  public CompoundTag getData() {
+    return this.data;
   }
 
 }

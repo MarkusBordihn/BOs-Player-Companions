@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2023 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,14 +19,15 @@
 
 package de.markusbordihn.playercompanions.tabs;
 
+import de.markusbordihn.playercompanions.item.ModItems;
 import net.minecraft.world.item.CreativeModeTab.DisplayItemsGenerator;
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
 import net.minecraft.world.item.CreativeModeTab.Output;
 
-import de.markusbordihn.playercompanions.item.ModItems;
-
 public class SpawnEggsItems implements DisplayItemsGenerator {
-  protected SpawnEggsItems() {}
+
+  protected SpawnEggsItems() {
+  }
 
   @Override
   public void accept(ItemDisplayParameters itemDisplayParameters, Output output) {

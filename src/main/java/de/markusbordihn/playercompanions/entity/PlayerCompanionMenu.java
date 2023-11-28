@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,25 +20,6 @@
 
 package de.markusbordihn.playercompanions.entity;
 
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
-
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-
-import net.minecraftforge.network.NetworkHooks;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.CollectorCompanionMenu;
 import de.markusbordihn.playercompanions.container.DefaultCompanionMenu;
@@ -47,12 +28,26 @@ import de.markusbordihn.playercompanions.container.GuardCompanionMenu;
 import de.markusbordihn.playercompanions.container.HealerCompanionMenu;
 import de.markusbordihn.playercompanions.container.SupporterCompanionMenu;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import java.util.UUID;
+import javax.annotation.Nullable;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkHooks;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionMenu {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected PlayerCompanionMenu() {}
+  protected PlayerCompanionMenu() {
+  }
 
   public static void openMenu(PlayerCompanionEntity playerCompanionEntity) {
     switch (playerCompanionEntity.getCompanionType()) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,12 +19,9 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.Constants;
 import java.util.List;
 import java.util.Random;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,18 +30,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionsFeatures {
 
-  protected final Random random = new Random();
-
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   // Ticker
   protected static final int EXPERIENCE_TICKER = 20 * 60;
   protected static final int EXPERIENCE_OWNER_BONUS_TICKER = 20 * 60 * 5;
+  protected final Random random = new Random();
   protected short ticker = 0;
   protected short experienceDistributeTicker = 0;
   protected short experienceOwnerBonusTicker = 0;

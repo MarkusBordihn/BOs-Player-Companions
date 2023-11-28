@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,16 +19,15 @@
 
 package de.markusbordihn.playercompanions.item.tameitems;
 
+import de.markusbordihn.playercompanions.item.CompanionTameItem;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.markusbordihn.playercompanions.item.CompanionTameItem;
-
 public class TameBone extends CompanionTameItem {
 
   private static final Set<String> tameableMobTypes = new HashSet<>(Arrays.asList(
-  // @formatter:off
+      // @formatter:off
     "player_companions:small_ghast",
     "player_companions:welsh_corgi"
   // @formatter:on

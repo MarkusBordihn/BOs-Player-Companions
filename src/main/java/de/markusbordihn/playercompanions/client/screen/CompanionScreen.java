@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,22 +19,6 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Inventory;
-
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.container.CompanionMenu;
 import de.markusbordihn.playercompanions.data.Experience;
@@ -47,6 +31,19 @@ import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.network.NetworkHandler;
 import de.markusbordihn.playercompanions.skin.SkinType;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @OnlyIn(Dist.CLIENT)
 public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerScreen<T> {
@@ -60,23 +57,21 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       new ResourceLocation(Constants.MOD_ID, "textures/container/dialog.png");
   private static final ResourceLocation SYMBOLS_TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/symbols.png");
-  private ResourceLocation backgroundTexture =
-      new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion.png");
-
+  // Cache
+  protected static int nextTextureSkinLocationChange =
+      (int) java.time.Instant.now().getEpochSecond();
   protected final Entity entity;
   protected final PlayerCompanionEntity playerCompanionEntity;
-
+  private ResourceLocation backgroundTexture =
+      new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion.png");
   private Button clearTextureSettingsButton = null;
   private Button closeTextureSettingsButton = null;
   private Button saveTextureSettingsButton = null;
-
   private Button actionTypeFollowButton = null;
   private Button actionTypeSitButton = null;
-
   private Button aggressionLevelDefaultButton = null;
   private ImageButton aggressiveLevelPreviousButton = null;
   private ImageButton aggressiveLevelNextButton = null;
-
   private EditBox textureSkinLocationBox;
   private String formerTextureSkinLocation = "";
   private boolean showTextureSettings = false;
@@ -85,10 +80,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   private float yMouse;
   private int leftPosDialog = this.leftPos - 18;
   private int topPosDialog = this.topPos + 90;
-
-  // Cache
-  protected static int nextTextureSkinLocationChange =
-      (int) java.time.Instant.now().getEpochSecond();
 
   public CompanionScreen(T menu, Inventory inventory, Component component,
       ResourceLocation backgroundTexture) {
@@ -104,6 +95,11 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     } else {
       this.playerCompanionEntity = null;
     }
+  }
+
+  private static void updateNextTextureSkinLocationChange() {
+    CompanionScreen.nextTextureSkinLocationChange =
+        (int) java.time.Instant.now().getEpochSecond() + ADD_SKIN_DELAY;
   }
 
   private void renderEntityActions(PlayerCompanionData playerCompanionData, GuiGraphics guiGraphics,
@@ -218,7 +214,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     guiGraphics.pose().scale(STATES_SCALE, STATES_SCALE, STATES_SCALE);
     leftPos = (int) ((x + 38) / STATES_SCALE);
     guiGraphics.drawString(this.font,
-        Component.literal("" + (int) playerCompanionEntity.getHealth() + " / "
+        Component.literal((int) playerCompanionEntity.getHealth() + " / "
             + (int) playerCompanionEntity.getMaxHealth()),
         leftPos, (int) ((y + 23) / STATES_SCALE), Constants.FONT_COLOR_WHITE);
     guiGraphics.drawString(this.font, Component.literal("" + playerCompanionEntity.getArmorValue()),
@@ -289,8 +285,8 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     if (textureSkinLocationValue != null
         && !textureSkinLocationValue.equals(this.formerTextureSkinLocation)
         && (textureSkinLocationValue.isEmpty()
-            || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
-            || PlayersUtils.isValidUrl(textureSkinLocationValue))) {
+        || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
+        || PlayersUtils.isValidUrl(textureSkinLocationValue))) {
 
       if (PlayersUtils.isValidPlayerName(textureSkinLocationValue)) {
         log.debug("Settings player user texture to {}", textureSkinLocationValue);
@@ -306,11 +302,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     }
   }
 
-  private static void updateNextTextureSkinLocationChange() {
-    CompanionScreen.nextTextureSkinLocationChange =
-        (int) java.time.Instant.now().getEpochSecond() + ADD_SKIN_DELAY;
-  }
-
   private void validateTextureSkinLocation() {
     String textureSkinLocationValue = this.textureSkinLocationBox.getValue();
     this.canTextureSkinLocationChange =
@@ -321,13 +312,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       this.saveTextureSettingsButton.active = textureSkinLocationValue != null
           && !textureSkinLocationValue.equals(this.formerTextureSkinLocation)
           && (textureSkinLocationValue.isEmpty()
-              || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
-              || PlayersUtils.isValidUrl(textureSkinLocationValue));
-    } else if (textureSkinLocationValue.isEmpty()) {
-      this.saveTextureSettingsButton.active = true;
-    } else {
-      this.saveTextureSettingsButton.active = false;
-    }
+          || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
+          || PlayersUtils.isValidUrl(textureSkinLocationValue));
+    } else
+      this.saveTextureSettingsButton.active = textureSkinLocationValue.isEmpty();
     this.clearTextureSettingsButton.active =
         textureSkinLocationValue != null && !textureSkinLocationValue.isEmpty();
   }

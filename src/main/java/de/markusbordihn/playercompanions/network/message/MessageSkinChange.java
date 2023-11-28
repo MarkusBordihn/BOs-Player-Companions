@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2023 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,23 +19,19 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
-import java.util.UUID;
-import java.util.function.Supplier;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-
-import net.minecraftforge.network.NetworkEvent;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.skin.SkinType;
 import de.markusbordihn.playercompanions.utils.PlayersUtils;
+import java.util.UUID;
+import java.util.function.Supplier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.NetworkEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MessageSkinChange {
 
@@ -54,26 +50,6 @@ public class MessageSkinChange {
     this.skinURL = skinURL;
     this.skinUUID = skinUUID;
     this.skinType = skinType;
-  }
-
-  public UUID getUUID() {
-    return this.uuid;
-  }
-
-  public String getSkin() {
-    return this.skin;
-  }
-
-  public String getSkinURL() {
-    return this.skinURL;
-  }
-
-  public UUID getSkinUUID() {
-    return this.skinUUID;
-  }
-
-  public SkinType getSkinType() {
-    return this.skinType;
   }
 
   public static MessageSkinChange decode(final FriendlyByteBuf buffer) {
@@ -170,6 +146,26 @@ public class MessageSkinChange {
         log.error("Failed processing skin:{} uuid:{} url:{} type:{} for {} from {}", skin, skinUUID,
             skinURL, skinType, playerCompanionEntity, serverPlayer);
     }
+  }
+
+  public UUID getUUID() {
+    return this.uuid;
+  }
+
+  public String getSkin() {
+    return this.skin;
+  }
+
+  public String getSkinURL() {
+    return this.skinURL;
+  }
+
+  public UUID getSkinUUID() {
+    return this.skinUUID;
+  }
+
+  public SkinType getSkinType() {
+    return this.skinType;
   }
 
 }

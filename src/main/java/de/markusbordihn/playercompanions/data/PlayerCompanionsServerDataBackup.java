@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,36 +19,31 @@
 
 package de.markusbordihn.playercompanions.data;
 
+import de.markusbordihn.playercompanions.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.world.level.storage.LevelResource;
-
 import net.minecraftforge.server.ServerLifecycleHooks;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionsServerDataBackup {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static final File BACKUP_FOLDER =
       new File(ServerLifecycleHooks.getCurrentServer().getWorldPath(LevelResource.ROOT).toFile(),
           Constants.MOD_ID);
   public static final String BACKUP_FILE_NAME = "player_companions_data.nbt";
-
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private static CompoundTag lastBackupCompoundTag = null;
 
-  protected PlayerCompanionsServerDataBackup() {}
+  protected PlayerCompanionsServerDataBackup() {
+  }
 
   public static boolean saveBackup() {
     CompoundTag compoundTag = new CompoundTag();

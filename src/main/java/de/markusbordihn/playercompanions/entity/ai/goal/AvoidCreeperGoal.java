@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,11 +19,10 @@
 
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.EnumSet;
 import java.util.function.Predicate;
-
 import javax.annotation.Nullable;
-
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -34,22 +33,20 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-
 public class AvoidCreeperGoal extends PlayerCompanionGoal {
 
-  private final double walkSpeedModifier;
-  private final double sprintSpeedModifier;
-  @Nullable
-  protected Creeper creeperToAvoid;
-  protected final float maxDist;
-  @Nullable
-  protected Path path;
-  protected final PathNavigation pathNav;
   protected static final Predicate<LivingEntity> avoidPredicate = livingEntity -> true;
   protected static final Predicate<LivingEntity> predicateOnAvoidEntity =
       EntitySelector.NO_CREATIVE_OR_SPECTATOR::test;
+  protected final float maxDist;
+  protected final PathNavigation pathNav;
+  private final double walkSpeedModifier;
+  private final double sprintSpeedModifier;
   private final TargetingConditions avoidEntityTargeting;
+  @Nullable
+  protected Creeper creeperToAvoid;
+  @Nullable
+  protected Path path;
 
   public AvoidCreeperGoal(PlayerCompanionEntity playerCompanionEntity) {
     this(playerCompanionEntity, 5.0F, 1.0D, 1.0D);

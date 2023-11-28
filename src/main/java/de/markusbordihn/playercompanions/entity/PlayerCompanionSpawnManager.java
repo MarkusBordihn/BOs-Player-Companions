@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,12 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import java.util.Iterator;
 import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
@@ -34,30 +33,26 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionSpawnManager {
 
+  public static final String COMPANION_UUID_TAG = "CompanionUUID";
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   private static final String FALL_DISTANCE_TAG = "FallDistance";
   private static final String FIRE_TAG = "Fire";
   private static final String HEALTH_TAG = "Health";
   private static final String MOTION_TAG = "Motion";
   private static final String ON_GROUND_TAG = "OnGround";
-
-  public static final String COMPANION_UUID_TAG = "CompanionUUID";
 
   protected PlayerCompanionSpawnManager() {
 

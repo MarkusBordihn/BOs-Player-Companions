@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -29,7 +29,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -65,9 +64,9 @@ public class WelshCorgiModel<T extends TamableAnimal> extends AgeableListModel<T
     PartDefinition body = partDefinition.addOrReplaceChild("body", CubeListBuilder.create(),
         PartPose.offset(0.0F, 16.0F, 0.0F));
     body.addOrReplaceChild("body_r1", CubeListBuilder.create().texOffs(0, 12)
-        .addBox(-3.0F, -3.0F, -5.0F, 6.0F, 9.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(17, 21)
-        .addBox(-3.0F, -4.5F, -3.0F, 6.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(21, 7)
-        .addBox(-3.5F, -4.0F, -4.0F, 7.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)),
+            .addBox(-3.0F, -3.0F, -5.0F, 6.0F, 9.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(17, 21)
+            .addBox(-3.0F, -4.5F, -3.0F, 6.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(21, 7)
+            .addBox(-3.5F, -4.0F, -4.0F, 7.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(0.0F, 0.0F, -1.0F, 1.5708F, 0.0F, 0.0F));
     body.addOrReplaceChild("body_r2",
         CubeListBuilder.create().texOffs(0, 31).addBox(-3.5F, -2.825F, -1.25F, 7.0F, 6.0F, 4.0F,
@@ -82,23 +81,23 @@ public class WelshCorgiModel<T extends TamableAnimal> extends AgeableListModel<T
 
     // Head with snout and ears
     PartDefinition head = partDefinition.addOrReplaceChild("head", CubeListBuilder.create()
-        .texOffs(0, 0).addBox(-4.0F, -3.0F, -5.0F, 8.0F, 7.0F, 5.0F, new CubeDeformation(0.0F)),
+            .texOffs(0, 0).addBox(-4.0F, -3.0F, -5.0F, 8.0F, 7.0F, 5.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 11.0F, -1.0F));
     PartDefinition rightEar = head.addOrReplaceChild("right_ear", CubeListBuilder.create(),
         PartPose.offset(0.0F, 0.0F, 0.0F));
     rightEar.addOrReplaceChild("right_ear_r1", CubeListBuilder.create().texOffs(22, 17)
-        .addBox(-1.5F, -5.0F, -0.5F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(22, 31)
-        .addBox(-2.0F, -4.0F, -0.5F, 3.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)),
+            .addBox(-1.5F, -5.0F, -0.5F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(22, 31)
+            .addBox(-2.0F, -4.0F, -0.5F, 3.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(-2.5F, -2.0F, -2.5F, 0.0F, 0.0F, -0.3927F));
     PartDefinition leftEar = head.addOrReplaceChild("left_ear", CubeListBuilder.create(),
         PartPose.offset(0.0F, 0.0F, 0.0F));
     leftEar.addOrReplaceChild("left_ear_r1", CubeListBuilder.create().texOffs(22, 17)
-        .addBox(-0.5F, -5.0F, -0.5F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(22, 31)
-        .addBox(-1.0F, -4.0F, -0.5F, 3.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)),
+            .addBox(-0.5F, -5.0F, -0.5F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(22, 31)
+            .addBox(-1.0F, -4.0F, -0.5F, 3.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(2.5F, -2.0F, -2.5F, 0.0F, 0.0F, 0.3927F));
     PartDefinition snout = head.addOrReplaceChild("snout", CubeListBuilder.create().texOffs(26, 0)
-        .addBox(-1.0F, 1.9998F, -8.275F, 2.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
-        .addBox(-0.5F, 1.825F, -8.45F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)),
+            .addBox(-1.0F, 1.9998F, -8.275F, 2.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
+            .addBox(-0.5F, 1.825F, -8.45F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, -0.5F, 0.0F));
     snout.addOrReplaceChild("snout_r1",
         CubeListBuilder.create().texOffs(0, 26).addBox(-1.0F, -0.625F, 1.1F, 2.0F, 2.0F, 3.0F,
@@ -117,10 +116,10 @@ public class WelshCorgiModel<T extends TamableAnimal> extends AgeableListModel<T
 
     // Legs
     partDefinition.addOrReplaceChild("right_hind_leg", CubeListBuilder.create().texOffs(30, 31)
-        .addBox(-3.005F, -4.0F, 5.5F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)),
+            .addBox(-3.005F, -4.0F, 5.5F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 24.0F, -1.0F));
     partDefinition.addOrReplaceChild("left_hind_leg", CubeListBuilder.create().texOffs(30, 31)
-        .addBox(1.005F, -4.0F, 5.5F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)),
+            .addBox(1.005F, -4.0F, 5.5F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 24.0F, -1.0F));
     partDefinition
         .addOrReplaceChild(
@@ -128,7 +127,7 @@ public class WelshCorgiModel<T extends TamableAnimal> extends AgeableListModel<T
                 -3.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)),
             PartPose.offset(0.0F, 24.0F, -1.0F));
     partDefinition.addOrReplaceChild("left_front_leg", CubeListBuilder.create().texOffs(30, 31)
-        .addBox(1.005F, -4.0F, -3.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)),
+            .addBox(1.005F, -4.0F, -3.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 24.0F, -1.0F));
 
     return LayerDefinition.create(meshDefinition, 64, 64);

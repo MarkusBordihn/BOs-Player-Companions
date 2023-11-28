@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,11 +19,15 @@
 
 package de.markusbordihn.playercompanions.container;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.container.slots.ArmorSlot;
+import de.markusbordihn.playercompanions.container.slots.DummySlot;
+import de.markusbordihn.playercompanions.container.slots.HandSlot;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -37,15 +41,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.container.slots.ArmorSlot;
-import de.markusbordihn.playercompanions.container.slots.DummySlot;
-import de.markusbordihn.playercompanions.container.slots.HandSlot;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CompanionMenu extends AbstractContainerMenu {
 
@@ -63,14 +60,12 @@ public class CompanionMenu extends AbstractContainerMenu {
   protected final Container equipmentContainer;
   protected final Container handContainer;
   protected final Container inventoryContainer;
-
-  // Define others
-  protected PlayerCompanionEntity playerCompanionEntity;
   protected final Level level;
   protected final Player player;
   protected final PlayerCompanionData playerCompanionData;
   protected final UUID playerCompanionUUID;
-
+  // Define others
+  protected PlayerCompanionEntity playerCompanionEntity;
   // Define states
   private boolean dataLoaded = false;
 

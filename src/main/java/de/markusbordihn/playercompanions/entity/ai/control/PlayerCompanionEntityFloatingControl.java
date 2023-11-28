@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,9 +19,8 @@
 
 package de.markusbordihn.playercompanions.entity.ai.control;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -31,17 +30,15 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionEntityFloatingControl extends MoveControl {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
+  protected PlayerCompanionEntity companionEntity;
   private int waitDelay;
   private int waitSoundDelay;
-  protected PlayerCompanionEntity companionEntity;
 
   public PlayerCompanionEntityFloatingControl(Mob mob) {
     super(mob);
@@ -83,8 +80,8 @@ public class PlayerCompanionEntityFloatingControl extends MoveControl {
       if (newY > this.mob.getStepHeight()
           && newX * newX + newZ * newZ < Math.max(1.0F, this.mob.getBbWidth())
           || !voxelShape.isEmpty()
-              && this.mob.getY() < voxelShape.max(Direction.Axis.Y) + blockPos.getY()
-              && !blockState.is(BlockTags.DOORS) && !blockState.is(BlockTags.FENCES)) {
+          && this.mob.getY() < voxelShape.max(Direction.Axis.Y) + blockPos.getY()
+          && !blockState.is(BlockTags.DOORS) && !blockState.is(BlockTags.FENCES)) {
         this.mob.getJumpControl().jump();
         this.operation = MoveControl.Operation.JUMPING;
       }
@@ -102,9 +99,7 @@ public class PlayerCompanionEntityFloatingControl extends MoveControl {
           waitSoundDelay = 0;
         }
       }
-    }
-
-    else if (this.operation == MoveControl.Operation.WAIT) {
+    } else if (this.operation == MoveControl.Operation.WAIT) {
       this.mob.setZza(0.0F);
     } else {
       super.tick();

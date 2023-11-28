@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,23 +19,20 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
-import java.util.EnumMap;
-import java.util.Map;
-
-import net.minecraft.Util;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.SmallSlimeModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
 import de.markusbordihn.playercompanions.client.renderer.layers.SmallSlimeOuterLayer;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.SmallSlime;
+import java.util.EnumMap;
+import java.util.Map;
+import net.minecraft.Util;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class SmallSlimeRenderer extends MobRenderer<SmallSlime, SmallSlimeModel<SmallSlime>> {

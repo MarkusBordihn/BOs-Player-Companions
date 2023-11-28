@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,14 +19,21 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import com.mojang.datafixers.util.Pair;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.block.LightBlock;
+import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
+import de.markusbordihn.playercompanions.config.CommonConfig;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import de.markusbordihn.playercompanions.network.NetworkHandler;
+import de.markusbordihn.playercompanions.skin.SkinType;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.annotation.Nullable;
-
-import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -63,21 +70,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
-
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.block.LightBlock;
-import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
-import de.markusbordihn.playercompanions.item.CapturedCompanion;
-import de.markusbordihn.playercompanions.network.NetworkHandler;
-import de.markusbordihn.playercompanions.skin.SkinType;
 
 @EventBusSubscriber
 public class PlayerCompanionEntity extends PlayerCompanionEntityData
@@ -85,7 +80,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   // Shared constants
   public static final MobCategory CATEGORY = MobCategory.CREATURE;
-
+  // Config
+  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   // Custom name format
   private static final ResourceLocation RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_respawn_message");
@@ -95,9 +91,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       new ResourceLocation(Constants.MOD_ID, "companion_will_respawn_message");
   private static final ResourceLocation WILL_NOT_RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_will_not_respawn_message");
-
-  // Config
-  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   private static final int BABY_GROW_TIME = 20 * 60 * 60 * 24; // In ticks: 1 day
 
   // Additional ticker
@@ -671,9 +664,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     return removalReason != null
         ? String.format(Locale.ROOT,
-            "%s['%s'/%d, l='%s', x=%.2f, y=%.2f, z=%.2f, tamed=%s, owner='%s', removed=%s]",
-            this.getClass().getSimpleName(), this.getName().getString(), id, level, this.getX(),
-            this.getY(), this.getZ(), tamed, owner, removalReason)
+        "%s['%s'/%d, l='%s', x=%.2f, y=%.2f, z=%.2f, tamed=%s, owner='%s', removed=%s]",
+        this.getClass().getSimpleName(), this.getName().getString(), id, level, this.getX(),
+        this.getY(), this.getZ(), tamed, owner, removalReason)
         : String.format(Locale.ROOT,
             "%s['%s'/%d, l='%s', x=%.2f, y=%.2f, z=%.2f, tamed=%s, owner='%s']",
             this.getClass().getSimpleName(), this.getName().getString(), id, level, this.getX(),

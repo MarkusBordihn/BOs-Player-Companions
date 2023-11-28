@@ -49,11 +49,11 @@ public class CompanionMenu extends AbstractContainerMenu {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // Defining basic layout options
-  protected static int armorContainerSize = 4;
-  protected static int equipmentContainerSize = 8;
-  protected static int handContainerSize = 2;
-  protected static int inventoryContainerSize = 16;
-  protected static int slotSize = 18;
+  protected static final int armorContainerSize = 4;
+  protected static final int equipmentContainerSize = 8;
+  protected static final int handContainerSize = 2;
+  protected static final int inventoryContainerSize = 16;
+  protected static final int slotSize = 18;
 
   // Define containers
   protected final Container armorContainer;
@@ -253,15 +253,6 @@ public class CompanionMenu extends AbstractContainerMenu {
     NonNullList<ItemStack> armor = this.playerCompanionData.getArmorItems();
     for (int index = 0; index < armor.size(); index++) {
       this.armorContainer.setItem(index, armor.get(index));
-    }
-  }
-
-  public void saveArmor() {
-    if (this.playerCompanionData == null) {
-      return;
-    }
-    for (int index = 0; index < armorContainerSize; index++) {
-      this.playerCompanionData.setArmorItem(index, this.armorContainer.getItem(index));
     }
   }
 

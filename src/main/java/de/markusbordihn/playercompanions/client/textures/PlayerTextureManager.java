@@ -44,10 +44,10 @@ public class PlayerTextureManager {
   private static final String LOG_PREFIX = "[Player Texture Manager]";
 
   private static Path textureCachePath = null;
-  private static HashMap<TextureModelKey, ResourceLocation> playerTextureCache = new HashMap<>();
-  private static HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache = new HashMap<>();
-  private static HashMap<TextureModelKey, String> playerTextureSkinURLCache = new HashMap<>();
-  private static HashSet<UUID> playerTextureReloadProtection = new HashSet<>();
+  private static final HashMap<TextureModelKey, ResourceLocation> playerTextureCache = new HashMap<>();
+  private static final HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache = new HashMap<>();
+  private static final HashMap<TextureModelKey, String> playerTextureSkinURLCache = new HashMap<>();
+  private static final HashSet<UUID> playerTextureReloadProtection = new HashSet<>();
 
   protected PlayerTextureManager() {}
 
@@ -83,7 +83,7 @@ public class PlayerTextureManager {
       PlayerCompanionEntity entity, ResourceLocation defaultResourceLocation) {
     // Check if we have a skin UUID otherwise we assume that the texture is unknown.
     Optional<UUID> skinUUID = entity.getSkinUUID();
-    if (!skinUUID.isPresent()) {
+    if (skinUUID.isEmpty()) {
       return defaultResourceLocation;
     }
 

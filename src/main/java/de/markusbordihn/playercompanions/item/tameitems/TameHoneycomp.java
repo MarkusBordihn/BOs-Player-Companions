@@ -22,24 +22,21 @@ package de.markusbordihn.playercompanions.item.tameitems;
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TameHoneycomp extends CompanionTameItem {
 
   private static final Set<String> tameableMobTypes =
       new HashSet<>(
-          Arrays.asList(
+          List.of(
               // @formatter:off
               "player_companions:firefly"
               // @formatter:on
-              ));
+          ));
 
   public TameHoneycomp() {
     super();
-  }
-
-  public TameHoneycomp(Properties properties) {
-    super(properties);
   }
 
   @Override

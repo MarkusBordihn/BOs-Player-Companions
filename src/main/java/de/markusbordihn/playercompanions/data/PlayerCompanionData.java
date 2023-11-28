@@ -643,11 +643,10 @@ public class PlayerCompanionData {
       return true;
     }
 
-    if (!(object instanceof PlayerCompanionData)) {
+    if (!(object instanceof PlayerCompanionData playerCompanion)) {
       return false;
     }
 
-    PlayerCompanionData playerCompanion = (PlayerCompanionData) object;
     return playerCompanion.getUUID().equals(this.companionUUID);
   }
 

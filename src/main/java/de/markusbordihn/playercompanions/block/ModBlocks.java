@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.block;
 
-import de.markusbordihn.playercompanions.Annotations.TemplateEntryPoint;
 import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;

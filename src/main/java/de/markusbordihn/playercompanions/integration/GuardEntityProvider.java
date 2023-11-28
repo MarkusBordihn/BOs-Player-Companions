@@ -43,7 +43,8 @@ public class GuardEntityProvider implements IEntityComponentProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
+    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.isAlive()) {
       PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
       if (data != null && data.hasEntityTarget()) {
         tooltip.add(

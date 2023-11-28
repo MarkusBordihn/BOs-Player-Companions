@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.block;
 
-import de.markusbordihn.playercompanions.Constants;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -36,8 +35,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class LightBlock extends Block {
 
@@ -47,7 +44,6 @@ public class LightBlock extends Block {
   public static final int TICK_TTL = 30;
   public static final int UPDATE_TICK_TTL = 20;
   public static final int VERIFY_TICK_TTL = 100;
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   protected static final VoxelShape SHAPE_AABB = Block.box(7.5D, 7.5D, 7.5D, 8.5D, 8.5D, 8.5D);
 
   public LightBlock(Properties properties) {

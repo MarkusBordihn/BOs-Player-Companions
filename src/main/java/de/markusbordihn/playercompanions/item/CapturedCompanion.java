@@ -87,19 +87,10 @@ public class CapturedCompanion extends Item {
     return getCompanionUUID(itemStack) != null;
   }
 
-  public boolean hasValidCompanion(ItemStack itemStack) {
-    return PlayerCompanionsServerData.get().hasCompanion(itemStack);
-  }
-
   private CompoundTag setCompanionUUID(ItemStack itemStack, UUID uuid) {
     CompoundTag compoundTag = itemStack.getOrCreateTag();
     compoundTag.putUUID(COMPANION_UUID_TAG, uuid);
     return compoundTag;
-  }
-
-  public Entity getCompanionEntity(ItemStack itemStack, ServerLevel serverLevel) {
-    UUID companionUUID = getCompanionUUID(itemStack);
-    return serverLevel.getEntity(companionUUID);
   }
 
   public PlayerCompanionVariant getVariant() {

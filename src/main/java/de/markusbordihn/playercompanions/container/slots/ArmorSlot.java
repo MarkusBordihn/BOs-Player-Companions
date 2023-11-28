@@ -36,8 +36,6 @@ import org.apache.logging.log4j.Logger;
 
 public class ArmorSlot extends Slot {
 
-  public static final ResourceLocation BLOCK_ATLAS =
-      new ResourceLocation(Constants.MOD_ID, "textures/atlas/blocks.png");
   public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET =
       new ResourceLocation(Constants.MOD_ID, "item/empty_armor_slot_helmet");
   public static final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE =
@@ -66,10 +64,6 @@ public class ArmorSlot extends Slot {
     super(container, index, x, y);
     this.menu = menu;
     this.equipmentSlot = SLOT_IDS[index];
-  }
-
-  public EquipmentSlot getEquipmentSlot() {
-    return this.equipmentSlot;
   }
 
   @Override

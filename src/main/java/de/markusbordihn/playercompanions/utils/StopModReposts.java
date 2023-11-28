@@ -35,15 +35,15 @@ public class StopModReposts {
 
   private static final String STOP_MOD_REPOSTS_URL = "https://stopmodreposts.org/";
 
-  private static Optional<String> version =
+  private static final Optional<String> version =
       Launcher.INSTANCE.environment().getProperty(IEnvironment.Keys.VERSION.get());
 
-  private static boolean isDevEnvironment =
+  private static final boolean isDevEnvironment =
       version.isPresent() && version.get() != null && "MOD_DEV".equals(version.get());
 
-  private static String modFileFormatRegEx = Constants.MOD_ID + "_1.19.2-\\d+.\\d+.\\d+.jar";
+  private static final String modFileFormatRegEx = Constants.MOD_ID + "_1.19.2-\\d+.\\d+.\\d+.jar";
 
-  private static Pattern expectedFilePattern = Pattern.compile(modFileFormatRegEx);
+  private static final Pattern expectedFilePattern = Pattern.compile(modFileFormatRegEx);
 
   protected StopModReposts() {}
 

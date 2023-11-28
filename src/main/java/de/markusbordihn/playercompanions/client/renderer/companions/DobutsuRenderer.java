@@ -67,14 +67,11 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
 
   @Override
   public ResourceLocation getTextureLocation(Dobutsu entity) {
-    switch (entity.getSkinType()) {
-      case PLAYER_SKIN:
-      case SECURE_REMOTE_URL:
-      case INSECURE_REMOTE_URL:
-        return PlayerTextureManager.getOrCreateTextureWithDefault(entity, DEFAULT_TEXTURE);
-      default:
-        return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
-    }
+    return switch (entity.getSkinType()) {
+      case PLAYER_SKIN, SECURE_REMOTE_URL, INSECURE_REMOTE_URL -> PlayerTextureManager
+          .getOrCreateTextureWithDefault(entity, DEFAULT_TEXTURE);
+      default -> TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
+    };
   }
 
   @Override

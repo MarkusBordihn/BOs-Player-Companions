@@ -69,7 +69,7 @@ public class ShootLargeFireballGoal extends PlayerCompanionGoal {
         Level level = this.playerCompanionEntity.level;
         ++this.chargeTime;
         if (this.chargeTime == 10 && !this.playerCompanionEntity.isSilent()) {
-          level.levelEvent((Player) null, 1015, this.playerCompanionEntity.blockPosition(), 0);
+          level.levelEvent(null, 1015, this.playerCompanionEntity.blockPosition(), 0);
         }
 
         if (this.chargeTime == 20) {
@@ -78,7 +78,7 @@ public class ShootLargeFireballGoal extends PlayerCompanionGoal {
           double y = livingEntity.getY(0.5D) - (0.5D + this.playerCompanionEntity.getY(0.5D));
           double z = livingEntity.getZ() - (this.playerCompanionEntity.getZ() + vec3.z * 4.0D);
           if (!this.playerCompanionEntity.isSilent()) {
-            level.levelEvent((Player) null, 1016, this.playerCompanionEntity.blockPosition(), 0);
+            level.levelEvent(null, 1016, this.playerCompanionEntity.blockPosition(), 0);
           }
 
           LargeFireball largeFireball =

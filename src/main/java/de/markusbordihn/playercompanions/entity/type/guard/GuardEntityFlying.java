@@ -44,7 +44,7 @@ public class GuardEntityFlying extends PlayerCompanionEntityFlying {
           AggressionLevel.AGGRESSIVE_MONSTER,
           AggressionLevel.AGGRESSIVE_ANIMALS,
           AggressionLevel.AGGRESSIVE_PLAYERS);
-  protected GuardFeatures guardFeatures;
+  protected final GuardFeatures guardFeatures;
 
   public GuardEntityFlying(
       EntityType<? extends PlayerCompanionEntity> entityType,

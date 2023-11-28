@@ -55,5 +55,6 @@ public class ModSoundEvents {
       SOUNDS.register(
           "companion.fairy.no",
           () -> new SoundEvent(new ResourceLocation(Constants.MOD_ID, "companion.fairy.no")));
+
   protected ModSoundEvents() {}
 }

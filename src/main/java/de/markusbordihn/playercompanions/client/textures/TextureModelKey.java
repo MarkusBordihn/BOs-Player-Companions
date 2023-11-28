@@ -25,8 +25,8 @@ import java.util.UUID;
 
 public class TextureModelKey {
 
-  private UUID uuid;
-  private String subType;
+  private final UUID uuid;
+  private final String subType;
   private SkinModel skinModel;
 
   public TextureModelKey(UUID uuid, SkinModel skinModel) {
@@ -67,11 +67,10 @@ public class TextureModelKey {
     if (object == this) {
       return true;
     }
-    if (!(object instanceof TextureModelKey)) {
+    if (!(object instanceof TextureModelKey textureModelKey)) {
       return false;
     }
 
-    TextureModelKey textureModelKey = (TextureModelKey) object;
     return this.uuid.equals(textureModelKey.uuid) && this.subType.equals(textureModelKey.subType);
   }
 }

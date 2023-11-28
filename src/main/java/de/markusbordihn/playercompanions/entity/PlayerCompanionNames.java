@@ -37,17 +37,17 @@ public class PlayerCompanionNames {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-  private static Random rand = new Random();
-  private static List<String> namesNPCFemale = new ArrayList<>(Arrays.asList("Unnamed female NPC"));
-  private static List<String> namesNPCMale = new ArrayList<>(Arrays.asList("Unnamed male NPC"));
-  private static List<String> namesNPCMisc = new ArrayList<>(Arrays.asList("Unnamed misc NPC"));
+  private static final Random rand = new Random();
+  private static List<String> namesNPCFemale = new ArrayList<>(List.of("Unnamed female NPC"));
+  private static List<String> namesNPCMale = new ArrayList<>(List.of("Unnamed male NPC"));
+  private static List<String> namesNPCMisc = new ArrayList<>(List.of("Unnamed misc NPC"));
 
   private static List<String> namesCompanionFemale =
-      new ArrayList<>(Arrays.asList("Unnamed female companion"));
+      new ArrayList<>(List.of("Unnamed female companion"));
   private static List<String> namesCompanionMale =
-      new ArrayList<>(Arrays.asList("Unnamed male companion"));
+      new ArrayList<>(List.of("Unnamed male companion"));
   private static List<String> namesCompanionMisc =
-      new ArrayList<>(Arrays.asList("Unnamed misc companion"));
+      new ArrayList<>(List.of("Unnamed misc companion"));
 
   protected PlayerCompanionNames() {}
 

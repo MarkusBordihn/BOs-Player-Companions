@@ -51,7 +51,7 @@ public class ModTextureManager {
   private static final String TEXTURE_PREFIX = Constants.MOD_ID + "_client_texture_";
 
   private static Path textureCachePath = null;
-  private static HashMap<String, ResourceLocation> textureCache = new HashMap<>();
+  private static final HashMap<String, ResourceLocation> textureCache = new HashMap<>();
 
   protected ModTextureManager() {}
 

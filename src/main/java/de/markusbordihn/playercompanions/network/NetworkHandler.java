@@ -56,7 +56,7 @@ public class NetworkHandler {
           () -> PROTOCOL_VERSION,
           PROTOCOL_VERSION::equals,
           PROTOCOL_VERSION::equals);
-  private static ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
   private static int id = 0;
   private static CompoundTag lastCompanionDataPackage;
   private static CompoundTag lastCompanionsDataPackage;

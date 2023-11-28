@@ -49,9 +49,8 @@ public class ModTextureManager {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String TEXTURE_PREFIX = Constants.MOD_ID + "_client_texture_";
-
+  private static final HashMap<String, ResourceLocation> textureCache = new HashMap<>();
   private static Path textureCachePath = null;
-  private static HashMap<String, ResourceLocation> textureCache = new HashMap<>();
 
   protected ModTextureManager() {}
 

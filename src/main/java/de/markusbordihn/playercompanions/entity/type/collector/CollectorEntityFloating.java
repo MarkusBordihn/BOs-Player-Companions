@@ -37,7 +37,7 @@ public class CollectorEntityFloating extends PlayerCompanionEntityFloating {
 
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
-  protected CollectorFeatures collectorFeatures;
+  protected final CollectorFeatures collectorFeatures;
 
   public CollectorEntityFloating(
       EntityType<? extends PlayerCompanionEntity> entityType,

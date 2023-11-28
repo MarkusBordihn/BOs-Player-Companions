@@ -34,7 +34,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public interface PlayerCompanionAttributes {
 
-  static Set<AggressionLevel> aggressionDefaultLevels =
+  Set<AggressionLevel> aggressionDefaultLevels =
       Collections.unmodifiableSet(EnumSet.allOf(AggressionLevel.class));
 
   default Set<AggressionLevel> getAggressionLevels() {

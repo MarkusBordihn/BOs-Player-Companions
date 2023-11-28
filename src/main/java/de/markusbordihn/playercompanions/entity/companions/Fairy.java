@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionNames;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
@@ -59,8 +58,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class Fairy extends HealerEntityFlyingAround {
 
@@ -72,7 +69,6 @@ public class Fairy extends HealerEntityFlyingAround {
   public static final List<PlayerCompanionVariant> VARIANTS =
       List.of(
           PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.BLUE, PlayerCompanionVariant.RED);
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
       Util.make(

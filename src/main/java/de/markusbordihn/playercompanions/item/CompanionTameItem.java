@@ -20,6 +20,8 @@
 package de.markusbordihn.playercompanions.item;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
 import de.markusbordihn.playercompanions.text.TranslatableText;
@@ -52,6 +54,7 @@ import org.apache.logging.log4j.Logger;
 public class CompanionTameItem extends Item {
 
   public static final Set<String> TAMEABLE_MOB_TYPES = Collections.emptySet();
+  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public CompanionTameItem() {
@@ -182,9 +185,30 @@ public class CompanionTameItem extends Item {
       return InteractionResult.FAIL;
     }
 
+    // Check if player has reached the max number of companions.
+    Level level = player.level;
+    if (!level.isClientSide
+        && player instanceof ServerPlayer serverPlayer
+        && COMMON.companionLimitPerPlayer.get() > 0) {
+      int numberOfCompanions = PlayerCompanionsServerData.get().getNumberOfCompanions(serverPlayer);
+      int maxNumberOfCompanions = COMMON.companionLimitPerPlayer.get();
+
+      // Inform player that he has reached the max number of companions.
+      if (numberOfCompanions >= maxNumberOfCompanions) {
+        TitleUtils.setTitle(
+            Component.translatable(Constants.TEXT_PREFIX + "max_number_of_companions.title"),
+            Component.translatable(
+                    Constants.TEXT_PREFIX + "max_number_of_companions.subtitle",
+                    numberOfCompanions,
+                    maxNumberOfCompanions)
+                .withStyle(ChatFormatting.RED),
+            serverPlayer);
+        return InteractionResult.FAIL;
+      }
+    }
+
     // Interact with entity if it is TameablePlayerCompanion compatible
     if (livingEntity instanceof TameablePlayerCompanion tameablePlayerCompanion) {
-      Level level = player.level;
       if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
         if (tameablePlayerCompanion.canTamePlayerCompanion(itemStack, player, livingEntity, hand)) {
           InteractionResult result =

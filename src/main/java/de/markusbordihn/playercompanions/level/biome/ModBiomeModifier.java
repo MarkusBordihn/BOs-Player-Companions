@@ -41,7 +41,7 @@ public record ModBiomeModifier(
     MobCategory mobCategory)
     implements BiomeModifier {
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static Codec<ModBiomeModifier> makeCodec() {
     return RecordCodecBuilder.create(

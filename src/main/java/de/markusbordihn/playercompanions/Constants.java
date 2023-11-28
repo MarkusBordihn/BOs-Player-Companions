@@ -72,5 +72,5 @@ public final class Constants {
   public static final float MATH_27DEG_TO_RAD = 0.47123894F;
   public static final float MATH_27DEG_TO_RAD_INVERTED = -0.47123894F;
 
-  protected Constants() {}
+  private Constants() {}
 }

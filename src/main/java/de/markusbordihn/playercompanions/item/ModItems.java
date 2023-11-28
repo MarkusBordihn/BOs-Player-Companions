@@ -243,7 +243,7 @@ public class ModItems {
           "dobutsu_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.DOBUTSU::get,
+                  ModEntityType.DOBUTSU,
                   MaterialColor.COLOR_PURPLE.col,
                   MaterialColor.COLOR_PURPLE.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -252,7 +252,7 @@ public class ModItems {
           "fairy_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.FAIRY::get,
+                  ModEntityType.FAIRY,
                   MaterialColor.COLOR_PURPLE.col,
                   MaterialColor.COLOR_BLUE.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -261,7 +261,7 @@ public class ModItems {
           "firefly_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.FIREFLY::get,
+                  ModEntityType.FIREFLY,
                   MaterialColor.COLOR_YELLOW.col,
                   MaterialColor.COLOR_ORANGE.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -270,7 +270,7 @@ public class ModItems {
           "lizard_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.LIZARD::get,
+                  ModEntityType.LIZARD,
                   MaterialColor.COLOR_ORANGE.col,
                   MaterialColor.COLOR_BROWN.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -279,7 +279,7 @@ public class ModItems {
           "pig_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.PIG::get,
+                  ModEntityType.PIG,
                   MaterialColor.COLOR_PINK.col,
                   MaterialColor.COLOR_PINK.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -288,7 +288,7 @@ public class ModItems {
           "raptor_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.RAPTOR::get,
+                  ModEntityType.RAPTOR,
                   MaterialColor.COLOR_BLACK.col,
                   MaterialColor.COLOR_GREEN.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -297,7 +297,7 @@ public class ModItems {
           "rooster_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.ROOSTER::get,
+                  ModEntityType.ROOSTER,
                   MaterialColor.COLOR_ORANGE.col,
                   MaterialColor.COLOR_RED.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -306,7 +306,7 @@ public class ModItems {
           "samurai_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.SAMURAI::get,
+                  ModEntityType.SAMURAI,
                   MaterialColor.COLOR_BLACK.col,
                   MaterialColor.COLOR_RED.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -315,7 +315,7 @@ public class ModItems {
           "small_ghast_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.SMALL_GHAST::get,
+                  ModEntityType.SMALL_GHAST,
                   MaterialColor.SNOW.col,
                   MaterialColor.SNOW.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -324,7 +324,7 @@ public class ModItems {
           "small_slime_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.SMALL_SLIME::get,
+                  ModEntityType.SMALL_SLIME,
                   MaterialColor.COLOR_GREEN.col,
                   MaterialColor.COLOR_GREEN.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -333,7 +333,7 @@ public class ModItems {
           "snail_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.SNAIL::get,
+                  ModEntityType.SNAIL,
                   MaterialColor.COLOR_ORANGE.col,
                   MaterialColor.COLOR_BLUE.col,
                   new Item.Properties().rarity(Rarity.EPIC)));
@@ -342,7 +342,7 @@ public class ModItems {
           "welsh_corgi_spawn_egg",
           () ->
               new ForgeSpawnEggItem(
-                  ModEntityType.WELSH_CORGI::get,
+                  ModEntityType.WELSH_CORGI,
                   MaterialColor.COLOR_ORANGE.col,
                   MaterialColor.COLOR_ORANGE.col,
                   new Item.Properties().rarity(Rarity.EPIC)));

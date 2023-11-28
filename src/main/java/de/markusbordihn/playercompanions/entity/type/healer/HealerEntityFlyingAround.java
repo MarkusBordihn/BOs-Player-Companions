@@ -37,7 +37,7 @@ public class HealerEntityFlyingAround extends PlayerCompanionEntityFlying {
 
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
-  protected HealerFeatures healerFeatures;
+  protected final HealerFeatures healerFeatures;
 
   public HealerEntityFlyingAround(
       EntityType<? extends PlayerCompanionEntity> entityType,

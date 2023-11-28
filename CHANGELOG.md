@@ -5,6 +5,10 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 2023.11.28
+
+- Added `companionLimitPerPlayer` option to limit the number of tamed companions per player on multiplayer servers.
+
 ### 2023.11.19
 
 - Added additional checks for tamed player companions items to make sure they are not getting lost with specific inventory mods.

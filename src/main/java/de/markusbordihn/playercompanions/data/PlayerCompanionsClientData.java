@@ -40,7 +40,7 @@ public class PlayerCompanionsClientData {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  private static ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
+  private static final ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
       new ConcurrentHashMap<>();
 
   protected PlayerCompanionsClientData() {}

@@ -107,27 +107,11 @@ public class Experience {
     return LevelExperienceMap.get(MAX_LEVEL);
   }
 
-  public static int getExperienceForPreviousLevel(int level) {
-    if (level > 1 && level <= MAX_LEVEL) {
-      return LevelExperienceMap.get(level - 1);
-    }
-    return LevelExperienceMap.get(MIN_LEVEL);
-  }
-
   public static int getExperienceDifferenceForLevel(int level) {
     if (level > 1) {
       return LevelExperienceMap.getOrDefault(level, 0)
           - LevelExperienceMap.getOrDefault(level - 1, 0);
     }
     return 0;
-  }
-
-  public static int getLevelFromExperience(int experience) {
-    for (int level = 0; level < MAX_LEVEL; level++) {
-      if (getExperienceForLevel(level) > experience) {
-        return level - 1;
-      }
-    }
-    return 1;
   }
 }

@@ -40,7 +40,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Pig.ID,
           () ->
-              EntityType.Builder.<Pig>of(Pig::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Pig::new, PlayerCompanionEntity.CATEGORY)
                   .sized(1.0F, 1.2F)
                   .clientTrackingRange(8)
                   .build(Pig.ID));
@@ -48,7 +48,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Snail.ID,
           () ->
-              EntityType.Builder.<Snail>of(Snail::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Snail::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.8F, 0.9F)
                   .clientTrackingRange(8)
                   .build(Snail.ID));
@@ -57,7 +57,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Dobutsu.ID,
           () ->
-              EntityType.Builder.<Dobutsu>of(Dobutsu::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Dobutsu::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.5F, 0.9F)
                   .clientTrackingRange(8)
                   .build(Dobutsu.ID));
@@ -65,7 +65,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Lizard.ID,
           () ->
-              EntityType.Builder.<Lizard>of(Lizard::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Lizard::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.6F, 0.5F)
                   .clientTrackingRange(8)
                   .build(Lizard.ID));
@@ -73,7 +73,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           SmallSlime.ID,
           () ->
-              EntityType.Builder.<SmallSlime>of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.5F, 0.5F)
                   .clientTrackingRange(8)
                   .build(SmallSlime.ID));
@@ -82,7 +82,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Samurai.ID,
           () ->
-              EntityType.Builder.<Samurai>of(Samurai::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Samurai::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.5F, 1.4F)
                   .clientTrackingRange(16)
                   .build(Samurai.ID));
@@ -90,7 +90,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Raptor.ID,
           () ->
-              EntityType.Builder.<Raptor>of(Raptor::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Raptor::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.8F, 1.5F)
                   .clientTrackingRange(16)
                   .build(Raptor.ID));
@@ -98,7 +98,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Rooster.ID,
           () ->
-              EntityType.Builder.<Rooster>of(Rooster::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Rooster::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.6F, 1.1F)
                   .clientTrackingRange(16)
                   .build(Rooster.ID));
@@ -106,7 +106,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           SmallGhast.ID,
           () ->
-              EntityType.Builder.<SmallGhast>of(SmallGhast::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(SmallGhast::new, PlayerCompanionEntity.CATEGORY)
                   .sized(1.0F, 2.13F)
                   .clientTrackingRange(16)
                   .build(SmallGhast.ID));
@@ -115,7 +115,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Fairy.ID,
           () ->
-              EntityType.Builder.<Fairy>of(Fairy::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Fairy::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.8F, 2.0F)
                   .clientTrackingRange(16)
                   .build(Fairy.ID));
@@ -124,7 +124,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           Firefly.ID,
           () ->
-              EntityType.Builder.<Firefly>of(Firefly::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(Firefly::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.25F, 0.25F)
                   .clientTrackingRange(16)
                   .build(Firefly.ID));
@@ -133,7 +133,7 @@ public class ModEntityType {
       ENTITIES_TYPES.register(
           WelshCorgi.ID,
           () ->
-              EntityType.Builder.<WelshCorgi>of(WelshCorgi::new, PlayerCompanionEntity.CATEGORY)
+              EntityType.Builder.of(WelshCorgi::new, PlayerCompanionEntity.CATEGORY)
                   .sized(0.65F, 1.0F)
                   .clientTrackingRange(16)
                   .build(WelshCorgi.ID));
@@ -141,7 +141,7 @@ public class ModEntityType {
   protected ModEntityType() {}
 
   @SubscribeEvent
-  public static final void entityAttributCreation(EntityAttributeCreationEvent event) {
+  public static void entityAttributCreation(EntityAttributeCreationEvent event) {
     // Create Attributes for Entities
     event.put(DOBUTSU.get(), Dobutsu.createAttributes().build());
     event.put(FAIRY.get(), Fairy.createAttributes().build());

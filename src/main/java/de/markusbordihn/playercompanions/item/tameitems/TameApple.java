@@ -38,10 +38,6 @@ public class TameApple extends CompanionTameItem {
     super();
   }
 
-  public TameApple(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Set<String> getTameableMobTypes() {
     return tameableMobTypes;

@@ -177,7 +177,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     } else {
       RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
       poseStack.pushPose();
-      GuiComponent.blit(poseStack, x, y + -1, 18, 19, 7, 9);
+      GuiComponent.blit(poseStack, x, y - 1, 18, 19, 7, 9);
       this.aggressiveLevelNextButton.visible = false;
       poseStack.popPose();
       this.aggressiveLevelPreviousButton.visible = false;
@@ -191,7 +191,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     } else {
       RenderSystem.setShaderTexture(0, SYMBOLS_TEXTURE);
       poseStack.pushPose();
-      GuiComponent.blit(poseStack, x + 125, y + -1, 25, 19, 7, 9);
+      GuiComponent.blit(poseStack, x + 125, y - 1, 25, 19, 7, 9);
       this.aggressiveLevelNextButton.visible = false;
       poseStack.popPose();
     }
@@ -240,8 +240,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     font.drawShadow(
         poseStack,
         Component.literal(
-            ""
-                + (int) playerCompanionEntity.getHealth()
+            (int) playerCompanionEntity.getHealth()
                 + " / "
                 + (int) playerCompanionEntity.getMaxHealth()),
         leftPos,
@@ -363,11 +362,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
               && (textureSkinLocationValue.isEmpty()
                   || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
                   || PlayersUtils.isValidUrl(textureSkinLocationValue));
-    } else if (textureSkinLocationValue.isEmpty()) {
-      this.saveTextureSettingsButton.active = true;
-    } else {
-      this.saveTextureSettingsButton.active = false;
-    }
+    } else this.saveTextureSettingsButton.active = textureSkinLocationValue.isEmpty();
     this.clearTextureSettingsButton.active =
         textureSkinLocationValue != null && !textureSkinLocationValue.isEmpty();
   }
@@ -443,10 +438,9 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
         this.addRenderableWidget(
             Button.builder(
                     Component.translatable(Constants.TEXT_PREFIX + "follow"),
-                    onPress -> {
-                      NetworkHandler.commandPlayerCompanion(
-                          playerCompanionEntity.getStringUUID(), PlayerCompanionCommand.FOLLOW);
-                    })
+                    onPress ->
+                        NetworkHandler.commandPlayerCompanion(
+                            playerCompanionEntity.getStringUUID(), PlayerCompanionCommand.FOLLOW))
                 .bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20)
                 .build());
     this.actionTypeFollowButton.visible = false;
@@ -456,10 +450,9 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
         this.addRenderableWidget(
             Button.builder(
                     Component.translatable(Constants.TEXT_PREFIX + "sit"),
-                    onPress -> {
-                      NetworkHandler.commandPlayerCompanion(
-                          playerCompanionEntity.getStringUUID(), PlayerCompanionCommand.SIT);
-                    })
+                    onPress ->
+                        NetworkHandler.commandPlayerCompanion(
+                            playerCompanionEntity.getStringUUID(), PlayerCompanionCommand.SIT))
                 .bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20)
                 .build());
     this.actionTypeSitButton.visible = false;
@@ -476,11 +469,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
                 1,
                 9,
                 SYMBOLS_TEXTURE,
-                onPress -> {
-                  NetworkHandler.commandPlayerCompanion(
-                      playerCompanionEntity.getStringUUID(),
-                      PlayerCompanionCommand.AGGRESSION_LEVEL_PREVIOUS);
-                }));
+                onPress ->
+                    NetworkHandler.commandPlayerCompanion(
+                        playerCompanionEntity.getStringUUID(),
+                        PlayerCompanionCommand.AGGRESSION_LEVEL_PREVIOUS)));
     this.aggressiveLevelPreviousButton.visible = false;
 
     // Aggressive Level Next Button
@@ -495,11 +487,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
                 1,
                 9,
                 SYMBOLS_TEXTURE,
-                onPress -> {
-                  NetworkHandler.commandPlayerCompanion(
-                      playerCompanionEntity.getStringUUID(),
-                      PlayerCompanionCommand.AGGRESSION_LEVEL_NEXT);
-                }));
+                onPress ->
+                    NetworkHandler.commandPlayerCompanion(
+                        playerCompanionEntity.getStringUUID(),
+                        PlayerCompanionCommand.AGGRESSION_LEVEL_NEXT)));
     this.aggressiveLevelNextButton.visible = false;
 
     // Aggressive Level Default Button
@@ -507,11 +498,10 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
         this.addRenderableWidget(
             Button.builder(
                     Component.translatable(Constants.TEXT_PREFIX + "default_aggression"),
-                    onPress -> {
-                      NetworkHandler.commandPlayerCompanion(
-                          playerCompanionEntity.getStringUUID(),
-                          PlayerCompanionCommand.AGGRESSION_LEVEL_DEFAULT);
-                    })
+                    onPress ->
+                        NetworkHandler.commandPlayerCompanion(
+                            playerCompanionEntity.getStringUUID(),
+                            PlayerCompanionCommand.AGGRESSION_LEVEL_DEFAULT))
                 .bounds(this.leftPosDialog + 10, this.topPosDialog + 68, 132, 20)
                 .build());
     this.aggressionLevelDefaultButton.visible = false;

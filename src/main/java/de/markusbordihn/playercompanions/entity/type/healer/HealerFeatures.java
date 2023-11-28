@@ -67,12 +67,9 @@ public class HealerFeatures extends PlayerCompanionsFeatures {
 
     // Automatic heal entities in the defined radius.
     if (COMMON.healerTypeRadius.get() > 0 && ticker++ >= HEALER_TICK) {
-      boolean hasHealthSomething = false;
+      boolean hasHealthSomething = this.getOwner() != null && healEntity(level, this.getOwner());
 
       // 1. Priority: Heal owner
-      if (this.getOwner() != null && healEntity(level, this.getOwner())) {
-        hasHealthSomething = true;
-      }
 
       // 2. Priority: Heal self
       if (!hasHealthSomething && healEntity(level, this.playerCompanionEntity)) {

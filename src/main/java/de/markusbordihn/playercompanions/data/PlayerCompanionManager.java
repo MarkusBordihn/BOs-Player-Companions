@@ -21,6 +21,7 @@ package de.markusbordihn.playercompanions.data;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -56,8 +57,7 @@ public class PlayerCompanionManager {
   private static final Set<Entity> entitySet = ConcurrentHashMap.newKeySet();
   private static short ticks = 0;
 
-  protected PlayerCompanionManager() {
-  }
+  protected PlayerCompanionManager() {}
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
@@ -83,7 +83,7 @@ public class PlayerCompanionManager {
   public static void handleEntityLeaveLevelEvent(EntityLeaveLevelEvent event) {
     if (event.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
         && (playerCompanionEntity.canRespawnOnDeath()
-        || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
+            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       updateCompanionData(event.getEntity());
     }
   }
@@ -160,9 +160,10 @@ public class PlayerCompanionManager {
 
   private static void updateOrRegisterCompanion(Entity entity) {
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
-        && !playerCompanionEntity.level().isClientSide && playerCompanionEntity.hasOwner()
+        && !playerCompanionEntity.level().isClientSide
+        && playerCompanionEntity.hasOwner()
         && (playerCompanionEntity.canRespawnOnDeath()
-        || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
+            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       log.debug("Update or register Companion {}", entity);
       PlayerCompanionsServerData.get().updateOrRegisterCompanion(playerCompanionEntity);
     }
@@ -170,9 +171,10 @@ public class PlayerCompanionManager {
 
   private static void updateCompanionData(Entity entity) {
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
-        && !playerCompanionEntity.level().isClientSide && playerCompanionEntity.hasOwner()
+        && !playerCompanionEntity.level().isClientSide
+        && playerCompanionEntity.hasOwner()
         && (playerCompanionEntity.canRespawnOnDeath()
-        || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
+            || playerCompanionEntity.getRemovalReason() != RemovalReason.KILLED)) {
       log.debug("Update Companion Data {}", entity);
       PlayerCompanionsServerData.get().updatePlayerCompanionData(playerCompanionEntity);
     }
@@ -196,18 +198,19 @@ public class PlayerCompanionManager {
 
       // Check for duplicates from other levels.
       while (serverLevels.hasNext()) {
-        ServerLevel serverLevel = serverLevels.next();
-        if (serverPlayer.level() != serverLevel) {
-          for (Entity playerCompanionEntity : playerCompanionsEntityInOwnersDimension) {
-            Entity entity = serverLevel.getEntity(playerCompanionEntity.getUUID());
-            if (entity != null) {
-              entity.remove(RemovalReason.CHANGED_DIMENSION);
+        try (ServerLevel serverLevel = serverLevels.next()) {
+          if (serverPlayer.level() != serverLevel) {
+            for (Entity playerCompanionEntity : playerCompanionsEntityInOwnersDimension) {
+              Entity entity = serverLevel.getEntity(playerCompanionEntity.getUUID());
+              if (entity != null) {
+                entity.remove(RemovalReason.CHANGED_DIMENSION);
+              }
             }
           }
+        } catch (IOException e) {
+          log.error("Failed to close server level {}", serverLevels, e);
         }
       }
-
     }
   }
-
 }

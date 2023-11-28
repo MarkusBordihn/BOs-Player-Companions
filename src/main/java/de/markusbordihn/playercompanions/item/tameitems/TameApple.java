@@ -26,24 +26,20 @@ import java.util.Set;
 
 public class TameApple extends CompanionTameItem {
 
-  private static final Set<String> tameableMobTypes = new HashSet<>(Arrays.asList(
-      // @formatter:off
-    "player_companions:samurai",
-    "player_companions:small_slime"
-  // @formatter:on
-  ));
+  private static final Set<String> tameableMobTypes =
+      new HashSet<>(
+          Arrays.asList(
+              // @formatter:off
+              "player_companions:samurai", "player_companions:small_slime"
+              // @formatter:on
+              ));
 
   public TameApple() {
     super();
-  }
-
-  public TameApple(Properties properties) {
-    super(properties);
   }
 
   @Override
   public Set<String> getTameableMobTypes() {
     return tameableMobTypes;
   }
-
 }

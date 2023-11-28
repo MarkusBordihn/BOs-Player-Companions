@@ -39,5 +39,4 @@ public class DummySlot extends Slot {
   public boolean mayPickup(Player player) {
     return true;
   }
-
 }

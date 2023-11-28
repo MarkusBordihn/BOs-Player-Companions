@@ -27,6 +27,7 @@ public enum ActionType {
   MOVE,
   PATROL,
   UNKNOWN;
+
   // @formatter:on
 
   public static ActionType get(String actionType) {

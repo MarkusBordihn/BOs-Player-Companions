@@ -26,8 +26,7 @@ import net.minecraft.world.item.CreativeModeTab.Output;
 
 public class SpawnEggsItems implements DisplayItemsGenerator {
 
-  protected SpawnEggsItems() {
-  }
+  protected SpawnEggsItems() {}
 
   @Override
   public void accept(ItemDisplayParameters itemDisplayParameters, Output output) {

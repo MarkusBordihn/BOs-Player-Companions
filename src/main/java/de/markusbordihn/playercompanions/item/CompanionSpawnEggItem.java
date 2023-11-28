@@ -31,9 +31,8 @@ public class CompanionSpawnEggItem extends ForgeSpawnEggItem {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public CompanionSpawnEggItem(Supplier<? extends EntityType<? extends Mob>> type,
-      Properties props) {
+  public CompanionSpawnEggItem(
+      Supplier<? extends EntityType<? extends Mob>> type, Properties props) {
     super(type, Constants.FONT_COLOR_RED, Constants.FONT_COLOR_YELLOW, props);
   }
-
 }

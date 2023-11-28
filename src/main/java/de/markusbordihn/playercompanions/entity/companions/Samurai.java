@@ -71,16 +71,21 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.APPLE);
 
   // Variants
-  public static final List<PlayerCompanionVariant> VARIANTS = List.of(
-      PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.BLUE, PlayerCompanionVariant.BLACK);
+  public static final List<PlayerCompanionVariant> VARIANTS =
+      List.of(
+          PlayerCompanionVariant.DEFAULT,
+          PlayerCompanionVariant.BLUE,
+          PlayerCompanionVariant.BLACK);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SAMURAI_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.BLUE, ModItems.SAMURAI_BLUE.get());
-        hashMap.put(PlayerCompanionVariant.BLACK, ModItems.SAMURAI_BLACK.get());
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SAMURAI_DEFAULT.get());
+            hashMap.put(PlayerCompanionVariant.BLUE, ModItems.SAMURAI_BLUE.get());
+            hashMap.put(PlayerCompanionVariant.BLACK, ModItems.SAMURAI_BLACK.get());
+          });
 
   public Samurai(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
@@ -88,8 +93,10 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.35F)
-        .add(Attributes.MAX_HEALTH, 14.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.35F)
+        .add(Attributes.MAX_HEALTH, 14.0D)
+        .add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
   public int getRemainingPersistentAngerTime() {
@@ -129,10 +136,10 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
     this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
     this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
-    this.targetSelector.addGoal(4,
-        new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
-    this.targetSelector.addGoal(7,
-        new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
+    this.targetSelector.addGoal(
+        4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
+    this.targetSelector.addGoal(
+        7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
     this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
   }
 
@@ -227,5 +234,4 @@ public class Samurai extends GuardEntityWalking implements NeutralMob {
   public void onMainHandItemSlotChange(ItemStack itemStack) {
     this.setGlowInTheDark(itemStack.is(Items.TORCH));
   }
-
 }

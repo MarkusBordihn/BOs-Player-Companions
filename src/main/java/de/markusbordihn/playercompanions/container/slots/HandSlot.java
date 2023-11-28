@@ -45,9 +45,9 @@ public class HandSlot extends Slot {
       new ResourceLocation(Constants.MOD_ID, "item/empty_armor/empty_armor_slot_shield");
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   static final ResourceLocation[] TEXTURE_EMPTY_SLOTS =
-      new ResourceLocation[]{EMPTY_ARMOR_SLOT_WEAPON, EMPTY_ARMOR_SLOT_SHIELD};
+      new ResourceLocation[] {EMPTY_ARMOR_SLOT_WEAPON, EMPTY_ARMOR_SLOT_SHIELD};
   private static final EquipmentSlot[] SLOT_IDS =
-      new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
+      new EquipmentSlot[] {EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
 
   final EquipmentSlot equipmentSlot;
   final CompanionMenu menu;
@@ -56,10 +56,6 @@ public class HandSlot extends Slot {
     super(container, index, x, y);
     this.menu = menu;
     this.equipmentSlot = SLOT_IDS[index];
-  }
-
-  public EquipmentSlot getEquipmentSlot() {
-    return this.equipmentSlot;
   }
 
   @Override
@@ -89,5 +85,4 @@ public class HandSlot extends Slot {
   public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
     return Pair.of(InventoryMenu.BLOCK_ATLAS, TEXTURE_EMPTY_SLOTS[this.equipmentSlot.getIndex()]);
   }
-
 }

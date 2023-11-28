@@ -38,14 +38,21 @@ public class RaptorRenderer extends MobRenderer<Raptor, RaptorModel<Raptor>> {
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/raptor/raptor_default.png"));
-        hashMap.put(PlayerCompanionVariant.PINK,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/raptor/raptor_pink.png"));
-        hashMap.put(PlayerCompanionVariant.DARK_GREEN,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/raptor/raptor_dark_green.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/raptor/raptor_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.PINK,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/raptor/raptor_pink.png"));
+            hashMap.put(
+                PlayerCompanionVariant.DARK_GREEN,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/raptor/raptor_dark_green.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 

@@ -20,7 +20,6 @@
 package de.markusbordihn.playercompanions.data;
 
 import de.markusbordihn.playercompanions.network.NetworkHandler;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.nbt.CompoundTag;
@@ -28,8 +27,7 @@ import net.minecraft.nbt.ListTag;
 
 public class PlayerCompanionsServerDataClientSync {
 
-  protected PlayerCompanionsServerDataClientSync() {
-  }
+  protected PlayerCompanionsServerDataClientSync() {}
 
   public static void syncPlayerCompanionData(PlayerCompanionData playerCompanionData) {
     // Only sync player companions, if we have a valid owner.
@@ -44,8 +42,8 @@ public class PlayerCompanionsServerDataClientSync {
     NetworkHandler.updatePlayerCompanionData(playerCompanionUUID, ownerUUID, data);
   }
 
-  public static void syncPlayerCompanionData(UUID ownerUUID,
-      Set<PlayerCompanionData> playerCompanionsData) {
+  public static void syncPlayerCompanionData(
+      UUID ownerUUID, Set<PlayerCompanionData> playerCompanionsData) {
     // Only sync player companions, if we have a valid owner.
     if (ownerUUID == null || playerCompanionsData == null || playerCompanionsData.isEmpty()) {
       return;
@@ -62,7 +60,8 @@ public class PlayerCompanionsServerDataClientSync {
   public static CompoundTag exportPlayerCompanionData(PlayerCompanionData playerCompanionData) {
 
     // Pre-checks to avoid errors or edge conditions like server start.
-    if (playerCompanionData == null || playerCompanionData.getUUID() == null
+    if (playerCompanionData == null
+        || playerCompanionData.getUUID() == null
         || playerCompanionData.getOwnerUUID() == null) {
       return null;
     }
@@ -93,9 +92,7 @@ public class PlayerCompanionsServerDataClientSync {
     ListTag companionListTag = new ListTag();
 
     // Iterate over all known player companions for the owner and get their meta data.
-    Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanionsData.iterator();
-    while (playerCompanionIterator.hasNext()) {
-      PlayerCompanionData playerCompanion = playerCompanionIterator.next();
+    for (PlayerCompanionData playerCompanion : playerCompanionsData) {
       if (playerCompanion != null) {
         CompoundTag playerCompanionCompoundTag = new CompoundTag();
         playerCompanion.saveMetaData(playerCompanionCompoundTag);
@@ -106,5 +103,4 @@ public class PlayerCompanionsServerDataClientSync {
 
     return compoundTag;
   }
-
 }

@@ -35,8 +35,10 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
 public class PlayerCompanionEntityFlying extends PlayerCompanionEntity {
 
-  public PlayerCompanionEntityFlying(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+  public PlayerCompanionEntityFlying(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityFlyControl(this, 10, true);
     this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
@@ -49,8 +51,8 @@ public class PlayerCompanionEntityFlying extends PlayerCompanionEntity {
   }
 
   @Override
-  protected void checkFallDamage(double height, boolean flag, BlockState blockState,
-      BlockPos blockPos) {
+  protected void checkFallDamage(
+      double height, boolean flag, BlockState blockState, BlockPos blockPos) {
     // Ignore damage
   }
 
@@ -67,5 +69,4 @@ public class PlayerCompanionEntityFlying extends PlayerCompanionEntity {
   public SoundEvent getJumpSound() {
     return SoundEvents.PHANTOM_FLAP;
   }
-
 }

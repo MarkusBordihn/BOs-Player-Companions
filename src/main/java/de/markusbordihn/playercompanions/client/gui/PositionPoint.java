@@ -48,5 +48,4 @@ public class PositionPoint {
   public String toString() {
     return "PositionPoint{x:" + this.x + ", y:" + this.y + "}";
   }
-
 }

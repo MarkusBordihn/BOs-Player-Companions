@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.block;
 
-import de.markusbordihn.playercompanions.Constants;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -36,8 +35,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class LightBlock extends Block {
 
@@ -47,7 +44,6 @@ public class LightBlock extends Block {
   public static final int TICK_TTL = 30;
   public static final int UPDATE_TICK_TTL = 20;
   public static final int VERIFY_TICK_TTL = 100;
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   protected static final VoxelShape SHAPE_AABB = Block.box(7.5D, 7.5D, 7.5D, 8.5D, 8.5D, 8.5D);
 
   public LightBlock(Properties properties) {
@@ -136,7 +132,10 @@ public class LightBlock extends Block {
    */
   @Deprecated
   @Override
-  public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos,
+  public VoxelShape getShape(
+      BlockState blockState,
+      BlockGetter blockGetter,
+      BlockPos blockPos,
       CollisionContext collisionContext) {
     return SHAPE_AABB;
   }
@@ -147,8 +146,12 @@ public class LightBlock extends Block {
   }
 
   @Override
-  public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState,
-      @Nullable LivingEntity placer, ItemStack itemStack) {
+  public void setPlacedBy(
+      Level level,
+      BlockPos blockPos,
+      BlockState blockState,
+      @Nullable LivingEntity placer,
+      ItemStack itemStack) {
     scheduleTick(level, blockPos);
   }
 
@@ -157,8 +160,8 @@ public class LightBlock extends Block {
    */
   @Deprecated
   @Override
-  public void tick(BlockState blockState, ServerLevel level, BlockPos blockPos,
-      RandomSource random) {
+  public void tick(
+      BlockState blockState, ServerLevel level, BlockPos blockPos, RandomSource random) {
     // Ignore client side.
     if (level.isClientSide) {
       return;
@@ -191,13 +194,12 @@ public class LightBlock extends Block {
    */
   @Deprecated
   @Override
-  public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos,
-      RandomSource random) {
+  public void randomTick(
+      BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource random) {
     // Makes sure that the blocks is removed after a while, if it is not extended.
     int age = blockState.getValue(AGE);
     if (age <= 15 && !serverLevel.getBlockTicks().hasScheduledTick(blockPos, this)) {
       scheduleVerifyTick(serverLevel, blockPos);
     }
   }
-
 }

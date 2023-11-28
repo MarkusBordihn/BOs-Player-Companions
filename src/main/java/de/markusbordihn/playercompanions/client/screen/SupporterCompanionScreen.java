@@ -33,9 +33,8 @@ public class SupporterCompanionScreen extends CompanionScreen<SupporterCompanion
   private static final ResourceLocation TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion_supporter.png");
 
-  public SupporterCompanionScreen(SupporterCompanionMenu menu, Inventory inventory,
-      Component component) {
+  public SupporterCompanionScreen(
+      SupporterCompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component, TEXTURE);
   }
-
 }

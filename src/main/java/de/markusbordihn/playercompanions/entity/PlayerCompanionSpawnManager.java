@@ -22,7 +22,6 @@ package de.markusbordihn.playercompanions.entity;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import java.util.Iterator;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -54,9 +53,7 @@ public class PlayerCompanionSpawnManager {
   private static final String MOTION_TAG = "Motion";
   private static final String ON_GROUND_TAG = "OnGround";
 
-  protected PlayerCompanionSpawnManager() {
-
-  }
+  protected PlayerCompanionSpawnManager() {}
 
   public static boolean spawn(UUID uuid, ServerPlayer serverPlayer) {
     return spawn(uuid, serverPlayer, serverPlayer.level());
@@ -73,18 +70,21 @@ public class PlayerCompanionSpawnManager {
     return spawn(uuid, serverPlayer, serverLevel, serverPlayer.getOnPos().above());
   }
 
-  public static boolean spawn(ItemStack itemStack, ServerPlayer serverPlayer,
-      ServerLevel serverLevel, BlockPos blockPos) {
+  public static boolean spawn(
+      ItemStack itemStack, ServerPlayer serverPlayer, ServerLevel serverLevel, BlockPos blockPos) {
     return spawn(getCompanionUUID(itemStack), serverPlayer, serverLevel, blockPos);
   }
 
-  public static boolean spawn(UUID uuid, ServerPlayer serverPlayer, ServerLevel serverLevel,
-      BlockPos blockPos) {
+  public static boolean spawn(
+      UUID uuid, ServerPlayer serverPlayer, ServerLevel serverLevel, BlockPos blockPos) {
     log.info("Spawn {} {} {} {}", uuid, blockPos, serverPlayer, serverLevel);
 
     // Check if UUID is valid.
     if (uuid == null) {
-      log.error("Unable to find companion with UUID {} for player {} in {}.", uuid, serverPlayer,
+      log.error(
+          "Unable to find companion with UUID {} for player {} in {}.",
+          uuid,
+          serverPlayer,
           serverLevel);
       return false;
     }
@@ -111,14 +111,15 @@ public class PlayerCompanionSpawnManager {
           playerCompanionEntity.setOrderedToPosition(
               new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
         } else {
-          serverPlayer.sendSystemMessage(Component.translatable(
-              Constants.TEXT_PREFIX + "companion_is_near_you", playerCompanion.getName()));
+          serverPlayer.sendSystemMessage(
+              Component.translatable(
+                  Constants.TEXT_PREFIX + "companion_is_near_you", playerCompanion.getName()));
         }
       } else {
         BlockState blockState = serverLevel.getBlockState(blockPos);
         if (isValidSpawnPlace(blockState)) {
-          playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5,
-              blockPos.getZ() + 0.5);
+          playerCompanion.teleportTo(
+              blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
           log.debug("Teleport player companion {} to position ...", playerCompanion, blockPos);
         } else {
           Vec3 playerPosition = serverPlayer.position();
@@ -148,7 +149,6 @@ public class PlayerCompanionSpawnManager {
         // Add entity to the world.
         log.debug("Spawn player companion {} ...", entity);
         if (serverLevel.addFreshEntity(entity)) {
-          playerCompanion = entity;
           if (entity instanceof PlayerCompanionEntity playerCompanionEntity) {
             playerCompanionEntity.finalizeSpawn();
           }
@@ -161,8 +161,8 @@ public class PlayerCompanionSpawnManager {
   }
 
   public static boolean despawn(UUID uuid, ServerLevel serverLevel) {
-    if (getCompanionEntity(uuid,
-        serverLevel) instanceof PlayerCompanionEntity playerCompanionEntity) {
+    if (getCompanionEntity(uuid, serverLevel)
+        instanceof PlayerCompanionEntity playerCompanionEntity) {
       return PlayerCompanionSpawnManager.despawn(playerCompanionEntity);
     }
     return false;
@@ -200,9 +200,7 @@ public class PlayerCompanionSpawnManager {
 
   public static void despawnCompanionExcept(UUID uuid, ServerLevel serverLevel) {
     MinecraftServer server = serverLevel.getServer();
-    Iterator<ServerLevel> serverLevels = server.getAllLevels().iterator();
-    while (serverLevels.hasNext()) {
-      ServerLevel serverLevelToCheck = serverLevels.next();
+    for (ServerLevel serverLevelToCheck : server.getAllLevels()) {
       if (serverLevelToCheck != serverLevel) {
         Entity playerCompanion = getCompanionEntity(uuid, serverLevelToCheck);
         if (playerCompanion != null) {
@@ -237,8 +235,8 @@ public class PlayerCompanionSpawnManager {
     return createCompanionEntity(playerCompanion, serverLevel);
   }
 
-  public static Entity createCompanionEntity(PlayerCompanionData playerCompanion,
-      ServerLevel serverLevel) {
+  public static Entity createCompanionEntity(
+      PlayerCompanionData playerCompanion, ServerLevel serverLevel) {
     EntityType<?> entityType = playerCompanion.getEntityType();
     CompoundTag entityData = playerCompanion.getEntityData();
     Entity entity = entityType.create(serverLevel);
@@ -269,8 +267,11 @@ public class PlayerCompanionSpawnManager {
   }
 
   public static boolean isValidSpawnPlace(BlockState blockState) {
-    return blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
-        || blockState.is(Blocks.SEAGRASS) || blockState.is(Blocks.SNOW)
+    return blockState.isAir()
+        || blockState.is(Blocks.WATER)
+        || blockState.is(Blocks.GRASS)
+        || blockState.is(Blocks.SEAGRASS)
+        || blockState.is(Blocks.SNOW)
         || blockState.is(Blocks.FERN);
   }
 
@@ -281,5 +282,4 @@ public class PlayerCompanionSpawnManager {
     }
     return listTag;
   }
-
 }

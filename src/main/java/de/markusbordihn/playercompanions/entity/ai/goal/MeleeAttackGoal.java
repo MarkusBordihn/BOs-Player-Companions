@@ -32,6 +32,7 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   private static final long COOLDOWN_BETWEEN_CAN_USE_CHECKS = 20L;
   private final double speedModifier;
   private final boolean followingTargetEvenIfNotSeen;
+  private final boolean canPenalize = false;
   private Path path;
   private double pathTargetX;
   private double pathTargetY;
@@ -40,9 +41,10 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   private int ticksUntilNextAttack;
   private long lastCanUseCheck;
   private int failedPathFindingPenalty = 0;
-  private final boolean canPenalize = false;
 
-  public MeleeAttackGoal(PlayerCompanionEntity playerCompanionEntity, double speedModifier,
+  public MeleeAttackGoal(
+      PlayerCompanionEntity playerCompanionEntity,
+      double speedModifier,
       boolean followingTargetEvenIfNotSeen) {
     super(playerCompanionEntity);
     this.speedModifier = speedModifier;
@@ -76,8 +78,9 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
         if (this.path != null) {
           return true;
         } else if (livingEntity != null) {
-          return this.getAttackReachSqr(livingEntity) >= this.playerCompanionEntity
-              .distanceToSqr(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
+          return this.getAttackReachSqr(livingEntity)
+              >= this.playerCompanionEntity.distanceToSqr(
+                  livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
         }
       }
     }
@@ -124,16 +127,17 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
     LivingEntity livingEntity = this.playerCompanionEntity.getTarget();
     if (livingEntity != null) {
       this.playerCompanionEntity.getLookControl().setLookAt(livingEntity, 30.0F, 30.0F);
-      double distance = this.playerCompanionEntity.distanceToSqr(livingEntity.getX(),
-          livingEntity.getY(), livingEntity.getZ());
+      double distance =
+          this.playerCompanionEntity.distanceToSqr(
+              livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
       this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
       if ((this.followingTargetEvenIfNotSeen
-          || this.playerCompanionEntity.getSensing().hasLineOfSight(livingEntity))
+              || this.playerCompanionEntity.getSensing().hasLineOfSight(livingEntity))
           && this.ticksUntilNextPathRecalculation <= 0
           && (this.pathTargetX == 0.0D && this.pathTargetY == 0.0D && this.pathTargetZ == 0.0D
-          || livingEntity.distanceToSqr(this.pathTargetX, this.pathTargetY,
-          this.pathTargetZ) >= 1.0D
-          || this.playerCompanionEntity.getRandom().nextFloat() < 0.05F)) {
+              || livingEntity.distanceToSqr(this.pathTargetX, this.pathTargetY, this.pathTargetZ)
+                  >= 1.0D
+              || this.playerCompanionEntity.getRandom().nextFloat() < 0.05F)) {
         this.pathTargetX = livingEntity.getX();
         this.pathTargetY = livingEntity.getY();
         this.pathTargetZ = livingEntity.getZ();
@@ -144,8 +148,9 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
           Path navigationPath = this.playerCompanionEntity.getNavigation().getPath();
           if (navigationPath != null) {
             net.minecraft.world.level.pathfinder.Node finalPathPoint = navigationPath.getEndNode();
-            if (finalPathPoint != null && livingEntity.distanceToSqr(finalPathPoint.x,
-                finalPathPoint.y, finalPathPoint.z) < 1) {
+            if (finalPathPoint != null
+                && livingEntity.distanceToSqr(finalPathPoint.x, finalPathPoint.y, finalPathPoint.z)
+                    < 1) {
               failedPathFindingPenalty = 0;
             } else {
               failedPathFindingPenalty += 10;
@@ -180,7 +185,6 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
       this.playerCompanionEntity.swing(InteractionHand.MAIN_HAND);
       this.playerCompanionEntity.doHurtTarget(livingEntity);
     }
-
   }
 
   protected void resetAttackCooldown() {
@@ -200,7 +204,10 @@ public class MeleeAttackGoal extends PlayerCompanionGoal {
   }
 
   protected double getAttackReachSqr(LivingEntity livingEntity) {
-    return this.playerCompanionEntity.getBbWidth() * 2.0F * this.playerCompanionEntity.getBbWidth()
-        * 2.0F + livingEntity.getBbWidth();
+    return this.playerCompanionEntity.getBbWidth()
+            * 2.0F
+            * this.playerCompanionEntity.getBbWidth()
+            * 2.0F
+        + livingEntity.getBbWidth();
   }
 }

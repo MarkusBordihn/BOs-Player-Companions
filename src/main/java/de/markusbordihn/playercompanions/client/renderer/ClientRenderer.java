@@ -77,16 +77,15 @@ public class ClientRenderer {
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "small_ghast"), "main");
   public static final ModelLayerLocation SMALL_SLIME =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "small_slime"), "main");
-  public static final ModelLayerLocation SMALL_SLIME_OUTER = new ModelLayerLocation(
-      new ResourceLocation(Constants.MOD_ID, "small_slime"), "outer");
+  public static final ModelLayerLocation SMALL_SLIME_OUTER =
+      new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "small_slime"), "outer");
   public static final ModelLayerLocation SNAIL =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "snail"), "main");
   public static final ModelLayerLocation WELSH_CORGI =
       new ModelLayerLocation(new ResourceLocation(Constants.MOD_ID, "welsh_corgi"), "main");
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected ClientRenderer() {
-  }
+  protected ClientRenderer() {}
 
   public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
     log.info("{} Entity Renders ...", Constants.LOG_REGISTER_PREFIX);
@@ -102,8 +101,7 @@ public class ClientRenderer {
     event.registerEntityRenderer(ModEntityType.SMALL_GHAST.get(), SmallGhastRenderer::new);
     event.registerEntityRenderer(ModEntityType.SMALL_SLIME.get(), SmallSlimeRenderer::new);
     event.registerEntityRenderer(ModEntityType.SNAIL.get(), SnailRenderer::new);
-    event.registerEntityRenderer(ModEntityType.WELSH_CORGI.get(),
-        WelshCorgiRenderer::new);
+    event.registerEntityRenderer(ModEntityType.WELSH_CORGI.get(), WelshCorgiRenderer::new);
   }
 
   public static void registerEntityLayerDefinitions(

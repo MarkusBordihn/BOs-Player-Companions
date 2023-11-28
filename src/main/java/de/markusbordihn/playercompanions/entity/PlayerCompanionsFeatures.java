@@ -40,16 +40,14 @@ public class PlayerCompanionsFeatures {
   protected static final int EXPERIENCE_TICKER = 20 * 60;
   protected static final int EXPERIENCE_OWNER_BONUS_TICKER = 20 * 60 * 5;
   protected final Random random = new Random();
+  // References
+  protected final Level level;
+  protected final PlayerCompanionEntity playerCompanionEntity;
   protected short ticker = 0;
   protected short experienceDistributeTicker = 0;
   protected short experienceOwnerBonusTicker = 0;
-
   // Internal states
   protected int distributedExperience = 0;
-
-  // References
-  protected Level level;
-  protected PlayerCompanionEntity playerCompanionEntity;
   protected NeutralMob neutralMob;
 
   // Animation related information
@@ -141,8 +139,11 @@ public class PlayerCompanionsFeatures {
       // Check if owner is near (8 blocks) to give additional bonus experience over time.
       if (this.experienceOwnerBonusTicker++ >= EXPERIENCE_OWNER_BONUS_TICKER
           && this.distributedExperience == 0) {
-        List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
-            new AABB(playerCompanionEntity.blockPosition()).inflate(8), entity -> true);
+        List<Player> playerEntities =
+            this.level.getEntities(
+                EntityType.PLAYER,
+                new AABB(playerCompanionEntity.blockPosition()).inflate(8),
+                entity -> true);
         for (Player player : playerEntities) {
           if (player == this.getOwner()) {
             distributeExperience(1);
@@ -160,5 +161,4 @@ public class PlayerCompanionsFeatures {
       }
     }
   }
-
 }

@@ -73,10 +73,12 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.ROOSTER_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.MIXED, ModItems.ROOSTER_MIXED.get());
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.ROOSTER_DEFAULT.get());
+            hashMap.put(PlayerCompanionVariant.MIXED, ModItems.ROOSTER_MIXED.get());
+          });
 
   public Rooster(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
@@ -84,8 +86,10 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 12.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.MAX_HEALTH, 12.0D)
+        .add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
   public float getOFlap() {
@@ -141,10 +145,10 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
     this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
     this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
-    this.targetSelector.addGoal(4,
-        new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
-    this.targetSelector.addGoal(7,
-        new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
+    this.targetSelector.addGoal(
+        4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
+    this.targetSelector.addGoal(
+        7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
     this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
   }
 
@@ -209,5 +213,4 @@ public class Rooster extends GuardEntityWalking implements NeutralMob {
   public int getEntityGuiTop() {
     return 18;
   }
-
 }

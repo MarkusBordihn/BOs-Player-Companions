@@ -54,8 +54,7 @@ public class TextureManager {
 
   private static Path textureCachePath = null;
 
-  protected TextureManager() {
-  }
+  protected TextureManager() {}
 
   private static ResourceLocation registerTexture(TextureModelKey textureModelKey, File file) {
     // Using client Texture Manager
@@ -64,9 +63,11 @@ public class TextureManager {
         client.getTextureManager();
 
     // Creative native image from file.
-    NativeImage nativeImage = textureModelKey.getSkinModel() == SkinModel.HUMANOID
-        || textureModelKey.getSkinModel() == SkinModel.HUMANOID_SLIM ? getNativePlayerImage(file)
-        : getNativeImage(file);
+    NativeImage nativeImage =
+        textureModelKey.getSkinModel() == SkinModel.HUMANOID
+                || textureModelKey.getSkinModel() == SkinModel.HUMANOID_SLIM
+            ? getNativePlayerImage(file)
+            : getNativeImage(file);
     if (nativeImage == null) {
       log.error("{} Unable to create native image for file {}.", LOG_PREFIX, file);
       return null;
@@ -78,14 +79,18 @@ public class TextureManager {
     // Register dynamic texture under resource location.
     String resourceName = getResourceName(textureModelKey);
     ResourceLocation resourceLocation = textureManager.register(resourceName, dynamicTexture);
-    log.debug("{} Registered image {} as texture {} with {}.", LOG_PREFIX, nativeImage,
-        dynamicTexture, resourceLocation);
+    log.debug(
+        "{} Registered image {} as texture {} with {}.",
+        LOG_PREFIX,
+        nativeImage,
+        dynamicTexture,
+        resourceLocation);
 
     return resourceLocation;
   }
 
-  public static ResourceLocation addRemoteTexture(TextureModelKey textureModelKey, String remoteUrl,
-      String targetDirectory) {
+  public static ResourceLocation addRemoteTexture(
+      TextureModelKey textureModelKey, String remoteUrl, String targetDirectory) {
     if (!PlayersUtils.isValidUrl(remoteUrl)) {
       log.error("{} Texture URL {} is invalid!", LOG_PREFIX, remoteUrl);
       return null;
@@ -94,8 +99,11 @@ public class TextureManager {
     // Check for cached textured.
     ResourceLocation cachedTexture = getCachedTexture(textureModelKey, targetDirectory);
     if (cachedTexture != null) {
-      log.debug("{} Found downloaded file in cache, will re-used {} for {}", LOG_PREFIX,
-          cachedTexture, remoteUrl);
+      log.debug(
+          "{} Found downloaded file in cache, will re-used {} for {}",
+          LOG_PREFIX,
+          cachedTexture,
+          remoteUrl);
       return cachedTexture;
     }
 
@@ -109,13 +117,16 @@ public class TextureManager {
         log.debug("{} Following redirect from {} to {}", LOG_PREFIX, remoteUrl, redirectUrl);
         remoteUrl = redirectUrl;
       } else if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-        log.error("{} Unable to load texture from URL {} because of: {}", LOG_PREFIX, remoteUrl,
+        log.error(
+            "{} Unable to load texture from URL {} because of: {}",
+            LOG_PREFIX,
+            remoteUrl,
             connection.getResponseMessage());
         return null;
       }
     } catch (IllegalArgumentException | IOException exception) {
-      log.error("{} Unable to load texture from URL {} because of:", LOG_PREFIX, remoteUrl,
-          exception);
+      log.error(
+          "{} Unable to load texture from URL {} because of:", LOG_PREFIX, remoteUrl, exception);
       return null;
     }
 
@@ -132,10 +143,16 @@ public class TextureManager {
     if (image == null) {
       log.error("{} Unable to get any valid texture from {}!", LOG_PREFIX, remoteUrl);
       return null;
-    } else if (image.getWidth() < 32 || image.getHeight() < 32 || image.getWidth() % 32 != 0
+    } else if (image.getWidth() < 32
+        || image.getHeight() < 32
+        || image.getWidth() % 32 != 0
         || image.getHeight() % 32 != 0) {
-      log.error("{} Unable to get any valid texture from {}, got {}x{}!", LOG_PREFIX, remoteUrl,
-          image.getWidth(), image.getHeight());
+      log.error(
+          "{} Unable to get any valid texture from {}, got {}x{}!",
+          LOG_PREFIX,
+          remoteUrl,
+          image.getWidth(),
+          image.getHeight());
       return null;
     }
 
@@ -145,7 +162,11 @@ public class TextureManager {
     try {
       ImageIO.write(image, "png", file);
     } catch (IllegalArgumentException | IOException exception) {
-      log.error("{} Unable to store texture from {} to {} because of:", LOG_PREFIX, remoteUrl, file,
+      log.error(
+          "{} Unable to store texture from {} to {} because of:",
+          LOG_PREFIX,
+          remoteUrl,
+          file,
           exception);
       return null;
     }
@@ -170,12 +191,15 @@ public class TextureManager {
     return name.replaceAll("[^a-z0-9_.-]", "") + ".png";
   }
 
-  public static ResourceLocation getCachedTexture(TextureModelKey textureModelKey,
-      String targetDirectory) {
+  public static ResourceLocation getCachedTexture(
+      TextureModelKey textureModelKey, String targetDirectory) {
     String fileName = String.format("%s.png", textureModelKey.getUUID());
     File file = new File(targetDirectory, fileName);
     if (file.exists()) {
-      log.debug("{} Found downloaded file in cache, will re-used file {} for {}", LOG_PREFIX, file,
+      log.debug(
+          "{} Found downloaded file in cache, will re-used file {} for {}",
+          LOG_PREFIX,
+          file,
           textureModelKey);
       return registerTexture(textureModelKey, file);
     }
@@ -191,8 +215,11 @@ public class TextureManager {
         try {
           Files.createDirectories(cacheDirectory);
         } catch (Exception exception) {
-          log.error("{} Unable to create texture cache directory at {} because of:", LOG_PREFIX,
-              cacheDirectory, exception);
+          log.error(
+              "{} Unable to create texture cache directory at {} because of:",
+              LOG_PREFIX,
+              cacheDirectory,
+              exception);
           return null;
         }
       }
@@ -216,8 +243,8 @@ public class TextureManager {
       nativeImage = NativeImage.read(inputStream);
       inputStream.close();
     } catch (Exception exception) {
-      log.error("{} Unable to get native image for file {} because of:", LOG_PREFIX, file,
-          exception);
+      log.error(
+          "{} Unable to get native image for file {} because of:", LOG_PREFIX, file, exception);
       return null;
     }
 
@@ -248,5 +275,4 @@ public class TextureManager {
     nativeImage.copyRect(52, 20, -8, 32, 4, 12, true, false);
     return nativeImage;
   }
-
 }

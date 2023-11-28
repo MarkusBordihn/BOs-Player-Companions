@@ -38,14 +38,22 @@ public class WelshCorgiRenderer extends MobRenderer<WelshCorgi, WelshCorgiModel<
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/welsh_corgi/welsh_corgi_default.png"));
-        hashMap.put(PlayerCompanionVariant.MIXED, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/welsh_corgi/welsh_corgi_mixed.png"));
-        hashMap.put(PlayerCompanionVariant.BLACK, new ResourceLocation(Constants.MOD_ID,
-            "textures/entity/welsh_corgi/welsh_corgi_black.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/welsh_corgi/welsh_corgi_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.MIXED,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/welsh_corgi/welsh_corgi_mixed.png"));
+            hashMap.put(
+                PlayerCompanionVariant.BLACK,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/welsh_corgi/welsh_corgi_black.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -57,5 +65,4 @@ public class WelshCorgiRenderer extends MobRenderer<WelshCorgi, WelshCorgiModel<
   public ResourceLocation getTextureLocation(WelshCorgi entity) {
     return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
-
 }

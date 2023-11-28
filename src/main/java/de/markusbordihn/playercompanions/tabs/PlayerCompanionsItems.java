@@ -26,8 +26,7 @@ import net.minecraft.world.item.CreativeModeTab.Output;
 
 public class PlayerCompanionsItems implements DisplayItemsGenerator {
 
-  protected PlayerCompanionsItems() {
-  }
+  protected PlayerCompanionsItems() {}
 
   @Override
   public void accept(ItemDisplayParameters itemDisplayParameters, Output output) {

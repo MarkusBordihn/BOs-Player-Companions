@@ -27,10 +27,11 @@ import net.minecraft.world.level.Level;
 
 public class PlayerCompanionEntityJumping extends PlayerCompanionEntity {
 
-  public PlayerCompanionEntityJumping(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+  public PlayerCompanionEntityJumping(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityJumpControl(this);
   }
-
 }

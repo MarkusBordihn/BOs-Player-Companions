@@ -40,14 +40,19 @@ public class FairyRenderer extends HumanoidMobRenderer<Fairy, FairyModel<Fairy>>
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_default.png"));
-        hashMap.put(PlayerCompanionVariant.BLUE,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_blue.png"));
-        hashMap.put(PlayerCompanionVariant.RED,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_red.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.BLUE,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_blue.png"));
+            hashMap.put(
+                PlayerCompanionVariant.RED,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/fairy/fairy_red.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -69,5 +74,4 @@ public class FairyRenderer extends HumanoidMobRenderer<Fairy, FairyModel<Fairy>>
   protected void scale(Fairy entity, PoseStack poseStack, float unused) {
     poseStack.scale(0.4F, 0.4F, 0.4F);
   }
-
 }

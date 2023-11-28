@@ -135,5 +135,4 @@ public interface PlayerCompanionAttributes {
   default ItemStack getCompanionTypeIcon() {
     return null;
   }
-
 }

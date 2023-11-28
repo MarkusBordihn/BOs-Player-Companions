@@ -34,8 +34,7 @@ public class PositionManager {
   private int height = 100;
   private PositionPoint position = new PositionPoint(0, 0);
 
-  protected PositionManager() {
-  }
+  protected PositionManager() {}
 
   public void setInstance(Minecraft minecraft) {
     this.window = minecraft.getWindow();
@@ -59,13 +58,13 @@ public class PositionManager {
   }
 
   public PositionPoint getHotbarLeft() {
-    return new PositionPoint(this.guiScaledWidth / 2 + HOTBAR_LEFT - this.width,
-        this.guiScaledHeight - this.height);
+    return new PositionPoint(
+        this.guiScaledWidth / 2 + HOTBAR_LEFT - this.width, this.guiScaledHeight - this.height);
   }
 
   public PositionPoint getHotbarRight() {
-    return new PositionPoint(this.guiScaledWidth / 2 + HOTBAR_RIGHT,
-        this.guiScaledHeight - this.height);
+    return new PositionPoint(
+        this.guiScaledWidth / 2 + HOTBAR_RIGHT, this.guiScaledHeight - this.height);
   }
 
   public int getWidth() {
@@ -112,5 +111,4 @@ public class PositionManager {
     guiScaledWidth = currentGuiScaledWidth;
     guiScaledHeight = currentGuiScaleHeight;
   }
-
 }

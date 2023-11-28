@@ -28,12 +28,10 @@ public class ServerSetup {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected ServerSetup() {
-  }
+  protected ServerSetup() {}
 
   public static void handleServerStartingEvent(ServerStartingEvent event) {
     log.info("{} Server Starting setup ...", Constants.LOG_REGISTER_PREFIX);
     PlayerCompanionsServerData.prepare(event.getServer());
   }
-
 }

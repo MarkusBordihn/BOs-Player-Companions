@@ -38,10 +38,6 @@ public class RaptorItem extends CapturedCompanion {
     super(variant);
   }
 
-  public RaptorItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Raptor.FOOD_ITEMS;

@@ -50,7 +50,8 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
+    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.isAlive()) {
       tooltip.add(Component.literal("Type: " + playerCompanionEntity.getCompanionType()));
       tooltip.add(Component.literal("Variant: " + playerCompanionEntity.getVariant()));
       if (playerCompanionEntity.getOwner() != null) {
@@ -65,13 +66,18 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
               ownerName = owner.getName().getString();
             } else if (ownerUUID != null) {
               ownerName = ownerUUID.toString();
+            } else {
+              ownerName = "Unknown";
             }
           }
           tooltip.add(Component.literal("Owner: " + ownerName));
         }
-        tooltip.add(Component.translatable(Constants.TEXT_PREFIX + "tamed_companion_level",
-            playerCompanionEntity.getExperienceLevel(), playerCompanionEntity.getExperience(),
-            Experience.getExperienceForNextLevel(playerCompanionEntity.getExperienceLevel())));
+        tooltip.add(
+            Component.translatable(
+                Constants.TEXT_PREFIX + "tamed_companion_level",
+                playerCompanionEntity.getExperienceLevel(),
+                playerCompanionEntity.getExperience(),
+                Experience.getExperienceForNextLevel(playerCompanionEntity.getExperienceLevel())));
         if (data != null) {
           long respawnTimer =
               data.getEntityRespawnTimer() - java.time.Instant.now().getEpochSecond();
@@ -88,9 +94,10 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
           }
           // Display respawn timer, if any.
           if (respawnTimer >= 0) {
-            tooltip.add(Component
-                .translatable(Constants.TEXT_PREFIX + "tamed_companion_respawn", respawnTimer)
-                .withStyle(ChatFormatting.RED));
+            tooltip.add(
+                Component.translatable(
+                        Constants.TEXT_PREFIX + "tamed_companion_respawn", respawnTimer)
+                    .withStyle(ChatFormatting.RED));
           }
 
           // Aggression Level
@@ -104,7 +111,8 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public IElement getIcon(EntityAccessor accessor, IPluginConfig config, IElement currentIcon) {
-    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
+    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.isAlive()) {
       ItemStack itemStack = new ItemStack(playerCompanionEntity.getCompanionItem());
       if (!itemStack.isEmpty()) {
         return new ElementHelper().item(itemStack, 2F);
@@ -117,5 +125,4 @@ public class PlayerCompanionEntityProvider implements IEntityComponentProvider {
   public ResourceLocation getUid() {
     return UID;
   }
-
 }

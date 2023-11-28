@@ -35,5 +35,4 @@ public interface PlayerCompanionModel {
   default ModelPart leftHand() {
     return null;
   }
-
 }

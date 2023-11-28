@@ -38,10 +38,6 @@ public class SamuraiItem extends CapturedCompanion {
     super(variant);
   }
 
-  public SamuraiItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Samurai.FOOD_ITEMS;

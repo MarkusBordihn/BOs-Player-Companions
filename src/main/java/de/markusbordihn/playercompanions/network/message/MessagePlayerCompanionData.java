@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
@@ -27,12 +26,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class MessagePlayerCompanionData {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected final CompoundTag data;
   protected final String playerCompanionUUID;
@@ -46,14 +41,14 @@ public class MessagePlayerCompanionData {
     return new MessagePlayerCompanionData(buffer.readUtf(), buffer.readNbt());
   }
 
-  public static void encode(final MessagePlayerCompanionData message,
-      final FriendlyByteBuf buffer) {
+  public static void encode(
+      final MessagePlayerCompanionData message, final FriendlyByteBuf buffer) {
     buffer.writeUtf(message.getPlayerCompanionUUID());
     buffer.writeNbt(message.getData());
   }
 
-  public static void handle(MessagePlayerCompanionData message,
-      Supplier<NetworkEvent.Context> contextSupplier) {
+  public static void handle(
+      MessagePlayerCompanionData message, Supplier<NetworkEvent.Context> contextSupplier) {
     NetworkEvent.Context context = contextSupplier.get();
     context.enqueueWork(
         () -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> handlePacket(message)));
@@ -71,5 +66,4 @@ public class MessagePlayerCompanionData {
   public String getPlayerCompanionUUID() {
     return this.playerCompanionUUID;
   }
-
 }

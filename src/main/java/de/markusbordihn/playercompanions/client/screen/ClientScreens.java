@@ -33,22 +33,24 @@ public class ClientScreens {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected ClientScreens() {
-  }
+  protected ClientScreens() {}
 
   public static void registerScreens(final FMLClientSetupEvent event) {
     log.info("{} Client Screens ...", Constants.LOG_REGISTER_PREFIX);
 
-    event.enqueueWork(() -> {
-      MenuScreens.register(ModMenuTypes.DEFAULT_COMPANION_MENU.get(), DefaultCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.COLLECTOR_COMPANION_MENU.get(),
-          CollectorCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.FOLLOWER_COMPANION_MENU.get(),
-          FollowerCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.GUARD_COMPANION_MENU.get(), GuardCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.HEALER_COMPANION_MENU.get(), HealerCompanionScreen::new);
-      MenuScreens.register(ModMenuTypes.SUPPORTER_COMPANION_MENU.get(),
-          SupporterCompanionScreen::new);
-    });
+    event.enqueueWork(
+        () -> {
+          MenuScreens.register(
+              ModMenuTypes.DEFAULT_COMPANION_MENU.get(), DefaultCompanionScreen::new);
+          MenuScreens.register(
+              ModMenuTypes.COLLECTOR_COMPANION_MENU.get(), CollectorCompanionScreen::new);
+          MenuScreens.register(
+              ModMenuTypes.FOLLOWER_COMPANION_MENU.get(), FollowerCompanionScreen::new);
+          MenuScreens.register(ModMenuTypes.GUARD_COMPANION_MENU.get(), GuardCompanionScreen::new);
+          MenuScreens.register(
+              ModMenuTypes.HEALER_COMPANION_MENU.get(), HealerCompanionScreen::new);
+          MenuScreens.register(
+              ModMenuTypes.SUPPORTER_COMPANION_MENU.get(), SupporterCompanionScreen::new);
+        });
   }
 }

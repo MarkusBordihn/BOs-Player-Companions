@@ -25,6 +25,7 @@ public enum SkinModel {
   DOBUTSU,
   HUMANOID,
   HUMANOID_SLIM;
+
   // @formatter:on
 
   public static SkinModel get(String skinModel) {

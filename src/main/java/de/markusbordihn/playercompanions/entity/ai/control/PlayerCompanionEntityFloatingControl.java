@@ -78,10 +78,11 @@ public class PlayerCompanionEntityFloatingControl extends MoveControl {
       BlockState blockState = this.mob.level().getBlockState(blockPos);
       VoxelShape voxelShape = blockState.getCollisionShape(this.mob.level(), blockPos);
       if (newY > this.mob.getStepHeight()
-          && newX * newX + newZ * newZ < Math.max(1.0F, this.mob.getBbWidth())
+              && newX * newX + newZ * newZ < Math.max(1.0F, this.mob.getBbWidth())
           || !voxelShape.isEmpty()
-          && this.mob.getY() < voxelShape.max(Direction.Axis.Y) + blockPos.getY()
-          && !blockState.is(BlockTags.DOORS) && !blockState.is(BlockTags.FENCES)) {
+              && this.mob.getY() < voxelShape.max(Direction.Axis.Y) + blockPos.getY()
+              && !blockState.is(BlockTags.DOORS)
+              && !blockState.is(BlockTags.FENCES)) {
         this.mob.getJumpControl().jump();
         this.operation = MoveControl.Operation.JUMPING;
       }
@@ -94,7 +95,8 @@ public class PlayerCompanionEntityFloatingControl extends MoveControl {
 
         // Play wait sound in specific intervals.
         if (waitSoundDelay++ >= companionEntity.getAmbientSoundInterval()) {
-          this.companionEntity.playSound(companionEntity.getWaitSound(),
+          this.companionEntity.playSound(
+              companionEntity.getWaitSound(),
               companionEntity.getSoundVolume(),
               companionEntity.getSoundPitch());
           waitSoundDelay = 0;
@@ -106,5 +108,4 @@ public class PlayerCompanionEntityFloatingControl extends MoveControl {
       super.tick();
     }
   }
-
 }

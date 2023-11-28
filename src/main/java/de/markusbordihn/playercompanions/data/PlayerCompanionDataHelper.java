@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.data;
 
 import de.markusbordihn.playercompanions.Constants;
+import java.util.Collections;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -31,8 +32,7 @@ public class PlayerCompanionDataHelper {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected PlayerCompanionDataHelper() {
-  }
+  protected PlayerCompanionDataHelper() {}
 
   public static CompoundTag saveArmorItems(CompoundTag compoundTag, NonNullList<ItemStack> armor) {
     ListTag listTag = new ListTag();
@@ -63,8 +63,8 @@ public class PlayerCompanionDataHelper {
     }
   }
 
-  public static CompoundTag saveInventoryItems(CompoundTag compoundTag,
-      NonNullList<ItemStack> inventory) {
+  public static CompoundTag saveInventoryItems(
+      CompoundTag compoundTag, NonNullList<ItemStack> inventory) {
     ListTag listTag = new ListTag();
     for (int i = 0; i < inventory.size(); ++i) {
       ItemStack itemStack = inventory.get(i);
@@ -123,9 +123,6 @@ public class PlayerCompanionDataHelper {
   }
 
   private static void resetNonNullList(NonNullList<ItemStack> list) {
-    for (int index = 0; index < list.size(); ++index) {
-      list.set(index, ItemStack.EMPTY);
-    }
+    Collections.fill(list, ItemStack.EMPTY);
   }
-
 }

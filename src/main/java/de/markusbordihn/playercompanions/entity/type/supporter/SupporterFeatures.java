@@ -51,7 +51,9 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     if (COMMON.supporterTypeRadius.get() > 0) {
-      log.info("{} Supporter will automatically buff in a {} block radius.", Constants.LOG_ICON,
+      log.info(
+          "{} Supporter will automatically buff in a {} block radius.",
+          Constants.LOG_ICON,
           COMMON.supporterTypeRadius.get());
     } else {
       log.info("{} Supporter will not automatically buff!", Constants.LOG_ICON);
@@ -73,10 +75,12 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
 
       // 3. Priority: Buff other players in radius.
       if (!hasBuffSomething) {
-        List<Player> playerEntities = this.level.getEntities(EntityType.PLAYER,
-            new AABB(playerCompanionEntity.blockPosition()).inflate(
-                COMMON.supporterTypeRadius.get()),
-            entity -> true);
+        List<Player> playerEntities =
+            this.level.getEntities(
+                EntityType.PLAYER,
+                new AABB(playerCompanionEntity.blockPosition())
+                    .inflate(COMMON.supporterTypeRadius.get()),
+                entity -> true);
         for (Player player : playerEntities) {
           if (player != this.getOwner() && buffLivingEntity(player)) {
             hasBuffSomething = true;
@@ -88,10 +92,13 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       // 4. Priority: Buff owned healer.
       if (!hasBuffSomething && this.getOwner() != null) {
         List<PlayerCompanionEntity> playerCompanions =
-            playerCompanionEntity.level().getEntitiesOfClass(PlayerCompanionEntity.class,
-                new AABB(playerCompanionEntity.blockPosition()).inflate(
-                    COMMON.supporterTypeRadius.get()),
-                entity -> true);
+            playerCompanionEntity
+                .level()
+                .getEntitiesOfClass(
+                    PlayerCompanionEntity.class,
+                    new AABB(playerCompanionEntity.blockPosition())
+                        .inflate(COMMON.supporterTypeRadius.get()),
+                    entity -> true);
         for (PlayerCompanionEntity playerCompanion : playerCompanions) {
           if (playerCompanion != this.playerCompanionEntity
               && playerCompanion.getCompanionType() == PlayerCompanionType.HEALER
@@ -106,13 +113,17 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
       // 5. Priority: Buff owned tamed animals regardless of type.
       if (!hasBuffSomething && this.getOwner() != null) {
         List<TamableAnimal> tamableAnimals =
-            playerCompanionEntity.level().getEntitiesOfClass(TamableAnimal.class,
-                new AABB(playerCompanionEntity.blockPosition()).inflate(
-                    COMMON.supporterTypeRadius.get()),
-                entity -> true);
+            playerCompanionEntity
+                .level()
+                .getEntitiesOfClass(
+                    TamableAnimal.class,
+                    new AABB(playerCompanionEntity.blockPosition())
+                        .inflate(COMMON.supporterTypeRadius.get()),
+                    entity -> true);
         for (TamableAnimal tamableAnimal : tamableAnimals) {
           if (tamableAnimal != this.playerCompanionEntity
-              && tamableAnimal.getOwner() == this.getOwner() && buffLivingEntity(tamableAnimal)) {
+              && tamableAnimal.getOwner() == this.getOwner()
+              && buffLivingEntity(tamableAnimal)) {
             hasBuffSomething = true;
             break;
           }
@@ -165,10 +176,16 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
   }
 
   public boolean buffLivingEntityDamageBoost(LivingEntity livingEntity) {
-    if (COMMON.supporterTypeDamageBoostDuration.get() > 0 && !livingEntity.hasEffect(
-        MobEffects.DAMAGE_BOOST)) {
-      livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,
-          COMMON.supporterTypeDamageBoostDuration.get(), 0, false, false, true));
+    if (COMMON.supporterTypeDamageBoostDuration.get() > 0
+        && !livingEntity.hasEffect(MobEffects.DAMAGE_BOOST)) {
+      livingEntity.addEffect(
+          new MobEffectInstance(
+              MobEffects.DAMAGE_BOOST,
+              COMMON.supporterTypeDamageBoostDuration.get(),
+              0,
+              false,
+              false,
+              true));
       return true;
     }
     return false;
@@ -177,8 +194,14 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
   public boolean buffLivingEntityDamageResistance(LivingEntity livingEntity) {
     if (COMMON.supporterTypeDamageResistanceDuration.get() > 0
         && !livingEntity.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-      livingEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE,
-          COMMON.supporterTypeDamageResistanceDuration.get(), 0, false, false, true));
+      livingEntity.addEffect(
+          new MobEffectInstance(
+              MobEffects.DAMAGE_RESISTANCE,
+              COMMON.supporterTypeDamageResistanceDuration.get(),
+              0,
+              false,
+              false,
+              true));
       return true;
     }
     return false;
@@ -187,8 +210,14 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
   public boolean buffLivingEntityFireResistance(LivingEntity livingEntity) {
     if (COMMON.supporterTypeFireResistanceDuration.get() > 0
         && !livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE)) {
-      livingEntity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE,
-          COMMON.supporterTypeFireResistanceDuration.get(), 0, false, false, true));
+      livingEntity.addEffect(
+          new MobEffectInstance(
+              MobEffects.FIRE_RESISTANCE,
+              COMMON.supporterTypeFireResistanceDuration.get(),
+              0,
+              false,
+              false,
+              true));
       return true;
     }
     return false;
@@ -199,5 +228,4 @@ public class SupporterFeatures extends PlayerCompanionsFeatures {
     super.tick();
     supporterTick();
   }
-
 }

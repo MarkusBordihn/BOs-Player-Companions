@@ -36,8 +36,6 @@ import org.apache.logging.log4j.Logger;
 
 public class ArmorSlot extends Slot {
 
-  public static final ResourceLocation BLOCK_ATLAS =
-      new ResourceLocation(Constants.MOD_ID, "textures/atlas/blocks.png");
   public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET =
       new ResourceLocation(Constants.MOD_ID, "item/empty_armor/empty_armor_slot_helmet");
   public static final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE =
@@ -48,10 +46,16 @@ public class ArmorSlot extends Slot {
       new ResourceLocation(Constants.MOD_ID, "item/empty_armor/empty_armor_slot_boots");
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   static final ResourceLocation[] TEXTURE_EMPTY_SLOTS =
-      new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS,
-          EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
-  private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.FEET,
-      EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD};
+      new ResourceLocation[] {
+        EMPTY_ARMOR_SLOT_BOOTS,
+        EMPTY_ARMOR_SLOT_LEGGINGS,
+        EMPTY_ARMOR_SLOT_CHESTPLATE,
+        EMPTY_ARMOR_SLOT_HELMET
+      };
+  private static final EquipmentSlot[] SLOT_IDS =
+      new EquipmentSlot[] {
+        EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD
+      };
 
   final EquipmentSlot equipmentSlot;
   final CompanionMenu menu;
@@ -60,10 +64,6 @@ public class ArmorSlot extends Slot {
     super(container, index, x, y);
     this.menu = menu;
     this.equipmentSlot = SLOT_IDS[index];
-  }
-
-  public EquipmentSlot getEquipmentSlot() {
-    return this.equipmentSlot;
   }
 
   @Override
@@ -96,5 +96,4 @@ public class ArmorSlot extends Slot {
   public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
     return Pair.of(InventoryMenu.BLOCK_ATLAS, TEXTURE_EMPTY_SLOTS[this.equipmentSlot.getIndex()]);
   }
-
 }

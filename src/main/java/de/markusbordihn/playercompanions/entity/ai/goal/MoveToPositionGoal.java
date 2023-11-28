@@ -34,8 +34,8 @@ public class MoveToPositionGoal extends PlayerCompanionGoal {
   private float oldWaterCost;
   private BlockPos targetPosition;
 
-  public MoveToPositionGoal(PlayerCompanionEntity playerCompanionEntity, double speedModifier,
-      float stopDistance) {
+  public MoveToPositionGoal(
+      PlayerCompanionEntity playerCompanionEntity, double speedModifier, float stopDistance) {
     super(playerCompanionEntity);
     this.speedModifier = speedModifier;
     this.stopDistance = stopDistance;
@@ -48,9 +48,11 @@ public class MoveToPositionGoal extends PlayerCompanionGoal {
       return false;
     }
     BlockPos blockPos = this.playerCompanionEntity.getOrderedToPosition();
-    if (blockPos == null || !this.playerCompanionEntity.isOrderedToPosition()
-        || this.playerCompanionEntity.distanceToSqr(blockPos.getX(), blockPos.getY(),
-        blockPos.getZ()) < this.stopDistance * this.stopDistance) {
+    if (blockPos == null
+        || !this.playerCompanionEntity.isOrderedToPosition()
+        || this.playerCompanionEntity.distanceToSqr(
+                blockPos.getX(), blockPos.getY(), blockPos.getZ())
+            < this.stopDistance * this.stopDistance) {
       return false;
     }
     this.targetPosition = blockPos;
@@ -59,13 +61,14 @@ public class MoveToPositionGoal extends PlayerCompanionGoal {
 
   @Override
   public boolean canContinueToUse() {
-    if (!this.playerCompanionEntity.hasOwnerAndIsAlive() || this.navigation.isDone()
+    if (!this.playerCompanionEntity.hasOwnerAndIsAlive()
+        || this.navigation.isDone()
         || !this.playerCompanionEntity.isOrderedToPosition()) {
       return false;
     } else {
-      return this.playerCompanionEntity.distanceToSqr(this.targetPosition.getX(),
-          this.targetPosition.getY(),
-          this.targetPosition.getZ()) > this.stopDistance * this.stopDistance;
+      return this.playerCompanionEntity.distanceToSqr(
+              this.targetPosition.getX(), this.targetPosition.getY(), this.targetPosition.getZ())
+          > this.stopDistance * this.stopDistance;
     }
   }
 
@@ -86,17 +89,24 @@ public class MoveToPositionGoal extends PlayerCompanionGoal {
 
   @Override
   public void tick() {
-    this.playerCompanionEntity.getLookControl().setLookAt(this.targetPosition.getX(),
-        this.targetPosition.getY(), this.targetPosition.getZ(), 10.0F,
-        this.playerCompanionEntity.getMaxHeadXRot());
+    this.playerCompanionEntity
+        .getLookControl()
+        .setLookAt(
+            this.targetPosition.getX(),
+            this.targetPosition.getY(),
+            this.targetPosition.getZ(),
+            10.0F,
+            this.playerCompanionEntity.getMaxHeadXRot());
 
     if (--this.timeToRecalcPath <= 0) {
       this.timeToRecalcPath = this.adjustedTickDelay(10);
       if (!this.playerCompanionEntity.isLeashed() && !this.playerCompanionEntity.isPassenger()) {
-        this.navigation.moveTo(this.targetPosition.getX(), this.targetPosition.getY(),
-            this.targetPosition.getZ(), this.speedModifier);
+        this.navigation.moveTo(
+            this.targetPosition.getX(),
+            this.targetPosition.getY(),
+            this.targetPosition.getZ(),
+            this.speedModifier);
       }
     }
   }
-
 }

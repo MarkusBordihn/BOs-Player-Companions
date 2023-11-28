@@ -183,7 +183,6 @@ public class PlayerCompanionData {
     this.entityActionType = actionType;
   }
 
-
   public AggressionLevel getEntityAggressionLevel() {
     return this.entityAggressionLevel;
   }
@@ -325,7 +324,8 @@ public class PlayerCompanionData {
 
       for (int index = 0; index < getInventoryItemsSize(); index++) {
         ItemStack existingItems = getInventoryItem(index);
-        if (!existingItems.isEmpty() && existingItems.is(item)
+        if (!existingItems.isEmpty()
+            && existingItems.is(item)
             && existingItems.getCount() + numberOfItems < existingItems.getMaxStackSize()) {
           existingItems.grow(numberOfItems);
           return true;
@@ -353,8 +353,10 @@ public class PlayerCompanionData {
   public void load(PlayerCompanionEntity companion) {
     this.companionEntity = companion;
     this.companionUUID = companion.getUUID();
-    this.name = companion.hasCustomName() ? companion.getCustomName().getString()
-        : companion.getRandomName();
+    this.name =
+        companion.hasCustomName()
+            ? companion.getCustomName().getString()
+            : companion.getRandomName();
     this.type = companion.getCompanionType();
     this.hasOwner = companion.hasOwner();
     if (this.hasOwner) {
@@ -401,7 +403,10 @@ public class PlayerCompanionData {
     // Handle hand items.
     setHandItems((NonNullList<ItemStack>) companion.getHandSlots());
 
-    log.debug("Loaded PlayerCompanion {} data over entity with {} and data {}", this.name, this,
+    log.debug(
+        "Loaded PlayerCompanion {} data over entity with {} and data {}",
+        this.name,
+        this,
         this.entityData);
   }
 
@@ -434,8 +439,9 @@ public class PlayerCompanionData {
       this.entityId = compoundTag.getInt(ENTITY_ID_TAG);
     }
     if (compoundTag.contains(ENTITY_TYPE_TAG)) {
-      this.entityType = ForgeRegistries.ENTITY_TYPES
-          .getValue(new ResourceLocation(compoundTag.getString(ENTITY_TYPE_TAG)));
+      this.entityType =
+          ForgeRegistries.ENTITY_TYPES.getValue(
+              new ResourceLocation(compoundTag.getString(ENTITY_TYPE_TAG)));
     }
     this.entityData = compoundTag.getCompound(ENTITY_DATA_TAG);
     this.entityDimension = compoundTag.getString(ENTITY_DIMENSION);
@@ -511,14 +517,14 @@ public class PlayerCompanionData {
     // If not use stored values instead.
     if (playerCompanionEntity != null && playerCompanionEntity.isAlive()) {
       compoundTag.putString(ENTITY_ACTION_TYPE, playerCompanionEntity.getActionType().name());
-      compoundTag.putString(ENTITY_AGGRESSION_LEVEL,
-          playerCompanionEntity.getAggressionLevel().name());
+      compoundTag.putString(
+          ENTITY_AGGRESSION_LEVEL, playerCompanionEntity.getAggressionLevel().name());
       compoundTag.putString(ENTITY_DIMENSION, playerCompanionEntity.getDimensionName());
       compoundTag.putBoolean(ENTITY_SITTING_TAG, playerCompanionEntity.isOrderedToSit());
-      compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG,
-          playerCompanionEntity.isSitOnShoulder());
-      compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION,
-          playerCompanionEntity.isOrderedToPosition());
+      compoundTag.putBoolean(
+          ENTITY_SITTING_ON_SHOULDER_TAG, playerCompanionEntity.isSitOnShoulder());
+      compoundTag.putBoolean(
+          ENTITY_ORDERED_TO_POSITION, playerCompanionEntity.isOrderedToPosition());
       compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, playerCompanionEntity.getMaxHealth());
       compoundTag.putFloat(ENTITY_HEALTH_TAG, playerCompanionEntity.getHealth());
       compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, playerCompanionEntity.getExperienceLevel());
@@ -533,7 +539,8 @@ public class PlayerCompanionData {
 
       // Set target, if any
       LivingEntity target = playerCompanionEntity.getTarget();
-      compoundTag.putString(ENTITY_TARGET_TAG,
+      compoundTag.putString(
+          ENTITY_TARGET_TAG,
           target == null || target.getEncodeId() == null ? "" : target.getEncodeId());
 
       // Get current armor items from entity to be in sync.
@@ -577,15 +584,47 @@ public class PlayerCompanionData {
   }
 
   public String toString() {
-    return "PlayerCompanion['" + this.name + "', type=" + this.type + ", owner=" + this.ownerUUID
-        + "(" + this.ownerName + "), entity=" + this.entityType + ", experience="
-        + this.entityExperience + ", level=" + this.entityExperienceLevel + ", health="
-        + this.entityHealth + "/" + this.entityHealthMax + ", x=" + this.blockPos.getX() + ", y="
-        + this.blockPos.getY() + ", z=" + this.blockPos.getZ() + ", armor=" + this.getArmorItems()
-        + ", hand=" + this.getHandItems() + ", dimension=" + this.entityDimension
-        + ", action_type = " + this.entityActionType.name() + ", aggression_level= "
-        + this.entityAggressionLevel.name() + ", respawnTimer=" + this.entityRespawnTimer + ", id="
-        + this.entityId + ", UUID=" + this.companionUUID + "]";
+    return "PlayerCompanion['"
+        + this.name
+        + "', type="
+        + this.type
+        + ", owner="
+        + this.ownerUUID
+        + "("
+        + this.ownerName
+        + "), entity="
+        + this.entityType
+        + ", experience="
+        + this.entityExperience
+        + ", level="
+        + this.entityExperienceLevel
+        + ", health="
+        + this.entityHealth
+        + "/"
+        + this.entityHealthMax
+        + ", x="
+        + this.blockPos.getX()
+        + ", y="
+        + this.blockPos.getY()
+        + ", z="
+        + this.blockPos.getZ()
+        + ", armor="
+        + this.getArmorItems()
+        + ", hand="
+        + this.getHandItems()
+        + ", dimension="
+        + this.entityDimension
+        + ", action_type = "
+        + this.entityActionType.name()
+        + ", aggression_level= "
+        + this.entityAggressionLevel.name()
+        + ", respawnTimer="
+        + this.entityRespawnTimer
+        + ", id="
+        + this.entityId
+        + ", UUID="
+        + this.companionUUID
+        + "]";
   }
 
   private void setDirty() {

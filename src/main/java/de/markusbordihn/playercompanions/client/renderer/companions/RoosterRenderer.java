@@ -40,12 +40,18 @@ public class RoosterRenderer extends MobRenderer<Rooster, RoosterModel<Rooster>>
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_default.png"));
-        hashMap.put(PlayerCompanionVariant.MIXED,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/rooster/rooster_mixed.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/rooster/rooster_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.MIXED,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/rooster/rooster_mixed.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -65,5 +71,4 @@ public class RoosterRenderer extends MobRenderer<Rooster, RoosterModel<Rooster>>
     float f1 = Mth.lerp(delay, entity.getOFlapSpeed(), entity.getFlapSpeed());
     return (Mth.sin(f) + 1.0F) * f1;
   }
-
 }

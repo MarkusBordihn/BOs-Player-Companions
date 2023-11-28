@@ -30,8 +30,5 @@ public class PlayerCompanionTypeIcon {
   public static final ItemStack HEALER = new ItemStack(Items.POTION);
   public static final ItemStack SUPPORTER = new ItemStack(Items.ENCHANTED_BOOK);
 
-  protected PlayerCompanionTypeIcon() {
-
-  }
-
+  protected PlayerCompanionTypeIcon() {}
 }

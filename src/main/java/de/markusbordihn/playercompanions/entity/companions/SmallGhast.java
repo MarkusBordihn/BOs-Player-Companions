@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
@@ -72,8 +71,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class SmallGhast extends GuardEntityFlying implements NeutralMob {
 
@@ -84,25 +81,32 @@ public class SmallGhast extends GuardEntityFlying implements NeutralMob {
   // Variants
   public static final List<PlayerCompanionVariant> VARIANTS =
       List.of(PlayerCompanionVariant.DEFAULT);
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   // Companion Item by variant
-  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT = Util.make(
-      new EnumMap<>(PlayerCompanionVariant.class),
-      hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_GHAST_DEFAULT.get()));
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap ->
+              hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_GHAST_DEFAULT.get()));
 
   public SmallGhast(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.FLYING_SPEED, 0.4F).add(Attributes.MAX_HEALTH, 10.0D)
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.FLYING_SPEED, 0.4F)
+        .add(Attributes.MAX_HEALTH, 10.0D)
         .add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
-  public static boolean checkGhastSpawnRules(EntityType<SmallGhast> entityType, LevelAccessor level,
-      MobSpawnType mobSpawnType, BlockPos blockPos, RandomSource random) {
+  public static boolean checkGhastSpawnRules(
+      EntityType<SmallGhast> entityType,
+      LevelAccessor level,
+      MobSpawnType mobSpawnType,
+      BlockPos blockPos,
+      RandomSource random) {
     return level.getDifficulty() != Difficulty.PEACEFUL
         && checkMobSpawnRules(entityType, level, mobSpawnType, blockPos, random);
   }
@@ -144,10 +148,10 @@ public class SmallGhast extends GuardEntityFlying implements NeutralMob {
     this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
     this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
-    this.targetSelector.addGoal(4,
-        new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
-    this.targetSelector.addGoal(7,
-        new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
+    this.targetSelector.addGoal(
+        4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
+    this.targetSelector.addGoal(
+        7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
     this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
   }
 
@@ -277,5 +281,4 @@ public class SmallGhast extends GuardEntityFlying implements NeutralMob {
       }
     }
   }
-
 }

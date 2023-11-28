@@ -36,5 +36,4 @@ public class GuardCompanionScreen extends CompanionScreen<GuardCompanionMenu> {
   public GuardCompanionScreen(GuardCompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component, TEXTURE);
   }
-
 }

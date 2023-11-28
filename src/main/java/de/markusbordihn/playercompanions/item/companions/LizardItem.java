@@ -38,10 +38,6 @@ public class LizardItem extends CapturedCompanion {
     super(variant);
   }
 
-  public LizardItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Lizard.FOOD_ITEMS;

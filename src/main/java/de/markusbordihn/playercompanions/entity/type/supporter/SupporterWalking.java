@@ -37,9 +37,11 @@ public class SupporterWalking extends PlayerCompanionEntityWalking {
 
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
-  protected SupporterFeatures supporterFeatures;
+  protected final SupporterFeatures supporterFeatures;
 
-  public SupporterWalking(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
+  public SupporterWalking(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.setAggressionLevel(getDefaultAggressionLevel());
@@ -83,5 +85,4 @@ public class SupporterWalking extends PlayerCompanionEntityWalking {
     super.tick();
     this.supporterFeatures.tick();
   }
-
 }

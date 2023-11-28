@@ -34,25 +34,33 @@ public class PlayerCompanionsTab {
   public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
       DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Constants.MOD_ID);
   public static final RegistryObject<CreativeModeTab> TAB_SPAWN_EGGS =
-      CREATIVE_TABS.register("spawn_eggs",
-          () -> CreativeModeTab.builder()
-              .icon(() -> ModItems.SMALL_SLIME_SPAWN_EGG.get().getDefaultInstance())
-              .displayItems(new SpawnEggsItems())
-              .title(Component.translatable("itemGroup.player_companions.spawn_eggs")).build());
+      CREATIVE_TABS.register(
+          "spawn_eggs",
+          () ->
+              CreativeModeTab.builder()
+                  .icon(() -> ModItems.SMALL_SLIME_SPAWN_EGG.get().getDefaultInstance())
+                  .displayItems(new SpawnEggsItems())
+                  .title(Component.translatable("itemGroup.player_companions.spawn_eggs"))
+                  .build());
   public static final RegistryObject<CreativeModeTab> TAB_COMPANIONS =
-      CREATIVE_TABS.register("player_companions",
-          () -> CreativeModeTab.builder()
-              .icon(() -> ModItems.SMALL_SLIME_GREEN.get().getDefaultInstance())
-              .displayItems(new PlayerCompanionsItems())
-              .title(Component.translatable("itemGroup.player_companions")).build());
+      CREATIVE_TABS.register(
+          "player_companions",
+          () ->
+              CreativeModeTab.builder()
+                  .icon(() -> ModItems.SMALL_SLIME_GREEN.get().getDefaultInstance())
+                  .displayItems(new PlayerCompanionsItems())
+                  .title(Component.translatable("itemGroup.player_companions"))
+                  .build());
   public static final RegistryObject<CreativeModeTab> TAB_TAME_ITEMS =
-      CREATIVE_TABS.register("tame_items",
-          () -> CreativeModeTab.builder().icon(() -> ModItems.TAME_APPLE.get().getDefaultInstance())
-              .displayItems(new TameItems())
-              .title(Component.translatable("itemGroup.player_companions.tame_items")).build());
+      CREATIVE_TABS.register(
+          "tame_items",
+          () ->
+              CreativeModeTab.builder()
+                  .icon(() -> ModItems.TAME_APPLE.get().getDefaultInstance())
+                  .displayItems(new TameItems())
+                  .title(Component.translatable("itemGroup.player_companions.tame_items"))
+                  .build());
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected PlayerCompanionsTab() {
-  }
-
+  protected PlayerCompanionsTab() {}
 }

@@ -33,5 +33,4 @@ public class HealerCompanionScreen extends CompanionScreen<HealerCompanionMenu> 
   public HealerCompanionScreen(HealerCompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component, TEXTURE);
   }
-
 }

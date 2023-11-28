@@ -34,11 +34,22 @@ public class HealerCompanionMenu extends CompanionMenu {
     super(ModMenuTypes.HEALER_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
   }
 
-  public HealerCompanionMenu(int windowId, Inventory playerInventory, Container armorContainer,
-      Container equipmentContainer, Container handContainer, Container inventoryContainer,
+  public HealerCompanionMenu(
+      int windowId,
+      Inventory playerInventory,
+      Container armorContainer,
+      Container equipmentContainer,
+      Container handContainer,
+      Container inventoryContainer,
       UUID playerCompanionUUID) {
-    super(ModMenuTypes.HEALER_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
-        equipmentContainer, handContainer, inventoryContainer, playerCompanionUUID);
+    super(
+        ModMenuTypes.HEALER_COMPANION_MENU.get(),
+        windowId,
+        playerInventory,
+        armorContainer,
+        equipmentContainer,
+        handContainer,
+        inventoryContainer,
+        playerCompanionUUID);
   }
-
 }

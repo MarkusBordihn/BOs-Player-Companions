@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.network.message;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
@@ -27,12 +26,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class MessagePlayerCompanionsData {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected final CompoundTag data;
 
@@ -48,11 +43,11 @@ public class MessagePlayerCompanionsData {
     buffer.writeNbt(message.getData());
   }
 
-  public static void handle(MessagePlayerCompanionsData message,
-      Supplier<NetworkEvent.Context> contextSupplier) {
+  public static void handle(
+      MessagePlayerCompanionsData message, Supplier<NetworkEvent.Context> contextSupplier) {
     NetworkEvent.Context context = contextSupplier.get();
-    context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-        () -> () -> handlePacket(message)));
+    context.enqueueWork(
+        () -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> handlePacket(message)));
     context.setPacketHandled(true);
   }
 
@@ -63,5 +58,4 @@ public class MessagePlayerCompanionsData {
   public CompoundTag getData() {
     return this.data;
   }
-
 }

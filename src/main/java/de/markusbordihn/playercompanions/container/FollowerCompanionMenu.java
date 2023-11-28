@@ -34,11 +34,22 @@ public class FollowerCompanionMenu extends CompanionMenu {
     super(ModMenuTypes.FOLLOWER_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
   }
 
-  public FollowerCompanionMenu(int windowId, Inventory playerInventory, Container armorContainer,
-      Container equipmentContainer, Container handContainer, Container inventoryContainer,
+  public FollowerCompanionMenu(
+      int windowId,
+      Inventory playerInventory,
+      Container armorContainer,
+      Container equipmentContainer,
+      Container handContainer,
+      Container inventoryContainer,
       UUID playerCompanionUUID) {
-    super(ModMenuTypes.FOLLOWER_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
-        equipmentContainer, handContainer, inventoryContainer, playerCompanionUUID);
+    super(
+        ModMenuTypes.FOLLOWER_COMPANION_MENU.get(),
+        windowId,
+        playerInventory,
+        armorContainer,
+        equipmentContainer,
+        handContainer,
+        inventoryContainer,
+        playerCompanionUUID);
   }
-
 }

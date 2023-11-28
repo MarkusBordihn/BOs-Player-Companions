@@ -50,5 +50,4 @@ public class GuardFeatures extends PlayerCompanionsFeatures {
     super.tick();
     guardTick();
   }
-
 }

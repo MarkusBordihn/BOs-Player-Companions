@@ -39,9 +39,12 @@ public class FireflyRenderer extends MobRenderer<Firefly, FireflyModel<Firefly>>
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class),
-          hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT,
-              new ResourceLocation(Constants.MOD_ID, "textures/entity/firefly/firefly.png")));
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap ->
+              hashMap.put(
+                  PlayerCompanionVariant.DEFAULT,
+                  new ResourceLocation(Constants.MOD_ID, "textures/entity/firefly/firefly.png")));
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -58,5 +61,4 @@ public class FireflyRenderer extends MobRenderer<Firefly, FireflyModel<Firefly>>
   protected void scale(Firefly entity, PoseStack poseStack, float unused) {
     poseStack.scale(0.25F, 0.25F, 0.25F);
   }
-
 }

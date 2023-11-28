@@ -34,8 +34,7 @@ public class TameItemGoal extends PlayerCompanionGoal {
   private final double speedModifier;
   private final Ingredient items;
   private final boolean canScare;
-  @Nullable
-  protected Player player;
+  @Nullable protected Player player;
   private double px;
   private double py;
   private double pz;
@@ -122,19 +121,20 @@ public class TameItemGoal extends PlayerCompanionGoal {
 
   @Override
   public void tick() {
-    this.playerCompanionEntity.getLookControl().setLookAt(this.player,
-        this.playerCompanionEntity.getMaxHeadYRot() + 20.0F,
-        this.playerCompanionEntity.getMaxHeadXRot());
+    this.playerCompanionEntity
+        .getLookControl()
+        .setLookAt(
+            this.player,
+            this.playerCompanionEntity.getMaxHeadYRot() + 20.0F,
+            this.playerCompanionEntity.getMaxHeadXRot());
     if (this.playerCompanionEntity.distanceToSqr(this.player) < 6.25D) {
       this.playerCompanionEntity.getNavigation().stop();
     } else {
       this.playerCompanionEntity.getNavigation().moveTo(this.player, this.speedModifier);
     }
-
   }
 
   public boolean isRunning() {
     return this.isRunning;
   }
-
 }

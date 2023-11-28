@@ -35,11 +35,23 @@ public class CollectorCompanionMenu extends CompanionMenu {
     super(ModMenuTypes.COLLECTOR_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
   }
 
-  public CollectorCompanionMenu(int windowId, Inventory playerInventory, Container armorContainer,
-      Container equipmentContainer, Container handContainer, Container inventoryContainer,
+  public CollectorCompanionMenu(
+      int windowId,
+      Inventory playerInventory,
+      Container armorContainer,
+      Container equipmentContainer,
+      Container handContainer,
+      Container inventoryContainer,
       UUID playerCompanionUUID) {
-    super(ModMenuTypes.COLLECTOR_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
-        equipmentContainer, handContainer, inventoryContainer, playerCompanionUUID);
+    super(
+        ModMenuTypes.COLLECTOR_COMPANION_MENU.get(),
+        windowId,
+        playerInventory,
+        armorContainer,
+        equipmentContainer,
+        handContainer,
+        inventoryContainer,
+        playerCompanionUUID);
   }
 
   @Override
@@ -55,11 +67,13 @@ public class CollectorCompanionMenu extends CompanionMenu {
     for (int inventoryRow = 0; inventoryRow < 4; ++inventoryRow) {
       for (int inventoryColumn = 0; inventoryColumn < 4; ++inventoryColumn) {
         this.addSlot(
-            new InventorySlot(this, this.inventoryContainer, inventoryRow + inventoryColumn * 4,
+            new InventorySlot(
+                this,
+                this.inventoryContainer,
+                inventoryRow + inventoryColumn * 4,
                 playerCompanionInventoryStartPositionX + inventoryColumn * slotSize,
                 playerCompanionInventoryStartPositionY + inventoryRow * slotSize));
       }
     }
   }
-
 }

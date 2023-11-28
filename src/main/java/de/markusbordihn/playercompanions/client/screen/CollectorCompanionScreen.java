@@ -33,9 +33,8 @@ public class CollectorCompanionScreen extends CompanionScreen<CollectorCompanion
   private static final ResourceLocation TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion_collector.png");
 
-  public CollectorCompanionScreen(CollectorCompanionMenu menu, Inventory inventory,
-      Component component) {
+  public CollectorCompanionScreen(
+      CollectorCompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component, TEXTURE);
   }
-
 }

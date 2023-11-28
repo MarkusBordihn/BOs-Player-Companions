@@ -31,17 +31,20 @@ import org.lwjgl.glfw.GLFW;
 public class ModKeyMapping {
 
   public static final KeyMapping AGGRESSION_KEY =
-      new KeyMapping(Constants.KEY_PREFIX + "aggression", KeyConflictContext.IN_GAME,
+      new KeyMapping(
+          Constants.KEY_PREFIX + "aggression",
+          KeyConflictContext.IN_GAME,
           InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_ALT),
           Constants.KEY_PREFIX + "category");
   public static final KeyMapping COMMAND_KEY =
-      new KeyMapping(Constants.KEY_PREFIX + "control", KeyConflictContext.IN_GAME,
+      new KeyMapping(
+          Constants.KEY_PREFIX + "control",
+          KeyConflictContext.IN_GAME,
           InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL),
           Constants.KEY_PREFIX + "category");
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected ModKeyMapping() {
-  }
+  protected ModKeyMapping() {}
 
   public static void registerKeyMapping(RegisterKeyMappingsEvent event) {
     log.info("{} Key Mapping ...", Constants.LOG_REGISTER_PREFIX);

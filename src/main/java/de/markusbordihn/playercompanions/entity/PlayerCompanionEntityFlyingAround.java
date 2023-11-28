@@ -35,7 +35,8 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
 public class PlayerCompanionEntityFlyingAround extends PlayerCompanionEntity {
 
-  public PlayerCompanionEntityFlyingAround(EntityType<? extends PlayerCompanionEntity> entityType,
+  public PlayerCompanionEntityFlyingAround(
+      EntityType<? extends PlayerCompanionEntity> entityType,
       Level level,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
@@ -50,8 +51,8 @@ public class PlayerCompanionEntityFlyingAround extends PlayerCompanionEntity {
   }
 
   @Override
-  protected void checkFallDamage(double height, boolean flag, BlockState blockState,
-      BlockPos blockPos) {
+  protected void checkFallDamage(
+      double height, boolean flag, BlockState blockState, BlockPos blockPos) {
     // Ignore damage
   }
 
@@ -68,5 +69,4 @@ public class PlayerCompanionEntityFlyingAround extends PlayerCompanionEntity {
   public SoundEvent getJumpSound() {
     return SoundEvents.PHANTOM_FLAP;
   }
-
 }

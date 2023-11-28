@@ -49,17 +49,15 @@ public class ModTextureManager {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String TEXTURE_PREFIX = Constants.MOD_ID + "_client_texture_";
-
-  private static Path textureCachePath = null;
   private static final HashMap<String, ResourceLocation> textureCache = new HashMap<>();
+  private static Path textureCachePath = null;
 
-  protected ModTextureManager() {
-  }
+  protected ModTextureManager() {}
 
   private static ResourceLocation addTexture(String name, File file) {
     if (hasTexture(name)) {
-      log.warn("Texture with name {} already exists! Unable to add texture for file: {}", name,
-          file);
+      log.warn(
+          "Texture with name {} already exists! Unable to add texture for file: {}", name, file);
       return getTexture(name);
     }
     Minecraft client = Minecraft.getInstance();
@@ -78,8 +76,11 @@ public class ModTextureManager {
     // Register dynamic texture under resource location.
     String textureId = getId(name);
     ResourceLocation resourceLocation = textureManager.register(textureId, dynamicTexture);
-    log.debug("Registered image {} as texture {} with {} to texture Manager.", nativeImage,
-        dynamicTexture, resourceLocation);
+    log.debug(
+        "Registered image {} as texture {} with {} to texture Manager.",
+        nativeImage,
+        dynamicTexture,
+        resourceLocation);
 
     // Store resource location by id into cache.
     textureCache.put(textureId, resourceLocation);
@@ -116,9 +117,14 @@ public class ModTextureManager {
     if (image == null) {
       log.error("Unable to get any valid texture from {}!", remoteUrl);
       return null;
-    } else if (image.getWidth() < 32 || image.getHeight() < 32 || image.getWidth() % 32 != 0
+    } else if (image.getWidth() < 32
+        || image.getHeight() < 32
+        || image.getWidth() % 32 != 0
         || image.getHeight() % 32 != 0) {
-      log.error("Unable to get any valid texture from {}, got {}x{}!", remoteUrl, image.getWidth(),
+      log.error(
+          "Unable to get any valid texture from {}, got {}x{}!",
+          remoteUrl,
+          image.getWidth(),
           image.getHeight());
       return null;
     }
@@ -164,7 +170,9 @@ public class ModTextureManager {
         try {
           Files.createDirectories(cacheDirectory);
         } catch (Exception exception) {
-          log.error("Unable to create texture cache directory at {} because of:", cacheDirectory,
+          log.error(
+              "Unable to create texture cache directory at {} because of:",
+              cacheDirectory,
               exception);
         }
       }
@@ -211,5 +219,4 @@ public class ModTextureManager {
     nativeImage.copyRect(52, 20, -8, 32, 4, 12, true, false);
     return nativeImage;
   }
-
 }

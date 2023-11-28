@@ -11,6 +11,7 @@ plugins {
   id 'maven-publish'
   id 'net.minecraftforge.gradle' version '5.1.+'
   id 'nu.studer.credentials' version '1.0.7'
+  id "com.modrinth.minotaur" version "2.+"
 }
 
 version = "${version_major}.${version_minor}.${version_patch}"
@@ -201,6 +202,20 @@ curseforge {
         optionalDependency 'jade'
       }
     }
+  }
+}
+
+modrinth {
+  token = "${credentials.modrinth_api_token}"
+  projectId = "${modrinth_project_id}"
+  versionNumber = "${version_major}.${version_minor}.${version_patch}"
+  versionType = "${modrinth_release_type}"
+  uploadFile = jar
+  gameVersions = ["${mc_version}"]
+  loaders = ["forge"]
+  dependencies {
+    optional.project "jade"
+    optional.project "patchouli"
   }
 }
 

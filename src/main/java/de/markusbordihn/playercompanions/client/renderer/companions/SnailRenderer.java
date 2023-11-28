@@ -38,12 +38,16 @@ public class SnailRenderer extends MobRenderer<Snail, SnailModel<Snail>> {
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail_default.png"));
-        hashMap.put(PlayerCompanionVariant.BROWN,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail_brown.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.BROWN,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/snail/snail_brown.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -55,5 +59,4 @@ public class SnailRenderer extends MobRenderer<Snail, SnailModel<Snail>> {
   public ResourceLocation getTextureLocation(Snail entity) {
     return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
-
 }

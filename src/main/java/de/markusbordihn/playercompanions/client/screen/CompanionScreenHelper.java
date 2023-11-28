@@ -31,8 +31,8 @@ import org.joml.Quaternionf;
 
 public class CompanionScreenHelper {
 
-  public static void renderEntity(int x, int y, float yRot, float xRot,
-      PlayerCompanionEntity playerCompanionEntity) {
+  public static void renderEntity(
+      int x, int y, float yRot, float xRot, PlayerCompanionEntity playerCompanionEntity) {
     // Prepare Renderer
     Minecraft minecraft = Minecraft.getInstance();
     float f = (float) Math.atan(yRot / 40.0F);
@@ -86,8 +86,8 @@ public class CompanionScreenHelper {
     entityRenderDispatcher.setRenderShadow(false);
     MultiBufferSource.BufferSource multiBuffer =
         Minecraft.getInstance().renderBuffers().bufferSource();
-    entityRenderDispatcher.render(playerCompanionEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, poseStack1,
-        multiBuffer, 15728880);
+    entityRenderDispatcher.render(
+        playerCompanionEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, poseStack1, multiBuffer, 15728880);
     multiBuffer.endBatch();
     entityRenderDispatcher.setRenderShadow(true);
 
@@ -111,5 +111,4 @@ public class CompanionScreenHelper {
     RenderSystem.applyModelViewMatrix();
     Lighting.setupFor3DItems();
   }
-
 }

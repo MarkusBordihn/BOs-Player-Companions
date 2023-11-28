@@ -43,8 +43,7 @@ public class PlayerCompanionDamageManager {
 
   private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
-  protected PlayerCompanionDamageManager() {
-  }
+  protected PlayerCompanionDamageManager() {}
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
@@ -108,13 +107,14 @@ public class PlayerCompanionDamageManager {
       // Collector and Follower Player companions could not be hurt by other players.
       if (attackedTamableAnimal instanceof PlayerCompanionEntity playerCompanionEntity
           && (playerCompanionEntity.getCompanionType() == PlayerCompanionType.COLLECTOR
-          || playerCompanionEntity.getCompanionType() == PlayerCompanionType.FOLLOWER)) {
+              || playerCompanionEntity.getCompanionType() == PlayerCompanionType.FOLLOWER)) {
         return false;
       }
     }
 
     // Avoid damage from other tamed animals with the same owner.
     return damageSourceEntity instanceof TamableAnimal tamableAnimal
-        && tamableAnimal.getOwner() != null && ownerUUID.equals(tamableAnimal.getOwner().getUUID());
+        && tamableAnimal.getOwner() != null
+        && ownerUUID.equals(tamableAnimal.getOwner().getUUID());
   }
 }

@@ -30,8 +30,10 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PlayerCompanionEntityFloating extends PlayerCompanionEntity {
 
-  public PlayerCompanionEntityFloating(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+  public PlayerCompanionEntityFloating(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityFloatingControl(this);
   }
@@ -42,8 +44,8 @@ public class PlayerCompanionEntityFloating extends PlayerCompanionEntity {
   }
 
   @Override
-  protected void checkFallDamage(double height, boolean flag, BlockState blockState,
-      BlockPos blockPos) {
+  protected void checkFallDamage(
+      double height, boolean flag, BlockState blockState, BlockPos blockPos) {
     // Ignore damage
   }
 
@@ -51,5 +53,4 @@ public class PlayerCompanionEntityFloating extends PlayerCompanionEntity {
   public boolean onClimbable() {
     return false;
   }
-
 }

@@ -60,50 +60,87 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
     PartDefinition partDefinition = meshDefinition.getRoot();
 
     // Body
-    PartDefinition body = partDefinition.addOrReplaceChild("body", CubeListBuilder.create()
-            .texOffs(0, 0).addBox(-1.5F, 4.0F, -4.0F, 3.0F, 2.0F, 7.0F, new CubeDeformation(0.0F)),
-        PartPose.offset(0.0F, 16.0F, 0.0F));
-    body.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(10, 12)
-            .addBox(-1.0F, -0.25F, -0.75F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
+    PartDefinition body =
+        partDefinition.addOrReplaceChild(
+            "body",
+            CubeListBuilder.create()
+                .texOffs(0, 0)
+                .addBox(-1.5F, 4.0F, -4.0F, 3.0F, 2.0F, 7.0F, new CubeDeformation(0.0F)),
+            PartPose.offset(0.0F, 16.0F, 0.0F));
+    body.addOrReplaceChild(
+        "tail",
+        CubeListBuilder.create()
+            .texOffs(10, 12)
+            .addBox(-1.0F, -0.25F, -0.75F, 2.0F, 1.0F, 4.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 0)
             .addBox(-0.5F, -0.25F, 3.25F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.0F, 4.75F, 3.0F));
 
     // Head with trill
-    PartDefinition head = partDefinition.addOrReplaceChild("head", CubeListBuilder.create()
-            .texOffs(0, 9).addBox(-1.5F, 2.0F, -5.0F, 3.0F, 3.0F, 4.0F, new CubeDeformation(0.01F)),
-        PartPose.offset(0.0F, 16.0F, -2.0F));
-    head.addOrReplaceChild("tongue", CubeListBuilder.create().texOffs(2, 0).addBox(-0.5F, -3.5F,
-        -8.0F, 1.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 8.0F, 2.0F));
-    PartDefinition trill = head.addOrReplaceChild("trill", CubeListBuilder.create(),
-        PartPose.offset(0.0F, 0.0F, 0.0F));
-    trill.addOrReplaceChild("trill_r1",
-        CubeListBuilder.create().texOffs(0, 3).addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 0.0F,
-            new CubeDeformation(0.0F)),
+    PartDefinition head =
+        partDefinition.addOrReplaceChild(
+            "head",
+            CubeListBuilder.create()
+                .texOffs(0, 9)
+                .addBox(-1.5F, 2.0F, -5.0F, 3.0F, 3.0F, 4.0F, new CubeDeformation(0.01F)),
+            PartPose.offset(0.0F, 16.0F, -2.0F));
+    head.addOrReplaceChild(
+        "tongue",
+        CubeListBuilder.create()
+            .texOffs(2, 0)
+            .addBox(-0.5F, -3.5F, -8.0F, 1.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)),
+        PartPose.offset(0.0F, 8.0F, 2.0F));
+    PartDefinition trill =
+        head.addOrReplaceChild(
+            "trill", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+    trill.addOrReplaceChild(
+        "trill_r1",
+        CubeListBuilder.create()
+            .texOffs(0, 3)
+            .addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(2.5F, 4.0F, -0.984F, 3.1416F, 0.0F, 0.3927F));
-    trill.addOrReplaceChild("trill_r2",
-        CubeListBuilder.create().texOffs(0, 3).addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 0.0F,
-            new CubeDeformation(0.0F)),
+    trill.addOrReplaceChild(
+        "trill_r2",
+        CubeListBuilder.create()
+            .texOffs(0, 3)
+            .addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(2.6531F, 2.3696F, -0.985F, 0.0F, 0.0F, -0.3927F));
-    trill.addOrReplaceChild("trill_r3",
-        CubeListBuilder.create().texOffs(0, 3).addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 0.0F,
-            new CubeDeformation(0.0F)),
+    trill.addOrReplaceChild(
+        "trill_r3",
+        CubeListBuilder.create()
+            .texOffs(0, 3)
+            .addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(-2.6435F, 2.3465F, -0.984F, 0.0F, 3.1416F, 0.3927F));
-    trill.addOrReplaceChild("trill_r4",
-        CubeListBuilder.create().texOffs(0, 3).addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 0.0F,
-            new CubeDeformation(0.0F)),
+    trill.addOrReplaceChild(
+        "trill_r4",
+        CubeListBuilder.create()
+            .texOffs(0, 3)
+            .addBox(-1.5F, -1.0F, 0.0F, 3.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(-2.5F, 4.0F, -0.985F, 3.1416F, 3.1416F, -0.3927F));
 
     // Legs
-    partDefinition.addOrReplaceChild("right_hind_leg", CubeListBuilder.create().texOffs(0, 9)
+    partDefinition.addOrReplaceChild(
+        "right_hind_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 9)
             .addBox(1.5F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-3.0F, 18.0F, 6.0F));
-    partDefinition.addOrReplaceChild("left_hind_leg", CubeListBuilder.create().texOffs(0, 9)
+    partDefinition.addOrReplaceChild(
+        "left_hind_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 9)
             .addBox(-0.5F, 4.0F, -4.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(1.0F, 18.0F, 6.0F));
-    partDefinition.addOrReplaceChild("right_front_leg", CubeListBuilder.create().texOffs(0, 9)
+    partDefinition.addOrReplaceChild(
+        "right_front_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 9)
             .addBox(1.5F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-3.0F, 18.0F, -1.0F));
-    partDefinition.addOrReplaceChild("left_front_leg", CubeListBuilder.create().texOffs(0, 9)
+    partDefinition.addOrReplaceChild(
+        "left_front_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 9)
             .addBox(-0.5F, 4.0F, -3.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offset(1.0F, 18.0F, -1.0F));
 
@@ -117,8 +154,8 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
 
   @Override
   protected Iterable<ModelPart> bodyParts() {
-    return java.util.List.of(this.body, this.leftFrontLeg, this.leftHindLeg, this.rightFrontLeg,
-        this.rightHindLeg);
+    return java.util.List.of(
+        this.body, this.leftFrontLeg, this.leftHindLeg, this.rightFrontLeg, this.rightHindLeg);
   }
 
   @Override
@@ -142,8 +179,13 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
   }
 
   @Override
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
+  public void setupAnim(
+      T entity,
+      float limbSwing,
+      float limbSwingAmount,
+      float ageInTicks,
+      float netHeadYaw,
+      float headPitch) {
 
     // Don't animate death entities
     if (entity.isDeadOrDying()) {
@@ -162,5 +204,4 @@ public class LizardModel<T extends TamableAnimal> extends AgeableListModel<T> {
           Mth.cos(limbSwing * 1.333F + (float) Math.PI) * 0.3F * limbSwingAmount;
     }
   }
-
 }

@@ -38,10 +38,6 @@ public class SnailItem extends CapturedCompanion {
     super(variant);
   }
 
-  public SnailItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Snail.FOOD_ITEMS;

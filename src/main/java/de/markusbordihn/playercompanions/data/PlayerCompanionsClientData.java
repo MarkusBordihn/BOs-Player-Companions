@@ -43,9 +43,7 @@ public class PlayerCompanionsClientData {
   private static final ConcurrentHashMap<UUID, PlayerCompanionData> playerCompanionsMap =
       new ConcurrentHashMap<>();
 
-  protected PlayerCompanionsClientData() {
-
-  }
+  protected PlayerCompanionsClientData() {}
 
   public static PlayerCompanionData getCompanion(ItemStack itemStack) {
     UUID companionUUID = null;
@@ -123,8 +121,8 @@ public class PlayerCompanionsClientData {
         log.debug("Update client player companion data for {} with {}", companionUUID, compoundTag);
         playerCompanionData.load(compoundTag);
       } else {
-        log.debug("Register client player companion data for {} with {}", companionUUID,
-            compoundTag);
+        log.debug(
+            "Register client player companion data for {} with {}", companionUUID, compoundTag);
         PlayerCompanionData playerCompanion = new PlayerCompanionData(compoundTag);
         loadPlayerCompanionData(playerCompanion);
       }
@@ -136,5 +134,4 @@ public class PlayerCompanionsClientData {
       playerCompanionsMap.put(playerCompanion.getUUID(), playerCompanion);
     }
   }
-
 }

@@ -34,11 +34,22 @@ public class DefaultCompanionMenu extends CompanionMenu {
     super(ModMenuTypes.DEFAULT_COMPANION_MENU.get(), windowId, inventory, playerCompanionUUID);
   }
 
-  public DefaultCompanionMenu(int windowId, Inventory playerInventory, Container armorContainer,
-      Container equipmentContainer, Container handContainer, Container inventoryContainer,
+  public DefaultCompanionMenu(
+      int windowId,
+      Inventory playerInventory,
+      Container armorContainer,
+      Container equipmentContainer,
+      Container handContainer,
+      Container inventoryContainer,
       UUID playerCompanionUUID) {
-    super(ModMenuTypes.DEFAULT_COMPANION_MENU.get(), windowId, playerInventory, armorContainer,
-        equipmentContainer, handContainer, inventoryContainer, playerCompanionUUID);
+    super(
+        ModMenuTypes.DEFAULT_COMPANION_MENU.get(),
+        windowId,
+        playerInventory,
+        armorContainer,
+        equipmentContainer,
+        handContainer,
+        inventoryContainer,
+        playerCompanionUUID);
   }
-
 }

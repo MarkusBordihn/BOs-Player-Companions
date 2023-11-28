@@ -30,6 +30,7 @@ public enum AggressionLevel {
   AGGRESSIVE_PLAYERS,
   AGGRESSIVE_ALL,
   UNKNOWN;
+
   // @formatter:on
 
   public static AggressionLevel get(String aggressionLevel) {

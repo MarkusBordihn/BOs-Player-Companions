@@ -42,49 +42,83 @@ public class SpawnHandler {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected SpawnHandler() {
-  }
+  protected SpawnHandler() {}
 
   @SubscribeEvent
   public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
     log.info("{} Spawn Placements ...", Constants.LOG_REGISTER_PREFIX);
 
-    event.register(ModEntityType.DOBUTSU.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Dobutsu::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.DOBUTSU.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Dobutsu::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.FAIRY.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Fairy::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.FAIRY.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Fairy::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.FIREFLY.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Firefly::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.FIREFLY.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Firefly::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.LIZARD.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Lizard::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.LIZARD.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Lizard::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.PIG.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.PIG.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Animal::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.RAPTOR.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.RAPTOR.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Animal::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.ROOSTER.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.ROOSTER.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Animal::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.SAMURAI.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.SAMURAI.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Animal::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.SMALL_GHAST.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SmallGhast::checkGhastSpawnRules,
+    event.register(
+        ModEntityType.SMALL_GHAST.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        SmallGhast::checkGhastSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.SMALL_SLIME.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SmallSlime::checkMobSpawnRules,
+    event.register(
+        ModEntityType.SMALL_SLIME.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        SmallSlime::checkMobSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.SNAIL.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Snail::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.SNAIL.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Snail::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
-    event.register(ModEntityType.WELSH_CORGI.get(), SpawnPlacements.Type.ON_GROUND,
-        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Snail::checkAnimalSpawnRules,
+    event.register(
+        ModEntityType.WELSH_CORGI.get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        Snail::checkAnimalSpawnRules,
         SpawnPlacementRegisterEvent.Operation.OR);
   }
-
 }

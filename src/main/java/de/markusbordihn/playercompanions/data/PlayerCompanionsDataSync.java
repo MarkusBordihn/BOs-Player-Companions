@@ -81,5 +81,4 @@ public interface PlayerCompanionsDataSync {
   default PlayerCompanionsServerData getServerData() {
     return PlayerCompanionsServerData.get();
   }
-
 }

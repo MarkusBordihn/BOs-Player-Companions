@@ -43,25 +43,28 @@ public class AvoidCreeperGoal extends PlayerCompanionGoal {
   private final double walkSpeedModifier;
   private final double sprintSpeedModifier;
   private final TargetingConditions avoidEntityTargeting;
-  @Nullable
-  protected Creeper creeperToAvoid;
-  @Nullable
-  protected Path path;
+  @Nullable protected Creeper creeperToAvoid;
+  @Nullable protected Path path;
 
   public AvoidCreeperGoal(PlayerCompanionEntity playerCompanionEntity) {
     this(playerCompanionEntity, 5.0F, 1.0D, 1.0D);
   }
 
-  public AvoidCreeperGoal(PlayerCompanionEntity playerCompanionEntity, float maxDist,
-      double walkSpeedModifier, double sprintSpeedModifier) {
+  public AvoidCreeperGoal(
+      PlayerCompanionEntity playerCompanionEntity,
+      float maxDist,
+      double walkSpeedModifier,
+      double sprintSpeedModifier) {
     super(playerCompanionEntity);
     this.maxDist = maxDist;
     this.walkSpeedModifier = walkSpeedModifier;
     this.sprintSpeedModifier = sprintSpeedModifier;
     this.pathNav = playerCompanionEntity.getNavigation();
     this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-    this.avoidEntityTargeting = TargetingConditions.forCombat().range(maxDist)
-        .selector(AvoidCreeperGoal.predicateOnAvoidEntity.and(AvoidCreeperGoal.avoidPredicate));
+    this.avoidEntityTargeting =
+        TargetingConditions.forCombat()
+            .range(maxDist)
+            .selector(AvoidCreeperGoal.predicateOnAvoidEntity.and(AvoidCreeperGoal.avoidPredicate));
   }
 
   @Override
@@ -70,23 +73,32 @@ public class AvoidCreeperGoal extends PlayerCompanionGoal {
       return false;
     }
     this.creeperToAvoid =
-        this.playerCompanionEntity.level().getNearestEntity(
-            this.playerCompanionEntity.level().getEntitiesOfClass(Creeper.class,
-                this.playerCompanionEntity.getBoundingBox().inflate(this.maxDist, 3.0D,
-                    this.maxDist),
-                creeper -> true),
-            this.avoidEntityTargeting, this.playerCompanionEntity,
-            this.playerCompanionEntity.getX(), this.playerCompanionEntity.getY(),
-            this.playerCompanionEntity.getZ());
+        this.playerCompanionEntity
+            .level()
+            .getNearestEntity(
+                this.playerCompanionEntity
+                    .level()
+                    .getEntitiesOfClass(
+                        Creeper.class,
+                        this.playerCompanionEntity
+                            .getBoundingBox()
+                            .inflate(this.maxDist, 3.0D, this.maxDist),
+                        creeper -> true),
+                this.avoidEntityTargeting,
+                this.playerCompanionEntity,
+                this.playerCompanionEntity.getX(),
+                this.playerCompanionEntity.getY(),
+                this.playerCompanionEntity.getZ());
     if (this.creeperToAvoid == null) {
       return false;
     } else {
-      Vec3 vec3 = DefaultRandomPos.getPosAway(this.playerCompanionEntity, 16, 7,
-          this.creeperToAvoid.position());
+      Vec3 vec3 =
+          DefaultRandomPos.getPosAway(
+              this.playerCompanionEntity, 16, 7, this.creeperToAvoid.position());
       if (vec3 == null) {
         return false;
-      } else if (this.creeperToAvoid.distanceToSqr(vec3.x, vec3.y, vec3.z) < this.creeperToAvoid
-          .distanceToSqr(this.playerCompanionEntity)) {
+      } else if (this.creeperToAvoid.distanceToSqr(vec3.x, vec3.y, vec3.z)
+          < this.creeperToAvoid.distanceToSqr(this.playerCompanionEntity)) {
         return false;
       } else {
         this.path = this.pathNav.createPath(vec3.x, vec3.y, vec3.z, 0);

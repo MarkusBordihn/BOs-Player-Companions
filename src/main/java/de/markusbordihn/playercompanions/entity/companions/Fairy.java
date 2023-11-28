@@ -19,7 +19,6 @@
 
 package de.markusbordihn.playercompanions.entity.companions;
 
-import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionNames;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
@@ -59,8 +58,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class Fairy extends HealerEntityFlyingAround {
 
@@ -69,24 +66,28 @@ public class Fairy extends HealerEntityFlyingAround {
   public static final String NAME = "Fairy";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.CAKE, Items.COOKIE);
   // Variants
-  public static final List<PlayerCompanionVariant> VARIANTS = List
-      .of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.BLUE, PlayerCompanionVariant.RED);
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  public static final List<PlayerCompanionVariant> VARIANTS =
+      List.of(
+          PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.BLUE, PlayerCompanionVariant.RED);
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.FAIRY_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.BLUE, ModItems.FAIRY_BLUE.get());
-        hashMap.put(PlayerCompanionVariant.RED, ModItems.FAIRY_RED.get());
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.FAIRY_DEFAULT.get());
+            hashMap.put(PlayerCompanionVariant.BLUE, ModItems.FAIRY_BLUE.get());
+            hashMap.put(PlayerCompanionVariant.RED, ModItems.FAIRY_RED.get());
+          });
 
   public Fairy(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.4F)
-        .add(Attributes.FLYING_SPEED, 0.4F).add(Attributes.MAX_HEALTH, 10.0D)
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.4F)
+        .add(Attributes.FLYING_SPEED, 0.4F)
+        .add(Attributes.MAX_HEALTH, 10.0D)
         .add(Attributes.ATTACK_DAMAGE, 1.0D);
   }
 
@@ -210,5 +211,4 @@ public class Fairy extends HealerEntityFlyingAround {
     super.tick();
     this.increaseRideCooldownCounter();
   }
-
 }

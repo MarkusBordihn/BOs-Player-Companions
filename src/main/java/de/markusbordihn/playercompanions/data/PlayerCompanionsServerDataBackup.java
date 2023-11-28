@@ -36,14 +36,14 @@ import org.apache.logging.log4j.Logger;
 public class PlayerCompanionsServerDataBackup {
 
   public static final File BACKUP_FOLDER =
-      new File(ServerLifecycleHooks.getCurrentServer().getWorldPath(LevelResource.ROOT).toFile(),
+      new File(
+          ServerLifecycleHooks.getCurrentServer().getWorldPath(LevelResource.ROOT).toFile(),
           Constants.MOD_ID);
   public static final String BACKUP_FILE_NAME = "player_companions_data.nbt";
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   private static CompoundTag lastBackupCompoundTag = null;
 
-  protected PlayerCompanionsServerDataBackup() {
-  }
+  protected PlayerCompanionsServerDataBackup() {}
 
   public static boolean saveBackup() {
     CompoundTag compoundTag = new CompoundTag();
@@ -60,8 +60,12 @@ public class PlayerCompanionsServerDataBackup {
       log.warn("{} skipping Backup, because data are empty!", Constants.LOG_ICON_NAME);
       return false;
     }
-    File file = new File(BACKUP_FOLDER.getAbsoluteFile(),
-        new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + "-" + BACKUP_FILE_NAME);
+    File file =
+        new File(
+            BACKUP_FOLDER.getAbsoluteFile(),
+            new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date())
+                + "-"
+                + BACKUP_FILE_NAME);
     log.info("{} creating Backup {} ...", Constants.LOG_ICON_NAME, file.getName());
     try {
       if (!file.getParentFile().exists()) {
@@ -128,5 +132,4 @@ public class PlayerCompanionsServerDataBackup {
     }
     return backupFiles;
   }
-
 }

@@ -34,22 +34,21 @@ public class CommandManager {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected CommandManager() {
-  }
+  protected CommandManager() {}
 
   @SubscribeEvent
   public static void handleRegisterCommandsEvent(RegisterCommandsEvent event) {
     log.info("Registering {} commands ...", Constants.MOD_COMMAND);
     CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
-    commandDispatcher.register(Commands.literal(Constants.MOD_COMMAND)
+    commandDispatcher.register(
+        Commands.literal(Constants.MOD_COMMAND)
             // @formatter:off
-        .then(BackupCommand.register())
-        .then(ListCommand.register())
-        .then(OverviewCommand.register())
-        .then(SummonCommand.register())
-        .then(VersionCommand.register())
-      // @formatter:on
-    );
+            .then(BackupCommand.register())
+            .then(ListCommand.register())
+            .then(OverviewCommand.register())
+            .then(SummonCommand.register())
+            .then(VersionCommand.register())
+        // @formatter:on
+        );
   }
-
 }

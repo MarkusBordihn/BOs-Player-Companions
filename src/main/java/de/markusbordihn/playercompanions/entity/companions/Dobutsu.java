@@ -59,16 +59,20 @@ public class Dobutsu extends FollowerEntityWalking {
 
   // Variants
   public static final List<PlayerCompanionVariant> VARIANTS =
-      List.of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.CREEPER,
+      List.of(
+          PlayerCompanionVariant.DEFAULT,
+          PlayerCompanionVariant.CREEPER,
           PlayerCompanionVariant.ENDERMAN);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.DOBUTSU_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.CREEPER, ModItems.DOBUTSU_CREEPER.get());
-        hashMap.put(PlayerCompanionVariant.ENDERMAN, ModItems.DOBUTSU_ENDERMAN.get());
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.DOBUTSU_DEFAULT.get());
+            hashMap.put(PlayerCompanionVariant.CREEPER, ModItems.DOBUTSU_CREEPER.get());
+            hashMap.put(PlayerCompanionVariant.ENDERMAN, ModItems.DOBUTSU_ENDERMAN.get());
+          });
 
   public Dobutsu(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
@@ -76,8 +80,10 @@ public class Dobutsu extends FollowerEntityWalking {
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.ATTACK_DAMAGE, 0.5D);
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.MAX_HEALTH, 16.0D)
+        .add(Attributes.ATTACK_DAMAGE, 0.5D);
   }
 
   @Override
@@ -137,5 +143,4 @@ public class Dobutsu extends FollowerEntityWalking {
   public int getEntityGuiTop() {
     return 24;
   }
-
 }

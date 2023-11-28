@@ -38,10 +38,6 @@ public class DobutsuItem extends CapturedCompanion {
     super(variant);
   }
 
-  public DobutsuItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Dobutsu.FOOD_ITEMS;

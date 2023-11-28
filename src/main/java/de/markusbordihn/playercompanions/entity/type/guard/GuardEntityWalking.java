@@ -36,12 +36,19 @@ import net.minecraft.world.level.Level;
 public class GuardEntityWalking extends PlayerCompanionEntityWalking {
 
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
-      EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE, AggressionLevel.NEUTRAL,
-          AggressionLevel.AGGRESSIVE, AggressionLevel.AGGRESSIVE_MONSTER,
-          AggressionLevel.AGGRESSIVE_ANIMALS, AggressionLevel.AGGRESSIVE_PLAYERS);
-  protected GuardFeatures guardFeatures;
+      EnumSet.of(
+          AggressionLevel.PASSIVE_FLEE,
+          AggressionLevel.PASSIVE,
+          AggressionLevel.NEUTRAL,
+          AggressionLevel.AGGRESSIVE,
+          AggressionLevel.AGGRESSIVE_MONSTER,
+          AggressionLevel.AGGRESSIVE_ANIMALS,
+          AggressionLevel.AGGRESSIVE_PLAYERS);
+  protected final GuardFeatures guardFeatures;
 
-  public GuardEntityWalking(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
+  public GuardEntityWalking(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.setAggressionLevel(getDefaultAggressionLevel());
@@ -91,5 +98,4 @@ public class GuardEntityWalking extends PlayerCompanionEntityWalking {
     super.tick();
     this.guardFeatures.tick();
   }
-
 }

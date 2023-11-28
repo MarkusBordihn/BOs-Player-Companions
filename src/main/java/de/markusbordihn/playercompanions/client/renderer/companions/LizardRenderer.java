@@ -38,14 +38,20 @@ public class LizardRenderer extends MobRenderer<Lizard, LizardModel<Lizard>> {
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_default.png"));
-        hashMap.put(PlayerCompanionVariant.DESERT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_desert.png"));
-        hashMap.put(PlayerCompanionVariant.GREEN,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_green.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/lizard/lizard_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.DESERT,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_desert.png"));
+            hashMap.put(
+                PlayerCompanionVariant.GREEN,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/lizard/lizard_green.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -57,5 +63,4 @@ public class LizardRenderer extends MobRenderer<Lizard, LizardModel<Lizard>> {
   public ResourceLocation getTextureLocation(Lizard entity) {
     return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
   }
-
 }

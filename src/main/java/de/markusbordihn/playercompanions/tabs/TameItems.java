@@ -26,8 +26,7 @@ import net.minecraft.world.item.CreativeModeTab.Output;
 
 public class TameItems implements DisplayItemsGenerator {
 
-  protected TameItems() {
-  }
+  protected TameItems() {}
 
   @Override
   public void accept(ItemDisplayParameters itemDisplayParameters, Output output) {

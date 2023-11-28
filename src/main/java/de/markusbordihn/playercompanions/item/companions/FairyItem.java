@@ -38,10 +38,6 @@ public class FairyItem extends CapturedCompanion {
     super(variant);
   }
 
-  public FairyItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Fairy.FOOD_ITEMS;

@@ -66,5 +66,4 @@ public enum PlayerCompanionVariant {
   public String getSuffix() {
     return "_" + this.name().toLowerCase();
   }
-
 }

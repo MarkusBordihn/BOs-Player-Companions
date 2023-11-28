@@ -37,9 +37,11 @@ public class HealerEntityFlying extends PlayerCompanionEntityFlying {
 
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
-  protected HealerFeatures healerFeatures;
+  protected final HealerFeatures healerFeatures;
 
-  public HealerEntityFlying(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
+  public HealerEntityFlying(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.setAggressionLevel(getDefaultAggressionLevel());
@@ -83,5 +85,4 @@ public class HealerEntityFlying extends PlayerCompanionEntityFlying {
     super.tick();
     this.healerFeatures.tick();
   }
-
 }

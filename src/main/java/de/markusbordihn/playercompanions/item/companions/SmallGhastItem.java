@@ -38,10 +38,6 @@ public class SmallGhastItem extends CapturedCompanion {
     super(variant);
   }
 
-  public SmallGhastItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return SmallGhast.FOOD_ITEMS;
@@ -51,5 +47,4 @@ public class SmallGhastItem extends CapturedCompanion {
   public EntityType<SmallGhast> getEntityType() {
     return ModEntityType.SMALL_GHAST.get();
   }
-
 }

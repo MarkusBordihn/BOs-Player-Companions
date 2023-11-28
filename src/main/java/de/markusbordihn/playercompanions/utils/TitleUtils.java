@@ -31,13 +31,14 @@ public class TitleUtils {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  public static final void setTitle(String title, String subTitle, ServerPlayer serverPlayer) {
-    setTitle(title != null && !title.isBlank() ? Component.literal(title) : null,
-        subTitle != null ? Component.literal(subTitle) : null, serverPlayer);
+  public static void setTitle(String title, String subTitle, ServerPlayer serverPlayer) {
+    setTitle(
+        title != null && !title.isBlank() ? Component.literal(title) : null,
+        subTitle != null ? Component.literal(subTitle) : null,
+        serverPlayer);
   }
 
-  public static final void setTitle(Component title, Component subTitle,
-      ServerPlayer serverPlayer) {
+  public static void setTitle(Component title, Component subTitle, ServerPlayer serverPlayer) {
     if (subTitle != null) {
       serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(subTitle));
     }
@@ -45,5 +46,4 @@ public class TitleUtils {
       serverPlayer.connection.send(new ClientboundSetTitleTextPacket(title));
     }
   }
-
 }

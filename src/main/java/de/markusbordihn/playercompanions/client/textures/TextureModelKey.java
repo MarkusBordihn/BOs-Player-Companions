@@ -17,7 +17,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 package de.markusbordihn.playercompanions.client.textures;
 
 import de.markusbordihn.playercompanions.skin.SkinModel;
@@ -74,5 +73,4 @@ public class TextureModelKey {
 
     return this.uuid.equals(textureModelKey.uuid) && this.subType.equals(textureModelKey.subType);
   }
-
 }

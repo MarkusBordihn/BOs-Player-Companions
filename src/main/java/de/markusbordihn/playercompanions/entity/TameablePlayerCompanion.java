@@ -28,12 +28,11 @@ import net.minecraft.world.item.ItemStack;
 
 public interface TameablePlayerCompanion {
 
-  InteractionResult tamePlayerCompanion(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand);
+  InteractionResult tamePlayerCompanion(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand);
 
-  default boolean canTamePlayerCompanion(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand) {
+  default boolean canTamePlayerCompanion(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand) {
     return itemStack.getItem() instanceof CompanionTameItem;
   }
-
 }

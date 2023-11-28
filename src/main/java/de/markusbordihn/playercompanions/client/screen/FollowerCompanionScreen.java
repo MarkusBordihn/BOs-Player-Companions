@@ -35,8 +35,8 @@ public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMe
   private static final ResourceLocation TEXTURE =
       new ResourceLocation(Constants.MOD_ID, "textures/container/player_companion_follower.png");
 
-  public FollowerCompanionScreen(FollowerCompanionMenu menu, Inventory inventory,
-      Component component) {
+  public FollowerCompanionScreen(
+      FollowerCompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component, TEXTURE);
   }
 
@@ -46,11 +46,15 @@ public class FollowerCompanionScreen extends CompanionScreen<FollowerCompanionMe
 
     if (entity instanceof PlayerCompanionEntity playerCompanionEntity
         && playerCompanionEntity.enableCustomTextureSkin()) {
-      this.addRenderableWidget(Button.builder(Component.translatable("Texture Settings"), event -> {
-        this.showTextureSettings(true);
-        this.setFocused(null);
-      }).bounds(this.leftPos + 5, this.topPos + 107, 108, 20).build());
+      this.addRenderableWidget(
+          Button.builder(
+                  Component.translatable("Texture Settings"),
+                  event -> {
+                    this.showTextureSettings(true);
+                    this.setFocused(null);
+                  })
+              .bounds(this.leftPos + 5, this.topPos + 107, 108, 20)
+              .build());
     }
   }
-
 }

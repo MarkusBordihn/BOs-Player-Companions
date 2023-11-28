@@ -61,75 +61,121 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
     MeshDefinition meshDefinition = new MeshDefinition();
     PartDefinition partDefinition = meshDefinition.getRoot();
 
-    PartDefinition body = partDefinition.addOrReplaceChild("body", CubeListBuilder.create()
-            .texOffs(24, 0).addBox(-3.0F, -3.0F, -6.0F, 6.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)),
-        PartPose.offset(0.0F, 16.0F, 0.0F));
+    PartDefinition body =
+        partDefinition.addOrReplaceChild(
+            "body",
+            CubeListBuilder.create()
+                .texOffs(24, 0)
+                .addBox(-3.0F, -3.0F, -6.0F, 6.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)),
+            PartPose.offset(0.0F, 16.0F, 0.0F));
 
-    body.addOrReplaceChild("body_r1", CubeListBuilder.create().texOffs(10, 14)
-            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(24, 7)
-            .addBox(-2.0F, 4.0F, 0.0F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(0, 27)
-            .addBox(-3.0F, -2.0F, -5.0F, 6.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(18, 24)
-            .addBox(-3.0F, -3.0F, -4.0F, 6.0F, 5.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 0)
+    body.addOrReplaceChild(
+        "body_r1",
+        CubeListBuilder.create()
+            .texOffs(10, 14)
+            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
+            .texOffs(24, 7)
+            .addBox(-2.0F, 4.0F, 0.0F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 27)
+            .addBox(-3.0F, -2.0F, -5.0F, 6.0F, 4.0F, 1.0F, new CubeDeformation(0.0F))
+            .texOffs(18, 24)
+            .addBox(-3.0F, -3.0F, -4.0F, 6.0F, 5.0F, 1.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 0)
             .addBox(-3.0F, -4.0F, -3.0F, 6.0F, 8.0F, 6.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.5708F, 0.0F, 0.0F));
 
     PartDefinition tail =
         body.addOrReplaceChild("tail", CubeListBuilder.create(), PartPose.offset(0.0F, 8.0F, 0.0F));
 
-    tail.addOrReplaceChild("tail_r1",
-        CubeListBuilder.create().texOffs(18, 0)
-            .addBox(-1.0F, -4.5F, 0.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(11, 29)
+    tail.addOrReplaceChild(
+        "tail_r1",
+        CubeListBuilder.create()
+            .texOffs(18, 0)
+            .addBox(-1.0F, -4.5F, 0.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
+            .texOffs(11, 29)
             .addBox(-1.0F, -1.5F, -1.0F, 2.0F, 5.0F, 3.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(0.0F, -12.5F, 6.5F, -0.3927F, 0.0F, 0.0F));
 
-    tail.addOrReplaceChild("tail_r2",
-        CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -0.75F, 1.075F, 2.0F, 3.0F, 1.0F,
-            new CubeDeformation(0.0F)),
+    tail.addOrReplaceChild(
+        "tail_r2",
+        CubeListBuilder.create()
+            .texOffs(0, 0)
+            .addBox(-1.0F, -0.75F, 1.075F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(0.0F, -15.0F, 8.5F, -0.7854F, 0.0F, 0.0F));
 
-    tail.addOrReplaceChild("tail_r3",
-        CubeListBuilder.create().texOffs(10, 18).addBox(-1.0F, -1.0F, -1.05F, 2.0F, 3.0F, 1.0F,
-            new CubeDeformation(0.0F)),
+    tail.addOrReplaceChild(
+        "tail_r3",
+        CubeListBuilder.create()
+            .texOffs(10, 18)
+            .addBox(-1.0F, -1.0F, -1.05F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(0.0F, -15.1924F, 6.5328F, 0.3927F, 0.0F, 0.0F));
 
-    PartDefinition head = partDefinition.addOrReplaceChild("head",
-        CubeListBuilder.create().texOffs(18, 14).addBox(-2.002F, -6.0F, -2.002F, 4.0F, 6.0F, 4.0F,
-            new CubeDeformation(0.0F)),
-        PartPose.offset(0.0F, 14.0F, -4.0F));
+    PartDefinition head =
+        partDefinition.addOrReplaceChild(
+            "head",
+            CubeListBuilder.create()
+                .texOffs(18, 14)
+                .addBox(-2.002F, -6.0F, -2.002F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.0F)),
+            PartPose.offset(0.0F, 14.0F, -4.0F));
 
-    head.addOrReplaceChild("feather_r1",
-        CubeListBuilder.create().texOffs(30, 14)
-            .addBox(-0.5F, -1.5F, 0.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(21, 30)
+    head.addOrReplaceChild(
+        "feather_r1",
+        CubeListBuilder.create()
+            .texOffs(30, 14)
+            .addBox(-0.5F, -1.5F, 0.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
+            .texOffs(21, 30)
             .addBox(-0.5F, -0.5F, -0.5F, 1.0F, 3.0F, 4.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(0.0F, -7.5F, -0.5F, -0.3927F, 0.0F, 0.0F));
 
-    head.addOrReplaceChild("comb", CubeListBuilder.create().texOffs(0, 18).addBox(-1.0F, -2.0F,
-        -3.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+    head.addOrReplaceChild(
+        "comb",
+        CubeListBuilder.create()
+            .texOffs(0, 18)
+            .addBox(-1.0F, -2.0F, -3.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
 
-    head.addOrReplaceChild("beak", CubeListBuilder.create().texOffs(0, 14).addBox(-1.0F, -4.0F,
-        -4.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+    head.addOrReplaceChild(
+        "beak",
+        CubeListBuilder.create()
+            .texOffs(0, 14)
+            .addBox(-1.0F, -4.0F, -4.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)),
+        PartPose.offset(0.0F, 0.0F, 0.0F));
 
-    partDefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(29, 27)
+    partDefinition.addOrReplaceChild(
+        "right_leg",
+        CubeListBuilder.create()
+            .texOffs(29, 27)
             .addBox(-1.0F, 2.0F, -3.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-2.0F, 19.0F, 1.0F));
 
-    partDefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(29, 27)
+    partDefinition.addOrReplaceChild(
+        "left_leg",
+        CubeListBuilder.create()
+            .texOffs(29, 27)
             .addBox(-1.0F, 2.0F, -3.0F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)),
         PartPose.offset(1.0F, 19.0F, 1.0F));
 
-    PartDefinition rightWing = partDefinition.addOrReplaceChild("right_wing",
-        CubeListBuilder.create(), PartPose.offset(-3.0F, 13.0F, 0.0F));
+    PartDefinition rightWing =
+        partDefinition.addOrReplaceChild(
+            "right_wing", CubeListBuilder.create(), PartPose.offset(-3.0F, 13.0F, 0.0F));
 
-    rightWing.addOrReplaceChild("wing0_r1",
-        CubeListBuilder.create().texOffs(0, 14).addBox(-0.5F, -2.5F, -4.0F, 1.0F, 5.0F, 8.0F,
-            new CubeDeformation(0.0F)),
+    rightWing.addOrReplaceChild(
+        "wing0_r1",
+        CubeListBuilder.create()
+            .texOffs(0, 14)
+            .addBox(-0.5F, -2.5F, -4.0F, 1.0F, 5.0F, 8.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(-0.5F, 2.5F, 1.0F, 3.1416F, 3.1416F, 0.0F));
 
-    partDefinition.addOrReplaceChild("left_wing", CubeListBuilder.create().texOffs(0, 14)
+    partDefinition.addOrReplaceChild(
+        "left_wing",
+        CubeListBuilder.create()
+            .texOffs(0, 14)
             .addBox(0.0F, 0.0F, -3.0F, 1.0F, 5.0F, 8.0F, new CubeDeformation(0.0F)),
         PartPose.offset(3.0F, 13.0F, 0.0F));
 
-    partDefinition.addOrReplaceChild("right_hand", CubeListBuilder.create(),
+    partDefinition.addOrReplaceChild(
+        "right_hand",
+        CubeListBuilder.create(),
         PartPose.offsetAndRotation(-0.2F, 0.4F, 0.3F, -120.0F, 180.0F, 0.0F));
 
     return LayerDefinition.create(meshDefinition, 64, 64);
@@ -172,8 +218,13 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
   }
 
   @Override
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
+  public void setupAnim(
+      T entity,
+      float limbSwing,
+      float limbSwingAmount,
+      float ageInTicks,
+      float netHeadYaw,
+      float headPitch) {
 
     // Don't animate death entities
     if (entity.isDeadOrDying()) {
@@ -189,5 +240,4 @@ public class RoosterModel<T extends TamableAnimal> extends AgeableListModel<T>
       this.leftWing.zRot = -ageInTicks;
     }
   }
-
 }

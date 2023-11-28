@@ -38,10 +38,6 @@ public class SmallSlimeItem extends CapturedCompanion {
     super(variant);
   }
 
-  public SmallSlimeItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return SmallSlime.FOOD_ITEMS;
@@ -51,5 +47,4 @@ public class SmallSlimeItem extends CapturedCompanion {
   public EntityType<SmallSlime> getEntityType() {
     return ModEntityType.SMALL_SLIME.get();
   }
-
 }

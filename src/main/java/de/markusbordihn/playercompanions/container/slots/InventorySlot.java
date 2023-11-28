@@ -54,5 +54,4 @@ public class InventorySlot extends Slot {
     Item item = itemStack.getItem();
     return (!(item instanceof CapturedCompanion) && !(item instanceof CompanionTameItem));
   }
-
 }

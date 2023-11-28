@@ -31,23 +31,24 @@ public class ModMenuTypes {
   public static final DeferredRegister<MenuType<?>> MENU_TYPES =
       DeferredRegister.create(ForgeRegistries.MENU_TYPES, Constants.MOD_ID);
 
-  protected ModMenuTypes() {
-  }
+  protected ModMenuTypes() {}
 
-  public static final RegistryObject<MenuType<CompanionMenu>> DEFAULT_COMPANION_MENU = MENU_TYPES
-      .register("default_companion_menu", () -> IForgeMenuType.create(DefaultCompanionMenu::new));
+  public static final RegistryObject<MenuType<CompanionMenu>> DEFAULT_COMPANION_MENU =
+      MENU_TYPES.register(
+          "default_companion_menu", () -> IForgeMenuType.create(DefaultCompanionMenu::new));
   public static final RegistryObject<MenuType<CollectorCompanionMenu>> COLLECTOR_COMPANION_MENU =
-      MENU_TYPES.register("collector_companion_menu",
-          () -> IForgeMenuType.create(CollectorCompanionMenu::new));
+      MENU_TYPES.register(
+          "collector_companion_menu", () -> IForgeMenuType.create(CollectorCompanionMenu::new));
   public static final RegistryObject<MenuType<FollowerCompanionMenu>> FOLLOWER_COMPANION_MENU =
-      MENU_TYPES.register("follower_companion_menu",
-          () -> IForgeMenuType.create(FollowerCompanionMenu::new));
-  public static final RegistryObject<MenuType<GuardCompanionMenu>> GUARD_COMPANION_MENU = MENU_TYPES
-      .register("guard_companion_menu", () -> IForgeMenuType.create(GuardCompanionMenu::new));
+      MENU_TYPES.register(
+          "follower_companion_menu", () -> IForgeMenuType.create(FollowerCompanionMenu::new));
+  public static final RegistryObject<MenuType<GuardCompanionMenu>> GUARD_COMPANION_MENU =
+      MENU_TYPES.register(
+          "guard_companion_menu", () -> IForgeMenuType.create(GuardCompanionMenu::new));
   public static final RegistryObject<MenuType<HealerCompanionMenu>> HEALER_COMPANION_MENU =
-      MENU_TYPES.register("healer_companion_menu",
-          () -> IForgeMenuType.create(HealerCompanionMenu::new));
+      MENU_TYPES.register(
+          "healer_companion_menu", () -> IForgeMenuType.create(HealerCompanionMenu::new));
   public static final RegistryObject<MenuType<SupporterCompanionMenu>> SUPPORTER_COMPANION_MENU =
-      MENU_TYPES.register("supporter_companion_menu",
-          () -> IForgeMenuType.create(SupporterCompanionMenu::new));
+      MENU_TYPES.register(
+          "supporter_companion_menu", () -> IForgeMenuType.create(SupporterCompanionMenu::new));
 }

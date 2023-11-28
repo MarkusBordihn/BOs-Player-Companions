@@ -20,6 +20,8 @@
 package de.markusbordihn.playercompanions.item;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.TameablePlayerCompanion;
 import de.markusbordihn.playercompanions.text.TranslatableText;
@@ -52,6 +54,7 @@ import org.apache.logging.log4j.Logger;
 public class CompanionTameItem extends Item {
 
   public static final Set<String> TAMEABLE_MOB_TYPES = Collections.emptySet();
+  protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public CompanionTameItem() {
@@ -62,8 +65,8 @@ public class CompanionTameItem extends Item {
     super(properties);
   }
 
-  public void convertEntityToItem(Item companionItem, ServerPlayer serverPlayer,
-      LivingEntity livingEntity, Level level) {
+  public void convertEntityToItem(
+      Item companionItem, ServerPlayer serverPlayer, LivingEntity livingEntity, Level level) {
 
     // Capture mob inside item.
     log.debug("Capturing mob {} for {} with {}", livingEntity, serverPlayer, companionItem);
@@ -89,46 +92,60 @@ public class CompanionTameItem extends Item {
     }
 
     // Confirm that the item is in the players inventory or drop the item near the player.
-    if (gavePlayerItemStack && !playerInventory.getItem(freeInventorySlot).isEmpty()
+    if (gavePlayerItemStack
+        && !playerInventory.getItem(freeInventorySlot).isEmpty()
         && playerInventory.getItem(freeInventorySlot).getItem() instanceof CapturedCompanion
         && CapturedCompanion.getCompanionUUID(playerInventory.getItem(freeInventorySlot))
-        .equals(livingEntity.getUUID())) {
-      log.info("Gave player {} captured companion item {} in slot {} with {}.", serverPlayer,
-          playerInventory.getItem(freeInventorySlot), freeInventorySlot, companionItem);
+            .equals(livingEntity.getUUID())) {
+      log.info(
+          "Gave player {} captured companion item {} in slot {} with {}.",
+          serverPlayer,
+          playerInventory.getItem(freeInventorySlot),
+          freeInventorySlot,
+          companionItem);
       TitleUtils.setTitle(
-          Component.translatable(Constants.TEXT_PREFIX + "captured_companion_title",
+          Component.translatable(
+              Constants.TEXT_PREFIX + "captured_companion_title",
               livingEntity.getName().getString()),
-          Component.translatable(Constants.TEXT_PREFIX + "captured_companion_subtitle_inventory",
-              freeInventorySlot).withStyle(ChatFormatting.GRAY),
+          Component.translatable(
+                  Constants.TEXT_PREFIX + "captured_companion_subtitle_inventory",
+                  freeInventorySlot)
+              .withStyle(ChatFormatting.GRAY),
           serverPlayer);
     } else {
       BlockPos blockPos = livingEntity.blockPosition();
       if (!level.addFreshEntity(
           new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), itemStack))) {
-        log.error("Unable to give item {} to player {} or to drop it to the world {}!", itemStack,
-            serverPlayer, level);
+        log.error(
+            "Unable to give item {} to player {} or to drop it to the world {}!",
+            itemStack,
+            serverPlayer,
+            level);
         return;
       } else {
         // Log warning and the exact reason, if we are not able to give the item to the player.
         log.warn("Dropped captured companion item for {} with {}.", serverPlayer, itemStack);
         if (freeInventorySlot == -1) {
           log.warn("Reason: Inventory is full!");
-        } else if (playerInventory.getItem(freeInventorySlot)
-            .getItem() instanceof CapturedCompanion) {
+        } else if (playerInventory.getItem(freeInventorySlot).getItem()
+            instanceof CapturedCompanion) {
           log.warn(
               "Reason: Was not able to store it in the inventory slot {} found captured companion item {} with UUID {} instead!",
-              freeInventorySlot, playerInventory.getItem(freeInventorySlot).getItem(),
+              freeInventorySlot,
+              playerInventory.getItem(freeInventorySlot).getItem(),
               CapturedCompanion.getCompanionUUID(playerInventory.getItem(freeInventorySlot)));
         } else {
           log.warn(
               "Reason: Was not able to store it in the inventory slot {} found item {} instead!",
-              freeInventorySlot, playerInventory.getItem(freeInventorySlot));
+              freeInventorySlot,
+              playerInventory.getItem(freeInventorySlot));
         }
 
         // Give player feedback that the item was dropped to the world and not added to the
         // inventory.
         TitleUtils.setTitle(
-            Component.translatable(Constants.TEXT_PREFIX + "captured_companion_title",
+            Component.translatable(
+                Constants.TEXT_PREFIX + "captured_companion_title",
                 livingEntity.getName().getString()),
             Component.translatable(Constants.TEXT_PREFIX + "captured_companion_subtitle_ground")
                 .withStyle(ChatFormatting.RED),
@@ -154,8 +171,8 @@ public class CompanionTameItem extends Item {
   }
 
   @Override
-  public InteractionResult interactLivingEntity(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand) {
+  public InteractionResult interactLivingEntity(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand) {
 
     // Ignore players and dead entities for capturing.
     if (livingEntity == null || livingEntity instanceof Player || livingEntity.isDeadOrDying()) {
@@ -168,9 +185,30 @@ public class CompanionTameItem extends Item {
       return InteractionResult.FAIL;
     }
 
+    // Check if player has reached the max number of companions.
+    Level level = player.level();
+    if (!level.isClientSide
+        && player instanceof ServerPlayer serverPlayer
+        && COMMON.companionLimitPerPlayer.get() > 0) {
+      int numberOfCompanions = PlayerCompanionsServerData.get().getNumberOfCompanions(serverPlayer);
+      int maxNumberOfCompanions = COMMON.companionLimitPerPlayer.get();
+
+      // Inform player that he has reached the max number of companions.
+      if (numberOfCompanions >= maxNumberOfCompanions) {
+        TitleUtils.setTitle(
+            Component.translatable(Constants.TEXT_PREFIX + "max_number_of_companions.title"),
+            Component.translatable(
+                    Constants.TEXT_PREFIX + "max_number_of_companions.subtitle",
+                    numberOfCompanions,
+                    maxNumberOfCompanions)
+                .withStyle(ChatFormatting.RED),
+            serverPlayer);
+        return InteractionResult.FAIL;
+      }
+    }
+
     // Interact with entity if it is TameablePlayerCompanion compatible
     if (livingEntity instanceof TameablePlayerCompanion tameablePlayerCompanion) {
-      Level level = player.level();
       if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
         if (tameablePlayerCompanion.canTamePlayerCompanion(itemStack, player, livingEntity, hand)) {
           InteractionResult result =
@@ -181,7 +219,9 @@ public class CompanionTameItem extends Item {
               if (companionItem != null) {
                 convertEntityToItem(companionItem, serverPlayer, livingEntity, level);
               } else {
-                log.error("Unable to capture companion entity {} in item {}!", livingEntity,
+                log.error(
+                    "Unable to capture companion entity {} in item {}!",
+                    livingEntity,
                     companionItem);
               }
             } else {
@@ -203,8 +243,11 @@ public class CompanionTameItem extends Item {
   }
 
   @Override
-  public void appendHoverText(ItemStack itemStack, @Nullable Level level,
-      List<Component> tooltipList, TooltipFlag tooltipFlag) {
+  public void appendHoverText(
+      ItemStack itemStack,
+      @Nullable Level level,
+      List<Component> tooltipList,
+      TooltipFlag tooltipFlag) {
     // Display description.
     tooltipList.add(Component.translatable(Constants.TEXT_PREFIX + "tame_companion"));
 
@@ -216,18 +259,20 @@ public class CompanionTameItem extends Item {
       for (String tamableMob : tameableMobTypes) {
         Component acceptedMobName = TranslatableText.getEntityName(tamableMob);
         if (acceptedMobName != null) {
-          tameableMobTypeOverview.append(acceptedMobName).append(", ")
+          tameableMobTypeOverview
+              .append(acceptedMobName)
+              .append(", ")
               .withStyle(ChatFormatting.DARK_GREEN);
         }
       }
       if (!tameableMobTypeOverview.getString().isBlank()) {
         MutableComponent tameableMobsOverview =
-            Component.translatable(Constants.TEXT_PREFIX + "tameable_companions").append(" ")
+            Component.translatable(Constants.TEXT_PREFIX + "tameable_companions")
+                .append(" ")
                 .withStyle(ChatFormatting.GREEN);
         tameableMobsOverview.append(tameableMobTypeOverview).append("...");
         tooltipList.add(tameableMobsOverview);
       }
     }
   }
-
 }

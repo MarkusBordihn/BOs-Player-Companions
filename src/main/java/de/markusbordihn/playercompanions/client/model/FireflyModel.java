@@ -63,40 +63,63 @@ public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
     PartDefinition partDefinition = meshDefinition.getRoot();
 
     PartDefinition head =
-        partDefinition
-            .addOrReplaceChild("head",
-                CubeListBuilder.create().texOffs(0, 14).addBox(-2.0F, -2.0019F, -3.9135F, 4.0F,
-                    4.0F, 4.0F, new CubeDeformation(0.1F)),
-                PartPose.offset(0.0F, 20.0019F, -3.0865F));
+        partDefinition.addOrReplaceChild(
+            "head",
+            CubeListBuilder.create()
+                .texOffs(0, 14)
+                .addBox(-2.0F, -2.0019F, -3.9135F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.1F)),
+            PartPose.offset(0.0F, 20.0019F, -3.0865F));
 
-    head.addOrReplaceChild("antenna_right",
-        CubeListBuilder.create().texOffs(0, 2).mirror()
-            .addBox(0.0F, -1.5F, -1.0F, 0.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false),
+    head.addOrReplaceChild(
+        "antenna_right",
+        CubeListBuilder.create()
+            .texOffs(0, 2)
+            .mirror()
+            .addBox(0.0F, -1.5F, -1.0F, 0.0F, 3.0F, 2.0F, new CubeDeformation(0.0F))
+            .mirror(false),
         PartPose.offsetAndRotation(1.975F, -2.9991F, -2.4182F, -0.3927F, 0.0F, 0.0F));
 
-    head.addOrReplaceChild("antenna_left",
-        CubeListBuilder.create().texOffs(0, 2).addBox(0.0F, -1.5F, -1.0F, 0.0F, 3.0F, 2.0F,
-            new CubeDeformation(0.0F)),
+    head.addOrReplaceChild(
+        "antenna_left",
+        CubeListBuilder.create()
+            .texOffs(0, 2)
+            .addBox(0.0F, -1.5F, -1.0F, 0.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)),
         PartPose.offsetAndRotation(-1.975F, -2.9991F, -2.4182F, -0.3927F, 0.0F, 0.0F));
 
-    partDefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-2.5F,
-            -1.0F, -3.0F, 4.0F, 4.0F, 10.0F, new CubeDeformation(0.0F)),
+    partDefinition.addOrReplaceChild(
+        "body",
+        CubeListBuilder.create()
+            .texOffs(0, 0)
+            .addBox(-2.5F, -1.0F, -3.0F, 4.0F, 4.0F, 10.0F, new CubeDeformation(0.0F)),
         PartPose.offset(0.5F, 19.0F, 0.0F));
 
-    partDefinition.addOrReplaceChild("right_wing", CubeListBuilder.create().texOffs(12, 0)
+    partDefinition.addOrReplaceChild(
+        "right_wing",
+        CubeListBuilder.create()
+            .texOffs(12, 0)
             .addBox(-8.5F, 2.998F, 0.5F, 9.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)),
         PartPose.offset(-1.0F, 15.0F, -3.0F));
 
-    partDefinition.addOrReplaceChild("left_wing",
-        CubeListBuilder.create().texOffs(12, 0).mirror()
-            .addBox(-1.5F, 2.998F, 0.5F, 9.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false),
+    partDefinition.addOrReplaceChild(
+        "left_wing",
+        CubeListBuilder.create()
+            .texOffs(12, 0)
+            .mirror()
+            .addBox(-1.5F, 2.998F, 0.5F, 9.0F, 0.0F, 6.0F, new CubeDeformation(0.0F))
+            .mirror(false),
         PartPose.offset(2.0F, 15.0F, -3.0F));
 
-    partDefinition.addOrReplaceChild("front_leg", CubeListBuilder.create().texOffs(0, 2)
+    partDefinition.addOrReplaceChild(
+        "front_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 2)
             .addBox(-4.0F, 0.0F, 0.0F, 4.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
         PartPose.offset(2.0F, 22.0F, -2.0F));
 
-    partDefinition.addOrReplaceChild("back_leg", CubeListBuilder.create().texOffs(0, 0)
+    partDefinition.addOrReplaceChild(
+        "back_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 0)
             .addBox(-4.0F, 0.0F, 1.0F, 4.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)),
         PartPose.offset(2.0F, 22.0F, 2.0F));
 
@@ -129,8 +152,13 @@ public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
     }
   }
 
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
+  public void setupAnim(
+      T entity,
+      float limbSwing,
+      float limbSwingAmount,
+      float ageInTicks,
+      float netHeadYaw,
+      float headPitch) {
 
     // Don't animate death entities
     if (entity.isDeadOrDying()) {
@@ -161,5 +189,4 @@ public class FireflyModel<T extends TamableAnimal> extends AgeableListModel<T> {
     this.head.xRot = headPitch * ((float) Math.PI / 225F);
     this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
   }
-
 }

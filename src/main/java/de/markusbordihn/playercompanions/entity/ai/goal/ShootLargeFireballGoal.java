@@ -17,12 +17,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -84,8 +82,10 @@ public class ShootLargeFireballGoal extends PlayerCompanionGoal {
 
           LargeFireball largeFireball =
               new LargeFireball(level, this.playerCompanionEntity, x, y, z, this.explosionPower);
-          largeFireball.setPos(this.playerCompanionEntity.getX() + vec3.x * 4.0D,
-              this.playerCompanionEntity.getY(0.5D) + 0.5D, largeFireball.getZ() + vec3.z * 4.0D);
+          largeFireball.setPos(
+              this.playerCompanionEntity.getX() + vec3.x * 4.0D,
+              this.playerCompanionEntity.getY(0.5D) + 0.5D,
+              largeFireball.getZ() + vec3.z * 4.0D);
           level.addFreshEntity(largeFireball);
           this.chargeTime = -40;
         }

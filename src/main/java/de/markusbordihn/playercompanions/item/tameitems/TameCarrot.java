@@ -20,30 +20,26 @@
 package de.markusbordihn.playercompanions.item.tameitems;
 
 import de.markusbordihn.playercompanions.item.CompanionTameItem;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class TameCarrot extends CompanionTameItem {
 
-  private static final Set<String> tameableMobTypes = new HashSet<>(List.of(
-      // @formatter:off
-    "player_companions:pig"
-  // @formatter:on
-  ));
+  private static final Set<String> tameableMobTypes =
+      new HashSet<>(
+          List.of(
+              // @formatter:off
+              "player_companions:pig"
+              // @formatter:on
+              ));
 
   public TameCarrot() {
     super();
-  }
-
-  public TameCarrot(Properties properties) {
-    super(properties);
   }
 
   @Override
   public Set<String> getTameableMobTypes() {
     return tameableMobTypes;
   }
-
 }

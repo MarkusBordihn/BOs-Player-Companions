@@ -69,18 +69,22 @@ public class Pig extends CollectorEntityWalking {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.PIG_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.SPOTTED, ModItems.PIG_SPOTTED.get());
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.PIG_DEFAULT.get());
+            hashMap.put(PlayerCompanionVariant.SPOTTED, ModItems.PIG_SPOTTED.get());
+          });
 
   public Pig(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.ATTACK_DAMAGE, 1.0D);
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.MAX_HEALTH, 10.0D)
+        .add(Attributes.ATTACK_DAMAGE, 1.0D);
   }
 
   @Override
@@ -157,5 +161,4 @@ public class Pig extends CollectorEntityWalking {
   public int getEntityGuiTop() {
     return 13;
   }
-
 }

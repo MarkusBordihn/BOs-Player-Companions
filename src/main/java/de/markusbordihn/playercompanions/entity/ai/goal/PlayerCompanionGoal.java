@@ -48,5 +48,4 @@ public class PlayerCompanionGoal extends Goal {
   public boolean canUse() {
     return playerCompanionEntity.hasOwnerAndIsAlive();
   }
-
 }

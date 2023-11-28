@@ -40,14 +40,21 @@ public class SamuraiRenderer extends HumanoidMobRenderer<Samurai, SamuraiModel<S
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_default.png"));
-        hashMap.put(PlayerCompanionVariant.BLUE,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_blue.png"));
-        hashMap.put(PlayerCompanionVariant.BLACK,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_black.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/samurai/samurai_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.BLUE,
+                new ResourceLocation(Constants.MOD_ID, "textures/entity/samurai/samurai_blue.png"));
+            hashMap.put(
+                PlayerCompanionVariant.BLACK,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/samurai/samurai_black.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -69,5 +76,4 @@ public class SamuraiRenderer extends HumanoidMobRenderer<Samurai, SamuraiModel<S
   protected void scale(Samurai entity, PoseStack poseStack, float unused) {
     poseStack.scale(0.7F, 0.7F, 0.7F);
   }
-
 }

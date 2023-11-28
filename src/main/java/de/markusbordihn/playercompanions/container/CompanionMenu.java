@@ -49,11 +49,11 @@ public class CompanionMenu extends AbstractContainerMenu {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   // Defining basic layout options
-  protected static int armorContainerSize = 4;
-  protected static int equipmentContainerSize = 8;
-  protected static int handContainerSize = 2;
-  protected static int inventoryContainerSize = 16;
-  protected static int slotSize = 18;
+  protected static final int armorContainerSize = 4;
+  protected static final int equipmentContainerSize = 8;
+  protected static final int handContainerSize = 2;
+  protected static final int inventoryContainerSize = 16;
+  protected static final int slotSize = 18;
 
   // Define containers
   protected final Container armorContainer;
@@ -69,24 +69,41 @@ public class CompanionMenu extends AbstractContainerMenu {
   // Define states
   private boolean dataLoaded = false;
 
-  public CompanionMenu(final MenuType<?> menuType, int windowId, Inventory inventory,
+  public CompanionMenu(
+      final MenuType<?> menuType, int windowId, Inventory inventory, UUID playerCompanionUUID) {
+    this(
+        menuType,
+        windowId,
+        inventory,
+        new SimpleContainer(armorContainerSize),
+        new SimpleContainer(equipmentContainerSize),
+        new SimpleContainer(handContainerSize),
+        new SimpleContainer(inventoryContainerSize),
+        playerCompanionUUID);
+  }
+
+  public CompanionMenu(
+      final MenuType<?> menuType, int windowId, Inventory playerInventory, FriendlyByteBuf data) {
+    this(
+        menuType,
+        windowId,
+        playerInventory,
+        new SimpleContainer(armorContainerSize),
+        new SimpleContainer(equipmentContainerSize),
+        new SimpleContainer(handContainerSize),
+        new SimpleContainer(inventoryContainerSize),
+        data.readUUID());
+  }
+
+  public CompanionMenu(
+      final MenuType<?> menuType,
+      final int windowId,
+      final Inventory playerInventory,
+      final Container armorContainer,
+      final Container equipmentContainer,
+      final Container handContainer,
+      final Container inventoryContainer,
       UUID playerCompanionUUID) {
-    this(menuType, windowId, inventory, new SimpleContainer(armorContainerSize),
-        new SimpleContainer(equipmentContainerSize), new SimpleContainer(handContainerSize),
-        new SimpleContainer(inventoryContainerSize), playerCompanionUUID);
-  }
-
-  public CompanionMenu(final MenuType<?> menuType, int windowId, Inventory playerInventory,
-      FriendlyByteBuf data) {
-    this(menuType, windowId, playerInventory, new SimpleContainer(armorContainerSize),
-        new SimpleContainer(equipmentContainerSize), new SimpleContainer(handContainerSize),
-        new SimpleContainer(inventoryContainerSize), data.readUUID());
-  }
-
-  public CompanionMenu(final MenuType<?> menuType, final int windowId,
-      final Inventory playerInventory, final Container armorContainer,
-      final Container equipmentContainer, final Container handContainer,
-      final Container inventoryContainer, UUID playerCompanionUUID) {
     super(menuType, windowId);
 
     // Make sure the passed container matched the expected sizes
@@ -116,7 +133,9 @@ public class CompanionMenu extends AbstractContainerMenu {
           PlayerCompanionsServerData.get().getCompanion(this.playerCompanionUUID);
     }
     if (this.playerCompanionData == null) {
-      log.error("Unable to find Player Companion Data for {} on {}!", playerCompanionUUID,
+      log.error(
+          "Unable to find Player Companion Data for {} on {}!",
+          playerCompanionUUID,
           this.level.isClientSide ? "Client" : "Server");
       return;
     }
@@ -131,38 +150,59 @@ public class CompanionMenu extends AbstractContainerMenu {
       loadAdditionalContainer();
     }
 
-    log.debug("CompanionsMenu client:{} companion:{} data:{} entity:{}", this.level.isClientSide,
-        this.playerCompanionUUID, this.playerCompanionData, this.playerCompanionEntity);
+    log.debug(
+        "CompanionsMenu client:{} companion:{} data:{} entity:{}",
+        this.level.isClientSide,
+        this.playerCompanionUUID,
+        this.playerCompanionData,
+        this.playerCompanionEntity);
 
     // Player Companion Amor Slots (left / slot: 3 - 0)
     int playerCompanionEquipmentLeftStartPositionY = 17;
     int playerCompanionEquipmentLeftStartPositionX = 6;
     for (int armorSlot = 3; armorSlot >= 0; armorSlot--) {
-      this.addSlot(new ArmorSlot(this, this.armorContainer, 3 - armorSlot,
-          playerCompanionEquipmentLeftStartPositionX,
-          playerCompanionEquipmentLeftStartPositionY + armorSlot * slotSize));
+      this.addSlot(
+          new ArmorSlot(
+              this,
+              this.armorContainer,
+              3 - armorSlot,
+              playerCompanionEquipmentLeftStartPositionX,
+              playerCompanionEquipmentLeftStartPositionY + armorSlot * slotSize));
     }
 
     // Player Companion Equipment Slots (right / slot: 4 - 7)
     int playerCompanionEquipmentRightStartPositionY = 17;
     int playerCompanionEquipmentRightStartPositionX = 96;
     for (int equipmentSlot = 0; equipmentSlot < 4; ++equipmentSlot) {
-      this.addSlot(new DummySlot(this.equipmentContainer, equipmentSlot + 4,
-          playerCompanionEquipmentRightStartPositionX,
-          playerCompanionEquipmentRightStartPositionY + equipmentSlot * slotSize));
+      this.addSlot(
+          new DummySlot(
+              this.equipmentContainer,
+              equipmentSlot + 4,
+              playerCompanionEquipmentRightStartPositionX,
+              playerCompanionEquipmentRightStartPositionY + equipmentSlot * slotSize));
     }
 
     // Player Companion Main Hand Slot (left / bottom: 0)
     int playerCompanionMainHandStartPositionY = 89;
     int playerCompanionMainHandStartPositionX = 6;
-    this.addSlot(new HandSlot(this, this.handContainer, EquipmentSlot.MAINHAND.getIndex(),
-        playerCompanionMainHandStartPositionX, playerCompanionMainHandStartPositionY));
+    this.addSlot(
+        new HandSlot(
+            this,
+            this.handContainer,
+            EquipmentSlot.MAINHAND.getIndex(),
+            playerCompanionMainHandStartPositionX,
+            playerCompanionMainHandStartPositionY));
 
     // Player Companion Off Hand Slot (right / bottom: 1)
     int playerCompanionOffHandStartPositionY = 89;
     int playerCompanionOffHandStartPositionX = 96;
-    this.addSlot(new HandSlot(this, this.handContainer, EquipmentSlot.OFFHAND.getIndex(),
-        playerCompanionOffHandStartPositionX, playerCompanionOffHandStartPositionY));
+    this.addSlot(
+        new HandSlot(
+            this,
+            this.handContainer,
+            EquipmentSlot.OFFHAND.getIndex(),
+            playerCompanionOffHandStartPositionX,
+            playerCompanionOffHandStartPositionY));
 
     // Additional slots, like inventory or any other kinds of type specific slots.
     addAdditionalSlots();
@@ -172,9 +212,12 @@ public class CompanionMenu extends AbstractContainerMenu {
     int playerInventoryStartPositionX = 6;
     for (int inventoryRow = 0; inventoryRow < 3; ++inventoryRow) {
       for (int inventoryColumn = 0; inventoryColumn < 9; ++inventoryColumn) {
-        this.addSlot(new Slot(playerInventory, inventoryColumn + inventoryRow * 9 + 9,
-            playerInventoryStartPositionX + inventoryColumn * slotSize,
-            playerInventoryStartPositionY + inventoryRow * slotSize));
+        this.addSlot(
+            new Slot(
+                playerInventory,
+                inventoryColumn + inventoryRow * 9 + 9,
+                playerInventoryStartPositionX + inventoryColumn * slotSize,
+                playerInventoryStartPositionY + inventoryRow * slotSize));
       }
     }
 
@@ -182,8 +225,12 @@ public class CompanionMenu extends AbstractContainerMenu {
     int hotbarStartPositionY = 209;
     int hotbarStartPositionX = 6;
     for (int playerInventorySlot = 0; playerInventorySlot < 9; ++playerInventorySlot) {
-      this.addSlot(new Slot(playerInventory, playerInventorySlot,
-          hotbarStartPositionX + playerInventorySlot * slotSize, hotbarStartPositionY));
+      this.addSlot(
+          new Slot(
+              playerInventory,
+              playerInventorySlot,
+              hotbarStartPositionX + playerInventorySlot * slotSize,
+              hotbarStartPositionY));
     }
 
     if (!this.level.isClientSide) {
@@ -206,15 +253,6 @@ public class CompanionMenu extends AbstractContainerMenu {
     NonNullList<ItemStack> armor = this.playerCompanionData.getArmorItems();
     for (int index = 0; index < armor.size(); index++) {
       this.armorContainer.setItem(index, armor.get(index));
-    }
-  }
-
-  public void saveArmor() {
-    if (this.playerCompanionData == null) {
-      return;
-    }
-    for (int index = 0; index < armorContainerSize; index++) {
-      this.playerCompanionData.setArmorItem(index, this.armorContainer.getItem(index));
     }
   }
 
@@ -302,5 +340,4 @@ public class CompanionMenu extends AbstractContainerMenu {
   public boolean stillValid(Player player) {
     return this.inventoryContainer.stillValid(player);
   }
-
 }

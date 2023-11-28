@@ -52,8 +52,16 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
   }
 
   @Override
-  public void render(PoseStack poseStack, MultiBufferSource buffer, int lightLevel, T entity,
-      float limbSwing, float limbSwingAmount, float ageInTicks, float ageInTicks2, float netHeadYaw,
+  public void render(
+      PoseStack poseStack,
+      MultiBufferSource buffer,
+      int lightLevel,
+      T entity,
+      float limbSwing,
+      float limbSwingAmount,
+      float ageInTicks,
+      float ageInTicks2,
+      float netHeadYaw,
       float headPitch) {
     ItemStack itemStackMainHand = entity.getMainHandItem();
 
@@ -63,15 +71,25 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
     }
 
     if (rightHand != null) {
-      this.renderRightHandItem(entity, itemStackMainHand,
-          ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, HumanoidArm.RIGHT, poseStack, buffer,
+      this.renderRightHandItem(
+          entity,
+          itemStackMainHand,
+          ItemDisplayContext.THIRD_PERSON_RIGHT_HAND,
+          HumanoidArm.RIGHT,
+          poseStack,
+          buffer,
           lightLevel);
     }
   }
 
-  protected void renderRightHandItem(LivingEntity livingEntity, ItemStack itemStack,
-      ItemDisplayContext transformType, HumanoidArm humanoidArm, PoseStack poseStack,
-      MultiBufferSource buffer, int lightLevel) {
+  protected void renderRightHandItem(
+      LivingEntity livingEntity,
+      ItemStack itemStack,
+      ItemDisplayContext transformType,
+      HumanoidArm humanoidArm,
+      PoseStack poseStack,
+      MultiBufferSource buffer,
+      int lightLevel) {
     if (!itemStack.isEmpty()) {
       poseStack.pushPose();
       if (rightHand != null) {
@@ -84,10 +102,9 @@ public class HandItemLayer<T extends LivingEntity, M extends EntityModel<T>>
       }
       boolean flag = humanoidArm == HumanoidArm.LEFT;
       poseStack.translate((flag ? -1 : 1) / 16.0F, 0.125D, -0.625D);
-      itemInHandRenderer.renderItem(livingEntity, itemStack, transformType, flag, poseStack, buffer,
-          lightLevel);
+      itemInHandRenderer.renderItem(
+          livingEntity, itemStack, transformType, flag, poseStack, buffer, lightLevel);
       poseStack.popPose();
     }
   }
-
 }

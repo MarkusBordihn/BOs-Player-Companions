@@ -62,7 +62,8 @@ public class Firefly extends FollowerEntityFlying {
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class),
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
           hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.FIREFLY_DEFAULT.get()));
 
   public Firefly(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
@@ -71,8 +72,10 @@ public class Firefly extends FollowerEntityFlying {
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.FLYING_SPEED, 0.4F).add(Attributes.MAX_HEALTH, 16.0D)
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.FLYING_SPEED, 0.4F)
+        .add(Attributes.MAX_HEALTH, 16.0D)
         .add(Attributes.ATTACK_DAMAGE, 0.0D);
   }
 
@@ -128,5 +131,4 @@ public class Firefly extends FollowerEntityFlying {
   public int getEntityGuiTop() {
     return 0;
   }
-
 }

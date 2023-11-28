@@ -27,5 +27,4 @@ public class FavouriteCompanionSlot extends Slot {
   public FavouriteCompanionSlot(Container container, int index, int x, int y) {
     super(container, index, x, y);
   }
-
 }

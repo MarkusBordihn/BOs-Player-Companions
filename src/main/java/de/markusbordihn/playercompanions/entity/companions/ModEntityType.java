@@ -36,54 +36,109 @@ public class ModEntityType {
   public static final DeferredRegister<EntityType<?>> ENTITIES_TYPES =
       DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Constants.MOD_ID);
   // Collector Entity
-  public static final RegistryObject<EntityType<Pig>> PIG = ENTITIES_TYPES.register(Pig.ID,
-      () -> EntityType.Builder.of(Pig::new, PlayerCompanionEntity.CATEGORY).sized(1.0F, 1.2F)
-          .clientTrackingRange(8).build(Pig.ID));
-  public static final RegistryObject<EntityType<Snail>> SNAIL = ENTITIES_TYPES.register(Snail.ID,
-      () -> EntityType.Builder.of(Snail::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.8F, 0.9F).clientTrackingRange(8).build(Snail.ID));
+  public static final RegistryObject<EntityType<Pig>> PIG =
+      ENTITIES_TYPES.register(
+          Pig.ID,
+          () ->
+              EntityType.Builder.of(Pig::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(1.0F, 1.2F)
+                  .clientTrackingRange(8)
+                  .build(Pig.ID));
+  public static final RegistryObject<EntityType<Snail>> SNAIL =
+      ENTITIES_TYPES.register(
+          Snail.ID,
+          () ->
+              EntityType.Builder.of(Snail::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.8F, 0.9F)
+                  .clientTrackingRange(8)
+                  .build(Snail.ID));
   // Follower Entity
-  public static final RegistryObject<EntityType<Dobutsu>> DOBUTSU = ENTITIES_TYPES.register(
-      Dobutsu.ID, () -> EntityType.Builder.of(Dobutsu::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.5F, 0.9F).clientTrackingRange(8).build(Dobutsu.ID));
-  public static final RegistryObject<EntityType<Lizard>> LIZARD = ENTITIES_TYPES.register(Lizard.ID,
-      () -> EntityType.Builder.of(Lizard::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.6F, 0.5F).clientTrackingRange(8).build(Lizard.ID));
+  public static final RegistryObject<EntityType<Dobutsu>> DOBUTSU =
+      ENTITIES_TYPES.register(
+          Dobutsu.ID,
+          () ->
+              EntityType.Builder.of(Dobutsu::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.5F, 0.9F)
+                  .clientTrackingRange(8)
+                  .build(Dobutsu.ID));
+  public static final RegistryObject<EntityType<Lizard>> LIZARD =
+      ENTITIES_TYPES.register(
+          Lizard.ID,
+          () ->
+              EntityType.Builder.of(Lizard::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.6F, 0.5F)
+                  .clientTrackingRange(8)
+                  .build(Lizard.ID));
   public static final RegistryObject<EntityType<SmallSlime>> SMALL_SLIME =
-      ENTITIES_TYPES.register(SmallSlime.ID,
-          () -> EntityType.Builder.of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)
-              .sized(0.5F, 0.5F).clientTrackingRange(8).build(SmallSlime.ID));
+      ENTITIES_TYPES.register(
+          SmallSlime.ID,
+          () ->
+              EntityType.Builder.of(SmallSlime::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.5F, 0.5F)
+                  .clientTrackingRange(8)
+                  .build(SmallSlime.ID));
   // Guard Entity
-  public static final RegistryObject<EntityType<Samurai>> SAMURAI = ENTITIES_TYPES.register(
-      Samurai.ID, () -> EntityType.Builder.of(Samurai::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.5F, 1.4F).clientTrackingRange(16).build(Samurai.ID));
-  public static final RegistryObject<EntityType<Raptor>> RAPTOR = ENTITIES_TYPES.register(Raptor.ID,
-      () -> EntityType.Builder.of(Raptor::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.8F, 1.5F).clientTrackingRange(16).build(Raptor.ID));
-  public static final RegistryObject<EntityType<Rooster>> ROOSTER = ENTITIES_TYPES.register(
-      Rooster.ID, () -> EntityType.Builder.of(Rooster::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.6F, 1.1F).clientTrackingRange(16).build(Rooster.ID));
+  public static final RegistryObject<EntityType<Samurai>> SAMURAI =
+      ENTITIES_TYPES.register(
+          Samurai.ID,
+          () ->
+              EntityType.Builder.of(Samurai::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.5F, 1.4F)
+                  .clientTrackingRange(16)
+                  .build(Samurai.ID));
+  public static final RegistryObject<EntityType<Raptor>> RAPTOR =
+      ENTITIES_TYPES.register(
+          Raptor.ID,
+          () ->
+              EntityType.Builder.of(Raptor::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.8F, 1.5F)
+                  .clientTrackingRange(16)
+                  .build(Raptor.ID));
+  public static final RegistryObject<EntityType<Rooster>> ROOSTER =
+      ENTITIES_TYPES.register(
+          Rooster.ID,
+          () ->
+              EntityType.Builder.of(Rooster::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.6F, 1.1F)
+                  .clientTrackingRange(16)
+                  .build(Rooster.ID));
   public static final RegistryObject<EntityType<SmallGhast>> SMALL_GHAST =
-      ENTITIES_TYPES.register(SmallGhast.ID,
-          () -> EntityType.Builder.of(SmallGhast::new, PlayerCompanionEntity.CATEGORY)
-              .sized(1.0F, 2.13F).clientTrackingRange(16).build(SmallGhast.ID));
+      ENTITIES_TYPES.register(
+          SmallGhast.ID,
+          () ->
+              EntityType.Builder.of(SmallGhast::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(1.0F, 2.13F)
+                  .clientTrackingRange(16)
+                  .build(SmallGhast.ID));
   // Healer Entity
-  public static final RegistryObject<EntityType<Fairy>> FAIRY = ENTITIES_TYPES.register(Fairy.ID,
-      () -> EntityType.Builder.of(Fairy::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.8F, 2.0F).clientTrackingRange(16).build(Fairy.ID));
+  public static final RegistryObject<EntityType<Fairy>> FAIRY =
+      ENTITIES_TYPES.register(
+          Fairy.ID,
+          () ->
+              EntityType.Builder.of(Fairy::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.8F, 2.0F)
+                  .clientTrackingRange(16)
+                  .build(Fairy.ID));
   // Lighting Entity
-  public static final RegistryObject<EntityType<Firefly>> FIREFLY = ENTITIES_TYPES.register(
-      Firefly.ID, () -> EntityType.Builder.of(Firefly::new, PlayerCompanionEntity.CATEGORY)
-          .sized(0.25F, 0.25F).clientTrackingRange(16).build(Firefly.ID));
+  public static final RegistryObject<EntityType<Firefly>> FIREFLY =
+      ENTITIES_TYPES.register(
+          Firefly.ID,
+          () ->
+              EntityType.Builder.of(Firefly::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.25F, 0.25F)
+                  .clientTrackingRange(16)
+                  .build(Firefly.ID));
   // Supporter Entity
   public static final RegistryObject<EntityType<WelshCorgi>> WELSH_CORGI =
-      ENTITIES_TYPES.register(WelshCorgi.ID,
-          () -> EntityType.Builder.of(WelshCorgi::new, PlayerCompanionEntity.CATEGORY)
-              .sized(0.65F, 1.0F).clientTrackingRange(16).build(WelshCorgi.ID));
+      ENTITIES_TYPES.register(
+          WelshCorgi.ID,
+          () ->
+              EntityType.Builder.of(WelshCorgi::new, PlayerCompanionEntity.CATEGORY)
+                  .sized(0.65F, 1.0F)
+                  .clientTrackingRange(16)
+                  .build(WelshCorgi.ID));
 
-  protected ModEntityType() {
-
-  }
+  protected ModEntityType() {}
 
   @SubscribeEvent
   public static final void entityAttributCreation(EntityAttributeCreationEvent event) {

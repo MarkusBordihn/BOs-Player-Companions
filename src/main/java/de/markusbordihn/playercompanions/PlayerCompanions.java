@@ -73,13 +73,15 @@ public class PlayerCompanions {
 
     forgeEventBus.addListener(ServerSetup::handleServerStartingEvent);
 
-    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-      modEventBus.addListener(ClientRenderer::registerEntityLayerDefinitions);
-      modEventBus.addListener(ClientRenderer::registerEntityRenderers);
-      modEventBus.addListener(ClientScreens::registerScreens);
-      modEventBus.addListener(ModKeyMapping::registerKeyMapping);
-      PlayerCompanionsTab.CREATIVE_TABS.register(modEventBus);
-    });
+    DistExecutor.unsafeRunWhenOn(
+        Dist.CLIENT,
+        () ->
+            () -> {
+              modEventBus.addListener(ClientRenderer::registerEntityLayerDefinitions);
+              modEventBus.addListener(ClientRenderer::registerEntityRenderers);
+              modEventBus.addListener(ClientScreens::registerScreens);
+              modEventBus.addListener(ModKeyMapping::registerKeyMapping);
+              PlayerCompanionsTab.CREATIVE_TABS.register(modEventBus);
+            });
   }
-
 }

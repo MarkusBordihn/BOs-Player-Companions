@@ -48,8 +48,10 @@ public class CollectorFeatures extends PlayerCompanionsFeatures {
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
     if (COMMON.collectorTypeRadius.get() > 0) {
-      log.info("{} Collector will automatically collect items in a {} block radius.",
-          Constants.LOG_ICON, COMMON.collectorTypeRadius.get());
+      log.info(
+          "{} Collector will automatically collect items in a {} block radius.",
+          Constants.LOG_ICON,
+          COMMON.collectorTypeRadius.get());
     } else {
       log.info("{} Collector will not automatically collect items!", Constants.LOG_ICON);
     }
@@ -57,11 +59,15 @@ public class CollectorFeatures extends PlayerCompanionsFeatures {
 
   private void collectorTick() {
     // Automatic collect items in the defined radius
-    if (!this.level.isClientSide && COMMON.collectorTypeRadius.get() > 0
+    if (!this.level.isClientSide
+        && COMMON.collectorTypeRadius.get() > 0
         && ticker++ >= COLLECT_TICK) {
-      List<ItemEntity> itemEntities = this.level.getEntities(EntityType.ITEM,
-          new AABB(playerCompanionEntity.blockPosition()).inflate(COMMON.collectorTypeRadius.get()),
-          entity -> true);
+      List<ItemEntity> itemEntities =
+          this.level.getEntities(
+              EntityType.ITEM,
+              new AABB(playerCompanionEntity.blockPosition())
+                  .inflate(COMMON.collectorTypeRadius.get()),
+              entity -> true);
       if (!itemEntities.isEmpty()) {
         PlayerCompanionData companionData = playerCompanionEntity.getData();
         if (companionData != null) {
@@ -88,5 +94,4 @@ public class CollectorFeatures extends PlayerCompanionsFeatures {
     super.tick();
     collectorTick();
   }
-
 }

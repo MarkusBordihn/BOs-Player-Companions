@@ -56,29 +56,41 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
     PartDefinition partDefinition = meshDefinition.getRoot();
 
     // Head and Body
-    partDefinition.addOrReplaceChild("head",
-        CubeListBuilder.create().texOffs(0, 0)
+    partDefinition.addOrReplaceChild(
+        "head",
+        CubeListBuilder.create()
+            .texOffs(0, 0)
             .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.85F))
             .texOffs(32, 0)
             .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(1.1F)),
         PartPose.offset(0.0F, 15.0F, 0.0F));
 
     // Legs
-    partDefinition.addOrReplaceChild("left_leg",
-        CubeListBuilder.create().texOffs(16, 48)
-            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 48)
+    partDefinition.addOrReplaceChild(
+        "left_leg",
+        CubeListBuilder.create()
+            .texOffs(16, 48)
+            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 48)
             .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)),
         PartPose.offset(1.9F, 8.0F, 0.0F));
-    partDefinition.addOrReplaceChild("right_leg",
-        CubeListBuilder.create().texOffs(0, 16)
-            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 32)
+    partDefinition.addOrReplaceChild(
+        "right_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 16)
+            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 32)
             .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)),
         PartPose.offset(-1.9F, 8.0F, 0.0F));
 
     // Hands
-    partDefinition.addOrReplaceChild("right_hand", CubeListBuilder.create(),
+    partDefinition.addOrReplaceChild(
+        "right_hand",
+        CubeListBuilder.create(),
         PartPose.offsetAndRotation(-4.5F, 16.0F, 0.0F, -120.0F, 180.0F, 0.0F));
-    partDefinition.addOrReplaceChild("left_hand", CubeListBuilder.create(),
+    partDefinition.addOrReplaceChild(
+        "left_hand",
+        CubeListBuilder.create(),
         PartPose.offsetAndRotation(4.5F, 16.0F, 0.0F, -120.0F, 180.0F, 0.0F));
 
     return LayerDefinition.create(meshDefinition, 64, 64);
@@ -136,8 +148,13 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
   }
 
   @Override
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
+  public void setupAnim(
+      T entity,
+      float limbSwing,
+      float limbSwingAmount,
+      float ageInTicks,
+      float netHeadYaw,
+      float headPitch) {
 
     // Don't animate death entities
     if (entity.isDeadOrDying()) {
@@ -152,5 +169,4 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
       this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmountFraction;
     }
   }
-
 }

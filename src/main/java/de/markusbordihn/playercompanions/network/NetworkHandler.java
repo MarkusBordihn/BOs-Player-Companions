@@ -51,15 +51,18 @@ public class NetworkHandler {
 
   private static final String PROTOCOL_VERSION = "4";
   public static final SimpleChannel INSTANCE =
-      NetworkRegistry.newSimpleChannel(new ResourceLocation(Constants.MOD_ID, "network"),
-          () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
-  private static final ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap = new ConcurrentHashMap<>();
+      NetworkRegistry.newSimpleChannel(
+          new ResourceLocation(Constants.MOD_ID, "network"),
+          () -> PROTOCOL_VERSION,
+          PROTOCOL_VERSION::equals,
+          PROTOCOL_VERSION::equals);
+  private static final ConcurrentHashMap<UUID, ServerPlayer> serverPlayerMap =
+      new ConcurrentHashMap<>();
   private static int id = 0;
   private static CompoundTag lastCompanionDataPackage;
   private static CompoundTag lastCompanionsDataPackage;
 
-  protected NetworkHandler() {
-  }
+  protected NetworkHandler() {}
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void handlePlayerChangedDimensionEvent(PlayerChangedDimensionEvent event) {
@@ -78,45 +81,58 @@ public class NetworkHandler {
 
   public static void registerNetworkHandler(final FMLCommonSetupEvent event) {
 
-    log.info("{} Network Handler for {} with version {} ...", Constants.LOG_REGISTER_PREFIX,
-        INSTANCE, PROTOCOL_VERSION);
+    log.info(
+        "{} Network Handler for {} with version {} ...",
+        Constants.LOG_REGISTER_PREFIX,
+        INSTANCE,
+        PROTOCOL_VERSION);
 
-    event.enqueueWork(() -> {
+    event.enqueueWork(
+        () -> {
 
-      // Send Player Companion Command: Client -> Server
-      INSTANCE.registerMessage(id++, MessageCommandPlayerCompanion.class,
-          MessageCommandPlayerCompanion::encode, MessageCommandPlayerCompanion::decode,
-          MessageCommandPlayerCompanion::handle);
+          // Send Player Companion Command: Client -> Server
+          INSTANCE.registerMessage(
+              id++,
+              MessageCommandPlayerCompanion.class,
+              MessageCommandPlayerCompanion::encode,
+              MessageCommandPlayerCompanion::decode,
+              MessageCommandPlayerCompanion::handle);
 
-      // Sync single Player Companion Data: Server -> Client
-      INSTANCE.registerMessage(id++, MessagePlayerCompanionData.class,
-          MessagePlayerCompanionData::encode, MessagePlayerCompanionData::decode,
-          MessagePlayerCompanionData::handle);
+          // Sync single Player Companion Data: Server -> Client
+          INSTANCE.registerMessage(
+              id++,
+              MessagePlayerCompanionData.class,
+              MessagePlayerCompanionData::encode,
+              MessagePlayerCompanionData::decode,
+              MessagePlayerCompanionData::handle);
 
-      // Sync full Player Companion Data: Server -> Client
-      INSTANCE.registerMessage(id++, MessagePlayerCompanionsData.class,
-          MessagePlayerCompanionsData::encode, MessagePlayerCompanionsData::decode,
-          MessagePlayerCompanionsData::handle);
+          // Sync full Player Companion Data: Server -> Client
+          INSTANCE.registerMessage(
+              id++,
+              MessagePlayerCompanionsData.class,
+              MessagePlayerCompanionsData::encode,
+              MessagePlayerCompanionsData::decode,
+              MessagePlayerCompanionsData::handle);
 
-      // Skin Change: Client -> Server
-      INSTANCE.registerMessage(id++, MessageSkinChange.class, MessageSkinChange::encode,
-          MessageSkinChange::decode, MessageSkinChange::handle);
-    });
+          // Skin Change: Client -> Server
+          INSTANCE.registerMessage(
+              id++,
+              MessageSkinChange.class,
+              MessageSkinChange::encode,
+              MessageSkinChange::decode,
+              MessageSkinChange::handle);
+        });
   }
 
-  /**
-   * Send player companion commands.
-   */
-  public static void commandPlayerCompanion(String playerCompanionUUID,
-      PlayerCompanionCommand command) {
+  /** Send player companion commands. */
+  public static void commandPlayerCompanion(
+      String playerCompanionUUID, PlayerCompanionCommand command) {
     if (playerCompanionUUID != null && command != null) {
       INSTANCE.sendToServer(new MessageCommandPlayerCompanion(playerCompanionUUID, command));
     }
   }
 
-  /**
-   * Send skin change.
-   */
+  /** Send skin change. */
   public static void skinChange(UUID uuid, SkinType skinType) {
     if (uuid != null && skinType != null) {
       INSTANCE.sendToServer(new MessageSkinChange(uuid, "", "", Constants.BLANK_UUID, skinType));
@@ -129,41 +145,44 @@ public class NetworkHandler {
     }
   }
 
-  public static void skinChange(UUID uuid, String skin, String skinURL, UUID skinUUID,
-      SkinType skinType) {
+  public static void skinChange(
+      UUID uuid, String skin, String skinURL, UUID skinUUID, SkinType skinType) {
     if (uuid != null && skin != null && skinType != null) {
       INSTANCE.sendToServer(new MessageSkinChange(uuid, skin, skinURL, skinUUID, skinType));
     }
   }
 
-  /**
-   * Send full companion data to the owner, if data has changed.
-   */
+  /** Send full companion data to the owner, if data has changed. */
   public static void updatePlayerCompanionsData(UUID ownerUUID, CompoundTag companionsData) {
-    if (ownerUUID != null && companionsData != null && !companionsData.isEmpty()
+    if (ownerUUID != null
+        && companionsData != null
+        && !companionsData.isEmpty()
         && !companionsData.equals(lastCompanionsDataPackage)) {
       ServerPlayer serverPlayer = getServerPlayer(ownerUUID);
       if (serverPlayer == null) {
         return;
       }
-      INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+      INSTANCE.send(
+          PacketDistributor.PLAYER.with(() -> serverPlayer),
           new MessagePlayerCompanionsData(companionsData));
       lastCompanionsDataPackage = companionsData;
     }
   }
 
-  /**
-   * Send specific player companion data to the owner, if data has changed.
-   */
-  public static void updatePlayerCompanionData(UUID playerCompanionUUID, UUID ownerUUID,
-      CompoundTag companionData) {
-    if (playerCompanionUUID != null && ownerUUID != null && companionData != null
-        && !companionData.isEmpty() && !companionData.equals(lastCompanionDataPackage)) {
+  /** Send specific player companion data to the owner, if data has changed. */
+  public static void updatePlayerCompanionData(
+      UUID playerCompanionUUID, UUID ownerUUID, CompoundTag companionData) {
+    if (playerCompanionUUID != null
+        && ownerUUID != null
+        && companionData != null
+        && !companionData.isEmpty()
+        && !companionData.equals(lastCompanionDataPackage)) {
       ServerPlayer serverPlayer = getServerPlayer(ownerUUID);
       if (serverPlayer == null) {
         return;
       }
-      INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+      INSTANCE.send(
+          PacketDistributor.PLAYER.with(() -> serverPlayer),
           new MessagePlayerCompanionData(playerCompanionUUID.toString(), companionData));
       lastCompanionDataPackage = companionData;
     }
@@ -192,5 +211,4 @@ public class NetworkHandler {
   public static ServerPlayer getServerPlayer(UUID uuid) {
     return serverPlayerMap.get(uuid);
   }
-
 }

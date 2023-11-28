@@ -41,14 +41,22 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
-        hashMap.put(PlayerCompanionVariant.CREEPER,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
-        hashMap.put(PlayerCompanionVariant.ENDERMAN,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_enderman.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.CREEPER,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
+            hashMap.put(
+                PlayerCompanionVariant.ENDERMAN,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_enderman.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -59,19 +67,15 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
 
   @Override
   public ResourceLocation getTextureLocation(Dobutsu entity) {
-    switch (entity.getSkinType()) {
-      case PLAYER_SKIN:
-      case SECURE_REMOTE_URL:
-      case INSECURE_REMOTE_URL:
-        return PlayerTextureManager.getOrCreateTextureWithDefault(entity, DEFAULT_TEXTURE);
-      default:
-        return TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
-    }
+    return switch (entity.getSkinType()) {
+      case PLAYER_SKIN, SECURE_REMOTE_URL, INSECURE_REMOTE_URL -> PlayerTextureManager
+          .getOrCreateTextureWithDefault(entity, DEFAULT_TEXTURE);
+      default -> TEXTURE_BY_VARIANT.getOrDefault(entity.getVariant(), DEFAULT_TEXTURE);
+    };
   }
 
   @Override
   protected void scale(Dobutsu entity, PoseStack poseStack, float unused) {
     poseStack.scale(0.8F, 0.8F, 0.8F);
   }
-
 }

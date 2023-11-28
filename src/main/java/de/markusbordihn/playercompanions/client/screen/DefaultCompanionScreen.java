@@ -31,5 +31,4 @@ public class DefaultCompanionScreen extends CompanionScreen<CompanionMenu> {
   public DefaultCompanionScreen(CompanionMenu menu, Inventory inventory, Component component) {
     super(menu, inventory, component);
   }
-
 }

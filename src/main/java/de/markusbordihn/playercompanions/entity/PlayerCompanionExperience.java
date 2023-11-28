@@ -90,8 +90,7 @@ public interface PlayerCompanionExperience {
     return Experience.getExperienceForLevel(getExperienceLevel());
   }
 
-  default int getHealthAdjustmentFromExperienceLevel(int level, int maxHealth,
-      int baseHealth) {
+  default int getHealthAdjustmentFromExperienceLevel(int level, int maxHealth, int baseHealth) {
     // Early return if we don't need to calculate anything.
     if (level == 1 || maxHealth == 0 || baseHealth >= maxHealth) {
       return 0;
@@ -103,8 +102,8 @@ public interface PlayerCompanionExperience {
     return 0;
   }
 
-  default int getAttackDamageAdjustmentFromExperienceLevel(int level, int maxAttackDamage,
-      int baseAttackDamage) {
+  default int getAttackDamageAdjustmentFromExperienceLevel(
+      int level, int maxAttackDamage, int baseAttackDamage) {
     // Early return if we don't need to calculate anything.
     if (level == 1 || maxAttackDamage == 0 || baseAttackDamage >= maxAttackDamage) {
       return 0;
@@ -117,8 +116,7 @@ public interface PlayerCompanionExperience {
     return 0;
   }
 
-  default int getHealingAmountFromExperienceLevel(int level, int minHealing,
-      int maxHealing) {
+  default int getHealingAmountFromExperienceLevel(int level, int minHealing, int maxHealing) {
     if (level == 1 || minHealing >= maxHealing) {
       return minHealing;
     }
@@ -128,5 +126,4 @@ public interface PlayerCompanionExperience {
     }
     return minHealing;
   }
-
 }

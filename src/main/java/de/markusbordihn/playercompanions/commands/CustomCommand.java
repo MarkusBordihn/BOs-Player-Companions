@@ -33,16 +33,15 @@ public abstract class CustomCommand implements Command<CommandSourceStack> {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
-  protected CustomCommand() {
-  }
+  protected CustomCommand() {}
 
   public static void sendFeedback(CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(() -> Component.literal(feedback), false);
   }
 
-  public static void sendErrorFeedback(CommandContext<CommandSourceStack> context,
-      String feedback) {
+  public static void sendErrorFeedback(
+      CommandContext<CommandSourceStack> context, String feedback) {
     CommandSourceStack commandSource = context.getSource();
     commandSource.sendSuccess(
         () -> Component.literal(feedback).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)),

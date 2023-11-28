@@ -42,15 +42,15 @@ public class PlayerTextureManager {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String LOG_PREFIX = "[Player Texture Manager]";
-
-  private static Path textureCachePath = null;
-  private static final HashMap<TextureModelKey, ResourceLocation> playerTextureCache = new HashMap<>();
-  private static final HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache = new HashMap<>();
+  private static final HashMap<TextureModelKey, ResourceLocation> playerTextureCache =
+      new HashMap<>();
+  private static final HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache =
+      new HashMap<>();
   private static final HashMap<TextureModelKey, String> playerTextureSkinURLCache = new HashMap<>();
   private static final HashSet<UUID> playerTextureReloadProtection = new HashSet<>();
+  private static Path textureCachePath = null;
 
-  protected PlayerTextureManager() {
-  }
+  protected PlayerTextureManager() {}
 
   public static Map<TextureModelKey, ResourceLocation> getPlayerTextureCache() {
     return playerTextureCache;
@@ -80,11 +80,11 @@ public class PlayerTextureManager {
         && playerTextureSkinURLCache.containsKey(textureModelKey);
   }
 
-  public static ResourceLocation getOrCreateTextureWithDefault(PlayerCompanionEntity entity,
-      ResourceLocation defaultResourceLocation) {
+  public static ResourceLocation getOrCreateTextureWithDefault(
+      PlayerCompanionEntity entity, ResourceLocation defaultResourceLocation) {
     // Check if we have a skin UUID otherwise we assume that the texture is unknown.
     Optional<UUID> skinUUID = entity.getSkinUUID();
-    if (!skinUUID.isPresent()) {
+    if (skinUUID.isEmpty()) {
       return defaultResourceLocation;
     }
 
@@ -104,13 +104,13 @@ public class PlayerTextureManager {
     return createdResourceLocation != null ? createdResourceLocation : defaultResourceLocation;
   }
 
-  private static ResourceLocation createTexture(TextureModelKey textureModelKey,
-      PlayerCompanionEntity entity) {
+  private static ResourceLocation createTexture(
+      TextureModelKey textureModelKey, PlayerCompanionEntity entity) {
     return createTexture(textureModelKey, entity.getSkinType(), entity.getSkinURL());
   }
 
-  private static ResourceLocation createTexture(TextureModelKey textureModelKey, SkinType skinType,
-      String skinURL) {
+  private static ResourceLocation createTexture(
+      TextureModelKey textureModelKey, SkinType skinType, String skinURL) {
 
     // Check the local texture cache for any matching files.
     SkinModel skinModel = textureModelKey.getSkinModel();
@@ -170,8 +170,11 @@ public class PlayerTextureManager {
         try {
           Files.createDirectories(cacheDirectory);
         } catch (Exception exception) {
-          log.error("{} Failed to create player texture cache directory at {}", LOG_PREFIX,
-              cacheDirectory, exception);
+          log.error(
+              "{} Failed to create player texture cache directory at {}",
+              LOG_PREFIX,
+              cacheDirectory,
+              exception);
         }
       }
       textureCachePath = cacheDirectory;
@@ -180,16 +183,18 @@ public class PlayerTextureManager {
     // Get or create model cache directory.
     Path cacheDirectory = Paths.get(textureCachePath.toString(), skinModel.name());
     if (!cacheDirectory.toFile().exists()) {
-      log.info("{} Creating player texture model cache directory at {}", LOG_PREFIX,
-          cacheDirectory);
+      log.info(
+          "{} Creating player texture model cache directory at {}", LOG_PREFIX, cacheDirectory);
       try {
         Files.createDirectories(cacheDirectory);
       } catch (Exception exception) {
-        log.error("{} Failed to create player texture model cache directory at {}", LOG_PREFIX,
-            cacheDirectory, exception);
+        log.error(
+            "{} Failed to create player texture model cache directory at {}",
+            LOG_PREFIX,
+            cacheDirectory,
+            exception);
       }
     }
     return cacheDirectory;
   }
-
 }

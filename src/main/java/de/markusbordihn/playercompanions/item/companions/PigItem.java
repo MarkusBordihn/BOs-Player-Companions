@@ -38,10 +38,6 @@ public class PigItem extends CapturedCompanion {
     super(variant);
   }
 
-  public PigItem(Properties properties) {
-    super(properties);
-  }
-
   @Override
   public Ingredient getEntityFood() {
     return Pig.FOOD_ITEMS;

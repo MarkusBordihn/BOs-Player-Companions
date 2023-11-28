@@ -1,4 +1,4 @@
-# 🐾 Player Companion's (1.19.2)
+# 🐾 Player Companion's (1.20.1)
 
 [![Player Companions Downloads](http://cf.way2muchnoise.eu/full_552456_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
 [![Player Companions Versions](http://cf.way2muchnoise.eu/versions/Minecraft_552456_all.svg)](https://www.curseforge.com/minecraft/mc-mods/player-companions)
@@ -222,10 +222,10 @@ The easiest way is to use your Player Companion Item or alternative over the `/p
 ## Version Status Overview 🛠️
 
 | Version        | Status                |
-| -------------- | --------------------- |
-| Fabric Version | ❌ Not planned        |
-| Forge 1.16.5   | ❌ Not planned        |
-| Forge 1.17.1   | ❌ Not planned        |
+|----------------|-----------------------|
+| Fabric Version | ❌ Not planned         |
+| Forge 1.16.5   | ❌ Not planned         |
+| Forge 1.17.1   | ❌ Not planned         |
 | Forge 1.18.1   | ⚠️ Deprecated         |
 | Forge 1.18.2   | ⚠️ Maintenance only   |
 | Forge 1.19     | ⚠️ Deprecated         |

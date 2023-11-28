@@ -23,7 +23,6 @@ import com.google.common.collect.Sets;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.CommonConfig;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -49,8 +48,7 @@ public class PlayerCompanionNames {
   private static List<String> namesCompanionMisc =
       new ArrayList<>(List.of("Unnamed misc companion"));
 
-  protected PlayerCompanionNames() {
-  }
+  protected PlayerCompanionNames() {}
 
   @SubscribeEvent
   public static void handleServerAboutToStartEvent(ServerAboutToStartEvent event) {
@@ -71,8 +69,8 @@ public class PlayerCompanionNames {
     }
 
     if (!COMMON.namesCompanionFemale.get().isEmpty()) {
-      log.info("Loading about {} female companion names ...",
-          COMMON.namesCompanionFemale.get().size());
+      log.info(
+          "Loading about {} female companion names ...", COMMON.namesCompanionFemale.get().size());
       namesCompanionFemale = new ArrayList<>(Sets.newHashSet(COMMON.namesCompanionFemale.get()));
     }
 
@@ -137,5 +135,4 @@ public class PlayerCompanionNames {
     }
     return getRandomMaleCompanionName();
   }
-
 }

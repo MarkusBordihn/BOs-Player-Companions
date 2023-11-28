@@ -31,10 +31,8 @@ public class ModBiomeModifiers {
   public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS =
       DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Constants.MOD_ID);
   public static final RegistryObject<Codec<ModBiomeModifier>> ENTITY_MODIFIER_TYPE =
-      BIOME_MODIFIER_SERIALIZERS.register("player_companions_spawn_modifier",
-          ModBiomeModifier::makeCodec);
+      BIOME_MODIFIER_SERIALIZERS.register(
+          "player_companions_spawn_modifier", ModBiomeModifier::makeCodec);
 
-  protected ModBiomeModifiers() {
-  }
-
+  protected ModBiomeModifiers() {}
 }

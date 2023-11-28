@@ -34,20 +34,25 @@ public class PlayerCompanionEntityFlyAroundControl extends PlayerCompanionEntity
   @Override
   public void tick() {
     if (this.operation == MoveControl.Operation.MOVE_TO) {
-      Vec3 vec3 = new Vec3(this.wantedX - this.companionEntity.getX(),
-          this.wantedY - this.companionEntity.getY(), this.wantedZ - this.companionEntity.getZ());
+      Vec3 vec3 =
+          new Vec3(
+              this.wantedX - this.companionEntity.getX(),
+              this.wantedY - this.companionEntity.getY(),
+              this.wantedZ - this.companionEntity.getZ());
       double d0 = vec3.length();
       if (d0 < this.companionEntity.getBoundingBox().getSize()) {
         this.operation = MoveControl.Operation.WAIT;
         this.companionEntity.setDeltaMovement(this.companionEntity.getDeltaMovement().scale(0.5D));
       } else {
-        this.companionEntity.setDeltaMovement(this.companionEntity.getDeltaMovement()
-            .add(vec3.scale(this.speedModifier * 0.05D / d0)));
+        this.companionEntity.setDeltaMovement(
+            this.companionEntity
+                .getDeltaMovement()
+                .add(vec3.scale(this.speedModifier * 0.05D / d0)));
         LivingEntity target = this.companionEntity.getTarget();
         if (target == null) {
           Vec3 vec31 = this.companionEntity.getDeltaMovement();
-          this.companionEntity
-              .setYRot(-((float) Mth.atan2(vec31.x, vec31.z)) * (180F / (float) Math.PI));
+          this.companionEntity.setYRot(
+              -((float) Mth.atan2(vec31.x, vec31.z)) * (180F / (float) Math.PI));
           this.companionEntity.yBodyRot = this.companionEntity.getYRot();
         } else {
           double d2 = target.getX() - this.companionEntity.getX();

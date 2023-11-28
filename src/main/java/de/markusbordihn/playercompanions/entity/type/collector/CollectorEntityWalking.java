@@ -37,9 +37,11 @@ public class CollectorEntityWalking extends PlayerCompanionEntityWalking {
 
   private static final Set<AggressionLevel> AGGRESSION_LEVELS =
       EnumSet.of(AggressionLevel.PASSIVE_FLEE, AggressionLevel.PASSIVE);
-  protected CollectorFeatures collectorFeatures;
+  protected final CollectorFeatures collectorFeatures;
 
-  public CollectorEntityWalking(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
+  public CollectorEntityWalking(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.setAggressionLevel(getDefaultAggressionLevel());
@@ -83,5 +85,4 @@ public class CollectorEntityWalking extends PlayerCompanionEntityWalking {
     super.tick();
     this.collectorFeatures.tick();
   }
-
 }

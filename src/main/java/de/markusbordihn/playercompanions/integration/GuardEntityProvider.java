@@ -43,12 +43,14 @@ public class GuardEntityProvider implements IEntityComponentProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
+    if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity
+        && playerCompanionEntity.isAlive()) {
       PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
       if (data != null && data.hasEntityTarget()) {
-        tooltip.add(Component.literal("Target: ")
-            .append(TranslatableText.getEntityName(data.getEntityTarget()))
-            .withStyle(ChatFormatting.RED));
+        tooltip.add(
+            Component.literal("Target: ")
+                .append(TranslatableText.getEntityName(data.getEntityTarget()))
+                .withStyle(ChatFormatting.RED));
       }
     }
   }
@@ -57,5 +59,4 @@ public class GuardEntityProvider implements IEntityComponentProvider {
   public ResourceLocation getUid() {
     return UID;
   }
-
 }

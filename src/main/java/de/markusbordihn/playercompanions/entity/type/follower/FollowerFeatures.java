@@ -42,5 +42,4 @@ public class FollowerFeatures extends PlayerCompanionsFeatures {
     super.tick();
     followerTick();
   }
-
 }

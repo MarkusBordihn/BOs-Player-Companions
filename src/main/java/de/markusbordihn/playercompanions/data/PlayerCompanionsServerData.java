@@ -24,7 +24,6 @@ import de.markusbordihn.playercompanions.config.CommonConfig;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -33,6 +32,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -72,8 +72,10 @@ public class PlayerCompanionsServerData extends SavedData {
     if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get())) {
       nextBackupTime =
           java.time.Instant.now().getEpochSecond() + (60L * COMMON.dataBackupInterval.get());
-      log.info("Enable automatic data backups every {} minutes, next backup will run at {} ...",
-          COMMON.dataBackupInterval.get(), nextBackupTime);
+      log.info(
+          "Enable automatic data backups every {} minutes, next backup will run at {} ...",
+          COMMON.dataBackupInterval.get(),
+          nextBackupTime);
     } else {
       log.warn(
           "Automatic Data backups are deactivated, please make sure to create regular backups!");
@@ -91,9 +93,14 @@ public class PlayerCompanionsServerData extends SavedData {
     PlayerCompanionsServerData.server = server;
 
     // Using a global approach and storing relevant data in the overworld only!
-    PlayerCompanionsServerData.data = server.getLevel(Level.OVERWORLD).getDataStorage()
-        .computeIfAbsent(PlayerCompanionsServerData::load, PlayerCompanionsServerData::new,
-            PlayerCompanionsServerData.getFileId());
+    PlayerCompanionsServerData.data =
+        server
+            .getLevel(Level.OVERWORLD)
+            .getDataStorage()
+            .computeIfAbsent(
+                PlayerCompanionsServerData::load,
+                PlayerCompanionsServerData::new,
+                PlayerCompanionsServerData.getFileId());
   }
 
   public static void setData(PlayerCompanionsServerData data) {
@@ -160,10 +167,13 @@ public class PlayerCompanionsServerData extends SavedData {
   }
 
   private static void updateBackupTime(long backupTime) {
-    if (nextBackupTime != backupTime && backupTime > 0
+    if (nextBackupTime != backupTime
+        && backupTime > 0
         && backupTime >= java.time.Instant.now().getEpochSecond()) {
-      log.info("{} next planned backup is scheduled for {} in about {} min.",
-          Constants.LOG_ICON_NAME, backupTime,
+      log.info(
+          "{} next planned backup is scheduled for {} in about {} min.",
+          Constants.LOG_ICON_NAME,
+          backupTime,
           (backupTime - java.time.Instant.now().getEpochSecond()) / 60);
       nextBackupTime = backupTime;
     }
@@ -209,6 +219,18 @@ public class PlayerCompanionsServerData extends SavedData {
     return companionsPerPlayerMap.get(ownerUUID);
   }
 
+  public int getNumberOfCompanions(ServerPlayer serverPlayer) {
+    return getNumberOfCompanions(serverPlayer.getUUID());
+  }
+
+  public int getNumberOfCompanions(UUID ownerUUID) {
+    Set<PlayerCompanionData> playerCompanions = getCompanions(ownerUUID);
+    if (playerCompanions != null) {
+      return playerCompanions.size();
+    }
+    return 0;
+  }
+
   public Set<Entity> getCompanionsEntity(UUID ownerUUID, Level level) {
     if (level instanceof ServerLevel serverLevel) {
       return getCompanionsEntity(ownerUUID, serverLevel);
@@ -241,8 +263,8 @@ public class PlayerCompanionsServerData extends SavedData {
   public PlayerCompanionData updatePlayerCompanion(PlayerCompanionEntity companionEntity) {
     PlayerCompanionData playerCompanion = playerCompanionsMap.get(companionEntity.getUUID());
     if (playerCompanion == null) {
-      log.error("Failed to update player companion {} because it does not exists!",
-          companionEntity);
+      log.error(
+          "Failed to update player companion {} because it does not exists!", companionEntity);
       registerCompanion(companionEntity);
       return null;
     }
@@ -280,15 +302,15 @@ public class PlayerCompanionsServerData extends SavedData {
     return registerCompanion(companionEntity, true);
   }
 
-  public PlayerCompanionData registerCompanion(PlayerCompanionEntity companionEntity,
-      boolean requiredOwner) {
+  public PlayerCompanionData registerCompanion(
+      PlayerCompanionEntity companionEntity, boolean requiredOwner) {
     if (playerCompanionsMap.get(companionEntity.getUUID()) != null) {
       log.warn("Companion {} is already registered!", companionEntity);
       return playerCompanionsMap.get(companionEntity.getUUID());
     }
     if (requiredOwner && !companionEntity.hasOwner()) {
-      log.debug("Skipping companion {} for registration because it has no owner, yet!",
-          companionEntity);
+      log.debug(
+          "Skipping companion {} for registration because it has no owner, yet!", companionEntity);
       return null;
     }
     if (companionEntity.hasOwner()) {
@@ -314,7 +336,9 @@ public class PlayerCompanionsServerData extends SavedData {
       if (ownerUUID != null) {
         Set<PlayerCompanionData> playerCompanions = companionsPerPlayerMap.get(ownerUUID);
         if (playerCompanions != null) {
-          log.info("Unregister Player Companion {} from owner {} ...", playerCompanion.getUUID(),
+          log.info(
+              "Unregister Player Companion {} from owner {} ...",
+              playerCompanion.getUUID(),
               ownerUUID);
           playerCompanions.remove(playerCompanion);
         }
@@ -344,9 +368,7 @@ public class PlayerCompanionsServerData extends SavedData {
 
     // Iterate throw all companions and store their full data (meta + entity data).
     ListTag companionListTag = new ListTag();
-    Iterator<PlayerCompanionData> playerCompanionIterator = playerCompanionsMap.values().iterator();
-    while (playerCompanionIterator.hasNext()) {
-      PlayerCompanionData playerCompanion = playerCompanionIterator.next();
+    for (PlayerCompanionData playerCompanion : playerCompanionsMap.values()) {
       if (playerCompanion != null) {
         CompoundTag playerCompanionCompoundTag = new CompoundTag();
         playerCompanion.save(playerCompanionCompoundTag);
@@ -360,7 +382,8 @@ public class PlayerCompanionsServerData extends SavedData {
     compoundTag.put(NPC_TAG, npcListTag);
 
     // Create a automatic backup, if enabled for the configured interval.
-    if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get()) && nextBackupTime > 0
+    if (Boolean.TRUE.equals(COMMON.dataBackupEnabled.get())
+        && nextBackupTime > 0
         && java.time.Instant.now().getEpochSecond() >= nextBackupTime) {
       PlayerCompanionsServerDataBackup.saveBackup(compoundTag);
       updateBackupTime(
@@ -369,5 +392,4 @@ public class PlayerCompanionsServerData extends SavedData {
 
     return compoundTag;
   }
-
 }

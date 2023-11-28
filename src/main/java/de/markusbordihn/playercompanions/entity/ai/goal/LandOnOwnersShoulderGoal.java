@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,9 +19,8 @@
 
 package de.markusbordihn.playercompanions.entity.ai.goal;
 
-import net.minecraft.server.level.ServerPlayer;
-
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public class LandOnOwnersShoulderGoal extends PlayerCompanionGoal {
   private ServerPlayer owner;
@@ -44,8 +43,11 @@ public class LandOnOwnersShoulderGoal extends PlayerCompanionGoal {
         && this.playerCompanionEntity.getOwner() instanceof ServerPlayer serverPlayer) {
       this.owner = serverPlayer;
     }
-    return this.owner != null && !owner.isSpectator() && !owner.getAbilities().flying
-        && !owner.isInWater() && !owner.isInPowderSnow
+    return this.owner != null
+        && !owner.isSpectator()
+        && !owner.getAbilities().flying
+        && !owner.isInWater()
+        && !owner.isInPowderSnow
         && !this.playerCompanionEntity.isOrderedToSit()
         && !this.playerCompanionEntity.isOrderedToPosition()
         && this.playerCompanionEntity.canSitOnShoulder();
@@ -68,7 +70,8 @@ public class LandOnOwnersShoulderGoal extends PlayerCompanionGoal {
 
   @Override
   public void tick() {
-    if (!this.isSittingOnShoulder && !this.playerCompanionEntity.isInSittingPose()
+    if (!this.isSittingOnShoulder
+        && !this.playerCompanionEntity.isInSittingPose()
         && !this.playerCompanionEntity.isLeashed()) {
       if (this.playerCompanionEntity.getBoundingBox().intersects(this.owner.getBoundingBox())) {
         this.isSittingOnShoulder = this.playerCompanionEntity.setEntityOnShoulder(this.owner);

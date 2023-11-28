@@ -1,29 +1,29 @@
 /**
  * Copyright 2021 Markus Bordihn
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
+ * <p>The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package de.markusbordihn.playercompanions.data;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.ActionType;
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
 import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -39,17 +39,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.ActionType;
-import de.markusbordihn.playercompanions.entity.AggressionLevel;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.type.PlayerCompanionType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionData {
 
+  public static final String UUID_TAG = "UUID";
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   private static final String ACTIVE_TAG = "Active";
   private static final String ENTITY_ACTION_TYPE = "EntityActionType";
   private static final String ENTITY_AGGRESSION_LEVEL = "EntityAggressionLevel";
@@ -73,8 +69,6 @@ public class PlayerCompanionData {
   private static final String POSITION_TAG = "Position";
   private static final String REMOVED_TAG = "Removed";
   private static final String TYPE_TAG = "Type";
-  public static final String UUID_TAG = "UUID";
-
   private ActionType entityActionType = ActionType.UNKNOWN;
   private AggressionLevel entityAggressionLevel = AggressionLevel.UNKNOWN;
   private BlockPos blockPos;
@@ -187,7 +181,6 @@ public class PlayerCompanionData {
   public void setEntityActionType(ActionType actionType) {
     this.entityActionType = actionType;
   }
-
 
   public AggressionLevel getEntityAggressionLevel() {
     return this.entityAggressionLevel;
@@ -330,7 +323,8 @@ public class PlayerCompanionData {
 
       for (int index = 0; index < getInventoryItemsSize(); index++) {
         ItemStack existingItems = getInventoryItem(index);
-        if (!existingItems.isEmpty() && existingItems.is(item)
+        if (!existingItems.isEmpty()
+            && existingItems.is(item)
             && existingItems.getCount() + numberOfItems < existingItems.getMaxStackSize()) {
           existingItems.grow(numberOfItems);
           return true;
@@ -358,8 +352,10 @@ public class PlayerCompanionData {
   public void load(PlayerCompanionEntity companion) {
     this.companionEntity = companion;
     this.companionUUID = companion.getUUID();
-    this.name = companion.hasCustomName() ? companion.getCustomName().getString()
-        : companion.getRandomName();
+    this.name =
+        companion.hasCustomName()
+            ? companion.getCustomName().getString()
+            : companion.getRandomName();
     this.type = companion.getCompanionType();
     this.hasOwner = companion.hasOwner();
     if (this.hasOwner) {
@@ -406,7 +402,10 @@ public class PlayerCompanionData {
     // Handle hand items.
     setHandItems((NonNullList<ItemStack>) companion.getHandSlots());
 
-    log.debug("Loaded PlayerCompanion {} data over entity with {} and data {}", this.name, this,
+    log.debug(
+        "Loaded PlayerCompanion {} data over entity with {} and data {}",
+        this.name,
+        this,
         this.entityData);
   }
 
@@ -516,14 +515,14 @@ public class PlayerCompanionData {
     // If not use stored values instead.
     if (playerCompanionEntity != null && playerCompanionEntity.isAlive()) {
       compoundTag.putString(ENTITY_ACTION_TYPE, playerCompanionEntity.getActionType().name());
-      compoundTag.putString(ENTITY_AGGRESSION_LEVEL,
-          playerCompanionEntity.getAggressionLevel().name());
+      compoundTag.putString(
+          ENTITY_AGGRESSION_LEVEL, playerCompanionEntity.getAggressionLevel().name());
       compoundTag.putString(ENTITY_DIMENSION, playerCompanionEntity.getDimensionName());
       compoundTag.putBoolean(ENTITY_SITTING_TAG, playerCompanionEntity.isOrderedToSit());
-      compoundTag.putBoolean(ENTITY_SITTING_ON_SHOULDER_TAG,
-          playerCompanionEntity.isSitOnShoulder());
-      compoundTag.putBoolean(ENTITY_ORDERED_TO_POSITION,
-          playerCompanionEntity.isOrderedToPosition());
+      compoundTag.putBoolean(
+          ENTITY_SITTING_ON_SHOULDER_TAG, playerCompanionEntity.isSitOnShoulder());
+      compoundTag.putBoolean(
+          ENTITY_ORDERED_TO_POSITION, playerCompanionEntity.isOrderedToPosition());
       compoundTag.putFloat(ENTITY_HEALTH_MAX_TAG, playerCompanionEntity.getMaxHealth());
       compoundTag.putFloat(ENTITY_HEALTH_TAG, playerCompanionEntity.getHealth());
       compoundTag.putInt(ENTITY_EXPERIENCE_LEVEL_TAG, playerCompanionEntity.getExperienceLevel());
@@ -538,7 +537,8 @@ public class PlayerCompanionData {
 
       // Set target, if any
       LivingEntity target = playerCompanionEntity.getTarget();
-      compoundTag.putString(ENTITY_TARGET_TAG,
+      compoundTag.putString(
+          ENTITY_TARGET_TAG,
           target == null || target.getEncodeId() == null ? "" : target.getEncodeId());
 
       // Get current armor items from entity to be in sync.
@@ -582,15 +582,47 @@ public class PlayerCompanionData {
   }
 
   public String toString() {
-    return "PlayerCompanion['" + this.name + "', type=" + this.type + ", owner=" + this.ownerUUID
-        + "(" + this.ownerName + "), entity=" + this.entityType + ", experience="
-        + this.entityExperience + ", level=" + this.entityExperienceLevel + ", health="
-        + this.entityHealth + "/" + this.entityHealthMax + ", x=" + this.blockPos.getX() + ", y="
-        + this.blockPos.getY() + ", z=" + this.blockPos.getZ() + ", armor=" + this.getArmorItems()
-        + ", hand=" + this.getHandItems() + ", dimension=" + this.entityDimension
-        + ", action_type = " + this.entityActionType.name() + ", aggression_level= "
-        + this.entityAggressionLevel.name() + ", respawnTimer=" + this.entityRespawnTimer + ", id="
-        + this.entityId + ", UUID=" + this.companionUUID + "]";
+    return "PlayerCompanion['"
+        + this.name
+        + "', type="
+        + this.type
+        + ", owner="
+        + this.ownerUUID
+        + "("
+        + this.ownerName
+        + "), entity="
+        + this.entityType
+        + ", experience="
+        + this.entityExperience
+        + ", level="
+        + this.entityExperienceLevel
+        + ", health="
+        + this.entityHealth
+        + "/"
+        + this.entityHealthMax
+        + ", x="
+        + this.blockPos.getX()
+        + ", y="
+        + this.blockPos.getY()
+        + ", z="
+        + this.blockPos.getZ()
+        + ", armor="
+        + this.getArmorItems()
+        + ", hand="
+        + this.getHandItems()
+        + ", dimension="
+        + this.entityDimension
+        + ", action_type = "
+        + this.entityActionType.name()
+        + ", aggression_level= "
+        + this.entityAggressionLevel.name()
+        + ", respawnTimer="
+        + this.entityRespawnTimer
+        + ", id="
+        + this.entityId
+        + ", UUID="
+        + this.companionUUID
+        + "]";
   }
 
   private void setDirty() {
@@ -610,11 +642,10 @@ public class PlayerCompanionData {
       return true;
     }
 
-    if (!(object instanceof PlayerCompanionData)) {
+    if (!(object instanceof PlayerCompanionData playerCompanion)) {
       return false;
     }
 
-    PlayerCompanionData playerCompanion = (PlayerCompanionData) object;
     return playerCompanion.getUUID().equals(this.companionUUID);
   }
 

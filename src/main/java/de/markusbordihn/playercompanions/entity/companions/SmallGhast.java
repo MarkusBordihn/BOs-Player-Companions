@@ -1,24 +1,32 @@
 /**
  * Copyright 2021 Markus Bordihn
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
+ * <p>The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package de.markusbordihn.playercompanions.entity.companions;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
+import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.ShootLargeFireballGoal;
+import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFlying;
+import de.markusbordihn.playercompanions.item.ModItems;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
@@ -26,10 +34,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -67,81 +71,47 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.config.CommonConfig;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.entity.ai.goal.FleeGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.ShootLargeFireballGoal;
-import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFlying;
-import de.markusbordihn.playercompanions.item.ModItems;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SmallGhast extends GuardEntityFlying implements NeutralMob {
-
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-  private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
 
   // General Information
   public static final String ID = "small_ghast";
   public static final String NAME = "Small Ghast";
   public static final Ingredient FOOD_ITEMS = Ingredient.of(Items.BONE);
-
-  // Config settings
-  private static int explosionPower = COMMON.smallGhastExplosionPower.get();
-
   // Variants
   public static final List<PlayerCompanionVariant> VARIANTS =
       List.of(PlayerCompanionVariant.DEFAULT);
-
+  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final CommonConfig.Config COMMON = CommonConfig.COMMON;
   // Companion Item by variant
-  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT = Util.make(
-      new EnumMap<>(PlayerCompanionVariant.class),
-      hashMap -> hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_GHAST_DEFAULT.get()));
+  private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap ->
+              hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.SMALL_GHAST_DEFAULT.get()));
+  // Config settings
+  private static final int explosionPower = COMMON.smallGhastExplosionPower.get();
 
   public SmallGhast(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
   }
 
-  static class SmallGhastLookGoal extends Goal {
-    private final SmallGhast smallGhast;
-
-    public SmallGhastLookGoal(SmallGhast smallGhast) {
-      this.smallGhast = smallGhast;
-      this.setFlags(EnumSet.of(Goal.Flag.LOOK));
-    }
-
-    public boolean canUse() {
-      return true;
-    }
-
-    @Override
-    public void tick() {
-      if (this.smallGhast.getTarget() == null) {
-        Vec3 vec3 = this.smallGhast.getDeltaMovement();
-        this.smallGhast.setYRot(-((float) Mth.atan2(vec3.x, vec3.z)) * (180F / (float) Math.PI));
-        this.smallGhast.yBodyRot = this.smallGhast.getYRot();
-      } else {
-        LivingEntity livingEntity = this.smallGhast.getTarget();
-        if (livingEntity != null && livingEntity.distanceToSqr(this.smallGhast) < 4096.0D) {
-          double d1 = livingEntity.getX() - this.smallGhast.getX();
-          double d2 = livingEntity.getZ() - this.smallGhast.getZ();
-          this.smallGhast.setYRot(-((float) Mth.atan2(d1, d2)) * (180F / (float) Math.PI));
-          this.smallGhast.yBodyRot = this.smallGhast.getYRot();
-        }
-      }
-    }
-  }
-
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.FLYING_SPEED, 0.4F).add(Attributes.MAX_HEALTH, 10.0D)
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.FLYING_SPEED, 0.4F)
+        .add(Attributes.MAX_HEALTH, 10.0D)
         .add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
-  public static boolean checkGhastSpawnRules(EntityType<SmallGhast> entityType, LevelAccessor level,
-      MobSpawnType mobSpawnType, BlockPos blockPos, Random random) {
+  public static boolean checkGhastSpawnRules(
+      EntityType<SmallGhast> entityType,
+      LevelAccessor level,
+      MobSpawnType mobSpawnType,
+      BlockPos blockPos,
+      Random random) {
     return level.getDifficulty() != Difficulty.PEACEFUL
         && checkMobSpawnRules(entityType, level, mobSpawnType, blockPos, random);
   }
@@ -183,10 +153,10 @@ public class SmallGhast extends GuardEntityFlying implements NeutralMob {
     this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
     this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     this.targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
-    this.targetSelector.addGoal(4,
-        new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
-    this.targetSelector.addGoal(7,
-        new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
+    this.targetSelector.addGoal(
+        4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
+    this.targetSelector.addGoal(
+        7, new NearestAttackableTargetGoal<>(this, AbstractSkeleton.class, false));
     this.targetSelector.addGoal(8, new ResetUniversalAngerTargetGoal<>(this, true));
   }
 
@@ -241,7 +211,6 @@ public class SmallGhast extends GuardEntityFlying implements NeutralMob {
     return SoundEvents.GHAST_AMBIENT;
   }
 
-
   @Override
   public SoundSource getSoundSource() {
     return SoundSource.HOSTILE;
@@ -287,4 +256,33 @@ public class SmallGhast extends GuardEntityFlying implements NeutralMob {
     return 42;
   }
 
+  static class SmallGhastLookGoal extends Goal {
+    private final SmallGhast smallGhast;
+
+    public SmallGhastLookGoal(SmallGhast smallGhast) {
+      this.smallGhast = smallGhast;
+      this.setFlags(EnumSet.of(Goal.Flag.LOOK));
+    }
+
+    public boolean canUse() {
+      return true;
+    }
+
+    @Override
+    public void tick() {
+      if (this.smallGhast.getTarget() == null) {
+        Vec3 vec3 = this.smallGhast.getDeltaMovement();
+        this.smallGhast.setYRot(-((float) Mth.atan2(vec3.x, vec3.z)) * (180F / (float) Math.PI));
+        this.smallGhast.yBodyRot = this.smallGhast.getYRot();
+      } else {
+        LivingEntity livingEntity = this.smallGhast.getTarget();
+        if (livingEntity != null && livingEntity.distanceToSqr(this.smallGhast) < 4096.0D) {
+          double d1 = livingEntity.getX() - this.smallGhast.getX();
+          double d2 = livingEntity.getZ() - this.smallGhast.getZ();
+          this.smallGhast.setYRot(-((float) Mth.atan2(d1, d2)) * (180F / (float) Math.PI));
+          this.smallGhast.yBodyRot = this.smallGhast.getYRot();
+        }
+      }
+    }
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -24,18 +24,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-
 public class CompanionScreenHelper {
 
-  public static void renderEntity(int x, int y, float yRot, float xRot,
-      PlayerCompanionEntity playerCompanionEntity) {
+  public static void renderEntity(
+      int x, int y, float yRot, float xRot, PlayerCompanionEntity playerCompanionEntity) {
     // Prepare Renderer
     Minecraft minecraft = Minecraft.getInstance();
     float f = (float) Math.atan(yRot / 40.0F);
@@ -89,8 +87,8 @@ public class CompanionScreenHelper {
     entityRenderDispatcher.setRenderShadow(false);
     MultiBufferSource.BufferSource multiBuffer =
         Minecraft.getInstance().renderBuffers().bufferSource();
-    entityRenderDispatcher.render(playerCompanionEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, poseStack1,
-        multiBuffer, 15728880);
+    entityRenderDispatcher.render(
+        playerCompanionEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, poseStack1, multiBuffer, 15728880);
     multiBuffer.endBatch();
     entityRenderDispatcher.setRenderShadow(true);
 
@@ -114,5 +112,4 @@ public class CompanionScreenHelper {
     RenderSystem.applyModelViewMatrix();
     Lighting.setupFor3DItems();
   }
-
 }

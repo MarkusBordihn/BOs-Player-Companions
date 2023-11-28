@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,13 +19,12 @@
 
 package de.markusbordihn.playercompanions.item.companions;
 
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.crafting.Ingredient;
-
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.ModEntityType;
 import de.markusbordihn.playercompanions.entity.companions.Samurai;
 import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public class SamuraiItem extends CapturedCompanion {
 

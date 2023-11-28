@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -20,38 +20,41 @@
 package de.markusbordihn.playercompanions.sounds;
 
 import de.markusbordihn.playercompanions.Constants;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModSoundEvents {
 
-  protected ModSoundEvents() {}
-
   public static final DeferredRegister<SoundEvent> SOUNDS =
       DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Constants.MOD_ID);
-
   // Fairy Sound Events
   public static final RegistryObject<SoundEvent> COMPANION_FAIRY_DEATH =
-      SOUNDS.register("companion.fairy.death",
+      SOUNDS.register(
+          "companion.fairy.death",
           () -> new SoundEvent(new ResourceLocation(Constants.MOD_ID, "companion.fairy.death")));
   public static final RegistryObject<SoundEvent> COMPANION_FAIRY_HURT =
-      SOUNDS.register("companion.fairy.hurt",
+      SOUNDS.register(
+          "companion.fairy.hurt",
           () -> new SoundEvent(new ResourceLocation(Constants.MOD_ID, "companion.fairy.hurt")));
   public static final RegistryObject<SoundEvent> COMPANION_FAIRY_HAGGLE =
-      SOUNDS.register("companion.fairy.haggle",
+      SOUNDS.register(
+          "companion.fairy.haggle",
           () -> new SoundEvent(new ResourceLocation(Constants.MOD_ID, "companion.fairy.haggle")));
   public static final RegistryObject<SoundEvent> COMPANION_FAIRY_AMBIENT =
-      SOUNDS.register("companion.fairy.ambient",
+      SOUNDS.register(
+          "companion.fairy.ambient",
           () -> new SoundEvent(new ResourceLocation(Constants.MOD_ID, "companion.fairy.ambient")));
   public static final RegistryObject<SoundEvent> COMPANION_FAIRY_YES =
-      SOUNDS.register("companion.fairy.yes",
+      SOUNDS.register(
+          "companion.fairy.yes",
           () -> new SoundEvent(new ResourceLocation(Constants.MOD_ID, "companion.fairy.yes")));
   public static final RegistryObject<SoundEvent> COMPANION_FAIRY_NO =
-      SOUNDS.register("companion.fairy.no",
+      SOUNDS.register(
+          "companion.fairy.no",
           () -> new SoundEvent(new ResourceLocation(Constants.MOD_ID, "companion.fairy.no")));
+
+  protected ModSoundEvents() {}
 }

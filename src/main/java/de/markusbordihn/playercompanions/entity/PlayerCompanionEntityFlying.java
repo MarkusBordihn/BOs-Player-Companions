@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,8 +19,8 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntityFlyControl;
 import java.util.Map;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -33,12 +33,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
-import de.markusbordihn.playercompanions.entity.ai.control.PlayerCompanionEntityFlyControl;
-
 public class PlayerCompanionEntityFlying extends PlayerCompanionEntity {
 
-  public PlayerCompanionEntityFlying(EntityType<? extends PlayerCompanionEntity> entityType,
-      Level level, Map<PlayerCompanionVariant, Item> companionItemByVariant) {
+  public PlayerCompanionEntityFlying(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
+      Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
     this.moveControl = new PlayerCompanionEntityFlyControl(this, 10, true);
     this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
@@ -51,8 +51,8 @@ public class PlayerCompanionEntityFlying extends PlayerCompanionEntity {
   }
 
   @Override
-  protected void checkFallDamage(double height, boolean flag, BlockState blockState,
-      BlockPos blockPos) {
+  protected void checkFallDamage(
+      double height, boolean flag, BlockState blockState, BlockPos blockPos) {
     // Ignore damage
   }
 
@@ -69,5 +69,4 @@ public class PlayerCompanionEntityFlying extends PlayerCompanionEntity {
   public SoundEvent getJumpSound() {
     return SoundEvents.PHANTOM_FLAP;
   }
-
 }

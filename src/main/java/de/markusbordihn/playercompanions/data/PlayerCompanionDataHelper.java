@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,15 +19,13 @@
 
 package de.markusbordihn.playercompanions.data;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionDataHelper {
 
@@ -64,8 +62,8 @@ public class PlayerCompanionDataHelper {
     }
   }
 
-  public static CompoundTag saveInventoryItems(CompoundTag compoundTag,
-      NonNullList<ItemStack> inventory) {
+  public static CompoundTag saveInventoryItems(
+      CompoundTag compoundTag, NonNullList<ItemStack> inventory) {
     ListTag listTag = new ListTag();
     for (int i = 0; i < inventory.size(); ++i) {
       ItemStack itemStack = inventory.get(i);
@@ -124,9 +122,6 @@ public class PlayerCompanionDataHelper {
   }
 
   private static void resetNonNullList(NonNullList<ItemStack> list) {
-    for (int index = 0; index < list.size(); ++index) {
-      list.set(index, ItemStack.EMPTY);
-    }
+    list.replaceAll(ignored -> ItemStack.EMPTY);
   }
-
 }

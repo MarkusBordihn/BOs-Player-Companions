@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,43 +19,35 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import com.google.common.collect.Sets;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.CommonConfig;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.google.common.collect.Sets;
-
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.config.CommonConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @EventBusSubscriber
 public class PlayerCompanionNames {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
-  private static Random rand = new Random();
-
   // Config values
   protected static final CommonConfig.Config COMMON = CommonConfig.COMMON;
-
-  private static List<String> namesNPCFemale = new ArrayList<>(Arrays.asList("Unnamed female NPC"));
-  private static List<String> namesNPCMale = new ArrayList<>(Arrays.asList("Unnamed male NPC"));
-  private static List<String> namesNPCMisc = new ArrayList<>(Arrays.asList("Unnamed misc NPC"));
+  private static final Random rand = new Random();
+  private static List<String> namesNPCFemale = new ArrayList<>(List.of("Unnamed female NPC"));
+  private static List<String> namesNPCMale = new ArrayList<>(List.of("Unnamed male NPC"));
+  private static List<String> namesNPCMisc = new ArrayList<>(List.of("Unnamed misc NPC"));
 
   private static List<String> namesCompanionFemale =
-      new ArrayList<>(Arrays.asList("Unnamed female companion"));
+      new ArrayList<>(List.of("Unnamed female companion"));
   private static List<String> namesCompanionMale =
-      new ArrayList<>(Arrays.asList("Unnamed male companion"));
+      new ArrayList<>(List.of("Unnamed male companion"));
   private static List<String> namesCompanionMisc =
-      new ArrayList<>(Arrays.asList("Unnamed misc companion"));
+      new ArrayList<>(List.of("Unnamed misc companion"));
 
   protected PlayerCompanionNames() {}
 
@@ -78,8 +70,8 @@ public class PlayerCompanionNames {
     }
 
     if (!COMMON.namesCompanionFemale.get().isEmpty()) {
-      log.info("Loading about {} female companion names ...",
-          COMMON.namesCompanionFemale.get().size());
+      log.info(
+          "Loading about {} female companion names ...", COMMON.namesCompanionFemale.get().size());
       namesCompanionFemale = new ArrayList<>(Sets.newHashSet(COMMON.namesCompanionFemale.get()));
     }
 
@@ -144,5 +136,4 @@ public class PlayerCompanionNames {
     }
     return getRandomMaleCompanionName();
   }
-
 }

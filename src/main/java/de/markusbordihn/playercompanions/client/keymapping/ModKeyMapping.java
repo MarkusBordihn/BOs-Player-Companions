@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,42 +19,41 @@
 
 package de.markusbordihn.playercompanions.client.keymapping;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.platform.InputConstants;
-
+import de.markusbordihn.playercompanions.Constants;
 import net.minecraft.client.KeyMapping;
-
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-
-import de.markusbordihn.playercompanions.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
 
 public class ModKeyMapping {
 
+  public static final KeyMapping AGGRESSION_KEY =
+      new KeyMapping(
+          Constants.KEY_PREFIX + "aggression",
+          KeyConflictContext.IN_GAME,
+          InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_ALT),
+          Constants.KEY_PREFIX + "category");
+  public static final KeyMapping COMMAND_KEY =
+      new KeyMapping(
+          Constants.KEY_PREFIX + "control",
+          KeyConflictContext.IN_GAME,
+          InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL),
+          Constants.KEY_PREFIX + "category");
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   protected ModKeyMapping() {}
 
-  public static final KeyMapping AGGRESSION_KEY = new KeyMapping(Constants.KEY_PREFIX + "aggression",
-      KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_ALT),
-      Constants.KEY_PREFIX + "category");
-
-  public static final KeyMapping COMMAND_KEY =
-      new KeyMapping(Constants.KEY_PREFIX + "control", KeyConflictContext.IN_GAME,
-          InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_CONTROL),
-          Constants.KEY_PREFIX + "category");
-
   public static void registerKeyMapping(final FMLClientSetupEvent event) {
     log.info("{} Key Mapping ...", Constants.LOG_REGISTER_PREFIX);
 
-    event.enqueueWork(() -> {
-      ClientRegistry.registerKeyBinding(ModKeyMapping.AGGRESSION_KEY);
-      ClientRegistry.registerKeyBinding(ModKeyMapping.COMMAND_KEY);
-    });
+    event.enqueueWork(
+        () -> {
+          ClientRegistry.registerKeyBinding(ModKeyMapping.AGGRESSION_KEY);
+          ClientRegistry.registerKeyBinding(ModKeyMapping.COMMAND_KEY);
+        });
   }
 }

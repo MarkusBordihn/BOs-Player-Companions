@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,10 +19,9 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import de.markusbordihn.playercompanions.Constants;
 
 public enum PlayerCompanionVariant {
   BLACK,
@@ -51,7 +50,7 @@ public enum PlayerCompanionVariant {
   WHITE,
   YELLOW;
 
-  protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   public static PlayerCompanionVariant getOrDefault(String value) {
     if (value != null && !value.isEmpty()) {
@@ -67,5 +66,4 @@ public enum PlayerCompanionVariant {
   public String getSuffix() {
     return "_" + this.name().toLowerCase();
   }
-
 }

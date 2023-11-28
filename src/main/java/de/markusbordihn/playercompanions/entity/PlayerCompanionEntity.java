@@ -1,30 +1,37 @@
 /**
  * Copyright 2021 Markus Bordihn
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
+ * <p>The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package de.markusbordihn.playercompanions.entity;
 
+import com.mojang.datafixers.util.Pair;
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.block.LightBlock;
+import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
+import de.markusbordihn.playercompanions.item.CapturedCompanion;
+import de.markusbordihn.playercompanions.network.NetworkHandler;
+import de.markusbordihn.playercompanions.skin.SkinType;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
-
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -63,20 +70,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
-
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.block.LightBlock;
-import de.markusbordihn.playercompanions.client.keymapping.ModKeyMapping;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
-import de.markusbordihn.playercompanions.entity.ai.goal.FoodItemGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.TameItemGoal;
-import de.markusbordihn.playercompanions.item.CapturedCompanion;
-import de.markusbordihn.playercompanions.network.NetworkHandler;
-import de.markusbordihn.playercompanions.skin.SkinType;
 
 @EventBusSubscriber
 public class PlayerCompanionEntity extends PlayerCompanionEntityData
@@ -94,17 +90,15 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       new ResourceLocation(Constants.MOD_ID, "companion_will_respawn_message");
   private static final ResourceLocation WILL_NOT_RESPAWN_MESSAGE =
       new ResourceLocation(Constants.MOD_ID, "companion_will_not_respawn_message");
-
-  // Config settings
-  private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
-  private static int respawnDelay = COMMON.respawnDelay.get();
-  private static boolean friendlyFire = COMMON.friendlyFire.get();
   private static final int BABY_GROW_TIME = 20 * 60 * 60 * 24; // In ticks: 1 day
-
   // Additional ticker
   private static final int INACTIVE_TICK = 100;
   private static final int GLOW_TICK = LightBlock.TICK_TTL / 2;
   private static final int ANNOYING_COUNTER_TICK = 20 * 60 * 5; // In ticks: 5 minutes
+  // Config settings
+  private static boolean respawnOnDeath = COMMON.respawnOnDeath.get();
+  private static int respawnDelay = COMMON.respawnDelay.get();
+  private static boolean friendlyFire = COMMON.friendlyFire.get();
   private int ticker = 0;
   private int glowTicker = 0;
   private int annoyingCounterTicker = 0;
@@ -113,7 +107,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   // Temporary states
   private boolean wasOnGround;
 
-  public PlayerCompanionEntity(EntityType<? extends PlayerCompanionEntity> entityType, Level level,
+  public PlayerCompanionEntity(
+      EntityType<? extends PlayerCompanionEntity> entityType,
+      Level level,
       Map<PlayerCompanionVariant, Item> companionItemByVariant) {
     super(entityType, level, companionItemByVariant);
 
@@ -134,8 +130,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     respawnDelay = COMMON.respawnDelay.get();
     friendlyFire = COMMON.friendlyFire.get();
     if (respawnOnDeath) {
-      log.info("{} will be respawn on death with a {} secs delay.", Constants.LOG_ICON_NAME,
-          COMMON.respawnDelay.get(), respawnDelay);
+      log.info(
+          "{} will be respawn on death with a {} secs delay.",
+          Constants.LOG_ICON_NAME,
+          respawnDelay);
     } else {
       log.warn("{} will NOT respawn on death!", Constants.LOG_ICON_NAME);
     }
@@ -145,8 +143,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.MAX_HEALTH, 8.0D)
+        .add(Attributes.ATTACK_DAMAGE, 2.0D);
   }
 
   protected void addParticle(ParticleOptions particleOptions) {
@@ -155,8 +155,14 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       float randomOffset = this.random.nextFloat() * 0.5F + 0.5F;
       float randomOffsetX = Mth.sin(randomCircleDistance) * 0.5F * randomOffset;
       float randomOffsetZ = Mth.cos(randomCircleDistance) * 0.5F * randomOffset;
-      this.level.addParticle(particleOptions, this.getX() + randomOffsetX, this.getY() + 0.5,
-          this.getZ() + randomOffsetZ, 0.0D, 0.0D, 0.0D);
+      this.level.addParticle(
+          particleOptions,
+          this.getX() + randomOffsetX,
+          this.getY() + 0.5,
+          this.getZ() + randomOffsetZ,
+          0.0D,
+          0.0D,
+          0.0D);
     }
   }
 
@@ -165,7 +171,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   protected void playSound(Player player, SoundEvent sound, float volume, float pitch) {
-    if (player.level.isClientSide && sound != null && sound.getLocation() != null && volume > 0.0f
+    if (player.level.isClientSide
+        && sound != null
+        && sound.getLocation() != null
+        && volume > 0.0f
         && pitch >= 0.0f) {
       player.playSound(sound, volume, pitch);
     }
@@ -205,7 +214,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     this.heal(foodProperties != null ? foodProperties.getNutrition() : 0.5F);
     if (foodProperties != null) {
       for (Pair<MobEffectInstance, Float> pair : foodProperties.getEffects()) {
-        if (!this.level.isClientSide && pair.getFirst() != null
+        if (!this.level.isClientSide
+            && pair.getFirst() != null
             && this.level.random.nextFloat() < pair.getSecond()) {
           this.addEffect(new MobEffectInstance(pair.getFirst()));
         }
@@ -313,9 +323,11 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
     if (level > 1) {
       addParticle(ParticleTypes.ENCHANT);
-      sendOwnerMessage(new TranslatableComponent(
-          Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, LEVEL_UP_MESSAGE),
-          this.getCustomName(), level));
+      sendOwnerMessage(
+          new TranslatableComponent(
+              Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, LEVEL_UP_MESSAGE),
+              this.getCustomName(),
+              level));
     }
   }
 
@@ -339,9 +351,10 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   @Override
   public void stopRespawnTimer() {
     super.stopRespawnTimer();
-    sendOwnerMessage(new TranslatableComponent(
-        Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, RESPAWN_MESSAGE),
-        this.getCustomName()));
+    sendOwnerMessage(
+        new TranslatableComponent(
+            Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, RESPAWN_MESSAGE),
+            this.getCustomName()));
     setDataSyncNeeded();
   }
 
@@ -360,7 +373,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
 
     // Ignore entities from the same Owner.
-    if (!friendlyFire && livingEntity instanceof TamableAnimal tamableAnimal
+    if (!friendlyFire
+        && livingEntity instanceof TamableAnimal tamableAnimal
         && tamableAnimal.getOwner() == this.getOwner()) {
       return;
     }
@@ -371,15 +385,17 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
   }
 
   @Override
-  public boolean canTamePlayerCompanion(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand) {
-    return this.isTamable() && getTameItem() != null && itemStack.is(getTameItem())
+  public boolean canTamePlayerCompanion(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand) {
+    return this.isTamable()
+        && getTameItem() != null
+        && itemStack.is(getTameItem())
         && player.getInventory().canPlaceItem(1, itemStack);
   }
 
   @Override
-  public InteractionResult tamePlayerCompanion(ItemStack itemStack, Player player,
-      LivingEntity livingEntity, InteractionHand hand) {
+  public InteractionResult tamePlayerCompanion(
+      ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand) {
     if (itemStack != null && !player.getAbilities().instabuild) {
       itemStack.shrink(1);
     }
@@ -441,16 +457,16 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         // Handle Commands with CTRL Key pressed
         boolean commandKeyPressed = ModKeyMapping.COMMAND_KEY.isDown();
         if (commandKeyPressed && (itemStack.isEmpty() || isWeapon(itemStack))) {
-          NetworkHandler.commandPlayerCompanion(getStringUUID(),
-              PlayerCompanionCommand.SIT_FOLLOW_TOGGLE);
+          NetworkHandler.commandPlayerCompanion(
+              getStringUUID(), PlayerCompanionCommand.SIT_FOLLOW_TOGGLE);
           return InteractionResult.SUCCESS;
         }
 
         // Handle Aggression level with ALT Key pressed
         boolean aggressionKeyPressed = ModKeyMapping.AGGRESSION_KEY.isDown();
         if (aggressionKeyPressed && (itemStack.isEmpty() || isWeapon(itemStack))) {
-          NetworkHandler.commandPlayerCompanion(getStringUUID(),
-              PlayerCompanionCommand.AGGRESSION_LEVEL_TOGGLE);
+          NetworkHandler.commandPlayerCompanion(
+              getStringUUID(), PlayerCompanionCommand.AGGRESSION_LEVEL_TOGGLE);
           return InteractionResult.SUCCESS;
         }
 
@@ -465,7 +481,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         }
 
         // No further interaction with "empty" captured companion items.
-        else if (itemStack != null && !itemStack.isEmpty()
+        else if (itemStack != null
+            && !itemStack.isEmpty()
             && itemStack.getItem() instanceof CapturedCompanion capturedCompanion
             && !capturedCompanion.hasCompanion(itemStack)) {
           return InteractionResult.FAIL;
@@ -485,14 +502,19 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
       else if (!this.isTame() && !this.isFood(itemStack) && getTameItem() != null) {
         if (annoyingCounter < 10) {
           player.sendMessage(
-              new TranslatableComponent(Constants.TEXT_PREFIX + "untamed_companion.interaction",
-                  this.getCustomName(), getTameItem()),
+              new TranslatableComponent(
+                  Constants.TEXT_PREFIX + "untamed_companion.interaction",
+                  this.getCustomName(),
+                  getTameItem()),
               Util.NIL_UUID);
           annoyingCounter++;
         } else {
-          player.sendMessage(new TranslatableComponent(
-              Constants.TEXT_PREFIX + "untamed_companion.interaction.annoying",
-              this.getCustomName()).withStyle(ChatFormatting.RED), Util.NIL_UUID);
+          player.sendMessage(
+              new TranslatableComponent(
+                      Constants.TEXT_PREFIX + "untamed_companion.interaction.annoying",
+                      this.getCustomName())
+                  .withStyle(ChatFormatting.RED),
+              Util.NIL_UUID);
         }
         return InteractionResult.SUCCESS;
       }
@@ -540,11 +562,15 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
 
   @Override
   @Nullable
-  public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevelAccessor,
-      DifficultyInstance difficulty, MobSpawnType mobSpawnType,
-      @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
-    spawnGroupData = super.finalizeSpawn(serverLevelAccessor, difficulty, mobSpawnType,
-        spawnGroupData, compoundTag);
+  public SpawnGroupData finalizeSpawn(
+      ServerLevelAccessor serverLevelAccessor,
+      DifficultyInstance difficulty,
+      MobSpawnType mobSpawnType,
+      @Nullable SpawnGroupData spawnGroupData,
+      @Nullable CompoundTag compoundTag) {
+    spawnGroupData =
+        super.finalizeSpawn(
+            serverLevelAccessor, difficulty, mobSpawnType, spawnGroupData, compoundTag);
 
     // Set random texture variants, if available.
     if (SkinType.DEFAULT.equals(getSkinType())
@@ -576,7 +602,8 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     }
 
     // ClientSide: Annoying counter reset.
-    if (this.level.isClientSide && this.annoyingCounter > 0
+    if (this.level.isClientSide
+        && this.annoyingCounter > 0
         && this.annoyingCounterTicker++ >= ANNOYING_COUNTER_TICK) {
       this.annoyingCounter = 0;
       this.annoyingCounterTicker = 0;
@@ -585,7 +612,9 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     // ServerSide: Place light block, if companion should glow in the dark.
     if (!this.level.isClientSide && this.shouldGlowInTheDark() && this.glowTicker++ >= GLOW_TICK) {
       BlockPos lightBlockPos = this.getOnPos();
-      if (this.level.isNight() || this.level.isRaining() || this.level.isThundering()
+      if (this.level.isNight()
+          || this.level.isRaining()
+          || this.level.isThundering()
           || !this.level.canSeeSky(lightBlockPos)) {
         LightBlock.place(level, lightBlockPos);
       }
@@ -600,8 +629,14 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
           float f1 = this.random.nextFloat() * 0.5F + 0.5F;
           float f2 = Mth.sin(f) * 0.5F * f1;
           float f3 = Mth.cos(f) * 0.5F * f1;
-          this.level.addParticle(this.getParticleType(), this.getX() + f2, this.getY(),
-              this.getZ() + f3, 0.0D, 0.0D, 0.0D);
+          this.level.addParticle(
+              this.getParticleType(),
+              this.getX() + f2,
+              this.getY(),
+              this.getZ() + f3,
+              0.0D,
+              0.0D,
+              0.0D);
         }
       }
       if (doPlayJumpSound() && getJumpSound() != null) {
@@ -633,13 +668,16 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         }
 
         // Inform owner about dead of companion and possible respawn.
-        sendOwnerMessage(new TranslatableComponent(
-            Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_RESPAWN_MESSAGE),
-            getCustomName(), respawnDelay));
+        sendOwnerMessage(
+            new TranslatableComponent(
+                Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_RESPAWN_MESSAGE),
+                getCustomName(),
+                respawnDelay));
       } else {
-        sendOwnerMessage(new TranslatableComponent(
-            Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_NOT_RESPAWN_MESSAGE),
-            getCustomName()));
+        sendOwnerMessage(
+            new TranslatableComponent(
+                Util.makeDescriptionId(Constants.ENTITY_TEXT_PREFIX, WILL_NOT_RESPAWN_MESSAGE),
+                getCustomName()));
         setActive(false);
 
         // Unregister companion from server data and remove entity.
@@ -647,7 +685,6 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
         this.remove(RemovalReason.KILLED);
       }
     }
-
   }
 
   @Override
@@ -668,14 +705,30 @@ public class PlayerCompanionEntity extends PlayerCompanionEntityData
     int id = this.getId();
 
     return removalReason != null
-        ? String.format(Locale.ROOT,
+        ? String.format(
+            Locale.ROOT,
             "%s['%s'/%d, l='%s', x=%.2f, y=%.2f, z=%.2f, tamed=%s, owner='%s', removed=%s]",
-            this.getClass().getSimpleName(), this.getName().getString(), id, level, this.getX(),
-            this.getY(), this.getZ(), tamed, owner, removalReason)
-        : String.format(Locale.ROOT,
+            this.getClass().getSimpleName(),
+            this.getName().getString(),
+            id,
+            level,
+            this.getX(),
+            this.getY(),
+            this.getZ(),
+            tamed,
+            owner,
+            removalReason)
+        : String.format(
+            Locale.ROOT,
             "%s['%s'/%d, l='%s', x=%.2f, y=%.2f, z=%.2f, tamed=%s, owner='%s']",
-            this.getClass().getSimpleName(), this.getName().getString(), id, level, this.getX(),
-            this.getY(), this.getZ(), tamed, owner);
+            this.getClass().getSimpleName(),
+            this.getName().getString(),
+            id,
+            level,
+            this.getX(),
+            this.getY(),
+            this.getZ(),
+            tamed,
+            owner);
   }
-
 }

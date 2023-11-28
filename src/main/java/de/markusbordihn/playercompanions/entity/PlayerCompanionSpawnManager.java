@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,12 +19,11 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.data.PlayerCompanionData;
+import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
 import java.util.Iterator;
 import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -35,34 +34,28 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.data.PlayerCompanionData;
-import de.markusbordihn.playercompanions.data.PlayerCompanionsServerData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PlayerCompanionSpawnManager {
 
+  public static final String COMPANION_UUID_TAG = "CompanionUUID";
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
   private static final String FALL_DISTANCE_TAG = "FallDistance";
   private static final String FIRE_TAG = "Fire";
   private static final String HEALTH_TAG = "Health";
   private static final String MOTION_TAG = "Motion";
   private static final String ON_GROUND_TAG = "OnGround";
 
-  public static final String COMPANION_UUID_TAG = "CompanionUUID";
-
-  protected PlayerCompanionSpawnManager() {
-
-  }
+  protected PlayerCompanionSpawnManager() {}
 
   public static boolean spawn(UUID uuid, ServerPlayer serverPlayer) {
     return spawn(uuid, serverPlayer, serverPlayer.getLevel());
@@ -72,18 +65,21 @@ public class PlayerCompanionSpawnManager {
     return spawn(uuid, serverPlayer, serverLevel, serverPlayer.getOnPos().above());
   }
 
-  public static boolean spawn(ItemStack itemStack, ServerPlayer serverPlayer,
-      ServerLevel serverLevel, BlockPos blockPos) {
+  public static boolean spawn(
+      ItemStack itemStack, ServerPlayer serverPlayer, ServerLevel serverLevel, BlockPos blockPos) {
     return spawn(getCompanionUUID(itemStack), serverPlayer, serverLevel, blockPos);
   }
 
-  public static boolean spawn(UUID uuid, ServerPlayer serverPlayer, ServerLevel serverLevel,
-      BlockPos blockPos) {
+  public static boolean spawn(
+      UUID uuid, ServerPlayer serverPlayer, ServerLevel serverLevel, BlockPos blockPos) {
     log.info("Spawn {} {} {} {}", uuid, blockPos, serverPlayer, serverLevel);
 
     // Check if UUID is valid.
     if (uuid == null) {
-      log.error("Unable to find companion with UUID {} for player {} in {}.", uuid, serverPlayer,
+      log.error(
+          "Unable to find companion with UUID {} for player {} in {}.",
+          uuid,
+          serverPlayer,
           serverLevel);
       return false;
     }
@@ -111,20 +107,20 @@ public class PlayerCompanionSpawnManager {
               new BlockPos(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5));
         } else {
           serverPlayer.sendMessage(
-              new TranslatableComponent(Constants.TEXT_PREFIX + "companion_is_near_you",
-                  playerCompanion.getName()),
+              new TranslatableComponent(
+                  Constants.TEXT_PREFIX + "companion_is_near_you", playerCompanion.getName()),
               Util.NIL_UUID);
         }
       } else {
         BlockState blockState = serverLevel.getBlockState(blockPos);
         if (isValidSpawnPlace(blockState)) {
-          playerCompanion.teleportTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5,
-              blockPos.getZ() + 0.5);
-          log.debug("Teleport player companion {} to position ...", playerCompanion, blockPos);
+          playerCompanion.teleportTo(
+              blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+          log.debug("Teleport player companion {} to position {} ...", playerCompanion, blockPos);
         } else {
           Vec3 playerPosition = serverPlayer.position();
           playerCompanion.teleportTo(playerPosition.x, playerPosition.y, playerPosition.z);
-          log.debug("Teleport player companion {} to player ...", playerCompanion, serverPlayer);
+          log.debug("Teleport player companion {} to player {} ...", playerCompanion, serverPlayer);
         }
         return true;
       }
@@ -162,8 +158,8 @@ public class PlayerCompanionSpawnManager {
   }
 
   public static boolean despawn(UUID uuid, ServerLevel serverLevel) {
-    if (getCompanionEntity(uuid,
-        serverLevel) instanceof PlayerCompanionEntity playerCompanionEntity) {
+    if (getCompanionEntity(uuid, serverLevel)
+        instanceof PlayerCompanionEntity playerCompanionEntity) {
       return PlayerCompanionSpawnManager.despawn(playerCompanionEntity);
     }
     return false;
@@ -238,8 +234,8 @@ public class PlayerCompanionSpawnManager {
     return createCompanionEntity(playerCompanion, serverLevel);
   }
 
-  public static Entity createCompanionEntity(PlayerCompanionData playerCompanion,
-      ServerLevel serverLevel) {
+  public static Entity createCompanionEntity(
+      PlayerCompanionData playerCompanion, ServerLevel serverLevel) {
     EntityType<?> entityType = playerCompanion.getEntityType();
     CompoundTag entityData = playerCompanion.getEntityData();
     Entity entity = entityType.create(serverLevel);
@@ -270,8 +266,11 @@ public class PlayerCompanionSpawnManager {
   }
 
   public static boolean isValidSpawnPlace(BlockState blockState) {
-    return blockState.isAir() || blockState.is(Blocks.WATER) || blockState.is(Blocks.GRASS)
-        || blockState.is(Blocks.SEAGRASS) || blockState.is(Blocks.SNOW)
+    return blockState.isAir()
+        || blockState.is(Blocks.WATER)
+        || blockState.is(Blocks.GRASS)
+        || blockState.is(Blocks.SEAGRASS)
+        || blockState.is(Blocks.SNOW)
         || blockState.is(Blocks.FERN);
   }
 
@@ -282,5 +281,4 @@ public class PlayerCompanionSpawnManager {
     }
     return listTag;
   }
-
 }

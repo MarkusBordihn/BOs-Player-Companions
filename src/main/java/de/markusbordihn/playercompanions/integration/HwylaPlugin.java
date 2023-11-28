@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,16 +19,15 @@
 
 package de.markusbordihn.playercompanions.integration;
 
-import mcp.mobius.waila.api.IWailaClientRegistration;
-import mcp.mobius.waila.api.IWailaPlugin;
-import mcp.mobius.waila.api.TooltipPosition;
-import mcp.mobius.waila.api.WailaPlugin;
-
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityFloating;
 import de.markusbordihn.playercompanions.entity.type.collector.CollectorEntityWalking;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityFloating;
 import de.markusbordihn.playercompanions.entity.type.guard.GuardEntityWalking;
+import mcp.mobius.waila.api.IWailaClientRegistration;
+import mcp.mobius.waila.api.IWailaPlugin;
+import mcp.mobius.waila.api.TooltipPosition;
+import mcp.mobius.waila.api.WailaPlugin;
 
 @WailaPlugin
 public class HwylaPlugin implements IWailaPlugin {
@@ -36,20 +35,19 @@ public class HwylaPlugin implements IWailaPlugin {
   @Override
   public void registerClient(IWailaClientRegistration registration) {
     // General provider
-    registration.registerIconProvider(PlayerCompanionEntityProvider.INSTANCE,
-        PlayerCompanionEntity.class);
-    registration.registerComponentProvider(PlayerCompanionEntityProvider.INSTANCE,
-        TooltipPosition.BODY, PlayerCompanionEntity.class);
+    registration.registerIconProvider(
+        PlayerCompanionEntityProvider.INSTANCE, PlayerCompanionEntity.class);
+    registration.registerComponentProvider(
+        PlayerCompanionEntityProvider.INSTANCE, TooltipPosition.BODY, PlayerCompanionEntity.class);
 
     // Type specific provider
-    registration.registerComponentProvider(CollectorEntityProvider.INSTANCE, TooltipPosition.BODY,
-        CollectorEntityFloating.class);
-    registration.registerComponentProvider(CollectorEntityProvider.INSTANCE, TooltipPosition.BODY,
-        CollectorEntityWalking.class);
-    registration.registerComponentProvider(GuardEntityProvider.INSTANCE, TooltipPosition.BODY,
-        GuardEntityFloating.class);
-    registration.registerComponentProvider(GuardEntityProvider.INSTANCE, TooltipPosition.BODY,
-        GuardEntityWalking.class);
+    registration.registerComponentProvider(
+        CollectorEntityProvider.INSTANCE, TooltipPosition.BODY, CollectorEntityFloating.class);
+    registration.registerComponentProvider(
+        CollectorEntityProvider.INSTANCE, TooltipPosition.BODY, CollectorEntityWalking.class);
+    registration.registerComponentProvider(
+        GuardEntityProvider.INSTANCE, TooltipPosition.BODY, GuardEntityFloating.class);
+    registration.registerComponentProvider(
+        GuardEntityProvider.INSTANCE, TooltipPosition.BODY, GuardEntityWalking.class);
   }
-
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,21 +19,18 @@
 
 package de.markusbordihn.playercompanions.integration;
 
-import mcp.mobius.waila.api.EntityAccessor;
-import mcp.mobius.waila.api.IEntityComponentProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import de.markusbordihn.playercompanions.data.PlayerCompanionData;
 import de.markusbordihn.playercompanions.data.PlayerCompanionsClientData;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
 import de.markusbordihn.playercompanions.text.TranslatableText;
+import mcp.mobius.waila.api.EntityAccessor;
+import mcp.mobius.waila.api.IEntityComponentProvider;
+import mcp.mobius.waila.api.ITooltip;
+import mcp.mobius.waila.api.config.IPluginConfig;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GuardEntityProvider implements IEntityComponentProvider {
 
@@ -45,8 +42,10 @@ public class GuardEntityProvider implements IEntityComponentProvider {
     if (accessor.getEntity() instanceof PlayerCompanionEntity playerCompanionEntity) {
       PlayerCompanionData data = PlayerCompanionsClientData.getCompanion(playerCompanionEntity);
       if (data != null && data.hasEntityTarget()) {
-        tooltip.add(new TranslatableComponent("Target: ").append(
-            TranslatableText.getEntityName(data.getEntityTarget())).withStyle(ChatFormatting.RED));
+        tooltip.add(
+            new TranslatableComponent("Target: ")
+                .append(TranslatableText.getEntityName(data.getEntityTarget()))
+                .withStyle(ChatFormatting.RED));
       }
     }
   }

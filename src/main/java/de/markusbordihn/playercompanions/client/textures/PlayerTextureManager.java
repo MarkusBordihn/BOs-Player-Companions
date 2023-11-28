@@ -1,24 +1,28 @@
 /**
  * Copyright 2023 Markus Bordihn
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
+ * <p>The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package de.markusbordihn.playercompanions.client.textures;
 
+import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.skin.SkinModel;
+import de.markusbordihn.playercompanions.skin.SkinType;
+import de.markusbordihn.playercompanions.utils.PlayersUtils;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -27,31 +31,23 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.loading.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import net.minecraft.resources.ResourceLocation;
-
-import net.minecraftforge.fml.loading.FileUtils;
-
-import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.skin.SkinModel;
-import de.markusbordihn.playercompanions.skin.SkinType;
-import de.markusbordihn.playercompanions.utils.PlayersUtils;
 
 public class PlayerTextureManager {
 
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String LOG_PREFIX = "[Player Texture Manager]";
-
+  private static final HashMap<TextureModelKey, ResourceLocation> playerTextureCache =
+      new HashMap<>();
+  private static final HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache =
+      new HashMap<>();
+  private static final HashMap<TextureModelKey, String> playerTextureSkinURLCache = new HashMap<>();
+  private static final HashSet<UUID> playerTextureReloadProtection = new HashSet<>();
   private static Path textureCachePath = null;
-  private static HashMap<TextureModelKey, ResourceLocation> playerTextureCache = new HashMap<>();
-  private static HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache = new HashMap<>();
-  private static HashMap<TextureModelKey, String> playerTextureSkinURLCache = new HashMap<>();
-  private static HashSet<UUID> playerTextureReloadProtection = new HashSet<>();
 
   protected PlayerTextureManager() {}
 
@@ -83,8 +79,8 @@ public class PlayerTextureManager {
         && playerTextureSkinURLCache.containsKey(textureModelKey);
   }
 
-  public static ResourceLocation getOrCreateTextureWithDefault(PlayerCompanionEntity entity,
-      ResourceLocation defaultResourceLocation) {
+  public static ResourceLocation getOrCreateTextureWithDefault(
+      PlayerCompanionEntity entity, ResourceLocation defaultResourceLocation) {
     // Check if we have a skin UUID otherwise we assume that the texture is unknown.
     Optional<UUID> skinUUID = entity.getSkinUUID();
     if (!skinUUID.isPresent()) {
@@ -107,13 +103,13 @@ public class PlayerTextureManager {
     return createdResourceLocation != null ? createdResourceLocation : defaultResourceLocation;
   }
 
-  private static ResourceLocation createTexture(TextureModelKey textureModelKey,
-      PlayerCompanionEntity entity) {
+  private static ResourceLocation createTexture(
+      TextureModelKey textureModelKey, PlayerCompanionEntity entity) {
     return createTexture(textureModelKey, entity.getSkinType(), entity.getSkinURL());
   }
 
-  private static ResourceLocation createTexture(TextureModelKey textureModelKey, SkinType skinType,
-      String skinURL) {
+  private static ResourceLocation createTexture(
+      TextureModelKey textureModelKey, SkinType skinType, String skinURL) {
 
     // Check the local texture cache for any matching files.
     SkinModel skinModel = textureModelKey.getSkinModel();
@@ -178,11 +174,10 @@ public class PlayerTextureManager {
     // Get or create model cache directory.
     Path cacheDirectory = Paths.get(textureCachePath.toString(), skinModel.name());
     if (!cacheDirectory.toFile().exists()) {
-      log.info("{} Creating player texture model cache directory at {}", LOG_PREFIX,
-          cacheDirectory);
+      log.info(
+          "{} Creating player texture model cache directory at {}", LOG_PREFIX, cacheDirectory);
       FileUtils.getOrCreateDirectory(cacheDirectory, Constants.MOD_ID);
     }
     return cacheDirectory;
   }
-
 }

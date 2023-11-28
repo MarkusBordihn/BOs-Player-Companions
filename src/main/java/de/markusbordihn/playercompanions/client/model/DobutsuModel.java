@@ -1,26 +1,24 @@
 /**
  * Copyright 2021 Markus Bordihn
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
+ * <p>The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package de.markusbordihn.playercompanions.client.model;
 
 import java.util.List;
-
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -31,7 +29,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.TamableAnimal;
-
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -58,28 +55,41 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
     PartDefinition partDefinition = meshDefinition.getRoot();
 
     // Head and Body
-    partDefinition.addOrReplaceChild("head",
-        CubeListBuilder.create().texOffs(0, 0)
-            .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.85F)).texOffs(32, 0)
+    partDefinition.addOrReplaceChild(
+        "head",
+        CubeListBuilder.create()
+            .texOffs(0, 0)
+            .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.85F))
+            .texOffs(32, 0)
             .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(1.1F)),
         PartPose.offset(0.0F, 15.0F, 0.0F));
 
     // Legs
-    partDefinition.addOrReplaceChild("left_leg",
-        CubeListBuilder.create().texOffs(16, 48)
-            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 48)
+    partDefinition.addOrReplaceChild(
+        "left_leg",
+        CubeListBuilder.create()
+            .texOffs(16, 48)
+            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 48)
             .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)),
         PartPose.offset(1.9F, 8.0F, 0.0F));
-    partDefinition.addOrReplaceChild("right_leg",
-        CubeListBuilder.create().texOffs(0, 16)
-            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 32)
+    partDefinition.addOrReplaceChild(
+        "right_leg",
+        CubeListBuilder.create()
+            .texOffs(0, 16)
+            .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 32)
             .addBox(-2.0F, 4.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F)),
         PartPose.offset(-1.9F, 8.0F, 0.0F));
 
     // Hands
-    partDefinition.addOrReplaceChild("right_hand", CubeListBuilder.create(),
+    partDefinition.addOrReplaceChild(
+        "right_hand",
+        CubeListBuilder.create(),
         PartPose.offsetAndRotation(-4.5F, 16.0F, 0.0F, -120.0F, 180.0F, 0.0F));
-    partDefinition.addOrReplaceChild("left_hand", CubeListBuilder.create(),
+    partDefinition.addOrReplaceChild(
+        "left_hand",
+        CubeListBuilder.create(),
         PartPose.offsetAndRotation(4.5F, 16.0F, 0.0F, -120.0F, 180.0F, 0.0F));
 
     return LayerDefinition.create(meshDefinition, 64, 64);
@@ -137,8 +147,13 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
   }
 
   @Override
-  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks,
-      float netHeadYaw, float headPitch) {
+  public void setupAnim(
+      T entity,
+      float limbSwing,
+      float limbSwingAmount,
+      float ageInTicks,
+      float netHeadYaw,
+      float headPitch) {
 
     // Don't animate death entities
     if (entity.isDeadOrDying()) {
@@ -153,5 +168,4 @@ public class DobutsuModel<T extends TamableAnimal> extends AgeableListModel<T>
       this.leftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmountFraction;
     }
   }
-
 }

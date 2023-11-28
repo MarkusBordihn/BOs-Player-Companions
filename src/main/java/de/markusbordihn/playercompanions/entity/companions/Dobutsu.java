@@ -1,28 +1,33 @@
 /**
  * Copyright 2021 Markus Bordihn
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
+ * <p>The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package de.markusbordihn.playercompanions.entity.companions;
 
+import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
+import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
+import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
+import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
+import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityWalking;
+import de.markusbordihn.playercompanions.item.ModItems;
+import de.markusbordihn.playercompanions.skin.SkinModel;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
 import net.minecraft.Util;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -44,14 +49,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
-import de.markusbordihn.playercompanions.entity.ai.goal.AvoidCreeperGoal;
-import de.markusbordihn.playercompanions.entity.ai.goal.MoveToPositionGoal;
-import de.markusbordihn.playercompanions.entity.type.follower.FollowerEntityWalking;
-import de.markusbordihn.playercompanions.item.ModItems;
-import de.markusbordihn.playercompanions.skin.SkinModel;
-
 public class Dobutsu extends FollowerEntityWalking {
 
   // General Information
@@ -61,16 +58,20 @@ public class Dobutsu extends FollowerEntityWalking {
 
   // Variants
   public static final List<PlayerCompanionVariant> VARIANTS =
-      List.of(PlayerCompanionVariant.DEFAULT, PlayerCompanionVariant.CREEPER,
+      List.of(
+          PlayerCompanionVariant.DEFAULT,
+          PlayerCompanionVariant.CREEPER,
           PlayerCompanionVariant.ENDERMAN);
 
   // Companion Item by variant
   private static final Map<PlayerCompanionVariant, Item> COMPANION_ITEM_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.DOBUTSU_DEFAULT.get());
-        hashMap.put(PlayerCompanionVariant.CREEPER, ModItems.DOBUTSU_CREEPER.get());
-        hashMap.put(PlayerCompanionVariant.ENDERMAN, ModItems.DOBUTSU_ENDERMAN.get());
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(PlayerCompanionVariant.DEFAULT, ModItems.DOBUTSU_DEFAULT.get());
+            hashMap.put(PlayerCompanionVariant.CREEPER, ModItems.DOBUTSU_CREEPER.get());
+            hashMap.put(PlayerCompanionVariant.ENDERMAN, ModItems.DOBUTSU_ENDERMAN.get());
+          });
 
   public Dobutsu(EntityType<? extends PlayerCompanionEntity> entityType, Level level) {
     super(entityType, level, COMPANION_ITEM_BY_VARIANT);
@@ -78,8 +79,10 @@ public class Dobutsu extends FollowerEntityWalking {
   }
 
   public static AttributeSupplier.Builder createAttributes() {
-    return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.3F)
-        .add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.ATTACK_DAMAGE, 0.5D);
+    return Mob.createMobAttributes()
+        .add(Attributes.MOVEMENT_SPEED, 0.3F)
+        .add(Attributes.MAX_HEALTH, 16.0D)
+        .add(Attributes.ATTACK_DAMAGE, 0.5D);
   }
 
   @Override
@@ -139,5 +142,4 @@ public class Dobutsu extends FollowerEntityWalking {
   public int getEntityGuiTop() {
     return 24;
   }
-
 }

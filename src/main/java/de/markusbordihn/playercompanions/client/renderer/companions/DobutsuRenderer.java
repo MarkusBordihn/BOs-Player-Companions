@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2022 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -19,19 +19,7 @@
 
 package de.markusbordihn.playercompanions.client.renderer.companions;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.Util;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
-
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.client.model.DobutsuModel;
 import de.markusbordihn.playercompanions.client.renderer.ClientRenderer;
@@ -39,20 +27,36 @@ import de.markusbordihn.playercompanions.client.renderer.layers.HandItemLayer;
 import de.markusbordihn.playercompanions.client.textures.PlayerTextureManager;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionVariant;
 import de.markusbordihn.playercompanions.entity.companions.Dobutsu;
+import java.util.EnumMap;
+import java.util.Map;
+import net.minecraft.Util;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>> {
 
   // Variant Textures
   protected static final Map<PlayerCompanionVariant, ResourceLocation> TEXTURE_BY_VARIANT =
-      Util.make(new EnumMap<>(PlayerCompanionVariant.class), hashMap -> {
-        hashMap.put(PlayerCompanionVariant.DEFAULT,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
-        hashMap.put(PlayerCompanionVariant.CREEPER,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
-        hashMap.put(PlayerCompanionVariant.ENDERMAN,
-            new ResourceLocation(Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_enderman.png"));
-      });
+      Util.make(
+          new EnumMap<>(PlayerCompanionVariant.class),
+          hashMap -> {
+            hashMap.put(
+                PlayerCompanionVariant.DEFAULT,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_default.png"));
+            hashMap.put(
+                PlayerCompanionVariant.CREEPER,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_creeper.png"));
+            hashMap.put(
+                PlayerCompanionVariant.ENDERMAN,
+                new ResourceLocation(
+                    Constants.MOD_ID, "textures/entity/dobutsu/dobutsu_enderman.png"));
+          });
   protected static final ResourceLocation DEFAULT_TEXTURE =
       TEXTURE_BY_VARIANT.get(PlayerCompanionVariant.DEFAULT);
 
@@ -77,5 +81,4 @@ public class DobutsuRenderer extends MobRenderer<Dobutsu, DobutsuModel<Dobutsu>>
   protected void scale(Dobutsu entity, PoseStack poseStack, float unused) {
     poseStack.scale(0.8F, 0.8F, 0.8F);
   }
-
 }

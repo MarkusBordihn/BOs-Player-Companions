@@ -15,8 +15,7 @@ plugins {
   id "com.modrinth.minotaur" version "2.+"
 }
 
-version = "${version_major}.${version_minor}.${version_patch}"
-archivesBaseName = "${mod_id}_${mc_version}"
+archivesBaseName = "${mod_id}_${minecraft_version}"
 
 // Mojang ships Java 17 to end users in 1.18+.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -28,7 +27,7 @@ minecraft {
   // stable_#            Stables are built at the discretion of the MCP team.
   // Use non-default mappings at your own risk. they may not always work.
   // Simply re-run your setup task after changing the mappings to update your workspace.
-  mappings channel: 'official', version: "${mc_version}"
+  mappings channel: 'official', version: "${minecraft_version}"
   // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
   // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -116,17 +115,17 @@ repositories {
   maven {
     url "https://www.cursemaven.com"
     content {
-        includeGroup "curse.maven"
+      includeGroup "curse.maven"
     }
   }
-   maven { url 'https://maven.blamejared.com' }
+  maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
   // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
   // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
   // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-  minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
+  minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
   // Integration:: Jade
   compileOnly fg.deobf("curse.maven:jade-324717:4573063")
@@ -159,13 +158,13 @@ dependencies {
 jar {
   manifest {
     attributes([
-      "Specification-Title": "${mod_name}",
-      "Specification-Vendor": "${vendor_name}",
-      "Specification-Version": "1", // We are version 1 of ourselves
-      "Implementation-Title": project.name,
-      "Implementation-Version": "${version}",
-      "Implementation-Vendor" :"${mod_id}",
-      "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        "Specification-Title"     : "${mod_name}",
+        "Specification-Vendor"    : "${vendor_name}",
+        "Specification-Version"   : "1", // We are version 1 of ourselves
+        "Implementation-Title"    : project.name,
+        "Implementation-Version"  : "${version}",
+        "Implementation-Vendor"   : "${mod_id}",
+        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
     ])
   }
 }
@@ -196,7 +195,7 @@ curseforge {
     changelog = file("CHANGELOG.md")
     changelogType = 'markdown'
     releaseType = "${curseforge_release_type}"
-    addGameVersion("${mc_version}")
+    addGameVersion("${minecraft_version}")
     addGameVersion("Forge")
     mainArtifact(jar) {
       relations {
@@ -210,10 +209,10 @@ curseforge {
 modrinth {
   token = "${credentials.modrinth_api_token}"
   projectId = "${modrinth_project_id}"
-  versionNumber = "${version_major}.${version_minor}.${version_patch}"
+  versionNumber = "${version}"
   versionType = "${modrinth_release_type}"
   uploadFile = jar
-  gameVersions = ["${mc_version}"]
+  gameVersions = ["${minecraft_version}"]
   loaders = ["forge"]
   dependencies {
     optional.project "jade"

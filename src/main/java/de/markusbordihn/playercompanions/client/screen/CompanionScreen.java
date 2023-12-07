@@ -366,8 +366,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
               && (textureSkinLocationValue.isEmpty()
                   || PlayersUtils.isValidPlayerName(textureSkinLocationValue)
                   || PlayersUtils.isValidUrl(textureSkinLocationValue));
-    } else
-      this.saveTextureSettingsButton.active = textureSkinLocationValue.isEmpty();
+    } else this.saveTextureSettingsButton.active = textureSkinLocationValue.isEmpty();
     this.clearTextureSettingsButton.active =
         textureSkinLocationValue != null && !textureSkinLocationValue.isEmpty();
   }

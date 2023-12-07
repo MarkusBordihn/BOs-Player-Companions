@@ -112,12 +112,12 @@ public class PlayerCompanionEntityData extends TamableAnimal
   private static final int JUMP_MOVE_DELAY = 10;
   // Additional ticker
   private static final int DATA_SYNC_TICK = 10;
+  // Variants
+  private final Map<PlayerCompanionVariant, Item> companionItemByVariant;
   protected UUID persistentAngerTarget;
   protected int rideCooldownCounter;
   // Default values
   private int explosionPower = 0;
-  // Variants
-  private final Map<PlayerCompanionVariant, Item> companionItemByVariant;
   // Temporary stats
   private ActionType actionType = ActionType.UNKNOWN;
   private AggressionLevel aggressionLevel = AggressionLevel.UNKNOWN;

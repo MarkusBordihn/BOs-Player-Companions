@@ -42,12 +42,13 @@ public class PlayerTextureManager {
   protected static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   private static final String LOG_PREFIX = "[Player Texture Manager]";
-
-  private static Path textureCachePath = null;
-  private static final HashMap<TextureModelKey, ResourceLocation> playerTextureCache = new HashMap<>();
-  private static final HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache = new HashMap<>();
+  private static final HashMap<TextureModelKey, ResourceLocation> playerTextureCache =
+      new HashMap<>();
+  private static final HashMap<TextureModelKey, SkinType> playerTextureSkinTypeCache =
+      new HashMap<>();
   private static final HashMap<TextureModelKey, String> playerTextureSkinURLCache = new HashMap<>();
   private static final HashSet<UUID> playerTextureReloadProtection = new HashSet<>();
+  private static Path textureCachePath = null;
 
   protected PlayerTextureManager() {}
 

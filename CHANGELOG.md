@@ -5,13 +5,20 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
+### 7.10.0
+
+- Fixed issue with soft-locked level data after dimension change, causing high delays for the level
+  loading / saving.
+
 ### 2023.11.28
 
-- Added `companionLimitPerPlayer` option to limit the number of tamed companions per player on multiplayer servers.
+- Added `companionLimitPerPlayer` option to limit the number of tamed companions per player on
+  multiplayer servers.
 
 ### 2023.11.19
 
-- Added additional checks for tamed player companions items to make sure they are not getting lost with specific inventory mods.
+- Added additional checks for tamed player companions items to make sure they are not getting lost
+  with specific inventory mods.
 - Added basic German translation.
 
 ### 2023.10.12
@@ -20,7 +27,8 @@ For the full changelog, please go to the [Git Hub History][history] instead.
 
 ### 2023.10.11
 
-- Added advancements for player companions from crafting the tame items to taming the different companion.
+- Added advancements for player companions from crafting the tame items to taming the different
+  companion.
 - Added automated recipe granting and notification for tame items.
 - Added help text for untamed companions for the right tame item.
 - Improved network performance for player companions.
@@ -81,7 +89,8 @@ For the full changelog, please go to the [Git Hub History][history] instead.
 
 ### 2022.07.22
 
-- Added better compatibility with twitchspawn to allow directly spawn of companions with pre-define names.
+- Added better compatibility with twitchspawn to allow directly spawn of companions with pre-define
+  names.
 - Removed duplicated storing of companion name and will use the standard custom name instead.
 - Added additional goal to let untamed companions more moving around the world.
 
@@ -138,6 +147,7 @@ For the full changelog, please go to the [Git Hub History][history] instead.
 
 ### 2022.04.20
 
-- Optimized network protocols to avoid large package message, even with 100 companions on a single player.
+- Optimized network protocols to avoid large package message, even with 100 companions on a single
+  player.
 
 [history]: https://github.com/MarkusBordihn/BOs-Player-Companions/commits/

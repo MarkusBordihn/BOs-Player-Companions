@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "player_companions:block/light_block" }
+    "": {"model": "player_companions:block/light_block"}
   }
 }

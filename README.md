@@ -30,7 +30,8 @@ You can access the inventory like a normal chest.
 
 ### Companion
 
-The companion is a combination of the collector, follower and guard and has some additional features like text lines.
+The companion is a combination of the collector, follower and guard and has some additional features
+like text lines.
 
 ### Follower
 
@@ -44,7 +45,8 @@ Equip your guard with weapons and armor to deal more damage and to have a better
 ### Healer
 
 The healer companion heals any player and your own companions in a specific radius.
-Additional healer will stack up the effect, so if you are traveling with your friends it good to have 1-2 healers in the group.
+Additional healer will stack up the effect, so if you are traveling with your friends it good to
+have 1-2 healers in the group.
 
 ### Supporter
 
@@ -53,19 +55,23 @@ Additional supporter will not stack up, but they will be able to buff the whole 
 
 ## Spawn
 
-The player companions are automatically spawned in specific biomes, but could be also spawned over the specific items in the creative mode.
+The player companions are automatically spawned in specific biomes, but could be also spawned over
+the specific items in the creative mode.
 
 ## Tame Items
 
 Tame items are needed to tame the different kind of companions.
-Each player companion prefer a specific tame item, in most cases you need several tame items to tame a player companion.
+Each player companion prefer a specific tame item, in most cases you need several tame items to tame
+a player companion.
 
 ## Controls
 
 Most of the companions could be controlled with the following controls:
 
-- **ALT + Right Click** (on Player Companion with empty Hand or Weapon) Change Aggressive status like passive, neutral, aggressive
-- **CTRL + Right Click** (on Player Companion with empty Hand or Weapon) Order to sit / un-order to sit
+- **ALT + Right Click** (on Player Companion with empty Hand or Weapon) Change Aggressive status
+  like passive, neutral, aggressive
+- **CTRL + Right Click** (on Player Companion with empty Hand or Weapon) Order to sit / un-order to
+  sit
 - **Right Click** (on Collector with empty hand or normal Block) Open the companion inventory
 - **Right Click** (on Player Companion with empty hand or normal Block) Open the companion menu
 - **Right Click** (with Player Companion Item on Companion) Despawn/Spawn the companion
@@ -74,19 +80,23 @@ Most of the companions could be controlled with the following controls:
 
 ### Order to a specific position
 
-Click with the corresponding item on the desired position and your companion will move or teleport to this position.
+Click with the corresponding item on the desired position and your companion will move or teleport
+to this position.
 
 ### Spawn / Respawn Companion
 
-With the corresponding item, you can spawn / respawn your companion at any time with just a simple click on an empty space.
+With the corresponding item, you can spawn / respawn your companion at any time with just a simple
+click on an empty space.
 
 ### Despawn Companion
 
-With the corresponding item, you can de-spawn your companion at any time. Just click with the right item on the spawned companion.
+With the corresponding item, you can de-spawn your companion at any time. Just click with the right
+item on the spawned companion.
 
 ## Compatible Mods
 
-Most of the should be supported out of the box, but this is a list of mods which I personally tested and working fine with this mod:
+Most of the should be supported out of the box, but this is a list of mods which I personally tested
+and working fine with this mod:
 
 - ✅ [Guard Villagers][guard-villagers]
 - ✅ [Human Companions][human_companions]
@@ -98,13 +108,16 @@ I'm not able to test all different kind of mod combinations or mod packs.
 
 ## Type of Companions
 
-There are different kind of companions which have different abilities and are living in different biomes.
+There are different kind of companions which have different abilities and are living in different
+biomes.
 You can find a list of all companions and their corresponding tame items below.
 
 ### Dobutsu
 
-The Dobutsu is a quick-change artist and can mimic the appearance of other players, even if their form will remain the same.
-Open the menu of a captured Dobutsu and click on **Texture Settings** to adjust the skin and the Dobutsu will try to mimic the player.
+The Dobutsu is a quick-change artist and can mimic the appearance of other players, even if their
+form will remain the same.
+Open the menu of a captured Dobutsu and click on **Texture Settings** to adjust the skin and the
+Dobutsu will try to mimic the player.
 
 ![Example image with dobutsu](examples/dobutsu.png)
 
@@ -113,7 +126,8 @@ They live in the open fields and like eating sweet berries.
 ### Fairies
 
 The fairy is magical create and has different kind of abilities.
-They will heal you and your group along your journey but will also learn new abilities from time to time.
+They will heal you and your group along your journey but will also learn new abilities from time to
+time.
 
 ![Example image with fairies](examples/fairies.png)
 
@@ -174,7 +188,8 @@ They live in the mountains and like eating healthy apples.
 
 ### Small Ghasts
 
-Small Ghast are not easy to catch, but once you became friend with one he will protect you for the rest of his live.
+Small Ghast are not easy to catch, but once you became friend with one he will protect you for the
+rest of his live.
 They will shoot small fireballs to your targets and some hostile mob as well.
 
 ![Example image with small ghasts](examples/small_ghasts.png)
@@ -201,7 +216,8 @@ They live at the beach and like eating sea grass.
 
 ### Welsh Corgis
 
-Welsh Corgi are will support you and other companions and players with their present and additional effects.
+Welsh Corgi are will support you and other companions and players with their present and additional
+effects.
 Depending on the level they will give different kind of effects to the player.
 
 ![Example image with welsh corgis](examples/welsh_corgis.png)
@@ -212,12 +228,14 @@ They live in the taiga and like eating bones like any other dogs.
 
 ### I lost my companion item, is there are way to get it back❓
 
-The easiest way is to get the identical (same type/variant) Player Companion Item (over creative mode or `/give command`) and just clicking on the corresponding player companion to link it.
+The easiest way is to get the identical (same type/variant) Player Companion Item (over creative
+mode or `/give command`) and just clicking on the corresponding player companion to link it.
 Please keep in mind that only the owner is able to link a player companion to an item.
 
 ### I lost my companion, is there are way to summon it❓
 
-The easiest way is to use your Player Companion Item or alternative over the `/player_companions summon` command.
+The easiest way is to use your Player Companion Item or alternative over
+the `/player_companions summon` command.
 
 ## Version Status Overview 🛠️
 
@@ -234,17 +252,23 @@ The easiest way is to use your Player Companion Item or alternative over the `/p
 
 ## License
 
-The MIT [LICENSE.md](LICENSE.md) applies only to the code in this repository. Images, models and other assets are explicitly excluded.
+The MIT [LICENSE.md](LICENSE.md) applies only to the code in this repository. Images, models and
+other assets are explicitly excluded.
 
 ## Note
 
-Please only download the mod from the official CurseForge page or with the official CurseForge launcher like:
+Please only download the mod from the official CurseForge page or with the official CurseForge
+launcher like:
 
 🚀 <https://www.curseforge.com/minecraft/mc-mods/player-companions>
 
-If you are downloading this mod from other sources we could not make sure that it works as expected or does not includes any unwanted modification (e.g. adware, malware, ...).
+If you are downloading this mod from other sources we could not make sure that it works as expected
+or does not includes any unwanted modification (e.g. adware, malware, ...).
 
 [guard-villagers]: https://www.curseforge.com/minecraft/mc-mods/guard-villagers
+
 [human_companions]: https://www.curseforge.com/minecraft/mc-mods/human-companions
+
 [morevanillaarmor]: https://www.curseforge.com/minecraft/mc-mods/morevanillaarmor
+
 [scaling-health]: https://www.curseforge.com/minecraft/mc-mods/scaling-health

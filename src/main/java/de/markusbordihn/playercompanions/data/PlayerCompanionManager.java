@@ -21,7 +21,6 @@ package de.markusbordihn.playercompanions.data;
 
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.entity.PlayerCompanionEntity;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -181,34 +180,35 @@ public class PlayerCompanionManager {
   }
 
   private static void verifyPlayerCompanionForPlayer(Player player) {
-    if (player instanceof ServerPlayer serverPlayer) {
-      PlayerCompanionsServerData data = PlayerCompanionsServerData.get();
-      if (data == null) {
-        return;
-      }
-      MinecraftServer server = serverPlayer.getServer();
-      if (server == null) {
-        return;
-      }
-      Iterator<ServerLevel> serverLevels = server.getAllLevels().iterator();
+    if (!(player instanceof ServerPlayer serverPlayer)) {
+      return;
+    }
+    PlayerCompanionsServerData data = PlayerCompanionsServerData.get();
+    if (data == null) {
+      return;
+    }
+    MinecraftServer server = serverPlayer.getServer();
+    if (server == null) {
+      return;
+    }
 
-      // Get relevant entities from owners level.
-      Set<Entity> playerCompanionsEntityInOwnersDimension =
-          data.getCompanionsEntity(player.getUUID(), serverPlayer.getLevel());
+    // Get relevant entities from owners level.
+    Set<Entity> playerCompanionsEntityInOwnersDimension =
+        data.getCompanionsEntity(player.getUUID(), serverPlayer.getLevel());
+    if (playerCompanionsEntityInOwnersDimension.isEmpty()) {
+      return;
+    }
 
-      // Check for duplicates from other levels.
-      while (serverLevels.hasNext()) {
-        try (ServerLevel serverLevel = serverLevels.next()) {
-          if (serverPlayer.getLevel() != serverLevel) {
-            for (Entity playerCompanionEntity : playerCompanionsEntityInOwnersDimension) {
-              Entity entity = serverLevel.getEntity(playerCompanionEntity.getUUID());
-              if (entity != null) {
-                entity.remove(RemovalReason.CHANGED_DIMENSION);
-              }
-            }
+    // Check for duplicates from other levels.
+    Iterator<ServerLevel> serverLevels = server.getAllLevels().iterator();
+    while (serverLevels.hasNext()) {
+      ServerLevel serverLevel = serverLevels.next();
+      if (serverLevel != null && serverPlayer.getLevel() != serverLevel) {
+        for (Entity playerCompanionEntity : playerCompanionsEntityInOwnersDimension) {
+          Entity entity = serverLevel.getEntity(playerCompanionEntity.getUUID());
+          if (entity != null && !entity.isRemoved()) {
+            entity.remove(RemovalReason.CHANGED_DIMENSION);
           }
-        } catch (IOException e) {
-          log.error("Failed to close server level {}", serverLevels, e);
         }
       }
     }

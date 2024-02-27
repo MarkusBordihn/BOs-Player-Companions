@@ -269,8 +269,10 @@ public class PlayerCompanionSpawnManager {
   public static boolean isValidSpawnPlace(BlockState blockState) {
     return blockState.isAir()
         || blockState.is(Blocks.WATER)
-        || blockState.is(Blocks.GRASS)
+        || blockState.is(Blocks.TALL_GRASS)
+        || blockState.is(Blocks.SHORT_GRASS)
         || blockState.is(Blocks.SEAGRASS)
+        || blockState.is(Blocks.TALL_SEAGRASS)
         || blockState.is(Blocks.SNOW)
         || blockState.is(Blocks.FERN);
   }

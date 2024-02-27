@@ -162,6 +162,16 @@ public class PlayerCompanionEntityData extends TamableAnimal
     }
   }
 
+  private static String getAttributeModifierName(AttributeModifier attributeModifier) {
+    if (attributeModifier != null) {
+      CompoundTag compoundTag = attributeModifier.save();
+      if (compoundTag.contains("Name")) {
+        return compoundTag.getString("Name");
+      }
+    }
+    return "";
+  }
+
   public void enableCustomTextureSkin(boolean enable) {
     this.enableCustomTextureSkin = enable;
   }
@@ -582,7 +592,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
         while (attributeModifierIterator.hasNext()) {
           AttributeModifier attributeModifier = attributeModifierIterator.next();
           if (attributeModifier != null
-              && attributeModifier.getName().equals(ATTRIBUTE_MAX_HEALTH)) {
+              && ATTRIBUTE_MAX_HEALTH.equals(getAttributeModifierName(attributeModifier))) {
             getAttribute(Attributes.MAX_HEALTH).removeModifier(attributeModifier.getId());
           }
         }
@@ -617,7 +627,7 @@ public class PlayerCompanionEntityData extends TamableAnimal
         while (attributeModifierIterator.hasNext()) {
           AttributeModifier attributeModifier = attributeModifierIterator.next();
           if (attributeModifier != null
-              && attributeModifier.getName().equals(ATTRIBUTE_ATTACK_DAMAGE)) {
+              && ATTRIBUTE_ATTACK_DAMAGE.equals(getAttributeModifierName(attributeModifier))) {
             getAttribute(Attributes.ATTACK_DAMAGE).removeModifier(attributeModifier.getId());
           }
         }

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -72,7 +73,7 @@ public class PlayerCompanionsServerDataBackup {
         log.info("{} creating backup folder at {}", Constants.LOG_ICON_NAME, file.getParentFile());
         file.getParentFile().mkdirs();
       }
-      NbtIo.writeCompressed(compoundTag, file);
+      NbtIo.writeCompressed(compoundTag, file.toPath());
       log.info("{} saved backup at {}", Constants.LOG_ICON_NAME, file);
       lastBackupCompoundTag = compoundTag;
       return true;
@@ -103,7 +104,7 @@ public class PlayerCompanionsServerDataBackup {
       return null;
     }
     try {
-      CompoundTag compoundTag = NbtIo.readCompressed(file);
+      CompoundTag compoundTag = NbtIo.readCompressed(file.toPath(), NbtAccounter.unlimitedHeap());
       if (compoundTag == null) {
         log.warn("{} loaded backup from {} was empty!", Constants.LOG_ICON_NAME, file);
       } else {

@@ -129,8 +129,8 @@ dependencies {
   minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
   // Integration:: Jade
-  compileOnly fg.deobf("curse.maven:jade-324717:4822578")
-  runtimeOnly fg.deobf("curse.maven:jade-324717:4822578")
+  compileOnly fg.deobf("curse.maven:jade-324717:4978952")
+  runtimeOnly fg.deobf("curse.maven:jade-324717:4978952")
 
   // Patchouli Integration
   // compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.19-74-SNAPSHOT:api")
@@ -150,8 +150,8 @@ dependencies {
 
   // Additional helpful Mods for development (dev depenedency)
   // runtimeOnly fg.deobf("curse.maven:item-zoom-261725:3749454")
-  runtimeOnly fg.deobf("curse.maven:jei-238222:4767571")
-  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:4768140")
+  runtimeOnly fg.deobf("curse.maven:jei-238222:5101380")
+  runtimeOnly fg.deobf("curse.maven:xaeros_minimap-263420:5060714")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -186,6 +186,16 @@ publishing {
       url "file:///${project.projectDir}/mcmodsrepo"
     }
   }
+}
+
+// Merge the resources and classes into the same directory.
+// This is done because java expects modules to be in a single directory.
+// And if we have it in multiple we have to do performance intensive hacks like having the UnionFileSystem
+// This will eventually be migrated to ForgeGradle so modders don't need to manually do it. But that is later.
+sourceSets.each {
+  def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+  it.output.resourcesDir = dir
+  it.java.destinationDirectory = dir
 }
 
 curseforge {

@@ -5,9 +5,14 @@
 This change log includes the summarized changes.
 For the full changelog, please go to the [Git Hub History][history] instead.
 
-### 7.10.0
+### 6.11.0
 
-- Fixed issue with soft-locked level data after dimension change, causing high delays for the level loading / saving.
+- Spanish translation has been added. A big thanks to `@Arkathus` for the contribution!
+
+### 6.10.0
+
+- Fixed issue with soft-locked level data after dimension change, causing high delays for the level
+  loading / saving.
 
 ### 2023.11.28
 

@@ -1,0 +1,23 @@
+{
+  "parent": "player_companions:taming/trust_50",
+  "display": {
+    "icon": {
+      "item": "minecraft:golden_carrot"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.trust_75.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.trust_75.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -1,6 +1,0 @@
-{
-  "parent": "player_companions:item/template/welsh_corgi",
-  "textures": {
-    "texture": "player_companions:item/entity/welsh_corgi/welsh_corgi_mixed"
-  }
-}

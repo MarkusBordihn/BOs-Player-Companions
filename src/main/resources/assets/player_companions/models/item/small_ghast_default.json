@@ -1,6 +1,0 @@
-{
-  "parent": "player_companions:item/template/small_ghast",
-  "textures": {
-    "texture": "player_companions:item/entity/small_ghast/small_ghast"
-  }
-}

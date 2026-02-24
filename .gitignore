@@ -17,6 +17,7 @@ out
 # Gradle
 build
 run
+NeoForge/runs
 .gradle
 *local.properties
 
@@ -25,20 +26,14 @@ node_modules
 npm-debug.log
 .npmrc
 
-# Files from Forge MDK
-forge*changelog.txt
-
 # VSCode
 .vscode/launch.json
-
-# Template placeholder files
-put_your_*_here
 
 # Other
 .DS_Store
 generated
-*.patch.txt
-*.clip
-*.stackdump
-*.log
 *.bak
+*.clip
+*.log
+*.patch.txt
+*.stackdump

@@ -1,0 +1,17 @@
+{
+  "entity.player_companions.pig_companion": "Schwein Begleiter",
+  "entity.player_companions.rooster_companion": "Hahn Begleiter",
+  "entity.player_companions.small_slime_companion": "Kleiner Schleim Begleiter",
+  "item.player_companions.pig_companion_spawn_egg": "Schweine-Begleiter Spawn-Ei",
+  "item.player_companions.rooster_companion_spawn_egg": "Hahn-Begleiter Spawn-Ei",
+  "item.player_companions.small_slime_companion_spawn_egg": "Kleiner-Schleim-Begleiter Spawn-Ei",
+  "player_companions.trust.progress": "+%d (%d/%d)",
+  "player_companions.trust.milestone.25": "✦ 25%% - Wird langsam!",
+  "player_companions.trust.milestone.50": "✦ 50%% - Auf halbem Weg!",
+  "player_companions.trust.milestone.75": "✦ 75%% - Fast gezähmt!",
+  "player_companions.trust.cooldown": "⏱ Warte %d Sekunden vor dem nächsten Füttern",
+  "player_companions.trust.wrong_player": "❌ %s zähmt bereits diesen Begleiter",
+  "player_companions.tamed.actionbar": "★ Begleiter gezähmt! ★",
+  "player_companions.tamed.chat": "Du hast %s gezähmt!",
+  "player_companions.tamed.limit_reached": "❌ Du hast bereits %d Begleiter (Limit erreicht)"
+}

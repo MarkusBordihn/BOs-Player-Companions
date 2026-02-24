@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/MarkusBordihn/BOs-Player-Companions/issues"
+
+[[mods]]
+modId = "player_companions"
+version = "${file.jarVersion}"
+displayName = "Player Companions"
+displayURL = "https://curseforge.com/minecraft/mc-mods/player_companions"
+logoFile = "logo.png"
+credits = ""
+authors = "Markus Bordihn"
+description = '''Player Companions adds additional creatures which will follow, protect or help you...'''
+
+[[dependencies.player_companions]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.player_companions]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,1.21)"
+ordering = "NONE"
+side = "BOTH"

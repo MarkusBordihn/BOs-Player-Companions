@@ -1,0 +1,23 @@
+{
+  "parent": "player_companions:taming/trust_75",
+  "display": {
+    "icon": {
+      "item": "minecraft:name_tag"
+    },
+    "title": {
+      "translate": "advancements.player_companions.taming.tamed.title"
+    },
+    "description": {
+      "translate": "advancements.player_companions.taming.tamed.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

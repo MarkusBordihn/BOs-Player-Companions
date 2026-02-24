@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "player_companions",
+  "version": "${version}",
+  "name": "Player Companions",
+  "description": "Player Companions adds additional creatures which will follow, protect or help you...",
+  "authors": [
+    "Markus Bordihn"
+  ],
+  "contact": {
+    "homepage": "https://curseforge.com/minecraft/mc-mods/player_companions",
+    "issues": "https://github.com/MarkusBordihn/BOs-Player-Companions/issues"
+  },
+  "license": "MIT",
+  "icon": "logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "de.markusbordihn.playercompanions.PlayerCompanions"
+    ],
+    "client": [
+      "de.markusbordihn.playercompanions.PlayerCompanionsClient"
+    ],
+    "fabric-gametest": [
+      "de.markusbordihn.playercompanions.gametest.SmokeTest"
+    ]
+  },
+  "mixins": [],
+  "accessWidener": "playercompanions.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.15",
+    "fabric": "*",
+    "minecraft": "1.20.1",
+    "java": ">=17"
+  },
+  "suggests": {
+    "tooltipfix": "*"
+  }
+}

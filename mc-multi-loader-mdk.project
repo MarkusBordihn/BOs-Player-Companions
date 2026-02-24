@@ -1,0 +1,16 @@
+{
+  "config_version": "1.0.0",
+  "game_version": "1.20.1",
+  "author": "Markus Bordihn",
+  "mod_name": "Player Companions",
+  "license": "MIT",
+  "description": "Player Companions adds additional creatures which will follow, protect or help you...",
+  "mod_id": "player_companions",
+  "class_name": "PlayerCompanions",
+  "class_namespace": "de.markusbordihn.playercompanions",
+  "class_package_name": "playercompanions",
+  "vendor_name": "markusbordihn",
+  "display_url": "https://curseforge.com/minecraft/mc-mods/player_companions",
+  "issue_tracker_url": "https://github.com/MarkusBordihn/BOs-Player-Companions/issues",
+  "confirmed": true
+}

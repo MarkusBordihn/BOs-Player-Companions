@@ -58,6 +58,13 @@ public class PlayerCompanions {
     log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.item.ModItems.ITEMS.register(modEventBus);
 
+    log.info("{} Menu Types ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.menu.ForgeModMenuTypes.MENU_TYPES.register(modEventBus);
+    de.markusbordihn.playercompanions.entity.CompanionMenuHandler.setMenuOpener(
+        new de.markusbordihn.playercompanions.menu.MenuOpener());
+    modEventBus.addListener((net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent event) ->
+        event.enqueueWork(de.markusbordihn.playercompanions.menu.ForgeModMenuTypes::register));
+
     // Initialize the client mod initializer
     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> new PlayerCompanionsClient(modEventBus));
   }

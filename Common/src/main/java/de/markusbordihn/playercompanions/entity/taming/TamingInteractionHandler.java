@@ -23,6 +23,7 @@ import de.markusbordihn.easynpc.entity.easynpc.EasyNPC;
 import de.markusbordihn.easynpc.entity.easynpc.data.OwnerDataCapable;
 import de.markusbordihn.easynpc.handler.OwnerHandler;
 import de.markusbordihn.playercompanions.config.CompanionNameConfig;
+import de.markusbordihn.playercompanions.entity.CompanionBehaviorHandler;
 import de.markusbordihn.playercompanions.entity.CompanionRelationship;
 import de.markusbordihn.playercompanions.entity.companion.PlayerCompanion;
 import net.minecraft.network.chat.Component;
@@ -90,6 +91,7 @@ public class TamingInteractionHandler {
           companion.asMob().getNavigation().stop();
           companion.asMob().setTarget(null);
           companion.level().broadcastEntityEvent(companion.asEntity(), (byte) 7);
+          CompanionBehaviorHandler.initializeTamedBehavior(companion);
         }
 
         // Clean up hint handler (removes wild nametag)

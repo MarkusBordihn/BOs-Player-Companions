@@ -37,3 +37,5 @@ generated
 *.log
 *.patch.txt
 *.stackdump
+*.local.json
+*.local.properties

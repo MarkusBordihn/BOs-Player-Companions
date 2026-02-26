@@ -19,6 +19,7 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import de.markusbordihn.easynpc.api.npc.base.ChickenBase;
 import de.markusbordihn.easynpc.api.npc.base.slime.SlimeSmallBase;
 import de.markusbordihn.playercompanions.Constants;
 import java.util.EnumMap;
@@ -29,7 +30,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Pig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,7 +67,7 @@ public class ModEntityType {
         case ROOSTER:
           FabricDefaultAttributeRegistry.register(
             (EntityType<? extends LivingEntity>) COMPANION_TYPE.get(type),
-            Chicken.createAttributes().build());
+            ChickenBase.createAttributes().add(Attributes.ATTACK_DAMAGE, 3.0).build());
           break;
         case SMALL_SLIME:
           FabricDefaultAttributeRegistry.register(

@@ -22,8 +22,10 @@ package de.markusbordihn.playercompanions.entity.companion;
 import de.markusbordihn.easynpc.api.npc.base.ChickenBase;
 import de.markusbordihn.easynpc.api.skin.VariantTexture;
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.entity.CompanionCommand;
 import de.markusbordihn.playercompanions.entity.CompanionRelationship;
 import de.markusbordihn.playercompanions.entity.CompanionRelationshipData;
+import de.markusbordihn.playercompanions.entity.CompanionRole;
 import de.markusbordihn.playercompanions.entity.taming.TamingHintHandler;
 import de.markusbordihn.playercompanions.network.CompanionEntityDataSerializers;
 import net.minecraft.nbt.CompoundTag;
@@ -50,6 +52,7 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
       CompanionEntityDataSerializers.RELATIONSHIP_DATA);
   private final TamingHintHandler tamingHintHandler = new TamingHintHandler();
   private CompanionRelationship relationship;
+  private CompanionCommand companionCommand = CompanionCommand.FOLLOW;
 
   public RoosterCompanion(EntityType<? extends Chicken> entityType, Level level) {
     this(entityType, level, Variant.DEFAULT);
@@ -108,6 +111,21 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
   @Override
   public TamingHintHandler getTamingHintHandler() {
     return this.tamingHintHandler;
+  }
+
+  @Override
+  public CompanionRole getCompanionRole() {
+    return CompanionRole.GUARD;
+  }
+
+  @Override
+  public CompanionCommand getCompanionCommand() {
+    return this.companionCommand;
+  }
+
+  @Override
+  public void setCompanionCommand(CompanionCommand command) {
+    this.companionCommand = command;
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Markus Bordihn
+ * Copyright 2026 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,29 +17,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions;
+package de.markusbordihn.playercompanions.client.screen;
 
-import de.markusbordihn.playercompanions.client.model.ModModelLayer;
-import de.markusbordihn.playercompanions.client.renderer.EntityRenderer;
-import net.fabricmc.api.ClientModInitializer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.markusbordihn.playercompanions.menu.CompanionFollowerMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
-public class PlayerCompanionsClient implements ClientModInitializer {
+public class CompanionFollowerScreen extends CompanionScreen<CompanionFollowerMenu> {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
-
-  @Override
-  public void onInitializeClient() {
-    log.info("Initializing {} (Fabric-Client) ...", Constants.MOD_NAME);
-
-    log.info("{} Model Layer Definitions ...", Constants.LOG_REGISTER_PREFIX);
-    ModModelLayer.registerEntityLayerDefinitions();
-
-    log.info("{} Renderer ...", Constants.LOG_REGISTER_PREFIX);
-    EntityRenderer.register();
-
-    log.info("{} Screens ...", Constants.LOG_REGISTER_PREFIX);
-    de.markusbordihn.playercompanions.client.screen.FabricScreenRegistry.register();
+  public CompanionFollowerScreen(CompanionFollowerMenu menu, Inventory inventory, Component title) {
+    super(menu, inventory, title);
   }
 }

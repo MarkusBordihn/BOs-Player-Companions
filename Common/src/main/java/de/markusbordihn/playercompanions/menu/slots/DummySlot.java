@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Markus Bordihn
+ * Copyright 2026 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,29 +17,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions;
+package de.markusbordihn.playercompanions.menu.slots;
 
-import de.markusbordihn.playercompanions.client.model.ModModelLayer;
-import de.markusbordihn.playercompanions.client.renderer.EntityRenderer;
-import net.fabricmc.api.ClientModInitializer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
-public class PlayerCompanionsClient implements ClientModInitializer {
+public class DummySlot extends Slot {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  public DummySlot(Container container, int index, int x, int y) {
+    super(container, index, x, y);
+  }
 
   @Override
-  public void onInitializeClient() {
-    log.info("Initializing {} (Fabric-Client) ...", Constants.MOD_NAME);
+  public boolean mayPlace(ItemStack stack) {
+    return false;
+  }
 
-    log.info("{} Model Layer Definitions ...", Constants.LOG_REGISTER_PREFIX);
-    ModModelLayer.registerEntityLayerDefinitions();
-
-    log.info("{} Renderer ...", Constants.LOG_REGISTER_PREFIX);
-    EntityRenderer.register();
-
-    log.info("{} Screens ...", Constants.LOG_REGISTER_PREFIX);
-    de.markusbordihn.playercompanions.client.screen.FabricScreenRegistry.register();
+  @Override
+  public boolean mayPickup(Player player) {
+    return false;
   }
 }

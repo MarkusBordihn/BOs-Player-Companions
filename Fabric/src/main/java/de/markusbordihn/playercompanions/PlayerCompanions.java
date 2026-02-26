@@ -49,5 +49,10 @@ public class PlayerCompanions implements ModInitializer {
 
     log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.item.ModItems.registerModItems();
+
+    log.info("{} Menu Types ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.menu.FabricModMenuTypes.register();
+    de.markusbordihn.playercompanions.entity.CompanionMenuHandler.setMenuOpener(
+        new de.markusbordihn.playercompanions.menu.MenuOpener());
   }
 }

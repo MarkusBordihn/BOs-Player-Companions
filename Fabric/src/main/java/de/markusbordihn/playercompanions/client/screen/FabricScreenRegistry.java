@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Markus Bordihn
+ * Copyright 2026 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,29 +17,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions;
+package de.markusbordihn.playercompanions.client.screen;
 
-import de.markusbordihn.playercompanions.client.model.ModModelLayer;
-import de.markusbordihn.playercompanions.client.renderer.EntityRenderer;
-import net.fabricmc.api.ClientModInitializer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.markusbordihn.playercompanions.menu.ModMenuTypes;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 
-public class PlayerCompanionsClient implements ClientModInitializer {
+public class FabricScreenRegistry {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  private FabricScreenRegistry() {}
 
-  @Override
-  public void onInitializeClient() {
-    log.info("Initializing {} (Fabric-Client) ...", Constants.MOD_NAME);
-
-    log.info("{} Model Layer Definitions ...", Constants.LOG_REGISTER_PREFIX);
-    ModModelLayer.registerEntityLayerDefinitions();
-
-    log.info("{} Renderer ...", Constants.LOG_REGISTER_PREFIX);
-    EntityRenderer.register();
-
-    log.info("{} Screens ...", Constants.LOG_REGISTER_PREFIX);
-    de.markusbordihn.playercompanions.client.screen.FabricScreenRegistry.register();
+  @SuppressWarnings("deprecation")
+  public static void register() {
+    ScreenRegistry.register(ModMenuTypes.COMPANION_DEFAULT, CompanionDefaultScreen::new);
+    ScreenRegistry.register(ModMenuTypes.COMPANION_COLLECTOR, CompanionCollectorScreen::new);
+    ScreenRegistry.register(ModMenuTypes.COMPANION_GUARD, CompanionGuardScreen::new);
+    ScreenRegistry.register(ModMenuTypes.COMPANION_FOLLOWER, CompanionFollowerScreen::new);
   }
 }

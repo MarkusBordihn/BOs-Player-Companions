@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Markus Bordihn
+ * Copyright 2026 Markus Bordihn
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -17,29 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions;
+package de.markusbordihn.playercompanions.menu;
 
-import de.markusbordihn.playercompanions.client.model.ModModelLayer;
-import de.markusbordihn.playercompanions.client.renderer.EntityRenderer;
-import net.fabricmc.api.ClientModInitializer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.world.inventory.MenuType;
 
-public class PlayerCompanionsClient implements ClientModInitializer {
+public class ModMenuTypes {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  public static MenuType<CompanionDefaultMenu> COMPANION_DEFAULT;
+  public static MenuType<CompanionCollectorMenu> COMPANION_COLLECTOR;
+  public static MenuType<CompanionGuardMenu> COMPANION_GUARD;
+  public static MenuType<CompanionFollowerMenu> COMPANION_FOLLOWER;
 
-  @Override
-  public void onInitializeClient() {
-    log.info("Initializing {} (Fabric-Client) ...", Constants.MOD_NAME);
+  private ModMenuTypes() {}
 
-    log.info("{} Model Layer Definitions ...", Constants.LOG_REGISTER_PREFIX);
-    ModModelLayer.registerEntityLayerDefinitions();
+  public static MenuType<CompanionDefaultMenu> getDefaultMenuType() {
+    return COMPANION_DEFAULT;
+  }
 
-    log.info("{} Renderer ...", Constants.LOG_REGISTER_PREFIX);
-    EntityRenderer.register();
+  public static MenuType<CompanionCollectorMenu> getCollectorMenuType() {
+    return COMPANION_COLLECTOR;
+  }
 
-    log.info("{} Screens ...", Constants.LOG_REGISTER_PREFIX);
-    de.markusbordihn.playercompanions.client.screen.FabricScreenRegistry.register();
+  public static MenuType<CompanionGuardMenu> getGuardMenuType() {
+    return COMPANION_GUARD;
+  }
+
+  public static MenuType<CompanionFollowerMenu> getFollowerMenuType() {
+    return COMPANION_FOLLOWER;
   }
 }

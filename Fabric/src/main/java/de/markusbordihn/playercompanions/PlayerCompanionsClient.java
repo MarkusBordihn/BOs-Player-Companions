@@ -39,6 +39,10 @@ public class PlayerCompanionsClient implements ClientModInitializer {
     log.info("{} Renderer ...", Constants.LOG_REGISTER_PREFIX);
     EntityRenderer.register();
 
+    log.info("{} Network Handler (client) ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.network.CompanionNetworkHandler.setHandler(
+      new de.markusbordihn.playercompanions.network.FabricNetworkHandler());
+
     log.info("{} Screens ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.client.screen.FabricScreenRegistry.register();
   }

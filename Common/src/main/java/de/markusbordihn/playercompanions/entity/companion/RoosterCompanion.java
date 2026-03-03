@@ -21,7 +21,12 @@ package de.markusbordihn.playercompanions.entity.companion;
 
 import de.markusbordihn.easynpc.api.npc.base.ChickenBase;
 import de.markusbordihn.easynpc.api.skin.VariantTexture;
+import de.markusbordihn.easynpc.data.progression.ProgressionData;
+import de.markusbordihn.easynpc.entity.easynpc.data.ProgressionDataCapable;
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.TamingConfig;
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
+import de.markusbordihn.playercompanions.entity.CompanionBehaviorHandler;
 import de.markusbordihn.playercompanions.entity.CompanionCommand;
 import de.markusbordihn.playercompanions.entity.CompanionRelationship;
 import de.markusbordihn.playercompanions.entity.CompanionRelationshipData;
@@ -32,12 +37,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.animal.Chicken;
@@ -50,9 +59,15 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
   private static final EntityDataAccessor<CompanionRelationshipData> DATA_RELATIONSHIP =
     SynchedEntityData.defineId(RoosterCompanion.class,
       CompanionEntityDataSerializers.RELATIONSHIP_DATA);
+  private static final EntityDataAccessor<CompanionCommand> DATA_COMMAND =
+    SynchedEntityData.defineId(RoosterCompanion.class,
+      CompanionEntityDataSerializers.COMPANION_COMMAND);
+  private static final EntityDataAccessor<AggressionLevel> DATA_AGGRESSION =
+    SynchedEntityData.defineId(RoosterCompanion.class,
+      CompanionEntityDataSerializers.AGGRESSION_LEVEL);
+  private static final String TAG_AGGRESSION = "AggressionLevel";
   private final TamingHintHandler tamingHintHandler = new TamingHintHandler();
   private CompanionRelationship relationship;
-  private CompanionCommand companionCommand = CompanionCommand.FOLLOW;
 
   public RoosterCompanion(EntityType<? extends Chicken> entityType, Level level) {
     this(entityType, level, Variant.DEFAULT);
@@ -69,6 +84,8 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
   protected void defineSynchedData() {
     super.defineSynchedData();
     this.entityData.define(DATA_RELATIONSHIP, CompanionRelationshipData.EMPTY);
+    this.entityData.define(DATA_COMMAND, CompanionCommand.FOLLOW);
+    this.entityData.define(DATA_AGGRESSION, AggressionLevel.NEUTRAL);
   }
 
   @Override
@@ -88,14 +105,7 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
 
   @Override
   public Enum<?> getSkinVariantType(String name) {
-    if (name == null || name.isEmpty()) {
-      return Variant.DEFAULT;
-    }
-    try {
-      return Variant.valueOf(name);
-    } catch (IllegalArgumentException e) {
-      return Variant.DEFAULT;
-    }
+    return PlayerCompanion.super.getSkinVariantType(name);
   }
 
   @Override
@@ -119,13 +129,31 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
   }
 
   @Override
+  public SoundEvent getFeedingSound() {
+    return SoundEvents.CHICKEN_AMBIENT;
+  }
+
+  @Override
   public CompanionCommand getCompanionCommand() {
-    return this.companionCommand;
+    return this.entityData.get(DATA_COMMAND);
   }
 
   @Override
   public void setCompanionCommand(CompanionCommand command) {
-    this.companionCommand = command;
+    this.entityData.set(DATA_COMMAND, command);
+  }
+
+  @Override
+  public AggressionLevel getAggressionLevel() {
+    return this.entityData.get(DATA_AGGRESSION);
+  }
+
+  @Override
+  public void setAggressionLevel(AggressionLevel level) {
+    this.entityData.set(DATA_AGGRESSION, level);
+    if (!this.level().isClientSide) {
+      CompanionBehaviorHandler.applyGuardObjectives(this, level);
+    }
   }
 
   @Override
@@ -145,39 +173,69 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
       }
     }
 
+    if (!isOwned()) {
+      CompanionBehaviorHandler.initializeWildBehavior(this);
+    }
+
     return spawnGroupData;
   }
 
   @Override
   public InteractionResult mobInteract(Player player, InteractionHand hand) {
-    InteractionResult tamingResult = handleCompanionInteraction(player, hand);
-    if (tamingResult.consumesAction()) {
-      return tamingResult;
-    }
-    return super.mobInteract(player, hand);
+    InteractionResult result = handleMobInteract(player, hand);
+    return result != InteractionResult.PASS ? result : super.mobInteract(player, hand);
+  }
+
+  @Override
+  public void die(DamageSource damageSource) {
+    handleCompanionDeath(damageSource);
+    super.die(damageSource);
   }
 
   @Override
   public boolean isInvulnerableTo(DamageSource damageSource) {
-    return handleDamage(damageSource, super.isInvulnerableTo(damageSource));
+    return handleCompanionDamage(damageSource, super.isInvulnerableTo(damageSource));
   }
 
   @Override
   public void addAdditionalSaveData(CompoundTag tag) {
     super.addAdditionalSaveData(tag);
     saveCompanionData(tag);
+    tag.putString(TAG_AGGRESSION, getAggressionLevel().name());
   }
 
   @Override
   public void readAdditionalSaveData(CompoundTag tag) {
     super.readAdditionalSaveData(tag);
     loadCompanionData(tag);
+    if (tag.contains(TAG_AGGRESSION)) {
+      try {
+        this.entityData.set(DATA_AGGRESSION,
+          AggressionLevel.valueOf(tag.getString(TAG_AGGRESSION)));
+      } catch (IllegalArgumentException ignored) {
+        // Handle pre-7.x saves that stored "DEFENSIVE" or "AGGRESSIVE"
+        this.entityData.set(DATA_AGGRESSION, AggressionLevel.NEUTRAL);
+      }
+    }
   }
 
   @Override
   public void tick() {
     super.tick();
     tickCompanion();
+  }
+
+  @Override
+  public boolean killedEntity(ServerLevel level, LivingEntity killedEntity) {
+    boolean result = super.killedEntity(level, killedEntity);
+    ((ProgressionDataCapable<?>) this).addExperience(TamingConfig.GUARD_KILL_XP_AMOUNT);
+    return result;
+  }
+
+  @Override
+  public void onProgressLevelUp(ProgressionData oldData, ProgressionData newData) {
+    super.onProgressLevelUp(oldData, newData);
+    notifyOwnerLevelUp(newData.experienceLevel());
   }
 
   public enum Variant implements VariantTexture {

@@ -26,15 +26,23 @@ import de.markusbordihn.easynpc.entity.easynpc.EasyNPC;
 import de.markusbordihn.easynpc.entity.easynpc.data.AttributeDataCapable;
 import de.markusbordihn.easynpc.entity.easynpc.data.OwnerDataCapable;
 import de.markusbordihn.playercompanions.config.TamingConfig;
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
 import de.markusbordihn.playercompanions.entity.CompanionBehaviorHandler;
 import de.markusbordihn.playercompanions.entity.CompanionCommand;
 import de.markusbordihn.playercompanions.entity.CompanionMenuHandler;
 import de.markusbordihn.playercompanions.entity.CompanionRelationship;
 import de.markusbordihn.playercompanions.entity.CompanionRole;
+import de.markusbordihn.playercompanions.entity.damage.CompanionDeathHandler;
 import de.markusbordihn.playercompanions.entity.taming.TamingHintHandler;
 import de.markusbordihn.playercompanions.entity.taming.TamingInteractionHandler;
-import net.minecraft.server.level.ServerPlayer;
+import java.util.Optional;
+import java.util.UUID;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -42,6 +50,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
@@ -64,6 +75,133 @@ public interface PlayerCompanion {
   CompanionCommand getCompanionCommand();
 
   void setCompanionCommand(CompanionCommand command);
+
+  /**
+   * Returns the sound played when the companion is fed during taming.
+   */
+  default SoundEvent getFeedingSound() {
+    return SoundEvents.PLAYER_BURP;
+  }
+
+  default AggressionLevel getAggressionLevel() {
+    return AggressionLevel.NEUTRAL;
+  }
+
+  default void setAggressionLevel(AggressionLevel level) {
+  }
+
+  /**
+   * Returns whether the collector role is actively picking up items. Default: true.
+   */
+  default boolean isCollectorActive() {
+    return true;
+  }
+
+  /**
+   * Toggles the collector active state. No-op unless overridden.
+   */
+  default void setCollectorActive(boolean active) {
+  }
+
+  /**
+   * Resolves the variant type from a string name, falling back to the default variant.
+   */
+  default Enum<?> getSkinVariantType(String name) {
+    if (name == null || name.isEmpty()) {
+      return getDefaultSkinVariantType();
+    }
+    for (Enum<?> variant : getSkinVariantTypes()) {
+      if (variant.name().equals(name)) {
+        return variant;
+      }
+    }
+    return getDefaultSkinVariantType();
+  }
+
+  /**
+   * Resolves the online owner ServerPlayer for this companion.
+   */
+  default Optional<ServerPlayer> getOnlineOwner() {
+    if (level().isClientSide || !(this instanceof EasyNPC<?> easyNPC)) {
+      return Optional.empty();
+    }
+    OwnerDataCapable<?> ownerData = easyNPC.getEasyNPCOwnerData();
+    if (ownerData == null || ownerData.getOwnerUUID() == null || level().getServer() == null) {
+      return Optional.empty();
+    }
+    return Optional.ofNullable(
+      level().getServer().getPlayerList().getPlayer(ownerData.getOwnerUUID()));
+  }
+
+  /**
+   * Handles mobInteract delegation: taming for wild, command toggle / menu for tamed.
+   */
+  default InteractionResult handleMobInteract(Player player, InteractionHand hand) {
+    InteractionResult tamingResult = handleCompanionInteraction(player, hand);
+    if (tamingResult.consumesAction()) {
+      return tamingResult;
+    }
+    return InteractionResult.PASS;
+  }
+
+  /**
+   * Handles die delegation: records death and notifies owner.
+   */
+  default void handleCompanionDeath(DamageSource damageSource) {
+    CompanionDeathHandler.handleDeath(this, damageSource);
+  }
+
+  /**
+   * Handles isInvulnerableTo delegation.
+   */
+  default boolean handleCompanionDamage(DamageSource damageSource, boolean defaultResult) {
+    return handleDamage(damageSource, defaultResult);
+  }
+
+  /**
+   * Called on level-up. Sends a chat message to the owner and re-applies scaled attribute
+   * modifiers.
+   */
+  default void notifyOwnerLevelUp(int newLevel) {
+    getOnlineOwner().ifPresent(owner -> {
+      owner.sendSystemMessage(
+        Component.translatable(
+            "playercompanions.level_up", asMob().getDisplayName(), newLevel)
+          .withStyle(ChatFormatting.GOLD));
+      applyLevelAttributes(newLevel);
+    });
+  }
+
+  /**
+   * Applies health (and attack for guards) attribute modifiers scaled to the given level. Uses
+   * linear interpolation up to TamingConfig.MAX_LEVEL.
+   */
+  default void applyLevelAttributes(int level) {
+    UUID healthModId = UUID.nameUUIDFromBytes("companion_level_health".getBytes());
+    AttributeInstance healthAttr = asMob().getAttribute(Attributes.MAX_HEALTH);
+    if (healthAttr != null) {
+      healthAttr.removeModifier(healthModId);
+      double healthBonus = level * TamingConfig.HEALTH_BOOST_PER_LEVEL;
+      if (healthBonus > 0) {
+        healthAttr.addPermanentModifier(new AttributeModifier(
+          healthModId, "Companion Level Health",
+          healthBonus, AttributeModifier.Operation.ADDITION));
+      }
+    }
+    if (getCompanionRole() == CompanionRole.GUARD) {
+      UUID attackModId = UUID.nameUUIDFromBytes("companion_level_attack".getBytes());
+      AttributeInstance attackAttr = asMob().getAttribute(Attributes.ATTACK_DAMAGE);
+      if (attackAttr != null) {
+        attackAttr.removeModifier(attackModId);
+        double attackBonus = level * TamingConfig.GUARD_ATTACK_BOOST_PER_LEVEL;
+        if (attackBonus > 0) {
+          attackAttr.addPermanentModifier(new AttributeModifier(
+            attackModId, "Companion Level Attack",
+            attackBonus, AttributeModifier.Operation.ADDITION));
+        }
+      }
+    }
+  }
 
   default Entity asEntity() {
     return (Entity) this;

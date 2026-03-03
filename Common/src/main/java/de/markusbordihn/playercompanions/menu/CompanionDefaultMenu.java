@@ -39,5 +39,6 @@ public class CompanionDefaultMenu extends CompanionMenu {
   }
 
   @Override
-  protected void addRoleSlots() {}
+  protected void addRoleSlots() {
+  }
 }

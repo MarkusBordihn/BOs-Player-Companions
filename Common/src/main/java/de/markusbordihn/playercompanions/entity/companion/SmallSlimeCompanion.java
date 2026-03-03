@@ -21,17 +21,30 @@ package de.markusbordihn.playercompanions.entity.companion;
 
 import de.markusbordihn.easynpc.api.npc.base.slime.SlimeSmallBase;
 import de.markusbordihn.easynpc.api.skin.VariantTexture;
+import de.markusbordihn.easynpc.data.progression.ProgressionData;
+import de.markusbordihn.easynpc.entity.easynpc.data.ProgressionDataCapable;
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.TamingConfig;
+import de.markusbordihn.playercompanions.entity.CompanionBehaviorHandler;
 import de.markusbordihn.playercompanions.entity.CompanionCommand;
 import de.markusbordihn.playercompanions.entity.CompanionRelationship;
 import de.markusbordihn.playercompanions.entity.CompanionRelationshipData;
 import de.markusbordihn.playercompanions.entity.CompanionRole;
 import de.markusbordihn.playercompanions.entity.taming.TamingHintHandler;
 import de.markusbordihn.playercompanions.network.CompanionEntityDataSerializers;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -40,19 +53,32 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.AABB;
 
+/**
+ * A small slime companion that follows its owner, warns about nearby threats, and gains XP over
+ * time.
+ */
 public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompanion {
 
   private static final EntityDataAccessor<CompanionRelationshipData> DATA_RELATIONSHIP =
     SynchedEntityData.defineId(SmallSlimeCompanion.class,
       CompanionEntityDataSerializers.RELATIONSHIP_DATA);
+  private static final EntityDataAccessor<CompanionCommand> DATA_COMMAND =
+    SynchedEntityData.defineId(SmallSlimeCompanion.class,
+      CompanionEntityDataSerializers.COMPANION_COMMAND);
+  private static final int OWNER_PROXIMITY_XP_INTERVAL = TamingConfig.FOLLOWER_PROXIMITY_XP_INTERVAL;
+  private static final int FOLLOWER_WARNING_INTERVAL = TamingConfig.FOLLOWER_WARNING_INTERVAL;
   private final TamingHintHandler tamingHintHandler = new TamingHintHandler();
-  private CompanionRelationship relationship;
-  private CompanionCommand companionCommand = CompanionCommand.FOLLOW;
+  private final CompanionRelationship relationship;
+  private final Set<UUID> warnedThreats = new HashSet<>();
+  private int ownerProximityTicker;
+  private int followerWarningTicker;
 
   public SmallSlimeCompanion(EntityType<? extends Slime> entityType, Level level) {
     this(entityType, level, Variant.GREEN);
@@ -69,6 +95,7 @@ public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompani
   protected void defineSynchedData() {
     super.defineSynchedData();
     this.entityData.define(DATA_RELATIONSHIP, CompanionRelationshipData.EMPTY);
+    this.entityData.define(DATA_COMMAND, CompanionCommand.FOLLOW);
   }
 
   @Override
@@ -88,14 +115,7 @@ public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompani
 
   @Override
   public Enum<?> getSkinVariantType(String name) {
-    if (name == null || name.isEmpty()) {
-      return Variant.GREEN;
-    }
-    try {
-      return Variant.valueOf(name);
-    } catch (IllegalArgumentException e) {
-      return Variant.GREEN;
-    }
+    return PlayerCompanion.super.getSkinVariantType(name);
   }
 
   @Override
@@ -119,13 +139,18 @@ public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompani
   }
 
   @Override
+  public SoundEvent getFeedingSound() {
+    return SoundEvents.SLIME_SQUISH_SMALL;
+  }
+
+  @Override
   public CompanionCommand getCompanionCommand() {
-    return this.companionCommand;
+    return this.entityData.get(DATA_COMMAND);
   }
 
   @Override
   public void setCompanionCommand(CompanionCommand command) {
-    this.companionCommand = command;
+    this.entityData.set(DATA_COMMAND, command);
   }
 
   @Override
@@ -139,10 +164,12 @@ public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompani
       super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData, compoundTag);
     this.setPos(this.getX(), this.getY() + 0.01D, this.getZ());
     if (random.nextInt(2) == 0) {
-      Enum<?>[] variants = Variant.values();
-      if (variants.length > 0) {
-        setSkinVariantType(variants[random.nextInt(variants.length)]);
-      }
+      Variant[] variants = Variant.values();
+      setSkinVariantType(variants[random.nextInt(variants.length)]);
+    }
+
+    if (!isOwned()) {
+      CompanionBehaviorHandler.initializeWildBehavior(this);
     }
 
     return spawnGroupData;
@@ -150,22 +177,24 @@ public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompani
 
   @Override
   public boolean shouldRenderAtSqrDistance(double distance) {
-    double renderDistance = 64.0;
-    return distance < renderDistance * renderDistance;
+    return distance < 64.0 * 64.0;
   }
 
   @Override
   public InteractionResult mobInteract(Player player, InteractionHand hand) {
-    InteractionResult tamingResult = handleCompanionInteraction(player, hand);
-    if (tamingResult.consumesAction()) {
-      return tamingResult;
-    }
-    return super.mobInteract(player, hand);
+    InteractionResult result = handleMobInteract(player, hand);
+    return result != InteractionResult.PASS ? result : super.mobInteract(player, hand);
+  }
+
+  @Override
+  public void die(DamageSource damageSource) {
+    handleCompanionDeath(damageSource);
+    super.die(damageSource);
   }
 
   @Override
   public boolean isInvulnerableTo(DamageSource damageSource) {
-    return handleDamage(damageSource, super.isInvulnerableTo(damageSource));
+    return handleCompanionDamage(damageSource, super.isInvulnerableTo(damageSource));
   }
 
   @Override
@@ -184,6 +213,57 @@ public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompani
   public void tick() {
     super.tick();
     tickCompanion();
+    if (!level().isClientSide && isOwned()) {
+      if (++ownerProximityTicker >= OWNER_PROXIMITY_XP_INTERVAL) {
+        ownerProximityTicker = 0;
+        grantOwnerProximityXp();
+      }
+      if (++followerWarningTicker >= FOLLOWER_WARNING_INTERVAL) {
+        followerWarningTicker = 0;
+        checkForNearbyThreats();
+      }
+    }
+  }
+
+  @Override
+  public void onProgressLevelUp(ProgressionData oldData, ProgressionData newData) {
+    super.onProgressLevelUp(oldData, newData);
+    notifyOwnerLevelUp(newData.experienceLevel());
+  }
+
+  /**
+   * Awards 1 XP to this companion when its owner is within 8 blocks, checked every 5 minutes.
+   */
+  private void grantOwnerProximityXp() {
+    getOnlineOwner().ifPresent(owner -> {
+      if (this.distanceTo(owner) <= TamingConfig.FOLLOWER_PROXIMITY_XP_RANGE) {
+        ((ProgressionDataCapable<?>) this).addExperience(TamingConfig.FOLLOWER_PROXIMITY_XP_AMOUNT);
+      }
+    });
+  }
+
+  /**
+   * Scans for nearby monsters and sends a chat warning to the owner for each new threat found.
+   */
+  private void checkForNearbyThreats() {
+    getOnlineOwner().ifPresent(owner -> {
+      warnedThreats.removeIf(uuid -> {
+        var entity = ((ServerLevel) level()).getEntity(uuid);
+        return entity == null || !entity.isAlive();
+      });
+      AABB searchBox = this.getBoundingBox().inflate(TamingConfig.FOLLOWER_THREAT_RADIUS);
+      List<Monster> threats = level().getEntitiesOfClass(Monster.class, searchBox,
+        monster -> monster.isAlive() && !warnedThreats.contains(monster.getUUID()));
+      for (Monster monster : threats) {
+        warnedThreats.add(monster.getUUID());
+        owner.sendSystemMessage(
+          Component.translatable(
+              "playercompanions.follower.threat_warning",
+              this.getDisplayName(),
+              monster.getType().getDescription())
+            .withStyle(ChatFormatting.YELLOW));
+      }
+    });
   }
 
   public enum Variant implements VariantTexture {

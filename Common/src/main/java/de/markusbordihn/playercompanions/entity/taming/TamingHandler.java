@@ -19,11 +19,10 @@
 
 package de.markusbordihn.playercompanions.entity.taming;
 
-import de.markusbordihn.easynpc.data.saveddata.NPCEntityData;
+import de.markusbordihn.easynpc.api.handler.EasyNPCEntityHandler;
 import de.markusbordihn.playercompanions.Constants;
 import de.markusbordihn.playercompanions.config.TamingConfig;
 import de.markusbordihn.playercompanions.entity.CompanionRelationship;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 
 public class TamingHandler {
@@ -62,18 +61,8 @@ public class TamingHandler {
       return false;
     }
 
-    MinecraftServer server = player.getServer();
-    if (server == null) {
-      return false;
-    }
-
-    NPCEntityData npcData = NPCEntityData.get(server);
-    if (npcData == null) {
-      return false;
-    }
-
     long companionCount =
-      npcData.getEntriesByOwner(player.getUUID()).stream()
+      EasyNPCEntityHandler.getByOwner(player.getUUID()).stream()
         .filter(
           entry ->
             entry.metadata() != null

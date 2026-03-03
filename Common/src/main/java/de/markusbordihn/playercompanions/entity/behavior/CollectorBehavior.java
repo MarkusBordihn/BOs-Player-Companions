@@ -31,32 +31,37 @@ public class CollectorBehavior {
 
   private static final double PICKUP_RADIUS = 4.0;
 
-  private CollectorBehavior() {}
+  private CollectorBehavior() {
+  }
 
-  public static void tick(PlayerCompanion companion, net.minecraft.world.SimpleContainer inventory) {
+  public static boolean tick(PlayerCompanion companion,
+    net.minecraft.world.SimpleContainer inventory) {
     if (companion.level().isClientSide || !companion.isOwned()
-        || companion.getCompanionCommand() == CompanionCommand.SIT) {
-      return;
+      || companion.getCompanionCommand() == CompanionCommand.SIT) {
+      return false;
     }
     Level level = companion.level();
     net.minecraft.world.entity.Mob mob = companion.asMob();
     AABB searchBox = mob.getBoundingBox().inflate(PICKUP_RADIUS);
     List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class, searchBox,
-        item -> !item.isRemoved() && item.isAlive());
+      item -> !item.isRemoved() && item.isAlive());
+    boolean collected = false;
     for (ItemEntity itemEntity : items) {
       if (inventory.canAddItem(itemEntity.getItem())) {
         ItemStack remaining = addToInventory(inventory, itemEntity.getItem().copy());
         if (remaining.isEmpty()) {
           itemEntity.discard();
+          collected = true;
         } else {
           itemEntity.setItem(remaining);
         }
       }
     }
+    return collected;
   }
 
   private static ItemStack addToInventory(net.minecraft.world.SimpleContainer inventory,
-      ItemStack stack) {
+    ItemStack stack) {
     for (int i = 0; i < inventory.getContainerSize(); i++) {
       ItemStack slot = inventory.getItem(i);
       if (slot.isEmpty()) {

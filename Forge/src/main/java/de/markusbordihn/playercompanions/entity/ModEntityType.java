@@ -20,16 +20,19 @@
 package de.markusbordihn.playercompanions.entity;
 
 import de.markusbordihn.easynpc.api.npc.base.ChickenBase;
-import de.markusbordihn.easynpc.api.npc.base.slime.SlimeBase;
+import de.markusbordihn.easynpc.api.npc.base.slime.SlimeSmallBase;
 import de.markusbordihn.playercompanions.Constants;
 import java.util.EnumMap;
 import java.util.Map;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
@@ -77,7 +80,7 @@ public class ModEntityType {
         case SMALL_SLIME:
           event.put(
             (EntityType<? extends LivingEntity>) COMPANION_TYPE.get(type).get(),
-            SlimeBase.createAttributes().build());
+            SlimeSmallBase.createAttributes().build());
           break;
         default:
           event.put(
@@ -85,6 +88,19 @@ public class ModEntityType {
             Pig.createAttributes().build());
           break;
       }
+    }
+  }
+
+  @SubscribeEvent
+  public static void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
+    log.info("{} Companion Spawn Placements ...", Constants.LOG_REGISTER_PREFIX);
+    for (CompanionEntityType type : CompanionEntityType.values()) {
+      event.register(
+        (EntityType) COMPANION_TYPE.get(type).get(),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        CompanionSpawnRules::checkCompanionSpawnRules,
+        SpawnPlacementRegisterEvent.Operation.AND);
     }
   }
 }

@@ -24,7 +24,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraftforge.network.NetworkHooks;
 
-public class MenuOpener implements IMenuOpener {
+public class MenuOpener implements CompanionMenuOpener {
 
   @Override
   public void openMenu(ServerPlayer player, MenuProvider menuProvider, UUID companionUUID) {

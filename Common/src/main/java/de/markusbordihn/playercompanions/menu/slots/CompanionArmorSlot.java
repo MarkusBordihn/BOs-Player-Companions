@@ -32,23 +32,25 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 public class CompanionArmorSlot extends Slot {
 
   private static final ResourceLocation[] EMPTY_ICONS = {
-      InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS,
-      InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS,
-      InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE,
-      InventoryMenu.EMPTY_ARMOR_SLOT_HELMET
+    InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS,
+    InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS,
+    InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE,
+    InventoryMenu.EMPTY_ARMOR_SLOT_HELMET
   };
 
   private final EquipmentSlot equipmentSlot;
 
   public CompanionArmorSlot(Container container, int index, int x, int y,
-      EquipmentSlot equipmentSlot) {
+    EquipmentSlot equipmentSlot) {
     super(container, index, x, y);
     this.equipmentSlot = equipmentSlot;
   }
 
   @Override
   public boolean mayPlace(ItemStack stack) {
-    if (stack.isEmpty()) return false;
+    if (stack.isEmpty()) {
+      return false;
+    }
     if (stack.getItem() instanceof Equipable equipable) {
       return equipable.getEquipmentSlot() == equipmentSlot;
     }
@@ -59,7 +61,7 @@ public class CompanionArmorSlot extends Slot {
   public boolean mayPickup(net.minecraft.world.entity.player.Player player) {
     ItemStack stack = getItem();
     return (stack.isEmpty() || player.isCreative()
-        || !EnchantmentHelper.hasBindingCurse(stack)) && super.mayPickup(player);
+      || !EnchantmentHelper.hasBindingCurse(stack)) && super.mayPickup(player);
   }
 
   @Override

@@ -50,6 +50,32 @@ public class TamingConfig extends Config {
       showTamingHints: Show proactive taming hints on wild companions (default: true)
       autoNameOnTame: Automatically name companions when tamed (default: true)
       
+      Progression
+      maxLevel: Maximum companion level (default: 60)
+      healthBoostPerLevel: Max health bonus added per level (default: 0.5)
+      guardAttackBoostPerLevel: Attack damage bonus per level for guards (default: 0.1)
+      followerThreatRadius: Radius in blocks where the follower companion detects hostile mobs (default: 16.0)
+      followerProximityXpInterval: Ticks between proximity XP checks for followers (default: 6000)
+      followerWarningInterval: Ticks between threat warning checks for followers (default: 60)
+      followerProximityXpRange: Max distance to owner for proximity XP (default: 8.0)
+      followerProximityXpAmount: XP gained per proximity check (default: 1)
+      guardKillXpAmount: XP gained per kill for guards (default: 2)
+      collectorPickupXpAmount: XP gained per item pickup for collectors (default: 1)
+      
+      Behavior
+      companionFollowSpeed: Speed modifier when following owner (default: 0.8)
+      companionCombatSpeed: Speed modifier during melee combat (default: 1.2)
+      
+      Spawning
+      spawnCooldownAlive: Cooldown in ticks for re-spawning alive companions (default: 6000)
+      spawnCooldownDead: Cooldown in ticks for re-spawning dead companions (default: 24000)
+      naturalSpawningEnabled: Enable natural spawning of wild companions (default: true)
+      spawnWeightSmallSlime: Spawn weight for small slime companions (default: 5)
+      spawnWeightPig: Spawn weight for pig companions (default: 3)
+      spawnWeightRooster: Spawn weight for rooster companions (default: 3)
+      spawnMinGroupSize: Minimum group size for natural spawning (default: 1)
+      spawnMaxGroupSize: Maximum group size for natural spawning (default: 2)
+      
       Food Values
       Define trust values for different foods per companion type.
       Format: food.<companion_type>.<item_id> = <trust_value>
@@ -71,6 +97,29 @@ public class TamingConfig extends Config {
   public static boolean SHOW_TRUST_BAR = true;
   public static boolean SHOW_TAMING_HINTS = true;
   public static boolean AUTO_NAME_ON_TAME = true;
+  // Progression
+  public static int MAX_LEVEL = 60;
+  public static float HEALTH_BOOST_PER_LEVEL = 0.5f;
+  public static float GUARD_ATTACK_BOOST_PER_LEVEL = 0.1f;
+  public static double FOLLOWER_THREAT_RADIUS = 16.0;
+  public static int FOLLOWER_PROXIMITY_XP_INTERVAL = 6000;
+  public static int FOLLOWER_WARNING_INTERVAL = 60;
+  public static double FOLLOWER_PROXIMITY_XP_RANGE = 8.0;
+  public static int FOLLOWER_PROXIMITY_XP_AMOUNT = 1;
+  public static int GUARD_KILL_XP_AMOUNT = 2;
+  public static int COLLECTOR_PICKUP_XP_AMOUNT = 1;
+  // Behavior
+  public static double COMPANION_FOLLOW_SPEED = 0.8;
+  public static double COMPANION_COMBAT_SPEED = 1.2;
+  // Spawning
+  public static long SPAWN_COOLDOWN_ALIVE = 6000L;
+  public static long SPAWN_COOLDOWN_DEAD = 24000L;
+  public static boolean NATURAL_SPAWNING_ENABLED = true;
+  public static int SPAWN_WEIGHT_SMALL_SLIME = 5;
+  public static int SPAWN_WEIGHT_PIG = 3;
+  public static int SPAWN_WEIGHT_ROOSTER = 3;
+  public static int SPAWN_MIN_GROUP_SIZE = 1;
+  public static int SPAWN_MAX_GROUP_SIZE = 2;
 
   public static void registerConfig() {
     registerConfigFile(CONFIG_FILE_NAME, CONFIG_FILE_HEADER);
@@ -104,6 +153,52 @@ public class TamingConfig extends Config {
     SHOW_TRUST_BAR = parseConfigValue(properties, "showTrustBar", SHOW_TRUST_BAR);
     SHOW_TAMING_HINTS = parseConfigValue(properties, "showTamingHints", SHOW_TAMING_HINTS);
     AUTO_NAME_ON_TAME = parseConfigValue(properties, "autoNameOnTame", AUTO_NAME_ON_TAME);
+
+    // Progression
+    MAX_LEVEL = parseConfigValue(properties, "maxLevel", MAX_LEVEL);
+    HEALTH_BOOST_PER_LEVEL =
+      (float) parseConfigValue(properties, "healthBoostPerLevel", (double) HEALTH_BOOST_PER_LEVEL);
+    GUARD_ATTACK_BOOST_PER_LEVEL =
+      (float) parseConfigValue(properties, "guardAttackBoostPerLevel",
+        (double) GUARD_ATTACK_BOOST_PER_LEVEL);
+    FOLLOWER_THREAT_RADIUS =
+      parseConfigValue(properties, "followerThreatRadius", FOLLOWER_THREAT_RADIUS);
+    FOLLOWER_PROXIMITY_XP_INTERVAL =
+      parseConfigValue(properties, "followerProximityXpInterval", FOLLOWER_PROXIMITY_XP_INTERVAL);
+    FOLLOWER_WARNING_INTERVAL =
+      parseConfigValue(properties, "followerWarningInterval", FOLLOWER_WARNING_INTERVAL);
+    FOLLOWER_PROXIMITY_XP_RANGE =
+      parseConfigValue(properties, "followerProximityXpRange", FOLLOWER_PROXIMITY_XP_RANGE);
+    FOLLOWER_PROXIMITY_XP_AMOUNT =
+      parseConfigValue(properties, "followerProximityXpAmount", FOLLOWER_PROXIMITY_XP_AMOUNT);
+    GUARD_KILL_XP_AMOUNT =
+      parseConfigValue(properties, "guardKillXpAmount", GUARD_KILL_XP_AMOUNT);
+    COLLECTOR_PICKUP_XP_AMOUNT =
+      parseConfigValue(properties, "collectorPickupXpAmount", COLLECTOR_PICKUP_XP_AMOUNT);
+
+    // Behavior
+    COMPANION_FOLLOW_SPEED =
+      parseConfigValue(properties, "companionFollowSpeed", COMPANION_FOLLOW_SPEED);
+    COMPANION_COMBAT_SPEED =
+      parseConfigValue(properties, "companionCombatSpeed", COMPANION_COMBAT_SPEED);
+
+    // Spawning
+    SPAWN_COOLDOWN_ALIVE =
+      (long) parseConfigValue(properties, "spawnCooldownAlive", (int) SPAWN_COOLDOWN_ALIVE);
+    SPAWN_COOLDOWN_DEAD =
+      (long) parseConfigValue(properties, "spawnCooldownDead", (int) SPAWN_COOLDOWN_DEAD);
+    NATURAL_SPAWNING_ENABLED =
+      parseConfigValue(properties, "naturalSpawningEnabled", NATURAL_SPAWNING_ENABLED);
+    SPAWN_WEIGHT_SMALL_SLIME =
+      parseConfigValue(properties, "spawnWeightSmallSlime", SPAWN_WEIGHT_SMALL_SLIME);
+    SPAWN_WEIGHT_PIG =
+      parseConfigValue(properties, "spawnWeightPig", SPAWN_WEIGHT_PIG);
+    SPAWN_WEIGHT_ROOSTER =
+      parseConfigValue(properties, "spawnWeightRooster", SPAWN_WEIGHT_ROOSTER);
+    SPAWN_MIN_GROUP_SIZE =
+      parseConfigValue(properties, "spawnMinGroupSize", SPAWN_MIN_GROUP_SIZE);
+    SPAWN_MAX_GROUP_SIZE =
+      parseConfigValue(properties, "spawnMaxGroupSize", SPAWN_MAX_GROUP_SIZE);
 
     // Food Values - Pig
     parseFoodValue(properties, "pig", "minecraft:wheat_seeds", 5);

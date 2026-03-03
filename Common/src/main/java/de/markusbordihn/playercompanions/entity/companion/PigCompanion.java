@@ -21,7 +21,11 @@ package de.markusbordihn.playercompanions.entity.companion;
 
 import de.markusbordihn.easynpc.api.npc.base.PigBase;
 import de.markusbordihn.easynpc.api.skin.VariantTexture;
+import de.markusbordihn.easynpc.data.progression.ProgressionData;
+import de.markusbordihn.easynpc.entity.easynpc.data.ProgressionDataCapable;
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.TamingConfig;
+import de.markusbordihn.playercompanions.entity.CompanionBehaviorHandler;
 import de.markusbordihn.playercompanions.entity.CompanionCommand;
 import de.markusbordihn.playercompanions.entity.CompanionRelationship;
 import de.markusbordihn.playercompanions.entity.CompanionRelationshipData;
@@ -31,8 +35,11 @@ import de.markusbordihn.playercompanions.entity.taming.TamingHintHandler;
 import de.markusbordihn.playercompanions.network.CompanionEntityDataSerializers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -52,13 +59,18 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
 
   private static final int INVENTORY_SIZE = 16;
   private static final String TAG_INVENTORY = "Inventory";
+  private static final String TAG_COLLECTOR_ACTIVE = "CollectorActive";
   private static final EntityDataAccessor<CompanionRelationshipData> DATA_RELATIONSHIP =
     SynchedEntityData.defineId(PigCompanion.class,
       CompanionEntityDataSerializers.RELATIONSHIP_DATA);
+  private static final EntityDataAccessor<CompanionCommand> DATA_COMMAND =
+    SynchedEntityData.defineId(PigCompanion.class,
+      CompanionEntityDataSerializers.COMPANION_COMMAND);
+  private static final EntityDataAccessor<Boolean> DATA_COLLECTOR_ACTIVE =
+    SynchedEntityData.defineId(PigCompanion.class, EntityDataSerializers.BOOLEAN);
   private final TamingHintHandler tamingHintHandler = new TamingHintHandler();
   private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
   private CompanionRelationship relationship;
-  private CompanionCommand companionCommand = CompanionCommand.FOLLOW;
 
   public PigCompanion(EntityType<? extends Pig> entityType, Level level) {
     this(entityType, level, Variant.DEFAULT);
@@ -74,6 +86,8 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
   protected void defineSynchedData() {
     super.defineSynchedData();
     this.entityData.define(DATA_RELATIONSHIP, CompanionRelationshipData.EMPTY);
+    this.entityData.define(DATA_COMMAND, CompanionCommand.FOLLOW);
+    this.entityData.define(DATA_COLLECTOR_ACTIVE, true);
   }
 
   @Override
@@ -93,14 +107,7 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
 
   @Override
   public Enum<?> getSkinVariantType(String name) {
-    if (name == null || name.isEmpty()) {
-      return Variant.DEFAULT;
-    }
-    try {
-      return Variant.valueOf(name);
-    } catch (IllegalArgumentException e) {
-      return Variant.DEFAULT;
-    }
+    return PlayerCompanion.super.getSkinVariantType(name);
   }
 
   @Override
@@ -123,18 +130,33 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
   }
 
   @Override
+  public boolean isCollectorActive() {
+    return this.entityData.get(DATA_COLLECTOR_ACTIVE);
+  }
+
+  @Override
+  public void setCollectorActive(boolean active) {
+    this.entityData.set(DATA_COLLECTOR_ACTIVE, active);
+  }
+
+  @Override
   public CompanionRole getCompanionRole() {
     return CompanionRole.COLLECTOR;
   }
 
   @Override
+  public SoundEvent getFeedingSound() {
+    return SoundEvents.PIG_AMBIENT;
+  }
+
+  @Override
   public CompanionCommand getCompanionCommand() {
-    return this.companionCommand;
+    return this.entityData.get(DATA_COMMAND);
   }
 
   @Override
   public void setCompanionCommand(CompanionCommand command) {
-    this.companionCommand = command;
+    this.entityData.set(DATA_COMMAND, command);
   }
 
   @Override
@@ -154,21 +176,28 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
       }
     }
 
+    if (!isOwned()) {
+      CompanionBehaviorHandler.initializeWildBehavior(this);
+    }
+
     return spawnGroupData;
   }
 
   @Override
   public InteractionResult mobInteract(Player player, InteractionHand hand) {
-    InteractionResult tamingResult = handleCompanionInteraction(player, hand);
-    if (tamingResult.consumesAction()) {
-      return tamingResult;
-    }
-    return super.mobInteract(player, hand);
+    InteractionResult result = handleMobInteract(player, hand);
+    return result != InteractionResult.PASS ? result : super.mobInteract(player, hand);
+  }
+
+  @Override
+  public void die(DamageSource damageSource) {
+    handleCompanionDeath(damageSource);
+    super.die(damageSource);
   }
 
   @Override
   public boolean isInvulnerableTo(DamageSource damageSource) {
-    return handleDamage(damageSource, super.isInvulnerableTo(damageSource));
+    return handleCompanionDamage(damageSource, super.isInvulnerableTo(damageSource));
   }
 
   @Override
@@ -176,6 +205,7 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
     super.addAdditionalSaveData(tag);
     saveCompanionData(tag);
     tag.put(TAG_INVENTORY, inventory.createTag());
+    tag.putBoolean(TAG_COLLECTOR_ACTIVE, isCollectorActive());
   }
 
   @Override
@@ -184,6 +214,9 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
     loadCompanionData(tag);
     if (tag.contains(TAG_INVENTORY)) {
       inventory.fromTag(tag.getList(TAG_INVENTORY, 10));
+    }
+    if (tag.contains(TAG_COLLECTOR_ACTIVE)) {
+      this.entityData.set(DATA_COLLECTOR_ACTIVE, tag.getBoolean(TAG_COLLECTOR_ACTIVE));
     }
   }
 
@@ -203,7 +236,15 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
   public void tick() {
     super.tick();
     tickCompanion();
-    CollectorBehavior.tick(this, inventory);
+    if (isCollectorActive() && CollectorBehavior.tick(this, inventory)) {
+      ((ProgressionDataCapable<?>) this).addExperience(TamingConfig.COLLECTOR_PICKUP_XP_AMOUNT);
+    }
+  }
+
+  @Override
+  public void onProgressLevelUp(ProgressionData oldData, ProgressionData newData) {
+    super.onProgressLevelUp(oldData, newData);
+    notifyOwnerLevelUp(newData.experienceLevel());
   }
 
   public enum Variant implements VariantTexture {

@@ -25,14 +25,19 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ForgeScreenRegistry {
 
-  private ForgeScreenRegistry() {}
+  private ForgeScreenRegistry() {
+  }
 
   public static void register(final FMLClientSetupEvent event) {
     event.enqueueWork(() -> {
       MenuScreens.register(ForgeModMenuTypes.COMPANION_DEFAULT.get(), CompanionDefaultScreen::new);
-      MenuScreens.register(ForgeModMenuTypes.COMPANION_COLLECTOR.get(), CompanionCollectorScreen::new);
+      MenuScreens.register(ForgeModMenuTypes.COMPANION_COLLECTOR.get(),
+        CompanionCollectorScreen::new);
       MenuScreens.register(ForgeModMenuTypes.COMPANION_GUARD.get(), CompanionGuardScreen::new);
-      MenuScreens.register(ForgeModMenuTypes.COMPANION_FOLLOWER.get(), CompanionFollowerScreen::new);
+      MenuScreens.register(ForgeModMenuTypes.COMPANION_FOLLOWER.get(),
+        CompanionFollowerScreen::new);
+      MenuScreens.register(ForgeModMenuTypes.COMPANION_SHRINE.get(),
+        CompanionShrineScreen::new);
     });
   }
 }

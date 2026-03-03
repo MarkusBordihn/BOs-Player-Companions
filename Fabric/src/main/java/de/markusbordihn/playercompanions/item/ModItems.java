@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.item;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.block.ModBlocks;
 import de.markusbordihn.playercompanions.entity.CompanionEntityType;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 import java.util.EnumMap;
@@ -29,6 +30,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SpawnEggItem;
@@ -57,6 +59,11 @@ public class ModItems {
         "Registering companion spawn egg for {} with id {}.", entityTypeObject, entityType.getId());
       COMPANION_SPAWN_EGGS.put(entityType, registerSpawnEgg(entityType.getId(), entityTypeObject));
     }
+
+    // Companion Shrine block item
+    log.info("Registering companion_shrine block item.");
+    registerItem("companion_shrine",
+      new BlockItem(ModBlocks.COMPANION_SHRINE, new Item.Properties()));
   }
 
   private static Item registerItem(String id, Item item) {

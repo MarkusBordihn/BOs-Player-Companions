@@ -31,7 +31,8 @@ import org.joml.Quaternionf;
 
 public class CompanionScreenHelper {
 
-  private CompanionScreenHelper() {}
+  private CompanionScreenHelper() {
+  }
 
   public static void renderEntity(int x, int y, int scale, float yRot, float xRot, Mob entity) {
     float f = (float) Math.atan(yRot / 40.0F);

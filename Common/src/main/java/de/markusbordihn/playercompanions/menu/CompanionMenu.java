@@ -64,7 +64,7 @@ public abstract class CompanionMenu extends AbstractContainerMenu {
   protected final Player player;
 
   protected CompanionMenu(MenuType<?> menuType, int windowId, Inventory playerInventory,
-      UUID companionUUID) {
+    UUID companionUUID) {
     super(menuType, windowId);
     this.companionUUID = companionUUID;
     this.player = playerInventory.player;
@@ -83,13 +83,15 @@ public abstract class CompanionMenu extends AbstractContainerMenu {
   }
 
   protected CompanionMenu(MenuType<?> menuType, int windowId, Inventory playerInventory,
-      FriendlyByteBuf data) {
+    FriendlyByteBuf data) {
     this(menuType, windowId, playerInventory, data.readUUID());
   }
 
   private void loadCompanionEquipment() {
     Mob companion = findCompanion();
-    if (companion == null) return;
+    if (companion == null) {
+      return;
+    }
     armorContainer.setItem(0, companion.getItemBySlot(EquipmentSlot.HEAD));
     armorContainer.setItem(1, companion.getItemBySlot(EquipmentSlot.CHEST));
     armorContainer.setItem(2, companion.getItemBySlot(EquipmentSlot.LEGS));
@@ -100,12 +102,12 @@ public abstract class CompanionMenu extends AbstractContainerMenu {
 
   private void addCompanionSlots() {
     EquipmentSlot[] armorTypes = {
-        EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+      EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
     // Armor slots
     for (int i = 0; i < 4; i++) {
       addSlot(new CompanionArmorSlot(armorContainer, i, ARMOR_X, ARMOR_Y + i * SLOT_SIZE,
-          armorTypes[i]));
+        armorTypes[i]));
     }
     // Equipment/dummy slots
     for (int i = 0; i < EQUIP_COUNT; i++) {
@@ -113,9 +115,9 @@ public abstract class CompanionMenu extends AbstractContainerMenu {
     }
     // Hand slots
     addSlot(new CompanionHandSlot(handContainer, EquipmentSlot.MAINHAND.getIndex(),
-        MAINHAND_X, MAINHAND_Y, EquipmentSlot.MAINHAND));
+      MAINHAND_X, MAINHAND_Y, EquipmentSlot.MAINHAND));
     addSlot(new CompanionHandSlot(handContainer, EquipmentSlot.OFFHAND.getIndex(),
-        OFFHAND_X, OFFHAND_Y, EquipmentSlot.OFFHAND));
+      OFFHAND_X, OFFHAND_Y, EquipmentSlot.OFFHAND));
   }
 
   protected abstract void addRoleSlots();
@@ -124,7 +126,7 @@ public abstract class CompanionMenu extends AbstractContainerMenu {
     for (int row = 0; row < 3; row++) {
       for (int col = 0; col < 9; col++) {
         addSlot(new Slot(playerInventory, col + row * 9 + 9,
-            PLAYER_INV_X + col * SLOT_SIZE, PLAYER_INV_Y + row * SLOT_SIZE));
+          PLAYER_INV_X + col * SLOT_SIZE, PLAYER_INV_Y + row * SLOT_SIZE));
       }
     }
     for (int col = 0; col < 9; col++) {
@@ -136,7 +138,7 @@ public abstract class CompanionMenu extends AbstractContainerMenu {
     return level.getEntitiesOfClass(Mob.class,
         player.getBoundingBox().inflate(64),
         e -> e instanceof PlayerCompanion && e.getUUID().equals(companionUUID)).stream()
-        .findFirst().orElse(null);
+      .findFirst().orElse(null);
   }
 
   public UUID getCompanionUUID() {
@@ -151,16 +153,22 @@ public abstract class CompanionMenu extends AbstractContainerMenu {
   @Override
   public ItemStack quickMoveStack(Player player, int slotIndex) {
     Slot slot = slots.get(slotIndex);
-    if (!slot.hasItem()) return ItemStack.EMPTY;
+    if (!slot.hasItem()) {
+      return ItemStack.EMPTY;
+    }
 
     ItemStack stack = slot.getItem().copy();
     int companionSlots = 4 + EQUIP_COUNT + 2 + getRoleSlotCount();
     int totalSlots = slots.size();
 
     if (slotIndex < companionSlots) {
-      if (!moveItemStackTo(stack, companionSlots, totalSlots, false)) return ItemStack.EMPTY;
+      if (!moveItemStackTo(stack, companionSlots, totalSlots, false)) {
+        return ItemStack.EMPTY;
+      }
     } else {
-      if (!moveItemStackTo(stack, 0, companionSlots, false)) return ItemStack.EMPTY;
+      if (!moveItemStackTo(stack, 0, companionSlots, false)) {
+        return ItemStack.EMPTY;
+      }
     }
 
     if (stack.isEmpty()) {

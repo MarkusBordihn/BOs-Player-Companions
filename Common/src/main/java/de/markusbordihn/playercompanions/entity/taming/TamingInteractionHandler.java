@@ -129,10 +129,6 @@ public class TamingInteractionHandler {
           companion, player, relationship.getTamingPlayer());
         break;
 
-      case ALREADY_TAMED:
-        TamingFeedbackHandler.handleAlreadyTamedFeedback(companion, player);
-        break;
-
       default:
         break;
     }

@@ -24,12 +24,13 @@ import de.markusbordihn.playercompanions.menu.CompanionCollectorMenu;
 import de.markusbordihn.playercompanions.menu.CompanionDefaultMenu;
 import de.markusbordihn.playercompanions.menu.CompanionFollowerMenu;
 import de.markusbordihn.playercompanions.menu.CompanionGuardMenu;
-import de.markusbordihn.playercompanions.menu.IMenuOpener;
+import de.markusbordihn.playercompanions.menu.CompanionMenuOpener;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,30 +38,31 @@ import org.apache.logging.log4j.Logger;
 public class CompanionMenuHandler {
 
   private static final Logger log = LogManager.getLogger(CompanionMenuHandler.class);
-  private static IMenuOpener menuOpener;
+  private static CompanionMenuOpener menuOpener;
 
-  private CompanionMenuHandler() {}
+  private CompanionMenuHandler() {
+  }
 
-  public static void setMenuOpener(IMenuOpener opener) {
+  public static void setMenuOpener(CompanionMenuOpener opener) {
     menuOpener = opener;
   }
 
   public static void openMenu(PlayerCompanion companion, ServerPlayer player) {
     if (menuOpener == null) {
-      log.error("No IMenuOpener registered — cannot open companion menu");
+      log.error("No CompanionMenuOpener registered — cannot open companion menu");
       return;
     }
     UUID companionUUID = companion.asEntity().getUUID();
     Component displayName = companion.asEntity().getCustomName() != null
-        ? companion.asEntity().getCustomName()
-        : companion.asEntity().getName();
+      ? companion.asEntity().getCustomName()
+      : companion.asEntity().getName();
 
     MenuProvider menuProvider = buildMenuProvider(companion, companionUUID, displayName);
     menuOpener.openMenu(player, menuProvider, companionUUID);
   }
 
   private static MenuProvider buildMenuProvider(PlayerCompanion companion, UUID companionUUID,
-      Component displayName) {
+    Component displayName) {
     return new MenuProvider() {
       @Override
       public Component getDisplayName() {
@@ -69,7 +71,7 @@ public class CompanionMenuHandler {
 
       @Override
       public AbstractContainerMenu createMenu(int windowId, Inventory inventory,
-          net.minecraft.world.entity.player.Player player) {
+        Player player) {
         return switch (companion.getCompanionRole()) {
           case COLLECTOR -> new CompanionCollectorMenu(windowId, inventory, companionUUID);
           case GUARD -> new CompanionGuardMenu(windowId, inventory, companionUUID);

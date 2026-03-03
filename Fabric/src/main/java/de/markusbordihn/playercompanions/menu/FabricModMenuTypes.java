@@ -25,23 +25,28 @@ import net.minecraft.resources.ResourceLocation;
 
 public class FabricModMenuTypes {
 
-  private FabricModMenuTypes() {}
+  private FabricModMenuTypes() {
+  }
 
   public static void register() {
     ModMenuTypes.COMPANION_DEFAULT = ScreenHandlerRegistry.registerExtended(
-        new ResourceLocation(Constants.MOD_ID, "companion_menu"),
-        CompanionDefaultMenu::new);
+      new ResourceLocation(Constants.MOD_ID, "companion_menu"),
+      CompanionDefaultMenu::new);
 
     ModMenuTypes.COMPANION_COLLECTOR = ScreenHandlerRegistry.registerExtended(
-        new ResourceLocation(Constants.MOD_ID, "companion_collector_menu"),
-        CompanionCollectorMenu::new);
+      new ResourceLocation(Constants.MOD_ID, "companion_collector_menu"),
+      CompanionCollectorMenu::new);
 
     ModMenuTypes.COMPANION_GUARD = ScreenHandlerRegistry.registerExtended(
-        new ResourceLocation(Constants.MOD_ID, "companion_guard_menu"),
-        CompanionGuardMenu::new);
+      new ResourceLocation(Constants.MOD_ID, "companion_guard_menu"),
+      CompanionGuardMenu::new);
 
     ModMenuTypes.COMPANION_FOLLOWER = ScreenHandlerRegistry.registerExtended(
-        new ResourceLocation(Constants.MOD_ID, "companion_follower_menu"),
-        CompanionFollowerMenu::new);
+      new ResourceLocation(Constants.MOD_ID, "companion_follower_menu"),
+      CompanionFollowerMenu::new);
+
+    ModMenuTypes.COMPANION_SHRINE = ScreenHandlerRegistry.registerExtended(
+      new ResourceLocation(Constants.MOD_ID, "companion_shrine_menu"),
+      CompanionShrineMenu::new);
   }
 }

@@ -27,8 +27,10 @@ public class ModMenuTypes {
   public static MenuType<CompanionCollectorMenu> COMPANION_COLLECTOR;
   public static MenuType<CompanionGuardMenu> COMPANION_GUARD;
   public static MenuType<CompanionFollowerMenu> COMPANION_FOLLOWER;
+  public static MenuType<CompanionShrineMenu> COMPANION_SHRINE;
 
-  private ModMenuTypes() {}
+  private ModMenuTypes() {
+  }
 
   public static MenuType<CompanionDefaultMenu> getDefaultMenuType() {
     return COMPANION_DEFAULT;

@@ -32,7 +32,7 @@ public class CompanionCollectorScreen extends CompanionScreen<CompanionCollector
   private static final int GRID_ROWS = 4;
 
   public CompanionCollectorScreen(CompanionCollectorMenu menu, Inventory inventory,
-      Component title) {
+    Component title) {
     super(menu, inventory, title);
   }
 
@@ -42,8 +42,8 @@ public class CompanionCollectorScreen extends CompanionScreen<CompanionCollector
     for (int row = 0; row < GRID_ROWS; row++) {
       for (int col = 0; col < GRID_COLS; col++) {
         guiGraphics.blit(TEXTURE_INVENTORY,
-            this.leftPos + GRID_X - 1 + col * 18, this.topPos + GRID_Y - 1 + row * 18,
-            18, 18, 7, 7, 18, 18, 256, 256);
+          this.leftPos + GRID_X - 1 + col * 18, this.topPos + GRID_Y - 1 + row * 18,
+          18, 18, 7, 7, 18, 18, 256, 256);
       }
     }
   }

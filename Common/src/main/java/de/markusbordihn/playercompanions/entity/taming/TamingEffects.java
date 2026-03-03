@@ -20,10 +20,7 @@
 package de.markusbordihn.playercompanions.entity.taming;
 
 import de.markusbordihn.playercompanions.config.TamingConfig;
-import de.markusbordihn.playercompanions.entity.companion.PigCompanion;
 import de.markusbordihn.playercompanions.entity.companion.PlayerCompanion;
-import de.markusbordihn.playercompanions.entity.companion.RoosterCompanion;
-import de.markusbordihn.playercompanions.entity.companion.SmallSlimeCompanion;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -118,14 +115,7 @@ public class TamingEffects {
     Entity entity = companion.asEntity();
     float pitch = 1.0f + (trustValue / 50f);
     entity.playSound(SoundEvents.PLAYER_BURP, 0.8f, pitch);
-
-    if (companion instanceof PigCompanion) {
-      entity.playSound(SoundEvents.PIG_AMBIENT, 0.5f, 1.2f);
-    } else if (companion instanceof RoosterCompanion) {
-      entity.playSound(SoundEvents.CHICKEN_AMBIENT, 0.5f, 1.1f);
-    } else if (companion instanceof SmallSlimeCompanion) {
-      entity.playSound(SoundEvents.SLIME_SQUISH_SMALL, 0.7f, 1.3f);
-    }
+    entity.playSound(companion.getFeedingSound(), 0.5f, 1.2f);
   }
 
   public static void playSound(PlayerCompanion companion, SoundEvent sound, float volume,

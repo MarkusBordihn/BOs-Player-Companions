@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SOS",
+    "ODO",
+    "SOS"
+  ],
+  "key": {
+    "S": {"item": "minecraft:soul_sand"},
+    "O": {"item": "minecraft:obsidian"},
+    "D": {"item": "minecraft:diamond"}
+  },
+  "result": {
+    "item": "player_companions:companion_shrine",
+    "count": 1
+  }
+}

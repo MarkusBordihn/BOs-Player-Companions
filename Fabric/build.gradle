@@ -18,6 +18,8 @@ dependencies {
 
   implementation project(":Common")
 
+  addEasyNpcDependency(dependencies, 'compileOnly', 'common')
+  addEasyNpcDependency(dependencies, 'testCompileOnly', 'common')
   addEasyNpcDependency(dependencies, 'modCompileOnly', 'fabric')
   addEasyNpcDependency(dependencies, 'modRuntimeOnly', 'fabric')
 

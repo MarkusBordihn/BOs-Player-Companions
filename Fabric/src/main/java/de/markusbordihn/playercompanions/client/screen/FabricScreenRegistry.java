@@ -24,7 +24,8 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 
 public class FabricScreenRegistry {
 
-  private FabricScreenRegistry() {}
+  private FabricScreenRegistry() {
+  }
 
   @SuppressWarnings("deprecation")
   public static void register() {
@@ -32,5 +33,6 @@ public class FabricScreenRegistry {
     ScreenRegistry.register(ModMenuTypes.COMPANION_COLLECTOR, CompanionCollectorScreen::new);
     ScreenRegistry.register(ModMenuTypes.COMPANION_GUARD, CompanionGuardScreen::new);
     ScreenRegistry.register(ModMenuTypes.COMPANION_FOLLOWER, CompanionFollowerScreen::new);
+    ScreenRegistry.register(ModMenuTypes.COMPANION_SHRINE, CompanionShrineScreen::new);
   }
 }

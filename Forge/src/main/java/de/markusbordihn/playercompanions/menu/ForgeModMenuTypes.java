@@ -52,6 +52,11 @@ public class ForgeModMenuTypes {
     () -> IForgeMenuType.create(
       (IContainerFactory<CompanionFollowerMenu>) CompanionFollowerMenu::new));
 
+  public static final RegistryObject<MenuType<CompanionShrineMenu>>
+    COMPANION_SHRINE = MENU_TYPES.register("companion_shrine_menu",
+    () -> IForgeMenuType.create(
+      (IContainerFactory<CompanionShrineMenu>) CompanionShrineMenu::new));
+
   private ForgeModMenuTypes() {
   }
 
@@ -60,5 +65,6 @@ public class ForgeModMenuTypes {
     ModMenuTypes.COMPANION_COLLECTOR = COMPANION_COLLECTOR.get();
     ModMenuTypes.COMPANION_GUARD = COMPANION_GUARD.get();
     ModMenuTypes.COMPANION_FOLLOWER = COMPANION_FOLLOWER.get();
+    ModMenuTypes.COMPANION_SHRINE = COMPANION_SHRINE.get();
   }
 }

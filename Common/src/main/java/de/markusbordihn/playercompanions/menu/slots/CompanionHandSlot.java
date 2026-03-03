@@ -34,7 +34,7 @@ public class CompanionHandSlot extends Slot {
   private final EquipmentSlot equipmentSlot;
 
   public CompanionHandSlot(Container container, int index, int x, int y,
-      EquipmentSlot equipmentSlot) {
+    EquipmentSlot equipmentSlot) {
     super(container, index, x, y);
     this.equipmentSlot = equipmentSlot;
   }
@@ -48,7 +48,7 @@ public class CompanionHandSlot extends Slot {
   public boolean mayPickup(Player player) {
     ItemStack stack = getItem();
     return stack.isEmpty() || player.isCreative()
-        || !EnchantmentHelper.hasBindingCurse(stack);
+      || !EnchantmentHelper.hasBindingCurse(stack);
   }
 
   @Override

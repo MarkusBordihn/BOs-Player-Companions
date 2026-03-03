@@ -19,12 +19,20 @@
 
 package de.markusbordihn.playercompanions.network;
 
+import de.markusbordihn.playercompanions.entity.AggressionLevel;
+import de.markusbordihn.playercompanions.entity.CompanionCommand;
 import de.markusbordihn.playercompanions.entity.CompanionRelationshipData;
 import java.util.UUID;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 
 public class CompanionEntityDataSerializers {
+
+  public static final EntityDataSerializer<AggressionLevel> AGGRESSION_LEVEL =
+    EntityDataSerializer.simpleEnum(AggressionLevel.class);
+
+  public static final EntityDataSerializer<CompanionCommand> COMPANION_COMMAND =
+    EntityDataSerializer.simpleEnum(CompanionCommand.class);
 
   public static final EntityDataSerializer<CompanionRelationshipData> RELATIONSHIP_DATA =
     EntityDataSerializer.simple(
@@ -49,6 +57,8 @@ public class CompanionEntityDataSerializers {
   }
 
   public static void register() {
+    EntityDataSerializers.registerSerializer(AGGRESSION_LEVEL);
+    EntityDataSerializers.registerSerializer(COMPANION_COMMAND);
     EntityDataSerializers.registerSerializer(RELATIONSHIP_DATA);
   }
 }

@@ -41,6 +41,7 @@ public class PlayerCompanionsClient {
     modEventBus.addListener(EntityRenderer::register);
 
     log.info("{} Screens ...", Constants.LOG_REGISTER_PREFIX);
-    modEventBus.addListener(de.markusbordihn.playercompanions.client.screen.ForgeScreenRegistry::register);
+    modEventBus.addListener(
+      de.markusbordihn.playercompanions.client.screen.ForgeScreenRegistry::register);
   }
 }

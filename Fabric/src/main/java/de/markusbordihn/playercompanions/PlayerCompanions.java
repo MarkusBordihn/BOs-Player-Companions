@@ -19,9 +19,11 @@
 
 package de.markusbordihn.playercompanions;
 
+import de.markusbordihn.playercompanions.commands.manager.CompanionCommandManager;
 import de.markusbordihn.playercompanions.config.Config;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,12 +49,32 @@ public class PlayerCompanions implements ModInitializer {
     log.info("{} Entity Types ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.entity.ModEntityType.registerEntityAttributes();
 
+    log.info("{} Spawn Placements ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.entity.ModEntityType.registerSpawnPlacements();
+
+    log.info("{} Biome Spawns ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.entity.ModEntityType.registerBiomeSpawns();
+
+    log.info("{} Blocks ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.block.FabricModBlocks.registerModBlocks();
+
     log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.item.ModItems.registerModItems();
+
+    log.info("{} Network Handler ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.network.FabricNetworkHandler.registerServerReceiver();
+    de.markusbordihn.playercompanions.network.CompanionNetworkHandler.setHandler(
+      new de.markusbordihn.playercompanions.network.FabricNetworkHandler());
 
     log.info("{} Menu Types ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.menu.FabricModMenuTypes.register();
     de.markusbordihn.playercompanions.entity.CompanionMenuHandler.setMenuOpener(
-        new de.markusbordihn.playercompanions.menu.MenuOpener());
+      new de.markusbordihn.playercompanions.menu.MenuOpener());
+    de.markusbordihn.playercompanions.menu.CompanionShrineHandler.setOpener(
+      new de.markusbordihn.playercompanions.menu.FabricCompanionShrineOpener());
+
+    log.info("{} Commands ...", Constants.LOG_REGISTER_PREFIX);
+    CommandRegistrationCallback.EVENT.register(
+      (dispatcher, ctx, sel) -> CompanionCommandManager.registerCommands(dispatcher, ctx));
   }
 }

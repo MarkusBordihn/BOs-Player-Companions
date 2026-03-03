@@ -17,12 +17,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package de.markusbordihn.playercompanions.menu;
+package de.markusbordihn.playercompanions.entity;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.MenuProvider;
+public enum AggressionLevel {
+  PASSIVE_FLEE,
+  PASSIVE,
+  NEUTRAL,
+  AGGRESSIVE_MONSTER,
+  AGGRESSIVE_ANIMALS,
+  AGGRESSIVE_PLAYERS,
+  AGGRESSIVE_ALL;
 
-public interface IMenuOpener {
+  public static final AggressionLevel[] GUARD_LEVELS = {
+    PASSIVE_FLEE, PASSIVE, NEUTRAL, AGGRESSIVE_MONSTER,
+    AGGRESSIVE_ANIMALS, AGGRESSIVE_PLAYERS, AGGRESSIVE_ALL
+  };
 
-  void openMenu(ServerPlayer player, MenuProvider menuProvider, java.util.UUID companionUUID);
+  public AggressionLevel next(AggressionLevel[] allowed) {
+    for (int i = 0; i < allowed.length; i++) {
+      if (allowed[i] == this) {
+        return allowed[(i + 1) % allowed.length];
+      }
+    }
+    return allowed[0];
+  }
+
+  public AggressionLevel next() {
+    return next(values());
+  }
 }

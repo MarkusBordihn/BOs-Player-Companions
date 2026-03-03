@@ -20,6 +20,7 @@
 package de.markusbordihn.playercompanions.item;
 
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.block.ForgeModBlocks;
 import de.markusbordihn.playercompanions.entity.CompanionEntityType;
 import de.markusbordihn.playercompanions.entity.ModEntityType;
 import java.util.EnumMap;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -42,6 +44,11 @@ public class ModItems {
     DeferredRegister.create(ForgeRegistries.ITEMS, Constants.MOD_ID);
   public static final Map<CompanionEntityType, RegistryObject<Item>> COMPANION_SPAWN_EGGS =
     new EnumMap<>(CompanionEntityType.class);
+
+  public static final RegistryObject<Item> COMPANION_SHRINE_ITEM = ITEMS.register(
+    "companion_shrine",
+    () -> new BlockItem(ForgeModBlocks.COMPANION_SHRINE.get(), new Item.Properties()));
+
   private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
 
   static {

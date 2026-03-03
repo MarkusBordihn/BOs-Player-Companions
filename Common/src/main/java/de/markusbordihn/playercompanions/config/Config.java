@@ -212,4 +212,17 @@ public class Config {
     properties.setProperty(key, String.join(",", defaultValue));
     return defaultValue;
   }
+
+  protected static double parseConfigValue(
+    final Properties properties, final String key, final double defaultValue) {
+    if (properties.containsKey(key)) {
+      try {
+        return Double.parseDouble(properties.getProperty(key).trim());
+      } catch (Exception e) {
+        log.error("{} Failed to parse Double value for key {}:", LOG_PREFIX, key, e);
+      }
+    }
+    properties.setProperty(key, Double.toString(defaultValue));
+    return defaultValue;
+  }
 }

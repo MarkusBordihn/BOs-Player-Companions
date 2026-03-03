@@ -44,11 +44,13 @@ public class CompanionCollectorMenu extends CompanionMenu {
   @Override
   protected void addRoleSlots() {
     SimpleContainer inventoryContainer = findInventory();
-    if (inventoryContainer == null) return;
+    if (inventoryContainer == null) {
+      return;
+    }
     for (int row = 0; row < GRID_ROWS; row++) {
       for (int col = 0; col < GRID_COLS; col++) {
         addSlot(new CompanionInventorySlot(inventoryContainer, col + row * GRID_COLS,
-            GRID_X + col * 18, GRID_Y + row * 18));
+          GRID_X + col * 18, GRID_Y + row * 18));
       }
     }
   }
@@ -62,8 +64,8 @@ public class CompanionCollectorMenu extends CompanionMenu {
     return level.getEntitiesOfClass(PigCompanion.class,
         player.getBoundingBox().inflate(64),
         e -> e.getUUID().equals(companionUUID)).stream()
-        .findFirst()
-        .map(PigCompanion::getInventory)
-        .orElse(null);
+      .findFirst()
+      .map(PigCompanion::getInventory)
+      .orElse(null);
   }
 }

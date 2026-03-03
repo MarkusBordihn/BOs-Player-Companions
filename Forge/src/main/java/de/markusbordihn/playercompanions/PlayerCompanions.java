@@ -58,12 +58,25 @@ public class PlayerCompanions {
     log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.item.ModItems.ITEMS.register(modEventBus);
 
+    log.info("{} Blocks ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.block.ForgeModBlocks.BLOCKS.register(modEventBus);
+
+    log.info("{} Network Handler ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.network.ForgeNetworkHandler.register();
+    de.markusbordihn.playercompanions.network.CompanionNetworkHandler.setHandler(
+      new de.markusbordihn.playercompanions.network.ForgeNetworkHandler());
+
     log.info("{} Menu Types ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.menu.ForgeModMenuTypes.MENU_TYPES.register(modEventBus);
     de.markusbordihn.playercompanions.entity.CompanionMenuHandler.setMenuOpener(
-        new de.markusbordihn.playercompanions.menu.MenuOpener());
+      new de.markusbordihn.playercompanions.menu.MenuOpener());
     modEventBus.addListener((net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent event) ->
-        event.enqueueWork(de.markusbordihn.playercompanions.menu.ForgeModMenuTypes::register));
+      event.enqueueWork(() -> {
+        de.markusbordihn.playercompanions.menu.ForgeModMenuTypes.register();
+        de.markusbordihn.playercompanions.block.ForgeModBlocks.register();
+        de.markusbordihn.playercompanions.menu.CompanionShrineHandler.setOpener(
+          new de.markusbordihn.playercompanions.menu.ForgeCompanionShrineOpener());
+      }));
 
     // Initialize the client mod initializer
     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> new PlayerCompanionsClient(modEventBus));

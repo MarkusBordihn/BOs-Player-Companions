@@ -22,16 +22,23 @@ package de.markusbordihn.playercompanions.entity;
 import de.markusbordihn.easynpc.api.npc.base.ChickenBase;
 import de.markusbordihn.easynpc.api.npc.base.slime.SlimeSmallBase;
 import de.markusbordihn.playercompanions.Constants;
+import de.markusbordihn.playercompanions.config.TamingConfig;
 import java.util.EnumMap;
 import java.util.Map;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,5 +88,51 @@ public class ModEntityType {
           break;
       }
     }
+  }
+
+  public static void registerSpawnPlacements() {
+    log.info("{} Companion Spawn Placements ...", Constants.LOG_REGISTER_PREFIX);
+    for (CompanionEntityType type : CompanionEntityType.values()) {
+      SpawnPlacements.register(
+        (EntityType) COMPANION_TYPE.get(type),
+        SpawnPlacements.Type.ON_GROUND,
+        Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        CompanionSpawnRules::checkCompanionSpawnRules);
+    }
+  }
+
+  public static void registerBiomeSpawns() {
+    if (!TamingConfig.NATURAL_SPAWNING_ENABLED) {
+      log.info("Natural spawning is disabled via config, skipping biome spawn registration.");
+      return;
+    }
+    log.info("{} Companion Biome Spawns ...", Constants.LOG_REGISTER_PREFIX);
+
+    // Small Slime - all overworld biomes
+    BiomeModifications.addSpawn(
+      BiomeSelectors.foundInOverworld(),
+      MobCategory.CREATURE,
+      getEntityType(CompanionEntityType.SMALL_SLIME),
+      TamingConfig.SPAWN_WEIGHT_SMALL_SLIME,
+      TamingConfig.SPAWN_MIN_GROUP_SIZE,
+      TamingConfig.SPAWN_MAX_GROUP_SIZE);
+
+    // Pig Companion - plains, meadows, savannas
+    BiomeModifications.addSpawn(
+      BiomeSelectors.includeByKey(Biomes.PLAINS, Biomes.MEADOW, Biomes.SAVANNA),
+      MobCategory.CREATURE,
+      getEntityType(CompanionEntityType.PIG),
+      TamingConfig.SPAWN_WEIGHT_PIG,
+      TamingConfig.SPAWN_MIN_GROUP_SIZE,
+      TamingConfig.SPAWN_MAX_GROUP_SIZE);
+
+    // Rooster Companion - plains, forests, jungles
+    BiomeModifications.addSpawn(
+      BiomeSelectors.includeByKey(Biomes.PLAINS, Biomes.FOREST, Biomes.JUNGLE),
+      MobCategory.CREATURE,
+      getEntityType(CompanionEntityType.ROOSTER),
+      TamingConfig.SPAWN_WEIGHT_ROOSTER,
+      TamingConfig.SPAWN_MIN_GROUP_SIZE,
+      TamingConfig.SPAWN_MAX_GROUP_SIZE);
   }
 }

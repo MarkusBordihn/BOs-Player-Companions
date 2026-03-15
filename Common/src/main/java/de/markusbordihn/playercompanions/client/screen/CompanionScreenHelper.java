@@ -35,8 +35,8 @@ public class CompanionScreenHelper {
   }
 
   public static void renderEntity(int x, int y, int scale, float yRot, float xRot, Mob entity) {
-    float f = (float) Math.atan(yRot / 40.0F);
-    float f1 = (float) Math.atan(xRot / 40.0F);
+    float yRotAngle = (float) Math.atan(yRot / 40.0F);
+    float xRotAngle = (float) Math.atan(xRot / 40.0F);
 
     PoseStack modelViewStack = RenderSystem.getModelViewStack();
     modelViewStack.pushPose();
@@ -49,7 +49,8 @@ public class CompanionScreenHelper {
     poseStack.scale(scale, scale, scale);
 
     Quaternionf quaternion = new Quaternionf().rotateZ((float) Math.PI);
-    Quaternionf quaternion1 = new Quaternionf().rotateX(f1 * 20.0F * ((float) Math.PI / 180F));
+    Quaternionf quaternion1 = new Quaternionf().rotateX(
+      xRotAngle * 20.0F * ((float) Math.PI / 180F));
     quaternion.mul(quaternion1);
     poseStack.mulPose(quaternion);
 
@@ -61,9 +62,9 @@ public class CompanionScreenHelper {
     float yHeadRotO = entity.yHeadRotO;
     float yHeadRot = entity.yHeadRot;
 
-    entity.yBodyRot = 180.0F + f * 20.0F;
-    entity.setYRot(180.0F + f * 40.0F);
-    entity.setXRot(-f1 * 20.0F);
+    entity.yBodyRot = 180.0F + yRotAngle * 20.0F;
+    entity.setYRot(180.0F + yRotAngle * 40.0F);
+    entity.setXRot(-xRotAngle * 20.0F);
     entity.yHeadRot = entity.getYRot();
     entity.yHeadRotO = entity.getYRot();
 
@@ -73,6 +74,7 @@ public class CompanionScreenHelper {
 
     Lighting.setupForEntityInInventory();
     EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
+    quaternion1.conjugate();
     quaternion1.conjugate();
     dispatcher.overrideCameraOrientation(quaternion1);
     dispatcher.setRenderShadow(false);

@@ -144,6 +144,21 @@ public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompani
   }
 
   @Override
+  public SoundEvent getPetSound() {
+    return SoundEvents.SLIME_SQUISH;
+  }
+
+  @Override
+  public int getEntityGuiScaling() {
+    return 60;
+  }
+
+  @Override
+  public int getEntityGuiTop() {
+    return 8;
+  }
+
+  @Override
   public CompanionCommand getCompanionCommand() {
     return this.entityData.get(DATA_COMMAND);
   }
@@ -173,6 +188,11 @@ public class SmallSlimeCompanion extends SlimeSmallBase implements PlayerCompani
     }
 
     return spawnGroupData;
+  }
+
+  @Override
+  protected boolean spawnCustomParticles() {
+    return true;
   }
 
   @Override

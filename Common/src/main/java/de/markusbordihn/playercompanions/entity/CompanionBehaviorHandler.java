@@ -59,12 +59,16 @@ public class CompanionBehaviorHandler {
 
   private static final ObjectiveType[] BASE_OBJECTIVES = {
     ObjectiveType.FLOAT,
+    ObjectiveType.LOOK_AT_PLAYER,
+    ObjectiveType.LOOK_RANDOM_AROUND,
   };
 
   private static final ObjectiveType[] WILD_OBJECTIVES = {
     ObjectiveType.FLOAT,
     ObjectiveType.PANIC,
     ObjectiveType.WATER_AVOIDING_RANDOM_STROLL,
+    ObjectiveType.LOOK_AT_PLAYER,
+    ObjectiveType.LOOK_RANDOM_AROUND,
   };
 
   private CompanionBehaviorHandler() {
@@ -84,6 +88,10 @@ public class CompanionBehaviorHandler {
         priority = 0;
       } else if (type == ObjectiveType.PANIC) {
         priority = 1;
+      } else if (type == ObjectiveType.LOOK_AT_PLAYER) {
+        priority = 9;
+      } else if (type == ObjectiveType.LOOK_RANDOM_AROUND) {
+        priority = 10;
       }
       ObjectiveDataEntry entry = new ObjectiveDataEntry(type, priority);
       if (type == ObjectiveType.PANIC) {

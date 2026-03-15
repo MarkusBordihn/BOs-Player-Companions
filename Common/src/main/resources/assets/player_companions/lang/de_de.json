@@ -34,5 +34,9 @@
   "playercompanions.shrine.empty": "♥ Alle Begleiter sind am Leben!",
   "playercompanions.shrine.respawn": "✓ Wiederbeleben",
   "playercompanions.shrine.xp_reduce": "⚡ -2 Min.",
-  "playercompanions.shrine.ready": "✔ Bereit!"
+  "playercompanions.shrine.ready": "✔ Bereit!",
+  "itemGroup.player_companions": "Spieler-Begleiter",
+  "key.categories.player_companions": "Spieler-Begleiter",
+  "key.player_companions.command": "Begleiter-Befehl umschalten (Folgen/Sitzen)",
+  "key.player_companions.aggression": "Aggressionslevel des Begleiters wechseln"
 }

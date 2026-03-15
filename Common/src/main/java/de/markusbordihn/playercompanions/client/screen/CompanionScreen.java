@@ -109,7 +109,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.leftPos = (this.width - SCREEN_WIDTH) / 2;
     this.inventoryLabelX = 6;
     this.inventoryLabelY = SCREEN_HEIGHT - 91;
-    companionEntity = resolveCompanionEntity();
 
     int buttonX = this.leftPos + INFO_PANEL_X;
     int buttonY = this.topPos + 100;
@@ -195,7 +194,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     this.mousePositionX = mouseX;
     this.mousePositionY = mouseY;
     companionEntity = resolveCompanionEntity();
-
     super.render(guiGraphics, mouseX, mouseY, partialTick);
 
     renderInfoPanel(guiGraphics);
@@ -219,10 +217,16 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     guiGraphics.fill(previewX, previewY, previewX + 68, previewY + 68, 0xFF000000);
 
     if (companionEntity != null) {
+      int scale = PREVIEW_SCALE;
+      int yOffset = getPreviewYOffset();
+      if (companionEntity instanceof PlayerCompanion pc) {
+        scale = pc.getEntityGuiScaling();
+        yOffset = pc.getEntityGuiTop();
+      }
       CompanionScreenHelper.renderEntity(
         this.leftPos + PREVIEW_CENTER_X,
-        this.topPos + PREVIEW_CENTER_Y + getPreviewYOffset(),
-        PREVIEW_SCALE,
+        this.topPos + PREVIEW_CENTER_Y + yOffset,
+        scale,
         this.leftPos + PREVIEW_CENTER_X - this.mousePositionX,
         this.topPos + 40 - this.mousePositionY,
         companionEntity);

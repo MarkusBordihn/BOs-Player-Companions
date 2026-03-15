@@ -61,6 +61,9 @@ public class PlayerCompanions implements ModInitializer {
     log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.item.ModItems.registerModItems();
 
+    log.info("{} Creative Tabs ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.item.ModCreativeTabs.register();
+
     log.info("{} Network Handler ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.network.FabricNetworkHandler.registerServerReceiver();
     de.markusbordihn.playercompanions.network.CompanionNetworkHandler.setHandler(

@@ -150,6 +150,21 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
   }
 
   @Override
+  public SoundEvent getPetSound() {
+    return SoundEvents.PIG_AMBIENT;
+  }
+
+  @Override
+  public int getEntityGuiScaling() {
+    return 35;
+  }
+
+  @Override
+  public int getEntityGuiTop() {
+    return 13;
+  }
+
+  @Override
   public CompanionCommand getCompanionCommand() {
     return this.entityData.get(DATA_COMMAND);
   }
@@ -174,6 +189,11 @@ public class PigCompanion extends PigBase implements PlayerCompanion {
       if (variants.length > 0) {
         setSkinVariantType(variants[random.nextInt(variants.length)]);
       }
+    }
+
+    // 10% chance to spawn as baby
+    if (random.nextInt(10) == 0) {
+      setBaby(true);
     }
 
     if (!isOwned()) {

@@ -21,6 +21,9 @@ NeoForge/runs
 .gradle
 *local.properties
 
+# Ghost Reference Index (local knowledge base sync)
+.ghost-reference-index
+
 # NodeJs
 node_modules
 npm-debug.log

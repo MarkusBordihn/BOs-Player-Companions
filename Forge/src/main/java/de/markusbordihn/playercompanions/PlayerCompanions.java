@@ -58,6 +58,9 @@ public class PlayerCompanions {
     log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.item.ModItems.ITEMS.register(modEventBus);
 
+    log.info("{} Creative Tabs ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.item.ModCreativeTabs.TABS.register(modEventBus);
+
     log.info("{} Blocks ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.block.ForgeModBlocks.BLOCKS.register(modEventBus);
 

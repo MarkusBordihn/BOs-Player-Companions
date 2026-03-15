@@ -63,8 +63,6 @@ public class ListCompanionsCommand extends CompanionCommand {
     for (SavedNPCEntityEntry entry : entries) {
       NPCEntityMetadata meta = entry.metadata();
       StringBuilder info = new StringBuilder();
-
-      // Name from saved NPC data if available
       String name = entry.entityUUID().toString().substring(0, 8);
       if (entry.npcData() != null && entry.npcData().contains("CustomName")) {
         String rawName = entry.npcData().getString("CustomName");
@@ -82,8 +80,6 @@ public class ListCompanionsCommand extends CompanionCommand {
       if (type.contains(":")) {
         type = type.substring(type.indexOf(':') + 1);
       }
-
-      // Make type more readable: pig_companion -> Pig
       type = type.replace("_companion", "");
       type = type.substring(0, 1).toUpperCase() + type.substring(1);
       type = type.replace("Small_slime", "Small Slime");
@@ -92,7 +88,6 @@ public class ListCompanionsCommand extends CompanionCommand {
         dimension = dimension.substring(dimension.indexOf(':') + 1);
       }
 
-      // Level from progression data
       int level = 0;
       if (entry.npcData() != null && entry.npcData().contains("Progression")) {
         CompoundTag progression = entry.npcData().getCompound("Progression");

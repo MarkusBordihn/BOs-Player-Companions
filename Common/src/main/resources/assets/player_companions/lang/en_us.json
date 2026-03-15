@@ -64,5 +64,9 @@
   "playercompanions.shrine.empty": "\u2665 All companions are alive!",
   "playercompanions.shrine.respawn": "\u2713 Respawn",
   "playercompanions.shrine.xp_reduce": "\u26A1 -2 min",
-  "playercompanions.shrine.ready": "\u2714 Ready!"
+  "playercompanions.shrine.ready": "\u2714 Ready!",
+  "itemGroup.player_companions": "Player Companions",
+  "key.categories.player_companions": "Player Companions",
+  "key.player_companions.command": "Toggle companion command (Follow/Sit)",
+  "key.player_companions.aggression": "Cycle companion aggression level"
 }

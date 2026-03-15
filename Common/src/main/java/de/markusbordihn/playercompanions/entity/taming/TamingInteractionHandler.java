@@ -94,13 +94,11 @@ public class TamingInteractionHandler {
           CompanionBehaviorHandler.initializeTamedBehavior(companion);
         }
 
-        // Clean up hint handler (removes wild nametag)
         TamingHintHandler hintHandler = companion.getTamingHintHandler();
         if (hintHandler != null) {
           hintHandler.onTamed(companion);
         }
 
-        // Auto-name the companion
         if (CompanionNameConfig.shouldAutoName()) {
           String randomName = CompanionNameConfig.getRandomName();
           if (randomName != null) {
@@ -110,8 +108,6 @@ public class TamingInteractionHandler {
         }
 
         relationship.reset();
-
-        // Grant taming advancement
         CompanionAdvancements.grantTamed(player);
         TamingFeedbackHandler.handleTamedFeedback(companion, player);
         if (!player.getAbilities().instabuild) {

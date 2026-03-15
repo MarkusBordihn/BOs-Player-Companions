@@ -1,8 +1,13 @@
+apply plugin: 'java'
+
 tasks.register('runAllGameTests') {
   group = 'verification'
   description = 'Runs both Fabric and Forge game tests.'
   dependsOn ':Fabric:runGameTest', ':Forge:runGameTestServer'
 }
+
+def ghostRefScript = file(findProperty('ghostRefIndex') ?: '')
+if (ghostRefScript.exists()) apply from: ghostRefScript
 
 subprojects {
 

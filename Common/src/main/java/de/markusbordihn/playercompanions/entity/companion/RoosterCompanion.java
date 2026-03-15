@@ -53,6 +53,7 @@ import net.minecraft.world.entity.animal.Chicken;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
 public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
 
@@ -78,6 +79,7 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
     super(entityType, level, variantType);
     this.relationship = new CompanionRelationship(this, DATA_RELATIONSHIP);
     this.initCompanionAttributes();
+    this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
   }
 
   @Override
@@ -134,6 +136,21 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
   }
 
   @Override
+  public SoundEvent getPetSound() {
+    return SoundEvents.CHICKEN_AMBIENT;
+  }
+
+  @Override
+  public int getEntityGuiScaling() {
+    return 45;
+  }
+
+  @Override
+  public int getEntityGuiTop() {
+    return 18;
+  }
+
+  @Override
   public CompanionCommand getCompanionCommand() {
     return this.entityData.get(DATA_COMMAND);
   }
@@ -171,6 +188,11 @@ public class RoosterCompanion extends ChickenBase implements PlayerCompanion {
       if (variants.length > 0) {
         setSkinVariantType(variants[random.nextInt(variants.length)]);
       }
+    }
+
+    // 10% chance to spawn as baby
+    if (random.nextInt(10) == 0) {
+      setBaby(true);
     }
 
     if (!isOwned()) {

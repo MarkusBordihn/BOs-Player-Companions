@@ -179,7 +179,6 @@ public class BlockbenchRoosterModelLoaderTest {
       }
     }
 
-    // Create part with offset and rotation
     float[] offset = part.getOffset();
     float[] rotation = part.getRotation();
     PartDefinition partDef = parent.addOrReplaceChild(
@@ -189,7 +188,6 @@ public class BlockbenchRoosterModelLoaderTest {
         offset[0], offset[1], offset[2],
         rotation[0], rotation[1], rotation[2]));
 
-    // Add children recursively
     for (de.markusbordihn.playercompanions.client.model.minecraft.MinecraftPart child : part.getChildren()) {
       addPart(partDef, child);
     }
@@ -207,8 +205,7 @@ public class BlockbenchRoosterModelLoaderTest {
 
       return false;
     } catch (Exception e) {
-      System.err.println("Failed to check cubes: " + e.getMessage());
-      return false;
+      throw new AssertionError("Failed to check cubes: " + e.getMessage(), e);
     }
   }
 
@@ -224,8 +221,7 @@ public class BlockbenchRoosterModelLoaderTest {
 
       return 0;
     } catch (Exception e) {
-      System.err.println("Failed to get cube count: " + e.getMessage());
-      return 0;
+      throw new AssertionError("Failed to get cube count: " + e.getMessage(), e);
     }
   }
 

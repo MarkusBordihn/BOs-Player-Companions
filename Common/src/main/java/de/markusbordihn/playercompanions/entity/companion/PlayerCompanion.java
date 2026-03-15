@@ -27,7 +27,6 @@ import de.markusbordihn.easynpc.entity.easynpc.data.AttributeDataCapable;
 import de.markusbordihn.easynpc.entity.easynpc.data.OwnerDataCapable;
 import de.markusbordihn.playercompanions.config.TamingConfig;
 import de.markusbordihn.playercompanions.entity.AggressionLevel;
-import de.markusbordihn.playercompanions.entity.CompanionBehaviorHandler;
 import de.markusbordihn.playercompanions.entity.CompanionCommand;
 import de.markusbordihn.playercompanions.entity.CompanionMenuHandler;
 import de.markusbordihn.playercompanions.entity.CompanionRelationship;
@@ -38,8 +37,10 @@ import de.markusbordihn.playercompanions.entity.taming.TamingInteractionHandler;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -81,6 +82,27 @@ public interface PlayerCompanion {
    */
   default SoundEvent getFeedingSound() {
     return SoundEvents.PLAYER_BURP;
+  }
+
+  /**
+   * Returns the sound played when the companion is petted by its owner.
+   */
+  default SoundEvent getPetSound() {
+    return SoundEvents.VILLAGER_YES;
+  }
+
+  /**
+   * Returns the GUI scaling factor for rendering this companion in the inventory screen.
+   */
+  default int getEntityGuiScaling() {
+    return 40;
+  }
+
+  /**
+   * Returns the GUI Y-offset for rendering this companion in the inventory screen.
+   */
+  default int getEntityGuiTop() {
+    return 0;
   }
 
   default AggressionLevel getAggressionLevel() {
@@ -298,23 +320,29 @@ public interface PlayerCompanion {
         return InteractionResult.PASS;
       }
       if (!level().isClientSide) {
-        if (player.isShiftKeyDown()) {
-          // Sneak+rightclick: open role-specific menu
+        if (player.isShiftKeyDown() && player.getItemInHand(hand).isEmpty()) {
+          // SHIFT+rightclick with empty hand: pet the companion
+          petCompanion(player);
+        } else {
+          // Rightclick (with or without item): open companion menu
           CompanionMenuHandler.openMenu(this, (ServerPlayer) player);
-        } else if (player.getItemInHand(hand).isEmpty()) {
-          // Normal rightclick: toggle FOLLOW/SIT
-          CompanionCommand next =
-            getCompanionCommand() == CompanionCommand.SIT
-              ? CompanionCommand.FOLLOW
-              : CompanionCommand.SIT;
-          CompanionBehaviorHandler.applyCommand(this, next);
-          level().broadcastEntityEvent(asEntity(),
-            next == CompanionCommand.SIT ? (byte) 4 : (byte) 6);
         }
       }
       return InteractionResult.sidedSuccess(level().isClientSide);
     }
     return TamingInteractionHandler.handleTamingInteraction(this, player, hand);
+  }
+
+  default void petCompanion(Player player) {
+    Mob mob = asMob();
+    mob.heal(0.1F);
+    mob.playSound(getPetSound(), 1.0F, 1.0F);
+    if (level() instanceof ServerLevel serverLevel) {
+      serverLevel.sendParticles(
+        ParticleTypes.HEART,
+        mob.getX(), mob.getY() + mob.getBbHeight() + 0.2, mob.getZ(),
+        3, 0.3, 0.3, 0.3, 0.0);
+    }
   }
 
   default boolean handleDamage(DamageSource damageSource, boolean defaultResult) {

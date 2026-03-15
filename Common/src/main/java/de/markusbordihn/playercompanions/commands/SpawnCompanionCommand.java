@@ -83,7 +83,6 @@ public class SpawnCompanionCommand extends CompanionCommand {
       return sendFailureMessage(context, "No saved data found for companion " + uuid + ".");
     }
 
-    // Gamemasters and creative players bypass cooldowns
     boolean bypassCooldown = context.hasPermission(Commands.LEVEL_GAMEMASTERS);
     if (!bypassCooldown) {
       try {
@@ -118,7 +117,6 @@ public class SpawnCompanionCommand extends CompanionCommand {
       }
     }
 
-    // Spawn at the player's current position, not the stored death/last position
     ServerPlayer spawnTarget;
     try {
       spawnTarget = context.getPlayerOrException();

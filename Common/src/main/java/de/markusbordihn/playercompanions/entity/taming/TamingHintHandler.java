@@ -79,14 +79,12 @@ public class TamingHintHandler {
       return;
     }
 
-    // Food-aware particle check
     foodCheckTimer++;
     if (foodCheckTimer >= FOOD_CHECK_INTERVAL) {
       foodCheckTimer = 0;
       tickFoodAwareness(companion, mob, serverLevel);
     }
 
-    // Ambient curiosity
     curiosityTimer++;
     if (curiosityTimer >= nextCuriosityInterval) {
       curiosityTimer = 0;
@@ -96,7 +94,6 @@ public class TamingHintHandler {
       tickCuriosity(companion, mob, serverLevel);
     }
 
-    // Food hint nametag timer
     if (showingFoodHint) {
       foodHintTimer++;
       if (foodHintTimer >= FOOD_HINT_DISPLAY_TICKS) {
@@ -104,7 +101,6 @@ public class TamingHintHandler {
       }
     }
 
-    // Nametag update
     nametagUpdateTimer++;
     if (nametagUpdateTimer >= NAMETAG_UPDATE_INTERVAL) {
       nametagUpdateTimer = 0;
@@ -143,7 +139,6 @@ public class TamingHintHandler {
           0.02
         );
 
-        // Small note particle above head (musical interest)
         serverLevel.sendParticles(
           ParticleTypes.NOTE,
           mob.getX(),
@@ -151,10 +146,7 @@ public class TamingHintHandler {
           mob.getZ(),
           1, 0, 0, 0, 0);
 
-        // Quiet ambient sound
         mob.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.15f, 1.8f);
-
-        // Update nametag to reveal food hint
         setFoodHint(companion, foodItem);
         return;
       }
@@ -173,7 +165,6 @@ public class TamingHintHandler {
       Player target = nearbyPlayers.get(mob.getRandom().nextInt(nearbyPlayers.size()));
       mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
 
-      // "?" particle effect (witch sparkle above head)
       serverLevel.sendParticles(
         ParticleTypes.WITCH,
         mob.getX(),
@@ -181,7 +172,6 @@ public class TamingHintHandler {
         mob.getZ(),
         2, 0.1, 0.1, 0.1, 0.01);
 
-      // Occasional small note particle (10% chance)
       if (mob.getRandom().nextInt(10) == 0) {
         serverLevel.sendParticles(
           ParticleTypes.NOTE,
@@ -199,8 +189,7 @@ public class TamingHintHandler {
       return;
     }
 
-    // Set "Wild [Name]" as default for untamed companions
-    if (mob.getCustomName() == null || !showingFoodHint) {
+    if (mob.getCustomName() == null) {
       ResourceLocation entityTypeId = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
       String wildNameKey = Constants.MOD_ID + ".wild." + entityTypeId.getPath();
       Component wildName =

@@ -188,8 +188,7 @@ public class BlockbenchPigModelLoaderTest {
 
       return false;
     } catch (Exception e) {
-      System.err.println("Failed to check cubes: " + e.getMessage());
-      return false;
+      throw new AssertionError("Failed to check cubes: " + e.getMessage(), e);
     }
   }
 
@@ -205,8 +204,7 @@ public class BlockbenchPigModelLoaderTest {
 
       return 0;
     } catch (Exception e) {
-      System.err.println("Failed to get cube count: " + e.getMessage());
-      return 0;
+      throw new AssertionError("Failed to get cube count: " + e.getMessage(), e);
     }
   }
 

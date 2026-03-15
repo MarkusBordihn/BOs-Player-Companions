@@ -19,8 +19,12 @@
 
 package de.markusbordihn.playercompanions;
 
+import de.markusbordihn.playercompanions.client.keymapping.CompanionKeyHandler;
 import de.markusbordihn.playercompanions.client.model.ModModelLayer;
 import de.markusbordihn.playercompanions.client.renderer.EntityRenderer;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,5 +47,20 @@ public class PlayerCompanionsClient {
     log.info("{} Screens ...", Constants.LOG_REGISTER_PREFIX);
     modEventBus.addListener(
       de.markusbordihn.playercompanions.client.screen.ForgeScreenRegistry::register);
+
+    log.info("{} Key Mappings ...", Constants.LOG_REGISTER_PREFIX);
+    modEventBus.addListener(PlayerCompanionsClient::registerKeyMappings);
+    MinecraftForge.EVENT_BUS.addListener(PlayerCompanionsClient::onClientTick);
+  }
+
+  private static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+    event.register(CompanionKeyHandler.COMMAND_KEY);
+    event.register(CompanionKeyHandler.AGGRESSION_KEY);
+  }
+
+  private static void onClientTick(TickEvent.ClientTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+      CompanionKeyHandler.tick();
+    }
   }
 }

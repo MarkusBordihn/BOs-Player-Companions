@@ -19,6 +19,7 @@
 
 package de.markusbordihn.playercompanions.client.screen;
 
+import de.markusbordihn.playercompanions.config.TamingConfig;
 import de.markusbordihn.playercompanions.menu.CompanionShrineEntry;
 import de.markusbordihn.playercompanions.menu.CompanionShrineMenu;
 import de.markusbordihn.playercompanions.network.CompanionNetworkHandler;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -51,8 +53,7 @@ public class CompanionShrineScreen extends AbstractContainerScreen<CompanionShri
   private static final int COLOR_EMPTY = 0xFF88AACC;
 
   private static final int BUTTON_UPDATE_INTERVAL_TICKS = 20;
-
-  private final List<Button> entryButtons = new ArrayList<>();
+  private final List<EntryButtons> pageEntryButtons = new ArrayList<>();
   private Button prevPageButton;
   private Button nextPageButton;
   private int currentPage = 0;
@@ -78,8 +79,13 @@ public class CompanionShrineScreen extends AbstractContainerScreen<CompanionShri
   }
 
   private void buildPageButtons() {
-    entryButtons.forEach(this::removeWidget);
-    entryButtons.clear();
+    pageEntryButtons.forEach(eb -> {
+      if (eb.speedUpButton() != null) {
+        removeWidget(eb.speedUpButton());
+      }
+      removeWidget(eb.respawnButton());
+    });
+    pageEntryButtons.clear();
     if (prevPageButton != null) {
       removeWidget(prevPageButton);
       prevPageButton = null;
@@ -99,41 +105,49 @@ public class CompanionShrineScreen extends AbstractContainerScreen<CompanionShri
     for (int i = pageStart; i < pageEnd; i++) {
       CompanionShrineEntry entry = entries.get(i);
       int buttonY = topPos + ENTRIES_START_Y + (i - pageStart) * ROW_HEIGHT + (ROW_HEIGHT - 18) / 2;
+      int remaining = menu.getRemainingSeconds(i);
 
-      entryButtons.add(addRenderableWidget(
+      Button speedUpButton = addRenderableWidget(
         Button.builder(
-            Component.literal("⚡ -2 min"),
+            Component.translatable("playercompanions.shrine.xp_reduce"),
             btn -> CompanionNetworkHandler.sendShrineXpReduce(entry.uuid()))
           .bounds(leftPos + 190, buttonY, 60, 18)
-          .build()));
+          .tooltip(
+            Tooltip.create(Component.translatable("playercompanions.shrine.xp_reduce.tooltip")))
+          .build());
+      speedUpButton.visible = remaining > 0;
+      speedUpButton.active = remaining > 0 && menu.getPlayerExperienceLevel() >= 1;
 
-      entryButtons.add(addRenderableWidget(
+      Button respawnButton = addRenderableWidget(
         Button.builder(
-            Component.literal("✓ Respawn"),
+            Component.translatable("playercompanions.shrine.respawn"),
             btn -> CompanionNetworkHandler.sendShrineRespawn(entry.uuid()))
           .bounds(leftPos + 254, buttonY, 60, 18)
-          .build()));
+          .build());
+      respawnButton.active = remaining == 0;
+
+      pageEntryButtons.add(new EntryButtons(speedUpButton, respawnButton));
     }
 
     if (totalPages > 1) {
       int navY = topPos + ENTRIES_START_Y + ENTRIES_PER_PAGE * ROW_HEIGHT + 4;
       prevPageButton = addRenderableWidget(
         Button.builder(
-            Component.literal("◀"),
+            Component.translatable("playercompanions.shrine.page.previous"),
             btn -> {
               currentPage = Math.max(0, currentPage - 1);
               buildPageButtons();
             })
-          .bounds(leftPos + IMAGE_WIDTH / 2 - 52, navY, 50, 16)
+          .bounds(leftPos + 5, navY, 50, 16)
           .build());
       nextPageButton = addRenderableWidget(
         Button.builder(
-            Component.literal("▶"),
+            Component.translatable("playercompanions.shrine.page.next"),
             btn -> {
               currentPage = Math.min(totalPages - 1, currentPage + 1);
               buildPageButtons();
             })
-          .bounds(leftPos + IMAGE_WIDTH / 2 + 2, navY, 50, 16)
+          .bounds(leftPos + 265, navY, 50, 16)
           .build());
     }
 
@@ -143,17 +157,14 @@ public class CompanionShrineScreen extends AbstractContainerScreen<CompanionShri
   private void updateButtonStates() {
     List<CompanionShrineEntry> entries = menu.getEntries();
     int pageStart = currentPage * ENTRIES_PER_PAGE;
-    int pageEnd = Math.min(pageStart + ENTRIES_PER_PAGE, entries.size());
     int playerLevel = menu.getPlayerExperienceLevel();
 
-    int buttonIndex = 0;
-    for (int i = pageStart; i < pageEnd; i++) {
-      int remainingSeconds = menu.getRemainingSeconds(i);
-      if (buttonIndex + 1 < entryButtons.size()) {
-        entryButtons.get(buttonIndex).active = remainingSeconds > 0 && playerLevel >= 1;
-        entryButtons.get(buttonIndex + 1).active = remainingSeconds == 0;
-      }
-      buttonIndex += 2;
+    for (int j = 0; j < pageEntryButtons.size(); j++) {
+      int remaining = menu.getRemainingSeconds(pageStart + j);
+      EntryButtons eb = pageEntryButtons.get(j);
+      eb.speedUpButton().visible = remaining > 0;
+      eb.speedUpButton().active = remaining > 0 && playerLevel >= 1;
+      eb.respawnButton().active = remaining == 0;
     }
 
     int totalPages = Math.max(1, (entries.size() + ENTRIES_PER_PAGE - 1) / ENTRIES_PER_PAGE);
@@ -164,7 +175,6 @@ public class CompanionShrineScreen extends AbstractContainerScreen<CompanionShri
       nextPageButton.active = currentPage < totalPages - 1;
     }
   }
-
 
   @Override
   protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
@@ -207,6 +217,7 @@ public class CompanionShrineScreen extends AbstractContainerScreen<CompanionShri
         IMAGE_WIDTH / 2,
         IMAGE_HEIGHT / 2 - 4,
         COLOR_EMPTY);
+      renderCompanionCount(guiGraphics);
       return;
     }
 
@@ -222,21 +233,38 @@ public class CompanionShrineScreen extends AbstractContainerScreen<CompanionShri
       guiGraphics.drawString(font, "[" + entry.readableType() + "]", 8, rowY + 16, COLOR_TYPE);
 
       if (remaining <= 0) {
-        guiGraphics.drawString(font, "✔ Ready!", 148, rowY + 9, COLOR_READY);
+        guiGraphics.drawString(font, Component.translatable("playercompanions.shrine.ready"), 140,
+          rowY + 13, COLOR_READY);
       } else {
         guiGraphics.drawString(font,
           String.format("%d:%02d", remaining / 60, remaining % 60),
-          148, rowY + 9, COLOR_TIMER);
+          140, rowY + 13, COLOR_TIMER);
       }
     }
 
     int totalPages = Math.max(1, (entries.size() + ENTRIES_PER_PAGE - 1) / ENTRIES_PER_PAGE);
     if (totalPages > 1) {
       guiGraphics.drawCenteredString(
-        font, (currentPage + 1) + " / " + totalPages,
-        IMAGE_WIDTH / 2, ENTRIES_START_Y + ENTRIES_PER_PAGE * ROW_HEIGHT + 7,
+        font, Component.translatable("playercompanions.shrine.page.indicator", currentPage + 1,
+          totalPages),
+        IMAGE_WIDTH / 2, ENTRIES_START_Y + ENTRIES_PER_PAGE * ROW_HEIGHT + 4,
         COLOR_TYPE);
     }
+
+    renderCompanionCount(guiGraphics);
+  }
+
+  private void renderCompanionCount(GuiGraphics guiGraphics) {
+    int companionLimit = TamingConfig.COMPANION_LIMIT_PER_PLAYER;
+    int totalCount = menu.getTotalCompanionCount();
+    Component countText = companionLimit > 0
+      ? Component.translatable("playercompanions.shrine.companion_count_limited", totalCount,
+      companionLimit)
+      : Component.translatable("playercompanions.shrine.companion_count", totalCount);
+    guiGraphics.drawCenteredString(
+      font, countText,
+      IMAGE_WIDTH / 2, ENTRIES_START_Y + ENTRIES_PER_PAGE * ROW_HEIGHT + 13,
+      COLOR_TYPE);
   }
 
   @Override
@@ -251,5 +279,9 @@ public class CompanionShrineScreen extends AbstractContainerScreen<CompanionShri
     }
     renderBackground(guiGraphics);
     super.render(guiGraphics, mouseX, mouseY, partialTick);
+  }
+
+  private record EntryButtons(Button speedUpButton, Button respawnButton) {
+
   }
 }

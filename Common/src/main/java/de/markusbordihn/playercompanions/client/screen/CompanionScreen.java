@@ -51,6 +51,12 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   private static final int PREVIEW_CENTER_Y = 70;
   private static final int PREVIEW_SCALE = 40;
   private static final int INFO_PANEL_X = 204;
+  private static final int TEXTURE_PANEL_WIDTH = 248;
+  private static final int TEXTURE_PANEL_HEIGHT = 166;
+  private static final int PANEL_SEPARATOR_WIDTH = 5;
+  private static final int LEFT_PANEL_WIDTH = INFO_PANEL_X - PANEL_SEPARATOR_WIDTH * 2; // 194
+  private static final int RIGHT_PANEL_X_OFFSET = INFO_PANEL_X - PANEL_SEPARATOR_WIDTH; // 199
+
   protected Mob companionEntity;
   private float mousePositionX;
   private float mousePositionY;
@@ -64,20 +70,37 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     super(menu, inventory, title);
   }
 
+  private static void blitPanel(GuiGraphics guiGraphics, int x, int y,
+    int panelWidth, int panelHeight, int leftSectionWidth, int topSectionHeight) {
+    int rightSectionWidth = panelWidth - leftSectionWidth;
+    int rightSectionU = TEXTURE_PANEL_WIDTH - rightSectionWidth;
+    int bottomSectionHeight = panelHeight - topSectionHeight;
+    int bottomSectionV = TEXTURE_PANEL_HEIGHT - bottomSectionHeight;
+
+    guiGraphics.blit(TEXTURE_DEMO_BG, x, y,
+      leftSectionWidth, topSectionHeight, 0, 0, leftSectionWidth, topSectionHeight, 256, 256);
+    guiGraphics.blit(TEXTURE_DEMO_BG, x + leftSectionWidth, y,
+      rightSectionWidth, topSectionHeight, rightSectionU, 0, rightSectionWidth, topSectionHeight,
+      256, 256);
+    guiGraphics.blit(TEXTURE_DEMO_BG, x, y + topSectionHeight,
+      leftSectionWidth, bottomSectionHeight, 0, bottomSectionV, leftSectionWidth,
+      bottomSectionHeight, 256, 256);
+    guiGraphics.blit(TEXTURE_DEMO_BG, x + leftSectionWidth, y + topSectionHeight,
+      rightSectionWidth, bottomSectionHeight, rightSectionU, bottomSectionV, rightSectionWidth,
+      bottomSectionHeight, 256, 256);
+  }
+
   static void renderWindowBg(GuiGraphics guiGraphics, int originX, int originY) {
-    int leftSplitWidth = 169;
-    int topSplitHeight = 83;
-    int rightSectionWidth = SCREEN_WIDTH - leftSplitWidth;
-    int bottomSectionHeight = SCREEN_HEIGHT - topSplitHeight;
-    guiGraphics.blit(TEXTURE_DEMO_BG, originX, originY, leftSplitWidth, topSplitHeight, 0, 0,
-      leftSplitWidth, topSplitHeight, 256, 256);
-    guiGraphics.blit(TEXTURE_DEMO_BG, originX + leftSplitWidth, originY, rightSectionWidth,
-      topSplitHeight, 132, 0, rightSectionWidth, topSplitHeight, 256, 256);
-    guiGraphics.blit(TEXTURE_DEMO_BG, originX, originY + topSplitHeight, leftSplitWidth,
-      bottomSectionHeight, 0, 5, leftSplitWidth, bottomSectionHeight, 256, 256);
-    guiGraphics.blit(TEXTURE_DEMO_BG, originX + leftSplitWidth, originY + topSplitHeight,
-      rightSectionWidth, bottomSectionHeight, 132, 5, rightSectionWidth, bottomSectionHeight, 256,
-      256);
+    int topSectionHeight = TEXTURE_PANEL_HEIGHT / 2; // 83
+
+    blitPanel(guiGraphics, originX, originY, LEFT_PANEL_WIDTH, SCREEN_HEIGHT, 169,
+      topSectionHeight);
+    guiGraphics.fill(
+      originX + LEFT_PANEL_WIDTH, originY + PANEL_SEPARATOR_WIDTH,
+      originX + RIGHT_PANEL_X_OFFSET, originY + SCREEN_HEIGHT - PANEL_SEPARATOR_WIDTH,
+      0xFF555555);
+    blitPanel(guiGraphics, originX + RIGHT_PANEL_X_OFFSET, originY,
+      SCREEN_WIDTH - RIGHT_PANEL_X_OFFSET, SCREEN_HEIGHT, 132, topSectionHeight);
   }
 
   static void renderCompanionSlots(GuiGraphics guiGraphics, int originX, int originY) {
@@ -203,18 +226,12 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
   @Override
   protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
     renderWindowBg(guiGraphics, this.leftPos, this.topPos);
-
-    guiGraphics.fill(
-      this.leftPos + INFO_PANEL_X, this.topPos + 1,
-      this.leftPos + SCREEN_WIDTH - 1, this.topPos + SCREEN_HEIGHT - 1,
-      0xFFC6C6C6);
-
     renderCompanionSlots(guiGraphics, this.leftPos, this.topPos);
     renderPlayerSlots(guiGraphics, this.leftPos, this.topPos);
 
-    int previewX = this.leftPos + 26;
-    int previewY = this.topPos + 17;
-    guiGraphics.fill(previewX, previewY, previewX + 68, previewY + 68, 0xFF000000);
+    int previewX = this.leftPos + 24;
+    int previewY = this.topPos + 16;
+    guiGraphics.fill(previewX, previewY, previewX + 70, previewY + 90, 0xFF000000);
 
     if (companionEntity != null) {
       int scale = PREVIEW_SCALE;
@@ -249,15 +266,15 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
     if (companionEntity instanceof PlayerCompanion companion) {
       guiGraphics.drawString(this.font,
         Component.translatable("playercompanions.screen.role",
-          companion.getCompanionRole().name()), panelX, panelY, 0xAAAAAA, false);
+          companion.getCompanionRole().name()), panelX, panelY, 0x666666, false);
       panelY += 12;
       guiGraphics.drawString(this.font,
         Component.translatable("playercompanions.screen.type",
-          companion.getCompanionTypeName()), panelX, panelY, 0xAAAAAA, false);
+          companion.getCompanionTypeName()), panelX, panelY, 0x666666, false);
       panelY += 12;
       guiGraphics.drawString(this.font,
         Component.translatable("playercompanions.screen.command",
-          companion.getCompanionCommand().name()), panelX, panelY, 0xAAAAAA, false);
+          companion.getCompanionCommand().name()), panelX, panelY, 0x666666, false);
       panelY += 12;
     }
 
@@ -265,7 +282,7 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
       guiGraphics.drawString(this.font,
         Component.translatable("playercompanions.screen.health",
           (int) companionEntity.getHealth(), (int) companionEntity.getMaxHealth()),
-        panelX, panelY, 0xAAAAAA, false);
+        panelX, panelY, 0x666666, false);
       panelY += 12;
     }
 
@@ -282,7 +299,6 @@ public class CompanionScreen<T extends CompanionMenu> extends AbstractContainerS
         0x55FF55, false);
       panelY += 12;
 
-      // XP level progress bar
       int barWidth = 132;
       int barHeight = 5;
       float levelProgress = (float) experienceLevel / TamingConfig.MAX_LEVEL;

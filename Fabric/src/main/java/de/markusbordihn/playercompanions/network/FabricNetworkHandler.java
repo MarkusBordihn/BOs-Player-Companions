@@ -36,21 +36,30 @@ public class FabricNetworkHandler implements CompanionNetwork {
 
   public static void registerServerReceiver() {
     ServerPlayNetworking.registerGlobalReceiver(CompanionCommandMessage.ID,
-      (server, serverPlayer, handler, buf, responseSender) ->
-        server.execute(() -> CompanionCommandMessage.decode(buf).handleServer(serverPlayer)));
+      (server, serverPlayer, handler, buf, responseSender) -> {
+        CompanionCommandMessage message = CompanionCommandMessage.decode(buf);
+        server.execute(() -> message.handleServer(serverPlayer));
+      });
     ServerPlayNetworking.registerGlobalReceiver(CompanionAggressionMessage.ID,
-      (server, serverPlayer, handler, buf, responseSender) ->
-        server.execute(() -> CompanionAggressionMessage.decode(buf).handleServer(serverPlayer)));
+      (server, serverPlayer, handler, buf, responseSender) -> {
+        CompanionAggressionMessage message = CompanionAggressionMessage.decode(buf);
+        server.execute(() -> message.handleServer(serverPlayer));
+      });
     ServerPlayNetworking.registerGlobalReceiver(CompanionCollectorActiveMessage.ID,
-      (server, serverPlayer, handler, buf, responseSender) ->
-        server.execute(
-          () -> CompanionCollectorActiveMessage.decode(buf).handleServer(serverPlayer)));
+      (server, serverPlayer, handler, buf, responseSender) -> {
+        CompanionCollectorActiveMessage message = CompanionCollectorActiveMessage.decode(buf);
+        server.execute(() -> message.handleServer(serverPlayer));
+      });
     ServerPlayNetworking.registerGlobalReceiver(ShrineRespawnMessage.ID,
-      (server, serverPlayer, handler, buf, responseSender) ->
-        server.execute(() -> ShrineRespawnMessage.decode(buf).handleServer(serverPlayer)));
+      (server, serverPlayer, handler, buf, responseSender) -> {
+        ShrineRespawnMessage message = ShrineRespawnMessage.decode(buf);
+        server.execute(() -> message.handleServer(serverPlayer));
+      });
     ServerPlayNetworking.registerGlobalReceiver(ShrineXpReduceMessage.ID,
-      (server, serverPlayer, handler, buf, responseSender) ->
-        server.execute(() -> ShrineXpReduceMessage.decode(buf).handleServer(serverPlayer)));
+      (server, serverPlayer, handler, buf, responseSender) -> {
+        ShrineXpReduceMessage message = ShrineXpReduceMessage.decode(buf);
+        server.execute(() -> message.handleServer(serverPlayer));
+      });
   }
 
   @Override

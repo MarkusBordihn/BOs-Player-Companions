@@ -72,18 +72,22 @@ public class CompanionShrineHandler {
     List<CompanionShrineEntry> entries = loadEntriesForPlayer(player);
     buf.writeInt(entries.size());
     entries.forEach(e -> e.encode(buf));
+    buf.writeInt(countAllCompanionsForPlayer(player));
+  }
+
+  public static int countAllCompanionsForPlayer(ServerPlayer player) {
+    return NPCEntityData.get(player.getServer()).getEntriesByOwner(player.getUUID()).size();
   }
 
   public static List<CompanionShrineEntry> loadEntriesForPlayer(ServerPlayer player) {
     List<CompanionShrineEntry> result = new ArrayList<>();
     for (SavedNPCEntityEntry entry :
       NPCEntityData.get(player.getServer()).getEntriesByOwner(player.getUUID())) {
-      if (!entry.metadata().hasRemovalReason()) {
-        continue;
-      }
-      result.add(toEntry(entry));
-      if (result.size() >= MAX_ENTRIES) {
-        break;
+      if (entry.metadata().hasRemovalReason()) {
+        result.add(toEntry(entry));
+        if (result.size() >= MAX_ENTRIES) {
+          break;
+        }
       }
     }
     return result;

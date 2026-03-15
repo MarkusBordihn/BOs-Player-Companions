@@ -1,0 +1,15 @@
+{
+  "type": "player_companions:companion_biome_spawn",
+  "biomes": [
+    "minecraft:plains",
+    "minecraft:meadow",
+    "minecraft:savanna"
+  ],
+  "spawn": {
+    "type": "player_companions:pig_companion",
+    "weight": 3,
+    "minCount": 1,
+    "maxCount": 1
+  },
+  "mob_category": "creature"
+}

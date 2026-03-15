@@ -31,6 +31,7 @@ public class TamingMessages {
   private static final String TRUST_PREFIX = Constants.TEXT_PREFIX + "trust.";
   private static final String TAMED_PREFIX = Constants.TEXT_PREFIX + "tamed.";
   private static final String TAMING_PREFIX = Constants.TEXT_PREFIX + "taming.";
+  private static final int TRUST_BAR_LENGTH = 10;
 
   private TamingMessages() {
   }
@@ -108,7 +109,10 @@ public class TamingMessages {
   }
 
   public static Component getTrustBar(int current, int max) {
-    int bars = 10;
+    if (max <= 0) {
+      return Component.literal("[" + "░".repeat(TRUST_BAR_LENGTH) + "]");
+    }
+    int bars = TRUST_BAR_LENGTH;
     int filled = (int) ((current / (float) max) * bars);
 
     MutableComponent bar = Component.literal("[");

@@ -108,7 +108,6 @@ public class ModEntityType {
     }
     log.info("{} Companion Biome Spawns ...", Constants.LOG_REGISTER_PREFIX);
 
-    // Small Slime - all overworld biomes
     BiomeModifications.addSpawn(
       BiomeSelectors.foundInOverworld(),
       MobCategory.CREATURE,
@@ -117,7 +116,6 @@ public class ModEntityType {
       TamingConfig.SPAWN_MIN_GROUP_SIZE,
       TamingConfig.SPAWN_MAX_GROUP_SIZE);
 
-    // Pig Companion - plains, meadows, savannas
     BiomeModifications.addSpawn(
       BiomeSelectors.includeByKey(Biomes.PLAINS, Biomes.MEADOW, Biomes.SAVANNA),
       MobCategory.CREATURE,
@@ -126,7 +124,6 @@ public class ModEntityType {
       TamingConfig.SPAWN_MIN_GROUP_SIZE,
       TamingConfig.SPAWN_MAX_GROUP_SIZE);
 
-    // Rooster Companion - plains, forests, jungles
     BiomeModifications.addSpawn(
       BiomeSelectors.includeByKey(Biomes.PLAINS, Biomes.FOREST, Biomes.JUNGLE),
       MobCategory.CREATURE,

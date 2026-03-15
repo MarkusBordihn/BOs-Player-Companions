@@ -39,29 +39,27 @@ public class CompanionNameConfig {
   private static final String FILE_MALE = "names_male.txt";
   private static final String FILE_MISC = "names_misc.txt";
 
-  // @formatter:off
   private static final List<String> DEFAULT_FEMALE = List.of(
-      "Abby", "Alina", "Amy", "Ayame", "Beauty", "Bella", "Bonnie", "Carla", "Carmen",
-      "Celina", "Chiyo", "Chloe", "Conny", "Dina", "Emi", "Emma", "Fluffy", "Fuyumi",
-      "Gina", "Haruhi", "Hope", "Iivy", "Isabell", "Itsumi", "Jessie", "Kacy", "Karin",
-      "Kasumi", "Keira", "Lina", "Lucy", "Luna", "Mai", "Marina", "Megumi", "Melody",
-      "Mia", "Mimi", "Mizue", "Nami", "Nicky", "Princess", "Rainy", "Reiko", "Sakura",
-      "Sandy", "Takeko", "Trixie", "Umi", "Vivi", "Yona", "Yukari", "Zoe");
+    "Abby", "Alina", "Amy", "Ayame", "Beauty", "Bella", "Bonnie", "Carla", "Carmen",
+    "Celina", "Chiyo", "Chloe", "Conny", "Dina", "Emi", "Emma", "Fluffy", "Fuyumi",
+    "Gina", "Haruhi", "Hope", "Iivy", "Isabell", "Itsumi", "Jessie", "Kacy", "Karin",
+    "Kasumi", "Keira", "Lina", "Lucy", "Luna", "Mai", "Marina", "Megumi", "Melody",
+    "Mia", "Mimi", "Mizue", "Nami", "Nicky", "Princess", "Rainy", "Reiko", "Sakura",
+    "Sandy", "Takeko", "Trixie", "Umi", "Vivi", "Yona", "Yukari", "Zoe");
 
   private static final List<String> DEFAULT_MALE = List.of(
-      "Alex", "Andrew", "Archie", "Benny", "Charlie", "Coco", "Derek", "Eric", "Felix",
-      "Frankie", "Gustav", "Haruo", "Hector", "Henry", "Hunter", "Ikuo", "Jin", "Kasimir",
-      "Kazuma", "Larry", "Leo", "Leonardo", "Loki", "Marin", "Masato", "Max", "Norio",
-      "Osamu", "Oskar", "Prince", "Roker", "Rufus", "Ryu", "Shadow", "Shin", "Simba",
-      "Snickers", "Sparky", "Spike", "Taizo", "Tiger", "Timmy", "Turbo", "Yoshi", "Yuma",
-      "Zenjiro", "Zottel");
+    "Alex", "Andrew", "Archie", "Benny", "Charlie", "Coco", "Derek", "Eric", "Felix",
+    "Frankie", "Gustav", "Haruo", "Hector", "Henry", "Hunter", "Ikuo", "Jin", "Kasimir",
+    "Kazuma", "Larry", "Leo", "Leonardo", "Loki", "Marin", "Masato", "Max", "Norio",
+    "Osamu", "Oskar", "Prince", "Roker", "Rufus", "Ryu", "Shadow", "Shin", "Simba",
+    "Snickers", "Sparky", "Spike", "Taizo", "Tiger", "Timmy", "Turbo", "Yoshi", "Yuma",
+    "Zenjiro", "Zottel");
 
   private static final List<String> DEFAULT_MISC = List.of(
-      "Angel", "Buddy", "Cato", "Cheddar", "Creamy", "Curly", "Dakota", "Elisa", "Foxy",
-      "Frana", "Inky", "Isa", "Jesse", "Jona", "Joyce", "Jule", "Kaya", "Luka", "Mika",
-      "Morgan", "Patches", "Phantom", "Riley", "Robin", "Sam", "Sanja", "Sascha", "Sasha",
-      "Skye", "Smokey", "Smokie", "Toni", "Yannie");
-  // @formatter:on
+    "Angel", "Buddy", "Cato", "Cheddar", "Creamy", "Curly", "Dakota", "Elisa", "Foxy",
+    "Frana", "Inky", "Isa", "Jesse", "Jona", "Joyce", "Jule", "Kaya", "Luka", "Mika",
+    "Morgan", "Patches", "Phantom", "Riley", "Robin", "Sam", "Sanja", "Sascha", "Sasha",
+    "Skye", "Smokey", "Smokie", "Toni", "Yannie");
 
   private static List<String> allNames = List.of();
 

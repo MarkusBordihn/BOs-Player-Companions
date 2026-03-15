@@ -112,7 +112,7 @@ public class Config {
       properties.store(writer, header.trim());
     } catch (Exception e) {
       log.error(
-        "{} Failed to create configuration file {} for {}", LOG_PREFIX, configFile, properties);
+        "{} Failed to create configuration file {} for {}", LOG_PREFIX, configFile, properties, e);
     }
   }
 
@@ -153,7 +153,8 @@ public class Config {
           "{} Failed to update configuration file {} with {}",
           LOG_PREFIX,
           configFile,
-          properties);
+          properties,
+          e);
       }
     } else {
       log.info("{} {} is up to date: {}", LOG_PREFIX, configFileHeader, properties);

@@ -7,7 +7,7 @@ For the full changelog, please go to the [GitHub History][history] instead.
 
 Note: Please always back up your world before updating to a new version!
 
-### 7.0.0 (testing)
+### 7.0.0 (beta testing)
 
 Note: This is a complete re-write of the Player Companions which uses
 the [Easy NPC API][easy_npc_api].

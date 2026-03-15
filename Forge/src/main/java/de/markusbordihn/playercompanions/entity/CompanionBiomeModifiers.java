@@ -19,28 +19,22 @@
 
 package de.markusbordihn.playercompanions.entity;
 
+import com.mojang.serialization.Codec;
 import de.markusbordihn.playercompanions.Constants;
-import de.markusbordihn.playercompanions.config.TamingConfig;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraftforge.common.world.BiomeModifier;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber
-public class CompanionSpawnHandler {
+public class CompanionBiomeModifiers {
 
-  private static final Logger log = LogManager.getLogger(Constants.LOG_NAME);
+  public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS =
+    DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Constants.MOD_ID);
 
-  private CompanionSpawnHandler() {
-  }
+  public static final RegistryObject<Codec<CompanionBiomeModifier>> COMPANION_BIOME_MODIFIER =
+    BIOME_MODIFIER_SERIALIZERS.register(
+      "companion_biome_spawn", () -> CompanionBiomeModifier.makeCodec());
 
-  @SubscribeEvent
-  public static void onServerAboutToStart(ServerAboutToStartEvent event) {
-    if (!TamingConfig.NATURAL_SPAWNING_ENABLED) {
-      log.info("Natural companion spawning is disabled via config.");
-    } else {
-      log.info("Natural companion spawning is active.");
-    }
+  private CompanionBiomeModifiers() {
   }
 }

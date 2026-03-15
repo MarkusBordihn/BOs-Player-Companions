@@ -55,6 +55,10 @@ public class PlayerCompanions {
     log.info("{} Entity Types ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.entity.ModEntityType.ENTITY_TYPES.register(modEventBus);
 
+    log.info("{} Biome Modifier Serializers ...", Constants.LOG_REGISTER_PREFIX);
+    de.markusbordihn.playercompanions.entity.CompanionBiomeModifiers.BIOME_MODIFIER_SERIALIZERS.register(
+      modEventBus);
+
     log.info("{} Items ...", Constants.LOG_REGISTER_PREFIX);
     de.markusbordihn.playercompanions.item.ModItems.ITEMS.register(modEventBus);
 

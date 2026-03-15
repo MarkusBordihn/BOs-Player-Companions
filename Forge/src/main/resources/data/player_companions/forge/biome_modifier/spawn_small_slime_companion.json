@@ -1,0 +1,11 @@
+{
+  "type": "player_companions:companion_biome_spawn",
+  "biomes": "#minecraft:is_overworld",
+  "spawn": {
+    "type": "player_companions:small_slime_companion",
+    "weight": 5,
+    "minCount": 1,
+    "maxCount": 2
+  },
+  "mob_category": "creature"
+}

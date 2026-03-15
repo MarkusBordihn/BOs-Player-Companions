@@ -3,8 +3,8 @@
   "credit": "Made with Blockbench by Markus Bordihn",
   "texture_size": [64, 64],
   "textures": {
-    "particle": "player_companions:block/companion_shrine_texture",
-    "texture": "player_companions:block/companion_shrine_texture"
+    "particle": "models/blocks/companion_shrine_texture",
+    "texture": "models/blocks/companion_shrine_texture"
   },
   "elements": [
     {
@@ -393,6 +393,38 @@
       }
     }
   ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.375, 0.375, 0.375]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.375, 0.375, 0.375]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, -135, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "gui": {
+      "rotation": [30, -135, 0],
+      "translation": [0, -1, 0],
+      "scale": [0.55, 0.55, 0.55]
+    },
+    "fixed": {
+      "scale": [0.5, 0.5, 0.5]
+    }
+  },
   "groups": [
     {
       "name": "base",

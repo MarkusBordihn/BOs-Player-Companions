@@ -75,7 +75,6 @@ public class CompanionScreenHelper {
     Lighting.setupForEntityInInventory();
     EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
     quaternion1.conjugate();
-    quaternion1.conjugate();
     dispatcher.overrideCameraOrientation(quaternion1);
     dispatcher.setRenderShadow(false);
 

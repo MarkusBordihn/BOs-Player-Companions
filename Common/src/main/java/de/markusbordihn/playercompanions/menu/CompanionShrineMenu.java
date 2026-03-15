@@ -37,12 +37,14 @@ public class CompanionShrineMenu extends AbstractContainerMenu {
   private final List<CompanionShrineEntry> entries;
   private final Player player;
   private final SimpleContainerData remainingSecondsData;
+  private final int totalCompanionCount;
 
   public CompanionShrineMenu(int windowId, Inventory playerInventory, ServerPlayer serverPlayer) {
     super(ModMenuTypes.COMPANION_SHRINE, windowId);
     this.player = playerInventory.player;
     this.entries = Collections.unmodifiableList(
       CompanionShrineHandler.loadEntriesForPlayer(serverPlayer));
+    this.totalCompanionCount = CompanionShrineHandler.countAllCompanionsForPlayer(serverPlayer);
     this.remainingSecondsData = new SimpleContainerData(entries.size());
     addDataSlots(remainingSecondsData);
   }
@@ -58,6 +60,7 @@ public class CompanionShrineMenu extends AbstractContainerMenu {
     this.entries = Collections.unmodifiableList(list);
     this.remainingSecondsData = new SimpleContainerData(entries.size());
     addDataSlots(remainingSecondsData);
+    this.totalCompanionCount = buf.readInt();
   }
 
   @Override
@@ -85,6 +88,10 @@ public class CompanionShrineMenu extends AbstractContainerMenu {
 
   public int getPlayerExperienceLevel() {
     return player.experienceLevel;
+  }
+
+  public int getTotalCompanionCount() {
+    return totalCompanionCount;
   }
 
   @Override
